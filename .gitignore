@@ -1,0 +1,28 @@
+# Environment and credentials
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Generated data — do not commit raw CSVs
+data/raw/
+
+# Chart exports
+outputs/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

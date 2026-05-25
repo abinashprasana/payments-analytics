@@ -1,0 +1,11 @@
+psycopg2-binary
+sqlalchemy
+faker
+pandas
+streamlit
+python-dotenv
+plotly
+matplotlib
+kaleido
+
+
