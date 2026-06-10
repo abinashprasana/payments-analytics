@@ -2,7 +2,7 @@
 
 <h1>💳 Payments Analytics</h1>
 
-<p><em>A PostgreSQL analytics project on synthetic commercial transaction data, demonstrating intermediate SQL patterns across a six-table relational schema. Built as part of an MSc AI portfolio.</em></p>
+<p><em>A PostgreSQL analytics project on synthetic commercial transaction data, demonstrating intermediate SQL patterns across a six-table relational schema, a Python data pipeline, a Streamlit dashboard, and a Power BI intelligence dashboard.</em></p>
 
 <br/>
 
@@ -10,6 +10,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
 [![Plotly](https://img.shields.io/badge/Plotly-Visualisation-3F4F75?style=for-the-badge&logo=plotly&logoColor=white)](https://plotly.com)
+[![PowerBI](https://img.shields.io/badge/Power%20BI-Dashboard-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](powerbi/payments_analytics_dashboard.pbix)
 [![Data](https://img.shields.io/badge/Data-Synthetic-94A3B8?style=for-the-badge)](data/generate_data.py)
 
 </div>
@@ -38,7 +39,7 @@ The separation of concerns mirrors real-world data warehouse design and forces t
 
 ---
 
-## 📸 Dashboard Preview
+## 📸 Streamlit Dashboard Preview
 
 > To regenerate these images locally, run:
 > ```bash
@@ -59,11 +60,46 @@ The separation of concerns mirrors real-world data warehouse design and forces t
 
 ---
 
+## 📊 Power BI Dashboard
+
+Built a four page interactive Power BI dashboard on top of the same synthetic dataset, demonstrating end to end BI development including data modelling, DAX measures and multi page dashboard design.
+
+> 📥 **To explore the full interactive dashboard:** Download [`payments_analytics_dashboard.pbix`](Power%20BI/payments_analytics_dashboard.pbix) and open it in Power BI Desktop.
+
+### What Was Built
+- Designed a star schema data model connecting all six tables with five relationships
+- Wrote 12 DAX measures covering transaction KPIs, fraud metrics, settlement analysis and customer counts
+- Used Power Query to clean and type-cast all columns across every table
+- Built four fully interactive pages with slicers, filters and cross-page navigation
+
+### 📋 Pages Covered
+
+| Page | Visuals |
+|---|---|
+| 🏠 Executive Overview | KPI cards, monthly transaction trend combo chart, transaction type donut, year and currency slicers |
+| 🏪 Merchant Performance | Revenue leaderboard, category breakdown, merchant details table, risk distribution donut |
+| 🚨 Fraud & Risk | Fraud KPI cards, flag rate by category, reasons distribution, resolution status chart, unresolved flags table |
+| 👥 Customer Segments | Geographic map, country and segment bar chart, monthly acquisition trend, active customer ratio |
+
+### 🖼️ Dashboard Screenshots
+
+#### 🏠 Executive Overview
+![Executive Overview](Power%20BI/executive_overview.png)
+
+#### 🏪 Merchant Performance
+![Merchant Performance](Power%20BI/merchant_performance.png)
+
+#### 🚨 Fraud & Risk
+![Fraud and Risk](Power%20BI/fraud_risk.png)
+
+#### 👥 Customer Segments
+![Customer Segments](Power%20BI/customer_segments.png)
+
+---
+
 ## 🎬 Demo Video
 
 > A walkthrough of the Streamlit dashboard covering all four analytical tabs.
-
-<!-- Once recorded, replace this block with your video link -->
 
 [![Demo Video](https://img.shields.io/badge/Demo-Coming%20Soon-FF4B4B?style=for-the-badge&logo=youtube&logoColor=white)](#)
 
@@ -71,6 +107,8 @@ The separation of concerns mirrors real-world data warehouse design and forces t
 > ```
 > https://github.com/abinashprasana/payments-analytics/assets/your-video-file.mp4
 > ```
+
+---
 
 ## 🛠️ Tech Stack
 
@@ -81,7 +119,8 @@ The separation of concerns mirrors real-world data warehouse design and forces t
 | 🗄️ Database | PostgreSQL 15+ | Relational schema, analytical queries |
 | 🐍 Data Generation | Python + Faker | Synthetic dataset creation |
 | 📥 Ingestion | psycopg2 + COPY | High-speed bulk loading |
-| 📊 Dashboard | Streamlit + Plotly | Interactive BI front-end |
+| 📊 BI Dashboard | Streamlit + Plotly | Interactive web front-end |
+| 📈 BI Reporting | Power BI Desktop + DAX | Professional analytics dashboard |
 | 🖼️ Export | Kaleido | Static PNG chart rendering |
 | 🔐 Config | python-dotenv | Credential management |
 
@@ -270,6 +309,13 @@ payments-analytics/
 ├── dashboard/
 │   └── app.py                 # Streamlit BI dashboard
 │
+├── Power BI/
+│   ├── payments_analytics_dashboard.pbix   # Full interactive Power BI file
+│   ├── executive_overview.png              # Page 1 screenshot
+│   ├── merchant_performance.png            # Page 2 screenshot
+│   ├── fraud_risk.png                      # Page 3 screenshot
+│   └── customer_segments.png              # Page 4 screenshot
+│
 └── outputs/
     └── charts/                # PNG exports from export_charts.py
 ```
@@ -347,7 +393,7 @@ python data/generate_data.py
 python scripts/load_data.py
 ```
 
-### 7️⃣ Launch the Dashboard
+### 7️⃣ Launch the Streamlit Dashboard
 
 ```bash
 streamlit run dashboard/app.py
@@ -355,11 +401,19 @@ streamlit run dashboard/app.py
 
 The dashboard opens automatically at `http://localhost:8501`
 
+### 8️⃣ Open the Power BI Dashboard
+
+```text
+1. Download Power BI Desktop from https://powerbi.microsoft.com/desktop
+2. Open Power BI/payments_analytics_dashboard.pbix
+3. All data is embedded — no database connection required
+```
+
 ---
 
 ## 🖼️ Exporting Visualisations
 
-### From the Dashboard
+### From the Streamlit Dashboard
 Every Plotly chart has a built-in **camera icon** in the top-right corner. Click it to download that chart as a PNG directly from the browser.
 
 ### Programmatic Export
@@ -382,4 +436,4 @@ Charts are saved to `outputs/charts/` as:
 
 ## 🙋 Author
 
-**Abinash Prasana Selvanathan**  
+**Abinash Prasana Selvanathan**
