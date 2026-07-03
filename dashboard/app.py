@@ -644,12 +644,12 @@ st.markdown(
     <section class="hero-panel">
         <h1 class="main-title">Corporate Payments Analytics</h1>
         <p class="hero-copy">
-            Built as part of an MSc AI portfolio project to practice real-world analytics
-            on commercial payments data. The dataset spans three years of synthetic transaction
-            activity across six relational tables: customers, accounts, merchants, transactions,
-            settlements, and fraud flags. Each tab answers one analytical question about
-            the data — from payment volume trends to merchant performance, fraud detection
-            patterns, and customer retention.
+            A commercial payments analytics system built on a six-table relational
+            database. The dataset spans three years of synthetic transaction activity
+            across customers, accounts, merchants, transactions, settlements, and fraud
+            flags. Each tab answers one analytical question about the data — from payment
+            volume trends to merchant performance, fraud detection patterns, and customer
+            retention.
         </p>
     </section>
     """,
