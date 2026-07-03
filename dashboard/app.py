@@ -7,7 +7,14 @@ import plotly.graph_objects as go
 import streamlit as st
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from scripts.db_connection import get_connection
+try:
+    from scripts.db_connection import get_connection
+    _DB_IMPORT_OK = True
+except Exception:
+    _DB_IMPORT_OK = False
+
+# Absolute path to the raw CSV directory, works both locally and on Streamlit Cloud
+_RAW = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "raw")
 
 
 st.set_page_config(
@@ -343,151 +350,293 @@ st.markdown(
 )
 
 
+# ---------------------------------------------------------------------------
+# CSV fallback — used automatically when PostgreSQL is not available
+# (e.g. deployed on Streamlit Cloud without a hosted database)
+# ---------------------------------------------------------------------------
+
+@st.cache_data(show_spinner=False)
+def _load_csvs():
+    """Load all six raw CSV files into DataFrames. Cached for the session."""
+    customers    = pd.read_csv(os.path.join(_RAW, "customers.csv"),    parse_dates=["join_date"])
+    accounts     = pd.read_csv(os.path.join(_RAW, "accounts.csv"))
+    merchants    = pd.read_csv(os.path.join(_RAW, "merchants.csv"))
+    transactions = pd.read_csv(os.path.join(_RAW, "transactions.csv"), parse_dates=["transaction_date"])
+    settlements  = pd.read_csv(os.path.join(_RAW, "settlements.csv"))
+    fraud_flags  = pd.read_csv(os.path.join(_RAW, "fraud_flags.csv"))
+    return customers, accounts, merchants, transactions, settlements, fraud_flags
+
+
+def _scope_csv():
+    customers, accounts, merchants, transactions, settlements, fraud_flags = _load_csvs()
+    return pd.Series({
+        "customer_count":      len(customers),
+        "account_count":       len(accounts),
+        "merchant_count":      len(merchants),
+        "transaction_count":   len(transactions),
+        "settlement_count":    len(settlements),
+        "fraud_flag_count":    len(fraud_flags),
+        "first_transaction_date": transactions["transaction_date"].min().date(),
+        "last_transaction_date":  transactions["transaction_date"].max().date(),
+    })
+
+
+def _overview_csv():
+    _, _, _, transactions, _, _ = _load_csvs()
+    completed = transactions[transactions["status"] == "completed"]
+    return pd.Series({
+        "total_tx_count":  len(completed),
+        "total_tx_volume": completed["amount"].sum(),
+        "avg_tx_value":    completed["amount"].mean(),
+    })
+
+
+def _monthly_trends_csv():
+    _, _, _, transactions, _, _ = _load_csvs()
+    completed = transactions[transactions["status"] == "completed"].copy()
+    completed["transaction_month"] = completed["transaction_date"].dt.to_period("M").dt.to_timestamp()
+    return (
+        completed.groupby("transaction_month")
+        .agg(transaction_volume=("transaction_id", "count"), total_value=("amount", "sum"))
+        .reset_index()
+        .sort_values("transaction_month")
+    )
+
+
+def _merchant_performance_csv():
+    _, accounts, merchants, transactions, settlements, _ = _load_csvs()
+    completed = transactions[transactions["status"] == "completed"]
+    merged = (
+        completed
+        .merge(settlements[["transaction_id", "settled_amount"]], on="transaction_id")
+        .merge(merchants[["merchant_id", "merchant_name", "category", "risk_tier"]], on="merchant_id")
+    )
+    result = (
+        merged.groupby(["merchant_id", "merchant_name", "category", "risk_tier"])["settled_amount"]
+        .sum()
+        .reset_index()
+        .rename(columns={"settled_amount": "total_revenue"})
+        .nlargest(10, "total_revenue")
+        [["merchant_name", "category", "risk_tier", "total_revenue"]]
+        .reset_index(drop=True)
+    )
+    return result
+
+
+def _risk_overview_csv():
+    _, _, merchants, transactions, _, fraud_flags = _load_csvs()
+    tx_m = transactions.merge(merchants[["merchant_id", "category"]], on="merchant_id")
+    tx_f = tx_m.merge(fraud_flags[["transaction_id", "flag_id"]], on="transaction_id", how="left")
+    result = (
+        tx_f.groupby("category")
+        .agg(
+            total_transactions=("transaction_id", "count"),
+            flagged_transactions=("flag_id", lambda x: x.notna().sum()),
+        )
+        .reset_index()
+    )
+    result["fraud_rate_pct"] = (result["flagged_transactions"] / result["total_transactions"] * 100).round(2)
+    return result.sort_values("fraud_rate_pct", ascending=False).reset_index(drop=True)
+
+
+def _cohort_retention_csv():
+    customers, accounts, _, transactions, _, _ = _load_csvs()
+    cust = customers[["customer_id", "join_date"]].copy()
+    cust["cohort_month"] = cust["join_date"].dt.to_period("M").dt.to_timestamp()
+
+    completed = transactions[transactions["status"] == "completed"].copy()
+    completed["activity_month"] = completed["transaction_date"].dt.to_period("M").dt.to_timestamp()
+
+    tx_acc = completed.merge(accounts[["account_id", "customer_id"]], on="account_id")
+    tx_cust = tx_acc.merge(cust[["customer_id", "cohort_month"]], on="customer_id")
+
+    active = tx_cust[["customer_id", "cohort_month", "activity_month"]].drop_duplicates()
+    active = active.copy()
+    active["months_active_offset"] = (
+        (active["activity_month"].dt.year  - active["cohort_month"].dt.year)  * 12 +
+        (active["activity_month"].dt.month - active["cohort_month"].dt.month)
+    ).astype(int)
+
+    cohort_sizes = cust.groupby("cohort_month")["customer_id"].count().reset_index(name="cohort_size")
+    retention = (
+        active.groupby(["cohort_month", "months_active_offset"])["customer_id"]
+        .nunique()
+        .reset_index(name="active_customers")
+    )
+    result = retention.merge(cohort_sizes, on="cohort_month")
+    result["retention_rate"] = (result["active_customers"] / result["cohort_size"] * 100).round(2)
+    result = result[result["months_active_offset"] <= 12]
+    return result[["cohort_month", "cohort_size", "months_active_offset", "retention_rate"]].sort_values(
+        ["cohort_month", "months_active_offset"]
+    ).reset_index(drop=True)
+
+
+# ---------------------------------------------------------------------------
+
+
 @st.cache_data(ttl=600)
 def fetch_dataset_scope():
-    conn = get_connection()
-    query = """
-        SELECT
-            (SELECT COUNT(*) FROM customers) AS customer_count,
-            (SELECT COUNT(*) FROM accounts) AS account_count,
-            (SELECT COUNT(*) FROM merchants) AS merchant_count,
-            (SELECT COUNT(*) FROM transactions) AS transaction_count,
-            (SELECT COUNT(*) FROM settlements) AS settlement_count,
-            (SELECT COUNT(*) FROM fraud_flags) AS fraud_flag_count,
-            (SELECT MIN(transaction_date)::DATE FROM transactions) AS first_transaction_date,
-            (SELECT MAX(transaction_date)::DATE FROM transactions) AS last_transaction_date;
-    """
-    df = pd.read_sql_query(query, conn)
-    conn.close()
-    return df.iloc[0]
+    try:
+        conn = get_connection()
+        query = """
+            SELECT
+                (SELECT COUNT(*) FROM customers) AS customer_count,
+                (SELECT COUNT(*) FROM accounts) AS account_count,
+                (SELECT COUNT(*) FROM merchants) AS merchant_count,
+                (SELECT COUNT(*) FROM transactions) AS transaction_count,
+                (SELECT COUNT(*) FROM settlements) AS settlement_count,
+                (SELECT COUNT(*) FROM fraud_flags) AS fraud_flag_count,
+                (SELECT MIN(transaction_date)::DATE FROM transactions) AS first_transaction_date,
+                (SELECT MAX(transaction_date)::DATE FROM transactions) AS last_transaction_date;
+        """
+        df = pd.read_sql_query(query, conn)
+        conn.close()
+        return df.iloc[0]
+    except Exception:
+        return _scope_csv()
 
 
 @st.cache_data(ttl=600)
 def fetch_overview_metrics():
-    conn = get_connection()
-    query = """
-        SELECT
-            COUNT(transaction_id) AS total_tx_count,
-            COALESCE(SUM(amount), 0) AS total_tx_volume,
-            COALESCE(AVG(amount), 0) AS avg_tx_value
-        FROM transactions
-        WHERE status = 'completed';
-    """
-    df = pd.read_sql_query(query, conn)
-    conn.close()
-    return df.iloc[0]
+    try:
+        conn = get_connection()
+        query = """
+            SELECT
+                COUNT(transaction_id) AS total_tx_count,
+                COALESCE(SUM(amount), 0) AS total_tx_volume,
+                COALESCE(AVG(amount), 0) AS avg_tx_value
+            FROM transactions
+            WHERE status = 'completed';
+        """
+        df = pd.read_sql_query(query, conn)
+        conn.close()
+        return df.iloc[0]
+    except Exception:
+        return _overview_csv()
 
 
 @st.cache_data(ttl=600)
 def fetch_monthly_trends():
-    conn = get_connection()
-    query = """
-        SELECT
-            DATE_TRUNC('month', transaction_date)::DATE AS transaction_month,
-            COUNT(transaction_id) AS transaction_volume,
-            SUM(amount) AS total_value
-        FROM transactions
-        WHERE status = 'completed'
-        GROUP BY 1
-        ORDER BY 1;
-    """
-    df = pd.read_sql_query(query, conn)
-    conn.close()
-    return df
+    try:
+        conn = get_connection()
+        query = """
+            SELECT
+                DATE_TRUNC('month', transaction_date)::DATE AS transaction_month,
+                COUNT(transaction_id) AS transaction_volume,
+                SUM(amount) AS total_value
+            FROM transactions
+            WHERE status = 'completed'
+            GROUP BY 1
+            ORDER BY 1;
+        """
+        df = pd.read_sql_query(query, conn)
+        conn.close()
+        return df
+    except Exception:
+        return _monthly_trends_csv()
 
 
 @st.cache_data(ttl=600)
 def fetch_merchant_performance():
-    conn = get_connection()
-    query = """
-        SELECT
-            m.merchant_name,
-            m.category,
-            m.risk_tier,
-            COALESCE(SUM(s.settled_amount), 0) AS total_revenue
-        FROM merchants m
-        INNER JOIN transactions t ON m.merchant_id = t.merchant_id
-        INNER JOIN settlements s ON t.transaction_id = s.transaction_id
-        WHERE t.status = 'completed'
-        GROUP BY m.merchant_id, m.merchant_name, m.category, m.risk_tier
-        ORDER BY total_revenue DESC
-        LIMIT 10;
-    """
-    df = pd.read_sql_query(query, conn)
-    conn.close()
-    return df
+    try:
+        conn = get_connection()
+        query = """
+            SELECT
+                m.merchant_name,
+                m.category,
+                m.risk_tier,
+                COALESCE(SUM(s.settled_amount), 0) AS total_revenue
+            FROM merchants m
+            INNER JOIN transactions t ON m.merchant_id = t.merchant_id
+            INNER JOIN settlements s ON t.transaction_id = s.transaction_id
+            WHERE t.status = 'completed'
+            GROUP BY m.merchant_id, m.merchant_name, m.category, m.risk_tier
+            ORDER BY total_revenue DESC
+            LIMIT 10;
+        """
+        df = pd.read_sql_query(query, conn)
+        conn.close()
+        return df
+    except Exception:
+        return _merchant_performance_csv()
 
 
 @st.cache_data(ttl=600)
 def fetch_risk_overview():
-    conn = get_connection()
-    query = """
-        SELECT
-            m.category,
-            COUNT(t.transaction_id) AS total_transactions,
-            COUNT(f.flag_id) AS flagged_transactions,
-            ROUND(COUNT(f.flag_id)::NUMERIC / COUNT(t.transaction_id) * 100, 2) AS fraud_rate_pct
-        FROM transactions t
-        INNER JOIN merchants m ON t.merchant_id = m.merchant_id
-        LEFT JOIN fraud_flags f ON t.transaction_id = f.transaction_id
-        GROUP BY m.category
-        ORDER BY fraud_rate_pct DESC;
-    """
-    df = pd.read_sql_query(query, conn)
-    conn.close()
-    return df
+    try:
+        conn = get_connection()
+        query = """
+            SELECT
+                m.category,
+                COUNT(t.transaction_id) AS total_transactions,
+                COUNT(f.flag_id) AS flagged_transactions,
+                ROUND(COUNT(f.flag_id)::NUMERIC / COUNT(t.transaction_id) * 100, 2) AS fraud_rate_pct
+            FROM transactions t
+            INNER JOIN merchants m ON t.merchant_id = m.merchant_id
+            LEFT JOIN fraud_flags f ON t.transaction_id = f.transaction_id
+            GROUP BY m.category
+            ORDER BY fraud_rate_pct DESC;
+        """
+        df = pd.read_sql_query(query, conn)
+        conn.close()
+        return df
+    except Exception:
+        return _risk_overview_csv()
 
 
 @st.cache_data(ttl=600)
 def fetch_cohort_retention():
-    conn = get_connection()
-    query = """
-        WITH customer_cohorts AS (
+    try:
+        conn = get_connection()
+        query = """
+            WITH customer_cohorts AS (
+                SELECT
+                    customer_id,
+                    DATE_TRUNC('month', join_date)::DATE AS cohort_month
+                FROM customers
+            ),
+            monthly_active_customers AS (
+                SELECT DISTINCT
+                    c.customer_id,
+                    cc.cohort_month,
+                    DATE_TRUNC('month', t.transaction_date)::DATE AS activity_month
+                FROM transactions t
+                INNER JOIN accounts a ON t.account_id = a.account_id
+                INNER JOIN customers c ON a.customer_id = c.customer_id
+                INNER JOIN customer_cohorts cc ON c.customer_id = cc.customer_id
+                WHERE t.status = 'completed'
+            ),
+            cohort_sizes AS (
+                SELECT
+                    cohort_month,
+                    COUNT(customer_id) AS cohort_size
+                FROM customer_cohorts
+                GROUP BY cohort_month
+            ),
+            cohort_retention AS (
+                SELECT
+                    ma.cohort_month,
+                    (EXTRACT(YEAR FROM AGE(ma.activity_month, ma.cohort_month)) * 12 +
+                     EXTRACT(MONTH FROM AGE(ma.activity_month, ma.cohort_month)))::INTEGER AS months_active_offset,
+                    COUNT(DISTINCT ma.customer_id) AS active_customers
+                FROM monthly_active_customers ma
+                GROUP BY ma.cohort_month, months_active_offset
+            )
             SELECT
-                customer_id,
-                DATE_TRUNC('month', join_date)::DATE AS cohort_month
-            FROM customers
-        ),
-        monthly_active_customers AS (
-            SELECT DISTINCT
-                c.customer_id,
-                cc.cohort_month,
-                DATE_TRUNC('month', t.transaction_date)::DATE AS activity_month
-            FROM transactions t
-            INNER JOIN accounts a ON t.account_id = a.account_id
-            INNER JOIN customers c ON a.customer_id = c.customer_id
-            INNER JOIN customer_cohorts cc ON c.customer_id = cc.customer_id
-            WHERE t.status = 'completed'
-        ),
-        cohort_sizes AS (
-            SELECT
-                cohort_month,
-                COUNT(customer_id) AS cohort_size
-            FROM customer_cohorts
-            GROUP BY cohort_month
-        ),
-        cohort_retention AS (
-            SELECT
-                ma.cohort_month,
-                (EXTRACT(YEAR FROM AGE(ma.activity_month, ma.cohort_month)) * 12 +
-                 EXTRACT(MONTH FROM AGE(ma.activity_month, ma.cohort_month)))::INTEGER AS months_active_offset,
-                COUNT(DISTINCT ma.customer_id) AS active_customers
-            FROM monthly_active_customers ma
-            GROUP BY ma.cohort_month, months_active_offset
-        )
-        SELECT
-            cr.cohort_month,
-            sz.cohort_size,
-            cr.months_active_offset,
-            ROUND(cr.active_customers::NUMERIC / sz.cohort_size * 100, 2) AS retention_rate
-        FROM cohort_retention cr
-        INNER JOIN cohort_sizes sz ON cr.cohort_month = sz.cohort_month
-        WHERE cr.months_active_offset <= 12
-        ORDER BY cr.cohort_month ASC, cr.months_active_offset ASC;
-    """
-    df = pd.read_sql_query(query, conn)
-    conn.close()
-    return df
+                cr.cohort_month,
+                sz.cohort_size,
+                cr.months_active_offset,
+                ROUND(cr.active_customers::NUMERIC / sz.cohort_size * 100, 2) AS retention_rate
+            FROM cohort_retention cr
+            INNER JOIN cohort_sizes sz ON cr.cohort_month = sz.cohort_month
+            WHERE cr.months_active_offset <= 12
+            ORDER BY cr.cohort_month ASC, cr.months_active_offset ASC;
+        """
+        df = pd.read_sql_query(query, conn)
+        conn.close()
+        return df
+    except Exception:
+        return _cohort_retention_csv()
 
 
 st.markdown(
@@ -506,6 +655,22 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+try:
+    if _DB_IMPORT_OK:
+        get_connection().close()
+        _using_db = True
+    else:
+        _using_db = False
+except Exception:
+    _using_db = False
+
+if not _using_db:
+    st.info(
+        "Running in read-only mode — loading data from CSV files. "
+        "All charts and metrics are fully functional.",
+        icon="📂",
+    )
 
 try:
     scope = fetch_dataset_scope()
