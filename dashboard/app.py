@@ -79,6 +79,10 @@ def insight_note(text):
     st.markdown(f'<p class="insight-note">{text}</p>', unsafe_allow_html=True)
 
 
+def chart_title(text):
+    return dict(text=text, font=dict(size=17, color="#EEF2FF"), x=0.02, xanchor="left")
+
+
 st.markdown(
     """
     <style>
@@ -176,7 +180,8 @@ st.markdown(
     }
 
     .scope-card {
-        min-height: 116px;
+        box-sizing: border-box;
+        height: 146px;
         padding: 18px 18px 16px;
         margin-bottom: 6px;
         border-radius: 8px;
@@ -222,12 +227,19 @@ st.markdown(
         border: 1px solid rgba(255,255,255,0.06);
         margin-right: 4px;
         transition: all 160ms ease;
+        font-weight: 500;
     }
 
     div[data-testid="stTabs"] button[aria-selected="true"] {
         color: #FFFFFF;
-        background: linear-gradient(135deg, rgba(138,35,135,0.36), rgba(242,113,33,0.18));
-        border-color: rgba(255,255,255,0.16);
+        background:
+            linear-gradient(135deg, rgba(233,64,87,0.34), rgba(242,113,33,0.16)),
+            rgba(255,255,255,0.08);
+        border-color: rgba(255,255,255,0.24);
+        box-shadow:
+            inset 0 -2px 0 #E94057,
+            0 10px 24px rgba(233, 64, 87, 0.16);
+        font-weight: 700;
     }
 
     .stMetric {
@@ -256,6 +268,22 @@ st.markdown(
         letter-spacing: 0.08em;
     }
 
+    label[data-testid="stMetricLabel"],
+    label[data-testid="stMetricLabel"] * {
+        color: var(--muted) !important;
+        opacity: 1 !important;
+    }
+
+    div[data-testid="stMetricLabel"] p,
+    div[data-testid="stMetricLabel"] div {
+        color: var(--muted) !important;
+        opacity: 1 !important;
+    }
+
+    div[data-testid="stMetricValue"] div {
+        color: #FFFFFF !important;
+    }
+
     div[data-testid="stPlotlyChart"],
     div[data-testid="stDataFrame"] {
         border-radius: 8px;
@@ -273,6 +301,32 @@ st.markdown(
         color: var(--muted);
         font-size: 14px;
         line-height: 1.5;
+    }
+
+    .summary-panel {
+        margin-top: 14px;
+        padding: 22px 24px;
+        border-radius: 8px;
+        border: 1px solid var(--border-soft);
+        background:
+            linear-gradient(145deg, rgba(255,255,255,0.09), rgba(255,255,255,0.025)),
+            rgba(12, 16, 27, 0.50);
+        box-shadow: 0 18px 48px rgba(0,0,0,0.22);
+        backdrop-filter: blur(18px);
+    }
+
+    .summary-panel h3 {
+        color: var(--text);
+        font-size: 18px;
+        margin: 0 0 10px;
+        letter-spacing: 0;
+    }
+
+    .summary-panel p {
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+        margin: 0 0 10px;
     }
 
     hr {
@@ -482,12 +536,13 @@ except Exception:
     st.info("Dataset context will appear after the PostgreSQL tables are available.")
 
 
-tab1, tab2, tab3, tab4 = st.tabs(
+tab1, tab2, tab3, tab4, tab5 = st.tabs(
     [
         "Overview",
-        "Merchant Analysis",
-        "Risk Overview",
-        "Cohort Retention",
+        "Merchants",
+        "Risk",
+        "Retention",
+        "Summary",
     ]
 )
 
@@ -503,7 +558,7 @@ with tab1:
         col1, col2, col3 = st.columns(3)
         col1.metric(
             label="Total Completed Transactions",
-            value=f"{metrics['total_tx_count']:,}",
+            value=f"{int(metrics['total_tx_count']):,}",
         )
         col2.metric(
             label="Total Transaction Volume (EUR)",
@@ -517,50 +572,66 @@ with tab1:
         st.write("---")
         section_header(
             "Transaction Trends Over Time",
-            "Monthly completed transaction counts are shown beside the total completed transaction amount for the same period.",
+            "Monthly completed transaction counts and completed transaction value are shown separately so the scale stays readable.",
         )
 
         trends_df = fetch_monthly_trends()
 
-        fig_trend = go.Figure()
-        fig_trend.add_trace(
+        count_col, value_col = st.columns(2)
+
+        fig_count = go.Figure()
+        fig_count.add_trace(
             go.Bar(
                 x=trends_df["transaction_month"],
                 y=trends_df["transaction_volume"],
-                name="Transaction Count",
-                yaxis="y",
+                name="Completed Transactions",
                 marker_color=INFO,
-                opacity=0.88,
-            )
-        )
-        fig_trend.add_trace(
-            go.Scatter(
-                x=trends_df["transaction_month"],
-                y=trends_df["total_value"],
-                name="Transaction Volume (EUR)",
-                yaxis="y2",
-                line=dict(color=SUCCESS, width=3),
-                mode="lines+markers",
-                marker=dict(size=6, color=SUCCESS),
+                opacity=0.9,
+                hovertemplate="%{x|%b %Y}<br>%{y:,.0f} completed payments<extra></extra>",
             )
         )
 
-        fig_trend.update_layout(
+        fig_count.update_layout(
             **CHART_LAYOUT,
-            title="Monthly Completed Transactions",
-            legend=dict(x=0.01, y=0.99, bgcolor="rgba(0,0,0,0)"),
-            yaxis=dict(title="Transaction Count", side="left", gridcolor=GRID),
-            yaxis2=dict(
-                title="Total Value (EUR)",
-                side="right",
-                overlaying="y",
-                showgrid=False,
-            ),
-            xaxis=dict(title="Month"),
-            height=450,
+            title=chart_title("Completed Transaction Count"),
+            showlegend=False,
+            yaxis=dict(title="Transactions", gridcolor=GRID, tickformat="~s"),
+            xaxis=dict(title="Month", tickformat="%b %Y"),
+            height=390,
+            bargap=0.18,
             margin=dict(l=16, r=16, t=54, b=16),
         )
-        st.plotly_chart(fig_trend, use_container_width=True)
+
+        fig_value = go.Figure()
+        fig_value.add_trace(
+            go.Scatter(
+                x=trends_df["transaction_month"],
+                y=trends_df["total_value"],
+                name="Completed Value",
+                line=dict(color=SUCCESS, width=3),
+                mode="lines+markers",
+                marker=dict(size=6, color=SUCCESS),
+                fill="tozeroy",
+                fillcolor="rgba(20, 184, 166, 0.14)",
+                hovertemplate="%{x|%b %Y}<br>EUR %{y:,.2f}<extra></extra>",
+            )
+        )
+
+        fig_value.update_layout(
+            **CHART_LAYOUT,
+            title=chart_title("Completed Transaction Value"),
+            showlegend=False,
+            yaxis=dict(title="Value (EUR)", gridcolor=GRID, tickprefix="EUR ", tickformat="~s"),
+            xaxis=dict(title="Month", tickformat="%b %Y"),
+            height=390,
+            margin=dict(l=16, r=16, t=54, b=16),
+        )
+
+        with count_col:
+            st.plotly_chart(fig_count, use_container_width=True)
+        with value_col:
+            st.plotly_chart(fig_value, use_container_width=True)
+
         if not trends_df.empty:
             peak_row = trends_df.loc[trends_df["transaction_volume"].idxmax()]
             peak_month = pd.to_datetime(peak_row["transaction_month"]).strftime("%b %Y")
@@ -599,7 +670,7 @@ with tab2:
 
         fig_merchants.update_layout(
             **CHART_LAYOUT,
-            title="Top Merchants by Settled Revenue",
+            title=chart_title("Top Merchants by Settled Revenue"),
             legend=dict(bgcolor="rgba(0,0,0,0)"),
             xaxis=dict(showgrid=True, gridcolor=GRID),
             yaxis=dict(autorange="reversed"),
@@ -664,9 +735,9 @@ with tab3:
             )
             fig_risk.update_layout(
                 **CHART_LAYOUT,
-                title="Fraud Flag Rate by Category",
+                title=chart_title("Fraud Flag Rate by Category"),
                 yaxis=dict(title="Fraud Rate (%)", showgrid=True, gridcolor=GRID),
-                xaxis=dict(title="Category"),
+                xaxis=dict(title="Category", tickangle=-20),
                 coloraxis_showscale=False,
                 height=400,
                 margin=dict(l=16, r=16, t=54, b=16),
@@ -721,13 +792,36 @@ with tab4:
 
         cohort_pivot.index = pd.to_datetime(cohort_pivot.index).strftime("%Y-%m")
 
-        styled_cohort = (
-            cohort_pivot.style.format("{:.2f}%", na_rep="-").background_gradient(
-                cmap="Purples", axis=None, low=0.0, high=100.0
+        heatmap = go.Figure(
+            data=go.Heatmap(
+                z=cohort_pivot.values,
+                x=[f"Month {int(month)}" for month in cohort_pivot.columns],
+                y=cohort_pivot.index,
+                colorscale=[
+                    (0.0, "rgba(31, 41, 55, 0.92)"),
+                    (0.35, INFO),
+                    (0.7, SUCCESS),
+                    (1.0, WARNING),
+                ],
+                colorbar=dict(title="Retention", ticksuffix="%"),
+                hovertemplate=(
+                    "Cohort %{y}<br>%{x}<br>Retention %{z:.2f}%<extra></extra>"
+                ),
+                zmin=0,
+                zmax=max(20, cohort_raw["retention_rate"].max()),
             )
         )
 
-        st.dataframe(styled_cohort, use_container_width=True)
+        heatmap.update_layout(
+            **CHART_LAYOUT,
+            title=chart_title("Retention Heatmap"),
+            xaxis=dict(title="Months After Joining"),
+            yaxis=dict(title="Cohort Month", autorange="reversed"),
+            height=560,
+            margin=dict(l=16, r=16, t=54, b=44),
+        )
+
+        st.plotly_chart(heatmap, use_container_width=True)
         month_one = cohort_raw[cohort_raw["months_active_offset"] == 1]
         if not month_one.empty:
             insight_note(
@@ -737,3 +831,61 @@ with tab4:
 
     except Exception as err:
         st.error(f"Failed to calculate customer cohort retention: {err}")
+
+
+with tab5:
+    section_header(
+        "Project Summary",
+        "A concise view of what this dashboard covers and how the analysis is organised.",
+    )
+
+    try:
+        summary_scope = fetch_dataset_scope()
+
+        summary_cols = st.columns(4)
+        with summary_cols[0]:
+            render_scope_card(
+                "Data Coverage",
+                f"{summary_scope['transaction_count']:,}",
+                "transactions analysed across the project",
+            )
+        with summary_cols[1]:
+            render_scope_card(
+                "Core Tables",
+                "6",
+                "customers, accounts, merchants, transactions, settlements, fraud flags",
+            )
+        with summary_cols[2]:
+            render_scope_card(
+                "Main Views",
+                "4",
+                "overview, merchants, risk, and retention",
+            )
+        with summary_cols[3]:
+            render_scope_card(
+                "Tools Used",
+                "SQL + Python",
+                "Streamlit dashboard with Plotly charts",
+            )
+
+        st.markdown(
+            """
+            <div class="summary-panel">
+                <h3>Analysis Focus</h3>
+                <p>
+                    The dashboard brings together completed payment activity, merchant
+                    settlement revenue, fraud flag rates, and customer retention patterns.
+                    Each tab answers one part of the payments analysis instead of mixing
+                    every result into one page.
+                </p>
+                <p>
+                    The structure is intentionally simple: SQL handles the analytical
+                    queries, Python loads the results, and Streamlit presents the findings
+                    as readable metrics, charts, and tables.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    except Exception as err:
+        st.error(f"Failed to load project summary: {err}")
