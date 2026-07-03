@@ -12,11 +12,8 @@ __pycache__/
 dist/
 build/
 
-# Generated data — do not commit raw CSVs
-data/raw/
-
-# Chart exports
-outputs/
+# Chart export working files (keep PNG exports tracked for README and deployment)
+outputs/charts/.gitkeep
 
 # IDE
 .vscode/

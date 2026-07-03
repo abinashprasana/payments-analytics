@@ -1,0 +1,2501 @@
+flag_id,transaction_id,flagged_date,flag_reason,is_resolved,resolved_date
+1,63102,2024-11-10 06:49:16,Velocity Limit Exceeded,True,2024-11-15 22:49:16
+2,18159,2024-12-11 13:12:54,Card-Not-Present Anomaly,True,2024-12-17 06:12:54
+3,24472,2024-04-25 03:54:00,Card-Not-Present Anomaly,True,2024-04-27 09:54:00
+4,55681,2024-09-16 09:38:22,Mismatched Billing Details,False,
+5,9657,2024-12-29 09:14:30,Suspicious Amount Spike,True,2025-01-05 18:14:30
+6,676,2024-12-05 01:43:29,Suspicious Amount Spike,True,2024-12-11 16:43:29
+7,55351,2024-11-28 17:44:33,Mismatched Billing Details,True,2024-11-30 11:44:33
+8,37424,2024-12-18 19:46:57,High Risk Country Match,True,2024-12-24 14:46:57
+9,37993,2024-12-02 20:26:01,Velocity Limit Exceeded,True,2024-12-10 17:26:01
+10,66808,2024-11-19 20:34:47,Card-Not-Present Anomaly,False,
+11,1411,2024-12-19 14:25:51,Suspicious Amount Spike,True,2024-12-22 05:25:51
+12,52859,2024-12-27 08:42:25,Suspicious Amount Spike,True,2025-01-02 20:42:25
+13,606,2024-12-24 19:36:00,Suspicious Amount Spike,True,2024-12-30 17:36:00
+14,12290,2023-07-11 22:17:25,Card-Not-Present Anomaly,True,2023-07-17 15:17:25
+15,17571,2024-05-18 17:54:16,Mismatched Billing Details,True,2024-05-25 12:54:16
+16,22093,2024-10-13 00:57:47,Suspicious Amount Spike,True,2024-10-15 04:57:47
+17,78777,2024-03-28 09:04:23,Card-Not-Present Anomaly,True,2024-04-03 12:04:23
+18,7897,2024-05-14 19:33:35,Velocity Limit Exceeded,True,2024-05-18 22:33:35
+19,79815,2024-10-24 04:25:10,Card-Not-Present Anomaly,True,2024-10-30 09:25:10
+20,58341,2024-12-21 11:47:41,Card-Not-Present Anomaly,True,2024-12-22 19:47:41
+21,45549,2024-12-27 03:06:59,Suspicious Amount Spike,True,2025-01-03 23:06:59
+22,67390,2024-12-23 04:02:38,Suspicious Amount Spike,True,2024-12-24 11:02:38
+23,21326,2024-10-06 10:10:36,Mismatched Billing Details,True,2024-10-07 13:10:36
+24,43165,2024-11-13 01:35:35,High Risk Country Match,True,2024-11-16 10:35:35
+25,12709,2024-12-27 15:22:09,Mismatched Billing Details,True,2025-01-04 05:22:09
+26,42617,2024-10-24 08:42:10,Mismatched Billing Details,True,2024-10-28 21:42:10
+27,37445,2024-06-28 10:47:04,High Risk Country Match,True,2024-07-04 04:47:04
+28,38296,2024-11-22 19:46:14,Velocity Limit Exceeded,True,2024-11-27 20:46:14
+29,19802,2024-08-03 19:08:45,Suspicious Amount Spike,True,2024-08-07 01:08:45
+30,12054,2024-09-25 05:31:08,Mismatched Billing Details,True,2024-09-26 06:31:08
+31,74961,2024-11-27 06:02:49,Suspicious Amount Spike,True,2024-12-01 13:02:49
+32,37842,2024-11-05 16:40:11,Mismatched Billing Details,True,2024-11-10 06:40:11
+33,70743,2024-07-26 19:15:21,High Risk Country Match,True,2024-08-01 14:15:21
+34,65393,2024-10-16 04:08:48,Suspicious Amount Spike,True,2024-10-21 07:08:48
+35,32478,2024-12-14 04:07:41,Velocity Limit Exceeded,True,2024-12-20 10:07:41
+36,18526,2024-12-27 00:47:25,Suspicious Amount Spike,True,2025-01-01 01:47:25
+37,9359,2024-10-12 07:38:50,Velocity Limit Exceeded,True,2024-10-15 02:38:50
+38,76356,2024-11-29 07:01:58,Suspicious Amount Spike,True,2024-12-05 10:01:58
+39,60879,2024-01-09 03:07:03,Mismatched Billing Details,True,2024-01-11 21:07:03
+40,28348,2024-10-22 01:40:22,Velocity Limit Exceeded,False,
+41,21319,2024-12-31 05:52:32,Card-Not-Present Anomaly,True,2025-01-07 14:52:32
+42,26736,2024-04-11 06:00:31,Card-Not-Present Anomaly,False,
+43,32366,2024-10-27 05:48:15,Card-Not-Present Anomaly,True,2024-11-04 02:48:15
+44,61084,2024-12-31 07:16:33,Velocity Limit Exceeded,True,2025-01-04 06:16:33
+45,64919,2024-03-26 15:30:39,Suspicious Amount Spike,True,2024-03-31 10:30:39
+46,2439,2024-11-23 03:05:29,Card-Not-Present Anomaly,False,
+47,21409,2024-10-25 05:18:00,Velocity Limit Exceeded,True,2024-10-30 09:18:00
+48,2697,2024-11-25 20:37:15,High Risk Country Match,True,2024-11-27 02:37:15
+49,24913,2024-12-31 13:51:13,High Risk Country Match,True,2025-01-06 07:51:13
+50,58939,2024-06-13 21:16:01,Card-Not-Present Anomaly,False,
+51,22443,2024-10-23 03:01:55,Mismatched Billing Details,False,
+52,67789,2024-11-01 09:10:59,High Risk Country Match,False,
+53,4414,2024-08-03 00:19:48,Mismatched Billing Details,True,2024-08-07 19:19:48
+54,28562,2024-12-31 23:02:12,Suspicious Amount Spike,True,2025-01-03 14:02:12
+55,70421,2024-10-27 14:35:48,Mismatched Billing Details,True,2024-10-29 12:35:48
+56,9980,2024-11-27 08:03:36,Mismatched Billing Details,True,2024-12-05 04:03:36
+57,55366,2024-12-05 04:33:03,Mismatched Billing Details,False,
+58,75201,2024-10-31 23:54:17,Mismatched Billing Details,True,2024-11-03 09:54:17
+59,26741,2024-09-25 17:33:21,Suspicious Amount Spike,True,2024-09-28 00:33:21
+60,48589,2024-12-10 16:28:24,High Risk Country Match,True,2024-12-15 05:28:24
+61,32133,2024-12-16 20:34:20,High Risk Country Match,True,2024-12-21 02:34:20
+62,46944,2024-12-06 08:01:37,Card-Not-Present Anomaly,True,2024-12-12 23:01:37
+63,18460,2024-12-14 04:16:46,Card-Not-Present Anomaly,True,2024-12-20 17:16:46
+64,22851,2024-04-10 06:03:18,Card-Not-Present Anomaly,True,2024-04-14 05:03:18
+65,17502,2024-10-03 07:33:22,Suspicious Amount Spike,True,2024-10-05 22:33:22
+66,22873,2024-11-29 08:12:04,High Risk Country Match,False,
+67,50990,2024-12-07 19:17:05,Card-Not-Present Anomaly,False,
+68,49185,2024-12-30 22:43:02,Suspicious Amount Spike,True,2025-01-07 10:43:02
+69,31684,2024-12-24 15:10:54,High Risk Country Match,True,2024-12-29 04:10:54
+70,68211,2024-12-08 03:47:15,High Risk Country Match,True,2024-12-10 06:47:15
+71,74337,2024-12-24 09:08:05,Velocity Limit Exceeded,True,2024-12-31 17:08:05
+72,14457,2024-08-14 04:59:06,High Risk Country Match,True,2024-08-17 00:59:06
+73,77440,2024-12-23 16:24:14,Mismatched Billing Details,True,2024-12-29 08:24:14
+74,78187,2024-02-29 17:31:02,Mismatched Billing Details,True,2024-03-03 07:31:02
+75,73523,2024-09-14 12:43:34,Suspicious Amount Spike,True,2024-09-19 15:43:34
+76,18430,2024-08-26 05:16:28,Mismatched Billing Details,True,2024-08-31 15:16:28
+77,1600,2024-12-04 22:12:20,Card-Not-Present Anomaly,True,2024-12-12 11:12:20
+78,60161,2024-08-08 11:43:52,High Risk Country Match,True,2024-08-14 18:43:52
+79,44494,2024-12-25 12:30:56,Card-Not-Present Anomaly,True,2024-12-27 13:30:56
+80,32786,2024-01-23 21:11:51,Velocity Limit Exceeded,True,2024-01-26 16:11:51
+81,31567,2024-12-29 07:27:18,High Risk Country Match,False,
+82,63475,2024-06-05 05:58:56,Mismatched Billing Details,True,2024-06-11 09:58:56
+83,14435,2024-10-26 14:08:06,Velocity Limit Exceeded,True,2024-10-29 22:08:06
+84,20501,2024-07-04 14:49:16,Mismatched Billing Details,True,2024-07-10 14:49:16
+85,17698,2024-12-02 12:12:54,Mismatched Billing Details,True,2024-12-08 19:12:54
+86,16656,2024-12-26 18:53:43,High Risk Country Match,True,2024-12-31 00:53:43
+87,21637,2024-12-13 21:53:02,Mismatched Billing Details,True,2024-12-19 20:53:02
+88,77024,2024-12-31 11:40:40,Suspicious Amount Spike,True,2025-01-02 07:40:40
+89,23638,2024-08-20 21:36:10,High Risk Country Match,True,2024-08-24 18:36:10
+90,3179,2024-12-30 16:07:04,Suspicious Amount Spike,False,
+91,75368,2024-11-21 23:17:54,High Risk Country Match,True,2024-11-25 01:17:54
+92,55353,2024-11-06 14:46:02,High Risk Country Match,True,2024-11-08 20:46:02
+93,68248,2024-08-08 08:00:20,Suspicious Amount Spike,True,2024-08-14 09:00:20
+94,67978,2024-10-24 07:45:40,Card-Not-Present Anomaly,True,2024-10-30 02:45:40
+95,21734,2024-10-29 01:13:46,Velocity Limit Exceeded,True,2024-11-02 09:13:46
+96,22502,2024-12-09 06:00:04,Velocity Limit Exceeded,True,2024-12-14 06:00:04
+97,16839,2024-06-07 12:58:19,Card-Not-Present Anomaly,False,
+98,30038,2024-12-30 21:19:45,Velocity Limit Exceeded,True,2025-01-05 10:19:45
+99,17235,2024-12-06 11:46:30,High Risk Country Match,True,2024-12-11 12:46:30
+100,68422,2024-02-21 13:38:05,Card-Not-Present Anomaly,True,2024-02-23 23:38:05
+101,62112,2024-06-27 11:47:03,Mismatched Billing Details,True,2024-07-04 22:47:03
+102,31364,2024-10-07 02:02:33,Suspicious Amount Spike,True,2024-10-11 22:02:33
+103,4514,2024-11-29 17:27:38,High Risk Country Match,True,2024-12-07 00:27:38
+104,13605,2024-05-10 17:48:44,High Risk Country Match,False,
+105,53036,2024-10-26 22:47:10,Card-Not-Present Anomaly,True,2024-10-31 08:47:10
+106,23665,2023-12-07 17:59:14,Card-Not-Present Anomaly,True,2023-12-09 20:59:14
+107,38565,2024-12-29 05:30:00,Suspicious Amount Spike,True,2025-01-05 01:30:00
+108,77385,2024-11-19 04:05:08,Velocity Limit Exceeded,True,2024-11-24 21:05:08
+109,35097,2024-11-16 21:16:27,High Risk Country Match,True,2024-11-18 14:16:27
+110,4940,2024-05-31 13:57:22,Card-Not-Present Anomaly,True,2024-06-01 15:57:22
+111,15150,2024-05-23 02:23:56,Mismatched Billing Details,True,2024-05-27 01:23:56
+112,10835,2024-04-28 14:08:24,High Risk Country Match,True,2024-04-29 22:08:24
+113,72868,2023-02-12 16:37:05,Mismatched Billing Details,True,2023-02-18 20:37:05
+114,17873,2024-11-27 15:18:38,Card-Not-Present Anomaly,False,
+115,42393,2024-09-19 00:46:33,Mismatched Billing Details,True,2024-09-25 03:46:33
+116,8735,2023-08-19 20:13:11,High Risk Country Match,True,2023-08-26 04:13:11
+117,10662,2024-11-11 17:02:17,High Risk Country Match,True,2024-11-18 09:02:17
+118,51628,2023-07-07 17:58:32,Velocity Limit Exceeded,True,2023-07-08 19:58:32
+119,59059,2024-05-12 13:15:08,Suspicious Amount Spike,False,
+120,21782,2024-06-29 08:21:16,Mismatched Billing Details,True,2024-07-03 18:21:16
+121,35989,2024-02-20 08:27:28,Card-Not-Present Anomaly,True,2024-02-25 17:27:28
+122,59095,2024-10-23 22:21:03,Card-Not-Present Anomaly,True,2024-10-26 06:21:03
+123,9903,2024-12-25 05:37:42,High Risk Country Match,True,2024-12-26 22:37:42
+124,67075,2024-06-29 05:37:18,High Risk Country Match,False,
+125,69041,2024-01-05 22:08:55,Mismatched Billing Details,True,2024-01-07 16:08:55
+126,7437,2024-02-07 18:46:49,Suspicious Amount Spike,True,2024-02-10 11:46:49
+127,8395,2024-10-21 04:45:16,Card-Not-Present Anomaly,False,
+128,79065,2024-10-18 21:17:59,High Risk Country Match,True,2024-10-25 13:17:59
+129,43029,2024-11-13 10:11:24,Suspicious Amount Spike,True,2024-11-18 14:11:24
+130,69060,2024-10-13 12:32:18,Card-Not-Present Anomaly,True,2024-10-16 00:32:18
+131,35821,2024-09-20 03:30:06,Suspicious Amount Spike,True,2024-09-26 06:30:06
+132,21576,2024-12-07 12:49:02,Velocity Limit Exceeded,False,
+133,49500,2024-10-22 14:00:27,High Risk Country Match,True,2024-10-25 14:00:27
+134,52317,2024-11-15 12:07:30,Card-Not-Present Anomaly,True,2024-11-20 18:07:30
+135,61073,2024-12-30 02:49:16,Card-Not-Present Anomaly,True,2025-01-04 08:49:16
+136,1937,2022-09-28 22:19:25,Velocity Limit Exceeded,True,2022-10-04 12:19:25
+137,6515,2024-11-27 05:28:23,High Risk Country Match,True,2024-11-30 06:28:23
+138,50476,2024-12-31 12:33:03,Suspicious Amount Spike,True,2025-01-05 03:33:03
+139,33864,2024-12-31 08:39:07,Velocity Limit Exceeded,True,2025-01-05 21:39:07
+140,40941,2024-12-26 20:01:27,High Risk Country Match,True,2024-12-28 11:01:27
+141,13787,2024-12-26 10:49:49,Velocity Limit Exceeded,True,2025-01-01 16:49:49
+142,76540,2024-03-17 07:30:27,Velocity Limit Exceeded,True,2024-03-23 10:30:27
+143,69260,2024-10-05 19:14:11,Card-Not-Present Anomaly,True,2024-10-09 02:14:11
+144,31733,2024-11-05 12:11:00,Suspicious Amount Spike,True,2024-11-12 19:11:00
+145,30521,2024-08-28 04:04:51,Mismatched Billing Details,True,2024-08-30 14:04:51
+146,47408,2024-12-10 20:43:58,Velocity Limit Exceeded,True,2024-12-17 18:43:58
+147,1026,2023-09-19 19:08:56,High Risk Country Match,True,2023-09-27 01:08:56
+148,15323,2024-08-30 03:04:18,Mismatched Billing Details,True,2024-09-02 05:04:18
+149,24463,2024-10-10 11:39:37,Velocity Limit Exceeded,True,2024-10-12 13:39:37
+150,15865,2024-10-15 14:49:46,Mismatched Billing Details,True,2024-10-21 10:49:46
+151,36850,2024-11-30 08:44:25,Mismatched Billing Details,True,2024-12-03 11:44:25
+152,22400,2024-08-30 01:49:54,Mismatched Billing Details,True,2024-09-02 14:49:54
+153,4283,2024-05-20 14:01:05,Suspicious Amount Spike,True,2024-05-28 07:01:05
+154,19878,2024-11-23 03:06:00,Card-Not-Present Anomaly,True,2024-11-25 03:06:00
+155,5052,2024-09-24 04:50:14,Velocity Limit Exceeded,True,2024-09-26 11:50:14
+156,75739,2024-12-18 04:10:33,Velocity Limit Exceeded,True,2024-12-23 17:10:33
+157,5805,2024-09-27 00:39:38,Card-Not-Present Anomaly,True,2024-09-30 15:39:38
+158,18348,2024-12-18 21:36:54,Card-Not-Present Anomaly,True,2024-12-22 21:36:54
+159,39358,2024-10-27 15:29:06,Suspicious Amount Spike,False,
+160,10156,2024-10-14 04:56:04,Velocity Limit Exceeded,True,2024-10-20 08:56:04
+161,70987,2024-04-15 00:44:06,Card-Not-Present Anomaly,True,2024-04-21 23:44:06
+162,25612,2024-10-11 07:22:27,Velocity Limit Exceeded,True,2024-10-18 22:22:27
+163,15226,2024-12-31 07:27:40,Suspicious Amount Spike,True,2025-01-05 16:27:40
+164,59579,2024-07-06 19:40:44,Suspicious Amount Spike,True,2024-07-12 23:40:44
+165,57035,2024-01-02 17:38:41,Card-Not-Present Anomaly,True,2024-01-07 21:38:41
+166,2609,2024-04-12 08:48:14,High Risk Country Match,True,2024-04-19 15:48:14
+167,16182,2024-12-05 21:18:03,High Risk Country Match,False,
+168,20661,2023-12-11 12:11:24,Mismatched Billing Details,False,
+169,29161,2024-12-30 08:08:26,High Risk Country Match,False,
+170,33370,2024-12-29 07:51:21,Suspicious Amount Spike,True,2025-01-02 06:51:21
+171,27139,2024-11-26 13:26:32,Mismatched Billing Details,False,
+172,72555,2024-10-20 06:06:12,Velocity Limit Exceeded,True,2024-10-24 08:06:12
+173,17704,2024-05-12 06:38:58,Suspicious Amount Spike,True,2024-05-15 00:38:58
+174,15727,2024-07-28 08:08:05,High Risk Country Match,True,2024-07-30 13:08:05
+175,33798,2024-11-13 06:30:29,High Risk Country Match,True,2024-11-20 13:30:29
+176,68189,2024-11-26 14:02:31,High Risk Country Match,True,2024-12-02 20:02:31
+177,49822,2024-08-24 13:41:16,Card-Not-Present Anomaly,True,2024-08-28 17:41:16
+178,76531,2024-10-21 14:35:31,Card-Not-Present Anomaly,True,2024-10-27 15:35:31
+179,69137,2024-12-09 05:35:24,High Risk Country Match,True,2024-12-12 05:35:24
+180,76024,2023-09-29 17:27:41,Velocity Limit Exceeded,True,2023-10-07 05:27:41
+181,9258,2024-12-10 22:37:29,Velocity Limit Exceeded,True,2024-12-13 06:37:29
+182,74990,2024-07-09 17:45:20,Suspicious Amount Spike,True,2024-07-10 23:45:20
+183,70740,2024-07-11 10:52:33,Suspicious Amount Spike,True,2024-07-13 20:52:33
+184,49946,2024-12-28 04:50:57,Velocity Limit Exceeded,True,2024-12-29 16:50:57
+185,47639,2024-12-17 04:02:06,High Risk Country Match,True,2024-12-23 20:02:06
+186,75601,2024-06-15 01:57:26,Mismatched Billing Details,False,
+187,45064,2024-12-29 15:43:04,High Risk Country Match,True,2025-01-01 11:43:04
+188,49565,2024-09-28 08:02:39,Velocity Limit Exceeded,True,2024-10-03 17:02:39
+189,26433,2024-11-15 15:43:01,Velocity Limit Exceeded,True,2024-11-20 08:43:01
+190,62178,2024-04-19 13:53:11,Suspicious Amount Spike,False,
+191,42535,2024-11-23 05:32:49,Mismatched Billing Details,True,2024-11-24 23:32:49
+192,1097,2024-12-03 13:14:22,Card-Not-Present Anomaly,True,2024-12-05 08:14:22
+193,79518,2024-12-08 07:30:47,Mismatched Billing Details,True,2024-12-10 16:30:47
+194,63237,2024-11-06 20:34:22,Velocity Limit Exceeded,True,2024-11-07 21:34:22
+195,73968,2024-11-25 16:48:13,Velocity Limit Exceeded,True,2024-12-02 22:48:13
+196,39709,2024-08-07 16:52:16,Velocity Limit Exceeded,True,2024-08-13 23:52:16
+197,78450,2024-12-15 16:35:37,Suspicious Amount Spike,True,2024-12-21 19:35:37
+198,66385,2024-09-18 08:27:26,High Risk Country Match,True,2024-09-22 02:27:26
+199,71349,2024-12-15 03:38:56,Velocity Limit Exceeded,True,2024-12-21 18:38:56
+200,16563,2024-11-10 17:33:08,High Risk Country Match,True,2024-11-18 04:33:08
+201,25637,2024-12-31 23:08:14,Card-Not-Present Anomaly,True,2025-01-02 11:08:14
+202,55384,2024-12-31 08:34:53,Card-Not-Present Anomaly,True,2025-01-01 20:34:53
+203,11895,2024-12-16 17:31:12,High Risk Country Match,False,
+204,60822,2024-11-03 04:31:40,Velocity Limit Exceeded,True,2024-11-06 16:31:40
+205,51874,2024-06-24 17:22:45,High Risk Country Match,True,2024-06-30 10:22:45
+206,56639,2024-08-04 12:16:51,Card-Not-Present Anomaly,True,2024-08-11 09:16:51
+207,14360,2024-10-08 08:49:40,Velocity Limit Exceeded,False,
+208,29169,2024-09-22 01:51:47,Card-Not-Present Anomaly,True,2024-09-23 07:51:47
+209,46256,2024-12-08 23:45:41,Mismatched Billing Details,True,2024-12-10 18:45:41
+210,10165,2024-10-29 04:21:12,Card-Not-Present Anomaly,False,
+211,73311,2024-12-31 01:25:16,Suspicious Amount Spike,True,2025-01-03 09:25:16
+212,71489,2024-12-28 05:02:55,Suspicious Amount Spike,True,2024-12-31 11:02:55
+213,39353,2024-04-17 10:03:25,Suspicious Amount Spike,False,
+214,27527,2024-09-09 02:17:26,Velocity Limit Exceeded,True,2024-09-14 10:17:26
+215,19709,2024-05-19 17:32:14,Card-Not-Present Anomaly,True,2024-05-22 19:32:14
+216,69187,2024-10-20 00:07:05,Velocity Limit Exceeded,True,2024-10-24 12:07:05
+217,55827,2024-10-05 11:52:35,Mismatched Billing Details,True,2024-10-10 14:52:35
+218,55661,2023-11-09 23:14:47,Card-Not-Present Anomaly,False,
+219,66354,2024-12-21 16:46:57,High Risk Country Match,True,2024-12-29 15:46:57
+220,70313,2024-12-23 06:40:48,Velocity Limit Exceeded,True,2024-12-31 04:40:48
+221,75120,2023-10-26 08:08:29,Mismatched Billing Details,True,2023-10-28 03:08:29
+222,33850,2024-08-18 14:14:47,High Risk Country Match,True,2024-08-25 04:14:47
+223,63776,2024-07-26 01:11:42,Suspicious Amount Spike,True,2024-07-31 12:11:42
+224,46540,2024-12-23 07:13:50,High Risk Country Match,False,
+225,39435,2023-12-06 04:08:45,Card-Not-Present Anomaly,False,
+226,64676,2024-12-05 11:51:35,Card-Not-Present Anomaly,True,2024-12-12 14:51:35
+227,70787,2024-11-16 08:50:39,Card-Not-Present Anomaly,True,2024-11-24 03:50:39
+228,22526,2024-12-10 18:03:11,Card-Not-Present Anomaly,True,2024-12-18 05:03:11
+229,63796,2024-12-19 08:07:24,Mismatched Billing Details,True,2024-12-22 18:07:24
+230,61300,2023-07-19 17:55:25,Velocity Limit Exceeded,False,
+231,53751,2024-12-16 15:28:12,Velocity Limit Exceeded,False,
+232,24998,2024-12-28 00:45:14,Velocity Limit Exceeded,False,
+233,23975,2024-10-08 06:44:31,Velocity Limit Exceeded,False,
+234,56799,2024-05-25 02:44:38,Card-Not-Present Anomaly,True,2024-05-26 08:44:38
+235,30294,2024-06-14 22:31:12,Card-Not-Present Anomaly,True,2024-06-19 16:31:12
+236,9466,2024-10-03 15:21:51,Mismatched Billing Details,False,
+237,2315,2024-12-20 06:56:41,Mismatched Billing Details,True,2024-12-26 09:56:41
+238,49458,2024-12-11 21:36:58,Card-Not-Present Anomaly,True,2024-12-13 00:36:58
+239,29480,2024-09-09 03:26:43,Velocity Limit Exceeded,False,
+240,33449,2024-06-24 04:13:33,Velocity Limit Exceeded,True,2024-06-30 17:13:33
+241,3480,2024-12-25 02:44:22,Card-Not-Present Anomaly,True,2025-01-01 18:44:22
+242,11510,2024-06-01 13:57:01,Suspicious Amount Spike,False,
+243,58795,2024-12-16 23:44:01,High Risk Country Match,True,2024-12-24 10:44:01
+244,79613,2024-11-23 02:13:53,High Risk Country Match,False,
+245,17943,2024-07-31 06:20:10,High Risk Country Match,True,2024-08-07 07:20:10
+246,17204,2024-09-11 07:23:30,Suspicious Amount Spike,False,
+247,15983,2024-12-31 02:24:09,Suspicious Amount Spike,True,2025-01-02 22:24:09
+248,61617,2024-11-22 07:24:10,Suspicious Amount Spike,True,2024-11-26 13:24:10
+249,42260,2024-12-23 14:43:40,Velocity Limit Exceeded,True,2024-12-27 07:43:40
+250,67620,2024-10-25 08:25:29,Mismatched Billing Details,True,2024-10-27 05:25:29
+251,63375,2024-12-28 15:52:46,Suspicious Amount Spike,True,2025-01-02 14:52:46
+252,78093,2024-10-11 22:49:33,Velocity Limit Exceeded,True,2024-10-13 17:49:33
+253,17167,2024-11-26 22:30:35,Mismatched Billing Details,True,2024-11-30 20:30:35
+254,8785,2024-07-02 04:19:22,Velocity Limit Exceeded,True,2024-07-06 14:19:22
+255,57600,2024-12-04 22:57:01,Suspicious Amount Spike,True,2024-12-06 20:57:01
+256,71274,2024-05-23 21:26:04,High Risk Country Match,False,
+257,72429,2024-07-12 18:29:00,Card-Not-Present Anomaly,True,2024-07-17 16:29:00
+258,52013,2024-12-26 05:14:39,Mismatched Billing Details,True,2024-12-31 14:14:39
+259,28056,2024-08-12 11:26:23,Suspicious Amount Spike,False,
+260,33505,2024-10-26 15:12:30,Suspicious Amount Spike,True,2024-10-27 19:12:30
+261,72461,2024-12-20 06:07:23,Suspicious Amount Spike,True,2024-12-23 07:07:23
+262,50493,2024-10-28 08:52:16,High Risk Country Match,True,2024-11-02 02:52:16
+263,9210,2024-05-02 12:00:19,Velocity Limit Exceeded,False,
+264,68418,2022-12-14 00:29:53,Mismatched Billing Details,False,
+265,47746,2024-10-10 06:45:42,Velocity Limit Exceeded,True,2024-10-14 11:45:42
+266,1528,2024-09-30 02:20:30,Suspicious Amount Spike,True,2024-10-02 02:20:30
+267,2756,2024-09-26 21:16:11,Card-Not-Present Anomaly,True,2024-10-03 14:16:11
+268,69571,2023-06-29 20:10:20,Card-Not-Present Anomaly,False,
+269,51198,2024-09-17 06:27:31,High Risk Country Match,True,2024-09-19 18:27:31
+270,16078,2024-05-02 23:37:00,Card-Not-Present Anomaly,True,2024-05-04 15:37:00
+271,54884,2024-09-17 01:43:29,Card-Not-Present Anomaly,True,2024-09-19 15:43:29
+272,55096,2024-12-30 16:59:56,Card-Not-Present Anomaly,False,
+273,71631,2024-09-11 22:39:11,Velocity Limit Exceeded,True,2024-09-13 04:39:11
+274,36537,2024-11-23 14:32:59,High Risk Country Match,True,2024-11-29 15:32:59
+275,76401,2024-12-02 16:06:38,Velocity Limit Exceeded,False,
+276,37717,2024-03-25 18:11:54,Suspicious Amount Spike,False,
+277,21250,2024-12-17 14:32:33,High Risk Country Match,True,2024-12-20 14:32:33
+278,53312,2023-03-08 20:22:53,Suspicious Amount Spike,True,2023-03-14 01:22:53
+279,21588,2024-12-17 06:34:20,Velocity Limit Exceeded,True,2024-12-21 21:34:20
+280,28392,2024-12-24 14:57:27,Velocity Limit Exceeded,False,
+281,19876,2024-12-31 18:37:41,High Risk Country Match,True,2025-01-04 19:37:41
+282,47056,2024-12-17 06:26:34,Card-Not-Present Anomaly,True,2024-12-21 23:26:34
+283,74856,2024-01-26 00:32:58,Card-Not-Present Anomaly,True,2024-01-30 16:32:58
+284,78432,2023-11-26 18:04:46,Suspicious Amount Spike,True,2023-11-27 18:04:46
+285,48475,2024-03-08 15:42:33,Mismatched Billing Details,True,2024-03-11 19:42:33
+286,73380,2024-11-27 08:48:50,High Risk Country Match,True,2024-11-30 00:48:50
+287,66762,2024-12-26 23:43:35,Mismatched Billing Details,True,2025-01-02 04:43:35
+288,57717,2024-07-09 09:26:49,High Risk Country Match,True,2024-07-12 16:26:49
+289,2365,2024-12-26 14:18:19,Velocity Limit Exceeded,True,2024-12-28 09:18:19
+290,21926,2024-07-18 16:43:33,High Risk Country Match,True,2024-07-26 05:43:33
+291,72811,2024-11-24 07:43:18,Velocity Limit Exceeded,True,2024-11-28 09:43:18
+292,18844,2024-12-12 08:36:09,High Risk Country Match,True,2024-12-15 22:36:09
+293,63605,2024-12-03 07:00:27,Velocity Limit Exceeded,True,2024-12-04 18:00:27
+294,23402,2024-12-20 14:34:43,High Risk Country Match,True,2024-12-28 04:34:43
+295,38150,2024-11-03 21:42:17,High Risk Country Match,True,2024-11-11 04:42:17
+296,5527,2024-06-20 07:47:20,Mismatched Billing Details,True,2024-06-21 23:47:20
+297,35848,2024-12-25 20:51:45,High Risk Country Match,True,2024-12-29 04:51:45
+298,50447,2024-11-30 23:46:55,Velocity Limit Exceeded,True,2024-12-07 11:46:55
+299,21170,2024-01-25 18:26:22,High Risk Country Match,True,2024-01-31 11:26:22
+300,46686,2024-12-16 00:53:34,Suspicious Amount Spike,True,2024-12-22 17:53:34
+301,23088,2024-06-28 22:52:55,Velocity Limit Exceeded,True,2024-07-03 09:52:55
+302,46428,2024-12-26 17:04:16,Suspicious Amount Spike,True,2025-01-03 08:04:16
+303,36989,2024-10-22 15:51:07,Suspicious Amount Spike,False,
+304,12757,2024-12-12 02:35:09,Card-Not-Present Anomaly,True,2024-12-18 19:35:09
+305,35837,2024-09-17 15:41:59,High Risk Country Match,True,2024-09-19 12:41:59
+306,37403,2024-12-12 18:02:24,Mismatched Billing Details,True,2024-12-16 21:02:24
+307,33014,2024-10-24 17:13:58,Card-Not-Present Anomaly,True,2024-10-31 02:13:58
+308,79023,2024-03-19 14:51:57,High Risk Country Match,True,2024-03-25 05:51:57
+309,12008,2024-06-02 08:03:13,Suspicious Amount Spike,True,2024-06-08 14:03:13
+310,59928,2024-06-13 08:43:17,High Risk Country Match,False,
+311,72393,2024-11-14 11:55:51,High Risk Country Match,True,2024-11-20 16:55:51
+312,6207,2024-12-23 05:45:54,Mismatched Billing Details,True,2024-12-25 03:45:54
+313,12774,2024-11-22 16:30:48,Suspicious Amount Spike,True,2024-11-24 17:30:48
+314,13879,2024-12-31 04:16:55,Velocity Limit Exceeded,False,
+315,8841,2024-04-13 00:24:16,Mismatched Billing Details,True,2024-04-18 11:24:16
+316,75392,2024-07-03 19:46:32,Velocity Limit Exceeded,True,2024-07-06 19:46:32
+317,15512,2023-08-04 23:31:34,High Risk Country Match,True,2023-08-06 13:31:34
+318,72718,2024-07-09 02:45:05,Velocity Limit Exceeded,False,
+319,7158,2024-12-09 08:56:18,Velocity Limit Exceeded,True,2024-12-11 17:56:18
+320,48123,2024-12-31 22:14:42,Velocity Limit Exceeded,False,
+321,77265,2024-12-01 21:28:10,Suspicious Amount Spike,False,
+322,11278,2024-03-09 02:41:58,Mismatched Billing Details,True,2024-03-15 22:41:58
+323,42127,2023-04-11 22:52:36,Suspicious Amount Spike,True,2023-04-14 00:52:36
+324,34694,2024-05-25 23:27:39,Suspicious Amount Spike,True,2024-05-27 17:27:39
+325,51086,2024-11-30 05:01:54,Suspicious Amount Spike,False,
+326,5778,2024-11-15 08:26:53,Mismatched Billing Details,True,2024-11-23 01:26:53
+327,23542,2024-09-24 17:10:49,High Risk Country Match,True,2024-09-27 06:10:49
+328,36319,2024-11-07 18:17:34,Suspicious Amount Spike,True,2024-11-10 14:17:34
+329,70262,2024-12-04 20:44:48,High Risk Country Match,True,2024-12-12 18:44:48
+330,7893,2024-10-16 08:30:30,Velocity Limit Exceeded,True,2024-10-18 17:30:30
+331,59696,2024-11-12 21:03:42,Suspicious Amount Spike,False,
+332,27047,2022-07-07 08:42:54,High Risk Country Match,True,2022-07-12 23:42:54
+333,25228,2024-12-04 13:24:33,High Risk Country Match,True,2024-12-06 16:24:33
+334,17386,2024-12-15 09:19:45,Mismatched Billing Details,True,2024-12-20 00:19:45
+335,23819,2024-05-09 12:59:28,Card-Not-Present Anomaly,True,2024-05-10 14:59:28
+336,2550,2024-11-16 12:22:01,Mismatched Billing Details,True,2024-11-22 06:22:01
+337,58385,2024-12-16 03:30:17,Suspicious Amount Spike,True,2024-12-22 18:30:17
+338,20240,2024-08-18 22:53:17,Card-Not-Present Anomaly,False,
+339,16759,2024-12-06 23:05:38,Card-Not-Present Anomaly,True,2024-12-11 09:05:38
+340,15054,2024-12-13 08:57:10,Suspicious Amount Spike,True,2024-12-19 07:57:10
+341,24617,2024-12-19 23:13:10,Mismatched Billing Details,True,2024-12-25 14:13:10
+342,72414,2024-12-18 14:41:59,Suspicious Amount Spike,True,2024-12-23 18:41:59
+343,65651,2024-08-07 12:28:16,Suspicious Amount Spike,True,2024-08-14 14:28:16
+344,34032,2024-03-09 21:37:40,Mismatched Billing Details,True,2024-03-17 14:37:40
+345,22475,2024-06-11 06:38:30,Velocity Limit Exceeded,True,2024-06-16 13:38:30
+346,21406,2024-12-19 18:56:34,Suspicious Amount Spike,True,2024-12-22 17:56:34
+347,48723,2024-12-31 13:39:25,Velocity Limit Exceeded,True,2025-01-04 08:39:25
+348,56998,2024-09-04 04:10:00,Mismatched Billing Details,True,2024-09-09 15:10:00
+349,49914,2024-12-26 00:41:18,High Risk Country Match,True,2024-12-27 20:41:18
+350,76167,2024-12-16 10:39:37,High Risk Country Match,False,
+351,23851,2024-09-06 15:38:42,Velocity Limit Exceeded,True,2024-09-12 12:38:42
+352,43520,2023-11-22 12:46:45,High Risk Country Match,True,2023-11-29 15:46:45
+353,10641,2024-12-31 05:38:09,Card-Not-Present Anomaly,True,2025-01-08 02:38:09
+354,27204,2024-12-17 00:10:32,High Risk Country Match,True,2024-12-18 01:10:32
+355,642,2024-10-12 22:12:56,Suspicious Amount Spike,True,2024-10-13 22:12:56
+356,19628,2024-09-26 05:05:03,Mismatched Billing Details,False,
+357,24943,2024-11-15 11:10:29,High Risk Country Match,True,2024-11-19 10:10:29
+358,4806,2024-05-26 18:01:37,Card-Not-Present Anomaly,False,
+359,10862,2024-12-10 10:30:51,High Risk Country Match,True,2024-12-11 16:30:51
+360,78334,2024-12-27 05:35:20,Suspicious Amount Spike,True,2024-12-30 20:35:20
+361,24794,2024-12-02 04:44:55,Mismatched Billing Details,False,
+362,27315,2024-12-31 19:32:52,Card-Not-Present Anomaly,True,2025-01-05 13:32:52
+363,49628,2024-10-03 23:40:54,Suspicious Amount Spike,True,2024-10-05 12:40:54
+364,65769,2024-08-04 02:47:30,Suspicious Amount Spike,True,2024-08-05 16:47:30
+365,20813,2024-09-05 01:13:31,High Risk Country Match,True,2024-09-10 22:13:31
+366,13315,2024-12-04 15:39:57,Suspicious Amount Spike,True,2024-12-05 16:39:57
+367,13551,2024-08-11 19:49:27,Velocity Limit Exceeded,True,2024-08-15 14:49:27
+368,56418,2024-12-27 23:47:30,Mismatched Billing Details,True,2024-12-30 12:47:30
+369,13111,2024-04-09 12:35:34,Card-Not-Present Anomaly,True,2024-04-13 11:35:34
+370,54074,2024-07-22 07:29:34,Suspicious Amount Spike,True,2024-07-28 18:29:34
+371,11329,2024-11-01 17:37:10,Suspicious Amount Spike,True,2024-11-07 20:37:10
+372,56900,2024-05-24 17:50:34,Suspicious Amount Spike,False,
+373,50698,2024-08-26 21:23:49,High Risk Country Match,False,
+374,13841,2024-11-15 07:24:45,Mismatched Billing Details,True,2024-11-19 12:24:45
+375,35240,2024-12-24 02:43:07,High Risk Country Match,True,2024-12-27 05:43:07
+376,61963,2024-06-01 10:56:49,Card-Not-Present Anomaly,False,
+377,31005,2024-12-07 17:15:42,High Risk Country Match,True,2024-12-13 07:15:42
+378,21064,2024-12-19 17:10:23,Velocity Limit Exceeded,False,
+379,30186,2024-04-27 18:52:41,Card-Not-Present Anomaly,True,2024-05-03 03:52:41
+380,60530,2024-12-31 11:26:20,Mismatched Billing Details,True,2025-01-03 10:26:20
+381,41821,2024-08-09 12:56:04,Suspicious Amount Spike,True,2024-08-13 03:56:04
+382,6074,2024-12-29 19:28:54,High Risk Country Match,True,2024-12-31 06:28:54
+383,33910,2024-12-25 07:21:36,Card-Not-Present Anomaly,True,2024-12-29 06:21:36
+384,43716,2024-06-06 04:52:30,Suspicious Amount Spike,True,2024-06-10 04:52:30
+385,53971,2024-12-23 16:06:44,Card-Not-Present Anomaly,True,2024-12-29 09:06:44
+386,12603,2024-12-28 05:24:15,Mismatched Billing Details,True,2024-12-29 23:24:15
+387,71288,2024-12-31 10:37:55,Velocity Limit Exceeded,True,2025-01-07 06:37:55
+388,12271,2024-08-29 07:20:16,Card-Not-Present Anomaly,True,2024-09-01 01:20:16
+389,72738,2024-11-28 04:11:32,Card-Not-Present Anomaly,False,
+390,50138,2024-11-12 15:47:41,Velocity Limit Exceeded,False,
+391,45638,2024-12-04 12:55:43,Mismatched Billing Details,False,
+392,57070,2024-11-29 05:34:40,Mismatched Billing Details,True,2024-12-01 22:34:40
+393,36960,2024-10-25 20:37:38,Card-Not-Present Anomaly,True,2024-10-31 05:37:38
+394,44830,2024-11-29 15:40:14,Suspicious Amount Spike,False,
+395,37753,2024-08-17 08:27:24,Suspicious Amount Spike,True,2024-08-21 19:27:24
+396,36292,2024-11-15 02:53:59,High Risk Country Match,True,2024-11-20 05:53:59
+397,52321,2024-11-20 07:49:27,Suspicious Amount Spike,True,2024-11-22 17:49:27
+398,828,2024-08-08 09:07:16,Velocity Limit Exceeded,True,2024-08-16 05:07:16
+399,68227,2024-12-02 21:56:11,Mismatched Billing Details,True,2024-12-09 05:56:11
+400,62973,2024-12-12 07:07:18,Velocity Limit Exceeded,True,2024-12-17 07:07:18
+401,44472,2024-12-09 13:55:22,Mismatched Billing Details,True,2024-12-15 08:55:22
+402,32697,2024-10-18 22:34:30,Mismatched Billing Details,True,2024-10-24 15:34:30
+403,37681,2024-12-07 09:03:04,High Risk Country Match,True,2024-12-11 22:03:04
+404,79769,2024-09-03 23:17:35,Velocity Limit Exceeded,False,
+405,24925,2024-11-13 16:56:43,Suspicious Amount Spike,True,2024-11-14 23:56:43
+406,30689,2024-11-25 08:57:50,High Risk Country Match,True,2024-11-30 18:57:50
+407,7292,2024-08-29 13:17:46,Velocity Limit Exceeded,True,2024-09-02 10:17:46
+408,22055,2023-05-20 05:37:26,Card-Not-Present Anomaly,True,2023-05-27 02:37:26
+409,67808,2024-07-05 05:35:00,High Risk Country Match,True,2024-07-07 18:35:00
+410,38158,2024-04-02 16:33:28,Mismatched Billing Details,True,2024-04-10 15:33:28
+411,70880,2024-12-31 13:43:40,Mismatched Billing Details,True,2025-01-04 18:43:40
+412,24557,2024-05-10 19:45:12,Mismatched Billing Details,True,2024-05-14 05:45:12
+413,42166,2024-10-30 13:12:59,Suspicious Amount Spike,True,2024-11-04 14:12:59
+414,5145,2024-12-10 12:43:27,Card-Not-Present Anomaly,True,2024-12-13 11:43:27
+415,59542,2024-12-26 01:35:51,Mismatched Billing Details,False,
+416,20679,2024-12-12 12:28:10,Suspicious Amount Spike,True,2024-12-16 20:28:10
+417,29156,2024-05-16 13:22:38,Suspicious Amount Spike,False,
+418,8718,2024-12-31 13:01:56,Suspicious Amount Spike,False,
+419,47958,2024-09-28 14:18:05,Card-Not-Present Anomaly,True,2024-09-30 06:18:05
+420,22987,2024-12-20 09:41:57,Suspicious Amount Spike,True,2024-12-26 04:41:57
+421,10645,2024-12-25 00:38:44,Card-Not-Present Anomaly,True,2024-12-30 13:38:44
+422,72912,2024-11-12 14:28:46,Suspicious Amount Spike,True,2024-11-17 05:28:46
+423,11644,2024-12-30 18:29:28,Suspicious Amount Spike,True,2025-01-02 02:29:28
+424,68556,2023-09-06 18:27:36,Velocity Limit Exceeded,True,2023-09-08 06:27:36
+425,370,2024-12-17 06:02:02,Mismatched Billing Details,True,2024-12-23 23:02:02
+426,5164,2024-12-01 18:23:47,Mismatched Billing Details,False,
+427,24916,2024-09-28 15:00:08,Card-Not-Present Anomaly,True,2024-10-03 18:00:08
+428,65934,2024-07-16 00:13:30,Card-Not-Present Anomaly,False,
+429,6673,2024-01-23 03:49:29,Mismatched Billing Details,True,2024-01-26 17:49:29
+430,22255,2024-12-16 10:10:12,Velocity Limit Exceeded,True,2024-12-20 13:10:12
+431,62535,2024-10-24 00:27:43,Mismatched Billing Details,True,2024-10-31 10:27:43
+432,72891,2024-03-01 00:40:12,Card-Not-Present Anomaly,True,2024-03-03 15:40:12
+433,5551,2024-07-26 21:13:07,High Risk Country Match,True,2024-08-02 20:13:07
+434,7061,2024-08-17 17:29:14,High Risk Country Match,True,2024-08-24 19:29:14
+435,14091,2023-06-24 14:01:03,Velocity Limit Exceeded,True,2023-06-28 12:01:03
+436,77132,2024-12-06 21:28:14,Velocity Limit Exceeded,True,2024-12-10 19:28:14
+437,33397,2023-10-25 06:12:42,High Risk Country Match,False,
+438,56411,2024-12-25 10:41:52,Card-Not-Present Anomaly,True,2024-12-31 14:41:52
+439,45563,2024-10-26 12:44:20,Velocity Limit Exceeded,True,2024-11-03 02:44:20
+440,60608,2024-12-24 11:02:40,Suspicious Amount Spike,True,2024-12-28 17:02:40
+441,65284,2024-11-29 13:45:26,Mismatched Billing Details,True,2024-12-04 13:45:26
+442,15582,2024-07-12 23:48:28,Velocity Limit Exceeded,True,2024-07-20 05:48:28
+443,14144,2023-12-25 07:13:53,High Risk Country Match,False,
+444,50889,2024-09-14 05:03:04,Card-Not-Present Anomaly,True,2024-09-19 15:03:04
+445,21508,2023-10-02 13:42:57,High Risk Country Match,False,
+446,28987,2024-11-19 05:53:13,Suspicious Amount Spike,True,2024-11-27 03:53:13
+447,59451,2024-12-17 18:24:24,Suspicious Amount Spike,True,2024-12-25 01:24:24
+448,55199,2024-05-27 03:22:30,Velocity Limit Exceeded,False,
+449,65448,2023-05-12 09:53:33,Velocity Limit Exceeded,True,2023-05-13 15:53:33
+450,53478,2024-03-09 10:55:53,Suspicious Amount Spike,True,2024-03-14 18:55:53
+451,53871,2024-12-31 18:45:28,Card-Not-Present Anomaly,True,2025-01-06 15:45:28
+452,60076,2024-05-08 16:39:26,Mismatched Billing Details,True,2024-05-12 18:39:26
+453,29174,2024-11-28 18:29:11,Card-Not-Present Anomaly,True,2024-12-01 11:29:11
+454,39091,2023-05-10 08:50:10,Velocity Limit Exceeded,True,2023-05-15 02:50:10
+455,63075,2024-12-25 14:36:24,Velocity Limit Exceeded,True,2024-12-29 03:36:24
+456,39085,2024-11-23 08:08:59,Card-Not-Present Anomaly,True,2024-11-30 07:08:59
+457,31546,2024-12-16 21:23:12,Velocity Limit Exceeded,True,2024-12-20 05:23:12
+458,65351,2024-05-13 02:02:01,Velocity Limit Exceeded,True,2024-05-15 10:02:01
+459,19676,2024-10-15 22:18:21,Card-Not-Present Anomaly,False,
+460,75836,2024-12-07 03:47:54,High Risk Country Match,True,2024-12-15 01:47:54
+461,11411,2024-05-12 21:40:35,Mismatched Billing Details,True,2024-05-19 05:40:35
+462,32498,2024-07-24 04:13:37,High Risk Country Match,True,2024-07-29 23:13:37
+463,4831,2024-12-07 03:59:47,Suspicious Amount Spike,False,
+464,4180,2024-10-19 11:49:11,High Risk Country Match,True,2024-10-26 03:49:11
+465,53252,2024-12-21 14:28:24,Velocity Limit Exceeded,True,2024-12-24 05:28:24
+466,24174,2024-10-20 11:23:48,Suspicious Amount Spike,True,2024-10-22 06:23:48
+467,2379,2024-09-02 12:55:58,Velocity Limit Exceeded,False,
+468,45117,2024-12-18 00:52:30,Mismatched Billing Details,True,2024-12-19 18:52:30
+469,73048,2023-10-05 17:10:19,Velocity Limit Exceeded,True,2023-10-08 19:10:19
+470,71518,2024-11-24 14:53:48,High Risk Country Match,False,
+471,37495,2024-10-05 11:03:52,Suspicious Amount Spike,True,2024-10-08 11:03:52
+472,28750,2024-12-23 13:52:42,Mismatched Billing Details,True,2024-12-26 03:52:42
+473,72394,2023-11-13 00:11:19,Mismatched Billing Details,True,2023-11-17 08:11:19
+474,6403,2023-05-01 21:59:31,Mismatched Billing Details,True,2023-05-05 23:59:31
+475,62033,2024-12-31 22:28:09,High Risk Country Match,True,2025-01-02 08:28:09
+476,31955,2024-09-09 18:14:45,Mismatched Billing Details,True,2024-09-16 22:14:45
+477,35944,2024-12-16 01:54:54,High Risk Country Match,True,2024-12-23 17:54:54
+478,6579,2024-12-31 21:09:28,Mismatched Billing Details,True,2025-01-06 23:09:28
+479,30944,2024-12-31 22:34:06,High Risk Country Match,False,
+480,63114,2024-10-09 09:05:21,Card-Not-Present Anomaly,True,2024-10-11 12:05:21
+481,45796,2024-11-29 10:02:24,Mismatched Billing Details,True,2024-12-02 13:02:24
+482,21776,2024-10-25 11:12:42,Velocity Limit Exceeded,False,
+483,25072,2024-08-22 17:59:21,High Risk Country Match,True,2024-08-25 12:59:21
+484,41458,2024-12-29 18:36:42,Mismatched Billing Details,True,2025-01-05 08:36:42
+485,25115,2024-09-12 17:32:21,Card-Not-Present Anomaly,True,2024-09-19 12:32:21
+486,34595,2024-11-14 22:26:10,Velocity Limit Exceeded,True,2024-11-18 06:26:10
+487,55957,2024-05-02 23:33:46,Card-Not-Present Anomaly,True,2024-05-06 01:33:46
+488,48435,2024-06-20 10:51:07,Velocity Limit Exceeded,False,
+489,51446,2024-07-30 09:17:24,High Risk Country Match,False,
+490,49367,2024-05-23 06:20:43,Mismatched Billing Details,False,
+491,24410,2024-11-26 01:33:32,High Risk Country Match,True,2024-12-01 08:33:32
+492,53747,2023-09-16 20:05:23,Mismatched Billing Details,True,2023-09-21 10:05:23
+493,30683,2024-10-08 10:43:10,Card-Not-Present Anomaly,False,
+494,26576,2024-12-13 01:52:43,Suspicious Amount Spike,True,2024-12-16 09:52:43
+495,54107,2024-06-12 06:20:44,High Risk Country Match,True,2024-06-16 10:20:44
+496,45995,2024-12-04 18:05:15,Suspicious Amount Spike,False,
+497,40384,2024-10-08 15:36:56,Velocity Limit Exceeded,True,2024-10-15 04:36:56
+498,29583,2024-12-01 03:29:25,Velocity Limit Exceeded,True,2024-12-05 22:29:25
+499,70712,2024-04-23 19:04:56,Mismatched Billing Details,False,
+500,60651,2024-09-30 07:37:45,Card-Not-Present Anomaly,True,2024-10-05 08:37:45
+501,27060,2024-07-09 19:32:44,Velocity Limit Exceeded,True,2024-07-15 08:32:44
+502,39850,2024-05-15 10:09:12,Velocity Limit Exceeded,True,2024-05-17 05:09:12
+503,48884,2024-12-03 23:48:26,Card-Not-Present Anomaly,True,2024-12-10 04:48:26
+504,33688,2023-12-18 15:54:50,Mismatched Billing Details,True,2023-12-24 16:54:50
+505,42403,2024-07-05 08:19:54,Mismatched Billing Details,False,
+506,20284,2024-08-18 20:14:11,Suspicious Amount Spike,True,2024-08-24 02:14:11
+507,5711,2024-12-04 22:16:55,Card-Not-Present Anomaly,True,2024-12-09 21:16:55
+508,14597,2024-06-25 17:51:19,High Risk Country Match,True,2024-07-03 11:51:19
+509,23439,2024-11-22 13:44:50,High Risk Country Match,True,2024-11-25 15:44:50
+510,43722,2024-09-15 01:04:17,Suspicious Amount Spike,True,2024-09-19 05:04:17
+511,51290,2024-10-10 11:11:05,Suspicious Amount Spike,True,2024-10-15 13:11:05
+512,44151,2024-12-21 10:18:30,Velocity Limit Exceeded,True,2024-12-26 12:18:30
+513,5860,2024-11-17 02:33:58,High Risk Country Match,True,2024-11-24 07:33:58
+514,20312,2024-02-15 06:59:57,Mismatched Billing Details,True,2024-02-17 02:59:57
+515,69396,2024-09-12 00:41:49,High Risk Country Match,False,
+516,58479,2024-11-14 14:41:57,Card-Not-Present Anomaly,False,
+517,43217,2024-04-25 17:02:08,Card-Not-Present Anomaly,True,2024-04-28 17:02:08
+518,13713,2024-12-27 16:01:41,Velocity Limit Exceeded,True,2025-01-03 23:01:41
+519,69423,2024-10-21 09:59:40,Suspicious Amount Spike,True,2024-10-28 13:59:40
+520,69518,2024-12-19 23:44:51,Mismatched Billing Details,False,
+521,17418,2024-12-16 16:32:31,Mismatched Billing Details,True,2024-12-24 02:32:31
+522,32889,2024-11-28 16:38:50,Velocity Limit Exceeded,True,2024-12-03 21:38:50
+523,52155,2024-12-03 06:05:08,High Risk Country Match,False,
+524,30442,2024-12-30 09:48:20,Card-Not-Present Anomaly,True,2025-01-05 05:48:20
+525,24641,2024-12-14 16:05:54,Velocity Limit Exceeded,True,2024-12-17 01:05:54
+526,16236,2024-11-29 17:22:28,Velocity Limit Exceeded,True,2024-12-03 15:22:28
+527,51864,2024-08-19 13:34:24,Mismatched Billing Details,True,2024-08-25 05:34:24
+528,14943,2024-12-14 15:06:58,Velocity Limit Exceeded,True,2024-12-19 09:06:58
+529,5048,2024-11-05 10:16:36,Suspicious Amount Spike,True,2024-11-11 17:16:36
+530,49415,2023-09-12 10:57:00,Card-Not-Present Anomaly,True,2023-09-13 13:57:00
+531,16333,2024-12-27 05:08:06,Mismatched Billing Details,True,2025-01-01 05:08:06
+532,35813,2024-07-19 20:42:52,Suspicious Amount Spike,True,2024-07-27 00:42:52
+533,53695,2024-10-14 02:26:04,Mismatched Billing Details,True,2024-10-16 02:26:04
+534,20215,2024-12-30 13:26:07,High Risk Country Match,False,
+535,34120,2024-11-18 21:45:56,Velocity Limit Exceeded,True,2024-11-21 16:45:56
+536,41043,2024-02-08 17:48:31,High Risk Country Match,True,2024-02-16 07:48:31
+537,14524,2024-12-04 05:01:42,High Risk Country Match,True,2024-12-08 04:01:42
+538,8920,2024-10-29 19:22:55,Velocity Limit Exceeded,True,2024-10-31 02:22:55
+539,60875,2024-10-05 07:10:36,High Risk Country Match,False,
+540,36120,2023-08-23 20:42:17,High Risk Country Match,True,2023-08-25 07:42:17
+541,15758,2023-11-18 06:25:13,Velocity Limit Exceeded,True,2023-11-22 10:25:13
+542,77569,2024-06-15 11:53:09,Card-Not-Present Anomaly,True,2024-06-21 05:53:09
+543,5296,2024-06-27 06:44:10,Velocity Limit Exceeded,True,2024-06-29 20:44:10
+544,43906,2024-12-30 21:20:36,Mismatched Billing Details,True,2025-01-07 03:20:36
+545,66835,2024-12-31 03:46:27,High Risk Country Match,False,
+546,74077,2024-10-21 12:36:47,Suspicious Amount Spike,False,
+547,39774,2024-12-04 02:56:53,Card-Not-Present Anomaly,True,2024-12-11 17:56:53
+548,10181,2024-07-30 13:12:05,High Risk Country Match,True,2024-08-07 08:12:05
+549,66455,2024-11-18 16:19:40,Velocity Limit Exceeded,True,2024-11-26 03:19:40
+550,36761,2024-10-09 15:13:21,Suspicious Amount Spike,True,2024-10-16 20:13:21
+551,75107,2024-07-03 03:47:07,High Risk Country Match,True,2024-07-09 16:47:07
+552,45464,2024-12-05 02:10:00,Card-Not-Present Anomaly,True,2024-12-10 21:10:00
+553,22863,2024-11-28 23:54:20,Card-Not-Present Anomaly,True,2024-12-01 10:54:20
+554,55772,2024-10-25 02:42:33,Card-Not-Present Anomaly,True,2024-10-26 14:42:33
+555,28989,2024-05-31 02:34:24,Suspicious Amount Spike,True,2024-06-01 10:34:24
+556,11124,2024-10-24 10:38:59,Velocity Limit Exceeded,True,2024-10-27 20:38:59
+557,54372,2024-12-10 21:54:20,Velocity Limit Exceeded,True,2024-12-16 18:54:20
+558,44902,2024-12-16 06:44:22,Suspicious Amount Spike,True,2024-12-22 23:44:22
+559,77784,2024-12-30 11:23:53,Velocity Limit Exceeded,False,
+560,78890,2024-12-01 10:10:14,Velocity Limit Exceeded,True,2024-12-06 22:10:14
+561,77092,2024-10-11 17:36:34,Card-Not-Present Anomaly,True,2024-10-19 07:36:34
+562,23097,2024-12-27 22:00:18,Velocity Limit Exceeded,True,2024-12-30 02:00:18
+563,65238,2024-11-25 05:05:14,High Risk Country Match,True,2024-11-30 04:05:14
+564,55226,2024-12-16 23:09:44,Mismatched Billing Details,True,2024-12-23 18:09:44
+565,11138,2024-11-26 00:39:12,Card-Not-Present Anomaly,True,2024-12-02 18:39:12
+566,74895,2024-12-29 02:19:37,High Risk Country Match,False,
+567,2041,2024-11-11 06:15:53,Velocity Limit Exceeded,False,
+568,28027,2024-11-02 16:41:35,Mismatched Billing Details,True,2024-11-09 06:41:35
+569,69374,2024-01-20 23:14:36,Suspicious Amount Spike,True,2024-01-28 18:14:36
+570,77647,2024-09-24 21:23:51,Mismatched Billing Details,True,2024-09-28 08:23:51
+571,34374,2024-10-05 22:17:21,High Risk Country Match,True,2024-10-09 02:17:21
+572,71632,2024-12-14 10:56:06,Mismatched Billing Details,True,2024-12-20 20:56:06
+573,12849,2024-11-02 11:52:40,Mismatched Billing Details,True,2024-11-04 00:52:40
+574,52477,2024-11-02 16:19:13,Card-Not-Present Anomaly,True,2024-11-10 06:19:13
+575,33353,2024-11-25 22:47:21,Mismatched Billing Details,False,
+576,71012,2024-10-23 02:36:14,Suspicious Amount Spike,True,2024-10-25 08:36:14
+577,1593,2024-11-26 14:11:30,Mismatched Billing Details,True,2024-11-27 22:11:30
+578,46437,2023-12-25 10:40:09,Suspicious Amount Spike,True,2024-01-01 08:40:09
+579,35034,2024-04-19 05:47:00,Mismatched Billing Details,True,2024-04-23 17:47:00
+580,35625,2024-12-14 20:02:33,Card-Not-Present Anomaly,True,2024-12-18 19:02:33
+581,54045,2024-09-28 22:35:46,Card-Not-Present Anomaly,True,2024-10-05 09:35:46
+582,10531,2024-09-01 23:44:10,Mismatched Billing Details,True,2024-09-05 00:44:10
+583,18111,2024-12-19 01:01:52,Card-Not-Present Anomaly,True,2024-12-21 09:01:52
+584,17787,2024-09-17 09:38:45,Mismatched Billing Details,True,2024-09-22 18:38:45
+585,22235,2024-08-24 14:37:00,Mismatched Billing Details,True,2024-08-27 16:37:00
+586,42374,2024-12-28 10:46:37,Velocity Limit Exceeded,True,2024-12-29 17:46:37
+587,14820,2024-08-13 19:35:44,Suspicious Amount Spike,True,2024-08-16 23:35:44
+588,4973,2024-12-04 00:33:32,Velocity Limit Exceeded,True,2024-12-10 08:33:32
+589,39367,2024-12-31 20:00:40,High Risk Country Match,True,2025-01-06 12:00:40
+590,28252,2024-10-22 09:10:34,Mismatched Billing Details,True,2024-10-25 03:10:34
+591,40740,2024-12-21 18:08:09,High Risk Country Match,True,2024-12-28 14:08:09
+592,43001,2024-12-13 23:56:48,High Risk Country Match,True,2024-12-21 16:56:48
+593,38086,2024-09-18 13:56:50,Card-Not-Present Anomaly,False,
+594,44170,2024-12-21 02:05:50,Card-Not-Present Anomaly,True,2024-12-25 07:05:50
+595,70430,2023-11-21 15:39:48,Velocity Limit Exceeded,True,2023-11-29 04:39:48
+596,32604,2024-12-18 18:54:01,Velocity Limit Exceeded,True,2024-12-23 12:54:01
+597,30918,2024-10-05 17:17:21,High Risk Country Match,False,
+598,50481,2024-11-01 19:34:20,Card-Not-Present Anomaly,True,2024-11-08 17:34:20
+599,53568,2024-12-31 10:20:01,Suspicious Amount Spike,False,
+600,2979,2024-10-08 13:02:55,High Risk Country Match,True,2024-10-14 10:02:55
+601,38405,2024-07-25 23:29:49,High Risk Country Match,True,2024-07-28 13:29:49
+602,56141,2024-09-05 15:22:15,High Risk Country Match,True,2024-09-11 00:22:15
+603,47246,2024-10-01 03:58:50,Mismatched Billing Details,True,2024-10-02 21:58:50
+604,57417,2024-08-22 01:00:49,Velocity Limit Exceeded,True,2024-08-28 17:00:49
+605,76345,2024-12-30 00:24:15,Suspicious Amount Spike,True,2025-01-03 12:24:15
+606,53047,2024-07-07 11:20:24,High Risk Country Match,True,2024-07-13 17:20:24
+607,53381,2024-12-30 06:08:23,High Risk Country Match,True,2025-01-01 23:08:23
+608,64480,2024-01-02 07:42:44,Suspicious Amount Spike,True,2024-01-07 06:42:44
+609,14434,2024-06-28 16:03:30,High Risk Country Match,True,2024-07-01 08:03:30
+610,15272,2024-10-03 13:17:36,Card-Not-Present Anomaly,False,
+611,73464,2023-09-13 21:52:05,Card-Not-Present Anomaly,True,2023-09-15 11:52:05
+612,20377,2024-05-28 21:26:52,Card-Not-Present Anomaly,True,2024-06-03 00:26:52
+613,41138,2024-08-12 21:39:28,High Risk Country Match,True,2024-08-16 23:39:28
+614,65535,2024-11-04 07:41:19,High Risk Country Match,True,2024-11-11 01:41:19
+615,22245,2024-11-13 15:02:40,Velocity Limit Exceeded,False,
+616,37203,2024-11-04 12:16:20,Suspicious Amount Spike,True,2024-11-09 00:16:20
+617,49453,2024-02-21 23:15:40,Card-Not-Present Anomaly,True,2024-02-28 22:15:40
+618,67499,2024-12-20 17:53:15,Card-Not-Present Anomaly,True,2024-12-26 12:53:15
+619,27468,2024-12-18 17:37:54,High Risk Country Match,True,2024-12-22 13:37:54
+620,67731,2024-12-29 15:00:17,Suspicious Amount Spike,True,2025-01-05 16:00:17
+621,74148,2024-12-30 00:50:06,Mismatched Billing Details,False,
+622,32063,2024-12-11 21:38:04,High Risk Country Match,True,2024-12-14 13:38:04
+623,20783,2024-11-19 09:54:08,Card-Not-Present Anomaly,True,2024-11-24 21:54:08
+624,47338,2024-12-30 23:59:01,Velocity Limit Exceeded,False,
+625,38266,2024-11-22 22:14:42,High Risk Country Match,True,2024-11-24 16:14:42
+626,8448,2024-12-31 14:33:57,Card-Not-Present Anomaly,True,2025-01-07 05:33:57
+627,2753,2024-10-16 22:28:09,High Risk Country Match,True,2024-10-21 10:28:09
+628,73665,2024-03-29 05:21:04,Card-Not-Present Anomaly,False,
+629,71749,2024-11-15 15:32:55,Mismatched Billing Details,True,2024-11-19 18:32:55
+630,28660,2024-12-19 23:43:30,Mismatched Billing Details,False,
+631,21971,2024-11-26 11:11:28,Mismatched Billing Details,True,2024-11-29 22:11:28
+632,43812,2024-09-05 07:27:00,High Risk Country Match,True,2024-09-07 03:27:00
+633,76644,2024-12-15 03:19:15,High Risk Country Match,True,2024-12-16 08:19:15
+634,65431,2024-10-26 12:51:42,Velocity Limit Exceeded,False,
+635,21880,2024-12-31 10:59:37,High Risk Country Match,True,2025-01-01 22:59:37
+636,2518,2024-12-25 12:36:33,Suspicious Amount Spike,True,2025-01-01 19:36:33
+637,10693,2024-12-06 23:23:35,Mismatched Billing Details,True,2024-12-14 21:23:35
+638,71183,2024-08-01 03:08:35,High Risk Country Match,False,
+639,67352,2024-11-23 16:36:03,Card-Not-Present Anomaly,True,2024-11-28 12:36:03
+640,34858,2024-09-28 15:02:12,Mismatched Billing Details,True,2024-10-03 23:02:12
+641,36329,2024-11-15 22:59:56,Suspicious Amount Spike,True,2024-11-23 02:59:56
+642,54723,2024-10-22 13:01:07,Card-Not-Present Anomaly,True,2024-10-26 06:01:07
+643,54594,2024-09-23 21:17:28,High Risk Country Match,True,2024-09-28 12:17:28
+644,48231,2024-11-12 17:50:51,Mismatched Billing Details,True,2024-11-14 13:50:51
+645,69806,2024-11-23 13:13:02,Velocity Limit Exceeded,True,2024-11-30 12:13:02
+646,46088,2024-12-31 09:57:41,Velocity Limit Exceeded,True,2025-01-03 20:57:41
+647,74316,2024-12-08 06:02:57,Velocity Limit Exceeded,True,2024-12-11 02:02:57
+648,21724,2024-09-25 02:01:07,High Risk Country Match,True,2024-09-28 20:01:07
+649,56527,2024-11-01 05:31:55,Mismatched Billing Details,False,
+650,7632,2024-11-22 00:28:29,Suspicious Amount Spike,True,2024-11-25 10:28:29
+651,43739,2024-12-26 11:19:29,High Risk Country Match,True,2025-01-03 00:19:29
+652,49926,2024-06-22 06:51:20,High Risk Country Match,True,2024-06-28 05:51:20
+653,26065,2024-12-31 04:11:39,Card-Not-Present Anomaly,True,2025-01-02 15:11:39
+654,4913,2024-10-12 01:16:56,Mismatched Billing Details,True,2024-10-14 06:16:56
+655,28429,2024-09-03 17:23:40,Mismatched Billing Details,True,2024-09-05 02:23:40
+656,74678,2023-12-21 07:55:26,Suspicious Amount Spike,True,2023-12-29 05:55:26
+657,37549,2023-09-02 09:08:49,Mismatched Billing Details,True,2023-09-07 03:08:49
+658,50192,2024-11-28 06:56:26,Suspicious Amount Spike,True,2024-11-30 09:56:26
+659,48785,2024-12-31 20:37:17,Card-Not-Present Anomaly,True,2025-01-06 10:37:17
+660,40556,2024-12-29 19:56:02,Card-Not-Present Anomaly,True,2025-01-01 10:56:02
+661,54922,2024-06-03 21:13:30,Suspicious Amount Spike,True,2024-06-07 18:13:30
+662,58772,2024-06-18 11:11:50,Card-Not-Present Anomaly,True,2024-06-22 09:11:50
+663,41917,2024-12-16 17:52:36,Velocity Limit Exceeded,True,2024-12-23 05:52:36
+664,57343,2022-12-28 20:27:39,Velocity Limit Exceeded,True,2023-01-04 13:27:39
+665,46572,2024-12-11 22:37:09,Card-Not-Present Anomaly,True,2024-12-19 10:37:09
+666,9105,2024-10-12 16:43:45,High Risk Country Match,True,2024-10-16 08:43:45
+667,40916,2024-12-21 01:26:05,Mismatched Billing Details,False,
+668,62328,2024-03-22 12:13:23,Card-Not-Present Anomaly,True,2024-03-25 00:13:23
+669,72120,2024-11-05 12:55:57,Suspicious Amount Spike,True,2024-11-10 11:55:57
+670,31433,2024-11-08 05:42:42,Mismatched Billing Details,True,2024-11-10 17:42:42
+671,52495,2024-09-06 01:57:14,Card-Not-Present Anomaly,True,2024-09-10 12:57:14
+672,34661,2024-12-19 08:34:33,Card-Not-Present Anomaly,True,2024-12-24 13:34:33
+673,43788,2023-04-05 10:40:43,Suspicious Amount Spike,True,2023-04-07 00:40:43
+674,70355,2024-10-18 13:49:07,Card-Not-Present Anomaly,True,2024-10-20 23:49:07
+675,71457,2024-07-26 01:02:38,Card-Not-Present Anomaly,True,2024-07-29 11:02:38
+676,68668,2024-12-23 12:54:29,Mismatched Billing Details,True,2024-12-30 02:54:29
+677,35080,2024-12-08 10:33:11,Card-Not-Present Anomaly,False,
+678,64088,2024-08-14 22:16:41,Mismatched Billing Details,True,2024-08-17 12:16:41
+679,18518,2024-04-23 19:08:16,Mismatched Billing Details,True,2024-04-26 06:08:16
+680,56316,2024-12-19 13:01:09,Velocity Limit Exceeded,True,2024-12-26 12:01:09
+681,70305,2024-10-19 05:30:04,Suspicious Amount Spike,False,
+682,8700,2024-10-24 20:37:41,High Risk Country Match,True,2024-10-26 22:37:41
+683,33156,2024-10-13 14:36:05,High Risk Country Match,True,2024-10-18 01:36:05
+684,34560,2024-08-03 16:20:59,High Risk Country Match,True,2024-08-05 06:20:59
+685,47092,2024-12-29 23:31:23,Card-Not-Present Anomaly,False,
+686,49658,2024-11-13 04:39:15,Card-Not-Present Anomaly,True,2024-11-16 01:39:15
+687,2878,2024-05-07 17:39:13,Mismatched Billing Details,True,2024-05-09 09:39:13
+688,2329,2024-12-04 02:52:52,High Risk Country Match,True,2024-12-11 19:52:52
+689,60094,2024-11-26 16:32:53,Velocity Limit Exceeded,True,2024-11-29 19:32:53
+690,71000,2024-08-17 03:48:10,Mismatched Billing Details,False,
+691,51200,2024-04-14 17:27:24,Suspicious Amount Spike,True,2024-04-18 09:27:24
+692,23682,2024-12-30 06:08:11,Suspicious Amount Spike,False,
+693,27848,2024-12-28 05:55:30,Mismatched Billing Details,True,2025-01-02 08:55:30
+694,36740,2024-12-26 09:22:09,Card-Not-Present Anomaly,True,2025-01-02 23:22:09
+695,46547,2024-12-24 03:46:16,Card-Not-Present Anomaly,True,2024-12-30 05:46:16
+696,26278,2024-09-25 13:32:35,Velocity Limit Exceeded,True,2024-09-27 21:32:35
+697,72743,2024-05-03 03:19:40,High Risk Country Match,True,2024-05-06 12:19:40
+698,29119,2024-02-08 18:20:33,High Risk Country Match,False,
+699,50866,2024-11-04 23:01:29,Mismatched Billing Details,True,2024-11-07 21:01:29
+700,33455,2024-11-24 14:57:37,High Risk Country Match,True,2024-11-25 15:57:37
+701,19602,2024-12-26 17:51:33,High Risk Country Match,True,2025-01-03 05:51:33
+702,64918,2024-05-09 14:28:59,Suspicious Amount Spike,True,2024-05-11 10:28:59
+703,76416,2024-08-30 00:15:15,Suspicious Amount Spike,False,
+704,1989,2024-08-16 11:10:30,Suspicious Amount Spike,True,2024-08-24 01:10:30
+705,66822,2024-12-31 10:44:32,Mismatched Billing Details,True,2025-01-03 12:44:32
+706,48071,2024-11-28 03:16:29,Velocity Limit Exceeded,True,2024-11-29 20:16:29
+707,15133,2024-04-05 15:47:18,Card-Not-Present Anomaly,True,2024-04-08 00:47:18
+708,70020,2024-12-26 02:09:31,High Risk Country Match,True,2024-12-27 02:09:31
+709,10189,2024-09-21 03:17:41,High Risk Country Match,False,
+710,20728,2024-04-22 22:23:04,Velocity Limit Exceeded,True,2024-04-26 15:23:04
+711,69869,2024-10-10 06:04:00,Velocity Limit Exceeded,True,2024-10-13 06:04:00
+712,34715,2024-12-03 18:58:27,Mismatched Billing Details,True,2024-12-05 09:58:27
+713,56376,2024-10-04 06:22:01,Velocity Limit Exceeded,False,
+714,41373,2024-11-19 21:43:37,Suspicious Amount Spike,True,2024-11-26 03:43:37
+715,46839,2023-10-22 16:04:43,Velocity Limit Exceeded,True,2023-10-30 10:04:43
+716,61983,2024-08-13 09:05:50,Mismatched Billing Details,False,
+717,73842,2024-05-20 22:09:50,Mismatched Billing Details,True,2024-05-24 11:09:50
+718,53993,2024-12-26 21:40:48,Suspicious Amount Spike,True,2025-01-01 11:40:48
+719,75585,2023-07-16 20:21:44,Mismatched Billing Details,True,2023-07-20 22:21:44
+720,65917,2024-12-07 14:08:30,Velocity Limit Exceeded,False,
+721,8294,2024-12-09 02:15:23,High Risk Country Match,True,2024-12-11 16:15:23
+722,37238,2024-11-27 12:20:40,High Risk Country Match,False,
+723,54245,2024-12-17 15:53:43,Mismatched Billing Details,True,2024-12-20 12:53:43
+724,22944,2024-12-09 14:49:40,Mismatched Billing Details,True,2024-12-17 05:49:40
+725,11768,2024-11-11 02:15:02,Card-Not-Present Anomaly,True,2024-11-16 15:15:02
+726,16228,2024-06-29 15:43:14,Suspicious Amount Spike,True,2024-07-06 04:43:14
+727,54599,2024-08-12 08:34:10,Card-Not-Present Anomaly,False,
+728,20927,2024-12-13 09:46:17,High Risk Country Match,False,
+729,41691,2024-05-25 17:12:28,High Risk Country Match,True,2024-05-30 12:12:28
+730,76156,2024-11-15 09:49:53,Velocity Limit Exceeded,True,2024-11-19 20:49:53
+731,20536,2024-12-30 17:09:54,Mismatched Billing Details,True,2025-01-01 21:09:54
+732,78844,2023-12-07 14:21:34,High Risk Country Match,True,2023-12-09 19:21:34
+733,14714,2024-10-31 17:59:10,Suspicious Amount Spike,True,2024-11-08 11:59:10
+734,26764,2024-12-12 18:07:06,High Risk Country Match,True,2024-12-19 05:07:06
+735,4694,2024-08-10 08:34:02,Mismatched Billing Details,True,2024-08-13 17:34:02
+736,52931,2024-12-17 18:02:22,Velocity Limit Exceeded,False,
+737,20531,2024-12-16 02:34:27,Mismatched Billing Details,False,
+738,5782,2024-12-21 19:24:57,Velocity Limit Exceeded,True,2024-12-26 13:24:57
+739,59181,2024-06-19 18:16:00,Card-Not-Present Anomaly,True,2024-06-22 22:16:00
+740,73974,2024-08-14 05:05:44,Velocity Limit Exceeded,False,
+741,33605,2024-12-12 10:24:37,Card-Not-Present Anomaly,False,
+742,32621,2024-12-25 21:07:27,Card-Not-Present Anomaly,False,
+743,77044,2024-05-25 09:40:45,Velocity Limit Exceeded,True,2024-06-02 08:40:45
+744,17605,2023-12-08 09:21:52,Suspicious Amount Spike,True,2023-12-12 21:21:52
+745,64273,2024-12-05 10:52:45,Card-Not-Present Anomaly,False,
+746,63189,2024-11-24 10:03:52,Mismatched Billing Details,True,2024-11-26 05:03:52
+747,45332,2024-10-18 14:31:37,Suspicious Amount Spike,True,2024-10-24 09:31:37
+748,42698,2024-10-13 16:28:31,Card-Not-Present Anomaly,True,2024-10-18 16:28:31
+749,45370,2024-11-18 20:57:22,High Risk Country Match,False,
+750,18080,2024-10-07 04:07:32,Suspicious Amount Spike,True,2024-10-13 01:07:32
+751,10551,2024-06-26 16:03:34,High Risk Country Match,False,
+752,65465,2024-07-02 13:15:10,High Risk Country Match,True,2024-07-07 14:15:10
+753,50048,2024-11-02 23:15:43,Mismatched Billing Details,True,2024-11-10 17:15:43
+754,47950,2024-10-30 12:35:28,Mismatched Billing Details,True,2024-11-04 21:35:28
+755,1850,2023-11-12 08:24:55,High Risk Country Match,False,
+756,38339,2024-12-31 18:36:53,High Risk Country Match,False,
+757,24412,2024-10-05 20:45:39,Card-Not-Present Anomaly,False,
+758,38727,2023-09-20 22:00:54,Mismatched Billing Details,True,2023-09-28 05:00:54
+759,13608,2023-09-09 04:07:20,High Risk Country Match,True,2023-09-14 00:07:20
+760,24565,2024-09-26 01:51:56,Suspicious Amount Spike,True,2024-10-01 19:51:56
+761,33099,2024-12-30 12:54:45,Suspicious Amount Spike,True,2024-12-31 15:54:45
+762,4934,2024-11-05 14:42:21,High Risk Country Match,True,2024-11-11 01:42:21
+763,15848,2024-12-21 18:09:35,Card-Not-Present Anomaly,True,2024-12-26 21:09:35
+764,69319,2024-03-31 14:19:02,High Risk Country Match,True,2024-04-07 07:19:02
+765,41462,2024-08-05 20:52:03,Suspicious Amount Spike,True,2024-08-09 15:52:03
+766,29759,2024-08-30 15:00:56,High Risk Country Match,True,2024-09-04 03:00:56
+767,22102,2024-12-14 08:31:50,Mismatched Billing Details,True,2024-12-20 07:31:50
+768,74313,2024-02-27 15:08:59,Velocity Limit Exceeded,True,2024-03-03 16:08:59
+769,30203,2024-11-08 01:07:44,High Risk Country Match,True,2024-11-14 20:07:44
+770,31954,2024-08-17 21:01:38,Velocity Limit Exceeded,True,2024-08-22 20:01:38
+771,21486,2024-09-27 08:14:24,High Risk Country Match,False,
+772,409,2024-10-17 05:08:19,Velocity Limit Exceeded,True,2024-10-22 11:08:19
+773,56823,2024-09-06 01:01:00,High Risk Country Match,True,2024-09-10 00:01:00
+774,79204,2024-11-29 00:12:59,High Risk Country Match,False,
+775,63119,2023-12-20 15:37:26,Card-Not-Present Anomaly,True,2023-12-26 22:37:26
+776,69061,2024-11-08 01:14:40,Mismatched Billing Details,True,2024-11-09 17:14:40
+777,17696,2024-01-12 03:33:37,Mismatched Billing Details,True,2024-01-19 12:33:37
+778,44833,2024-11-04 23:55:19,Mismatched Billing Details,True,2024-11-06 16:55:19
+779,71422,2024-10-12 08:10:06,Velocity Limit Exceeded,True,2024-10-13 23:10:06
+780,42637,2024-12-17 05:18:51,Velocity Limit Exceeded,True,2024-12-18 18:18:51
+781,79694,2024-11-08 11:13:40,Velocity Limit Exceeded,False,
+782,25915,2024-12-13 08:32:24,Mismatched Billing Details,False,
+783,20684,2024-12-05 05:15:23,High Risk Country Match,True,2024-12-11 11:15:23
+784,19178,2024-07-17 17:55:45,Suspicious Amount Spike,True,2024-07-18 19:55:45
+785,2728,2024-10-25 09:55:04,Card-Not-Present Anomaly,True,2024-10-30 06:55:04
+786,175,2024-04-03 01:56:08,Suspicious Amount Spike,True,2024-04-05 01:56:08
+787,23775,2024-10-31 17:02:48,High Risk Country Match,True,2024-11-04 01:02:48
+788,38674,2024-12-23 19:29:10,High Risk Country Match,True,2024-12-29 14:29:10
+789,48379,2024-09-13 21:21:50,Mismatched Billing Details,False,
+790,37354,2024-12-29 11:49:38,Velocity Limit Exceeded,True,2025-01-04 09:49:38
+791,78747,2024-10-01 01:10:30,Card-Not-Present Anomaly,False,
+792,73018,2024-06-04 21:33:52,High Risk Country Match,True,2024-06-11 19:33:52
+793,61178,2024-12-29 19:41:26,High Risk Country Match,True,2024-12-31 10:41:26
+794,34853,2024-11-01 19:22:58,High Risk Country Match,True,2024-11-04 21:22:58
+795,28503,2024-12-11 07:55:34,Mismatched Billing Details,False,
+796,53192,2024-04-24 01:21:13,Velocity Limit Exceeded,True,2024-04-28 13:21:13
+797,22908,2024-08-04 00:20:51,High Risk Country Match,True,2024-08-08 13:20:51
+798,26442,2024-11-01 08:37:58,Card-Not-Present Anomaly,True,2024-11-05 02:37:58
+799,55243,2024-07-25 13:37:32,Suspicious Amount Spike,True,2024-07-29 14:37:32
+800,39600,2024-05-29 03:25:23,Card-Not-Present Anomaly,True,2024-06-03 06:25:23
+801,49405,2024-08-27 01:29:06,High Risk Country Match,True,2024-09-01 15:29:06
+802,77047,2024-10-01 15:09:42,Card-Not-Present Anomaly,True,2024-10-05 13:09:42
+803,79885,2024-12-28 16:26:15,Velocity Limit Exceeded,False,
+804,70245,2024-07-12 19:01:51,High Risk Country Match,True,2024-07-18 23:01:51
+805,68799,2024-12-11 04:39:39,Velocity Limit Exceeded,True,2024-12-17 12:39:39
+806,78468,2024-11-17 04:06:59,High Risk Country Match,True,2024-11-24 22:06:59
+807,72018,2024-11-17 06:15:29,Velocity Limit Exceeded,True,2024-11-24 05:15:29
+808,76538,2024-06-21 10:54:07,High Risk Country Match,True,2024-06-25 07:54:07
+809,70932,2024-11-24 12:00:35,Card-Not-Present Anomaly,True,2024-12-01 18:00:35
+810,15320,2024-10-23 11:30:10,High Risk Country Match,True,2024-10-25 04:30:10
+811,36556,2024-12-07 22:42:57,Suspicious Amount Spike,True,2024-12-14 19:42:57
+812,12036,2024-09-23 22:20:21,High Risk Country Match,True,2024-09-25 02:20:21
+813,17882,2024-11-30 19:09:18,Card-Not-Present Anomaly,True,2024-12-07 23:09:18
+814,8066,2024-12-06 02:20:10,High Risk Country Match,True,2024-12-12 02:20:10
+815,54457,2024-08-29 12:41:12,Mismatched Billing Details,True,2024-09-05 05:41:12
+816,15428,2024-10-07 01:32:44,High Risk Country Match,True,2024-10-09 12:32:44
+817,5503,2024-10-18 08:59:20,Card-Not-Present Anomaly,True,2024-10-22 09:59:20
+818,76881,2024-12-27 17:03:33,Velocity Limit Exceeded,True,2024-12-29 09:03:33
+819,14481,2024-12-12 18:59:16,High Risk Country Match,True,2024-12-18 07:59:16
+820,19912,2024-12-21 19:39:49,Suspicious Amount Spike,False,
+821,20046,2024-12-30 12:53:25,Mismatched Billing Details,True,2025-01-03 14:53:25
+822,53802,2023-12-17 17:29:08,High Risk Country Match,False,
+823,29919,2024-12-09 10:31:20,High Risk Country Match,True,2024-12-11 08:31:20
+824,76756,2024-11-14 11:40:41,Card-Not-Present Anomaly,True,2024-11-18 14:40:41
+825,17585,2024-09-12 12:01:44,Suspicious Amount Spike,True,2024-09-16 22:01:44
+826,18496,2024-12-21 18:57:44,Suspicious Amount Spike,True,2024-12-28 11:57:44
+827,17766,2024-12-09 21:09:44,Mismatched Billing Details,False,
+828,3771,2024-03-24 15:39:53,Suspicious Amount Spike,True,2024-03-28 16:39:53
+829,25679,2024-08-27 02:40:41,Suspicious Amount Spike,True,2024-08-30 09:40:41
+830,1751,2024-10-28 11:37:05,Velocity Limit Exceeded,True,2024-11-02 04:37:05
+831,22762,2024-12-08 23:09:45,High Risk Country Match,True,2024-12-14 06:09:45
+832,67810,2024-12-04 18:21:34,Mismatched Billing Details,True,2024-12-07 03:21:34
+833,39911,2024-10-21 10:01:01,Mismatched Billing Details,True,2024-10-23 04:01:01
+834,73012,2024-08-03 23:44:16,Suspicious Amount Spike,True,2024-08-10 17:44:16
+835,30967,2024-12-21 00:00:54,Suspicious Amount Spike,True,2024-12-23 02:00:54
+836,3552,2024-10-19 04:41:46,Suspicious Amount Spike,True,2024-10-20 06:41:46
+837,12623,2024-12-20 20:33:46,Mismatched Billing Details,True,2024-12-22 02:33:46
+838,9386,2024-12-12 17:16:33,High Risk Country Match,True,2024-12-16 02:16:33
+839,6969,2024-10-12 20:55:32,Card-Not-Present Anomaly,True,2024-10-18 08:55:32
+840,6671,2024-11-27 17:59:04,Suspicious Amount Spike,True,2024-11-30 10:59:04
+841,56207,2024-10-30 15:04:16,High Risk Country Match,True,2024-11-04 00:04:16
+842,52938,2023-09-09 07:05:19,Velocity Limit Exceeded,True,2023-09-12 19:05:19
+843,6271,2024-07-20 13:48:07,High Risk Country Match,True,2024-07-22 22:48:07
+844,14350,2024-11-26 09:19:13,High Risk Country Match,False,
+845,19175,2024-10-27 21:05:44,Suspicious Amount Spike,True,2024-11-03 05:05:44
+846,28913,2024-12-20 08:52:23,Card-Not-Present Anomaly,True,2024-12-25 16:52:23
+847,5220,2024-06-15 15:11:47,High Risk Country Match,True,2024-06-16 15:11:47
+848,52776,2024-07-12 00:54:35,High Risk Country Match,True,2024-07-14 16:54:35
+849,61354,2024-12-31 18:11:04,High Risk Country Match,True,2025-01-06 15:11:04
+850,34129,2024-10-26 23:44:54,Velocity Limit Exceeded,True,2024-11-03 05:44:54
+851,42070,2024-12-20 08:01:34,Suspicious Amount Spike,True,2024-12-22 22:01:34
+852,25773,2024-09-09 22:11:08,Velocity Limit Exceeded,True,2024-09-15 17:11:08
+853,42175,2024-09-11 03:41:50,Suspicious Amount Spike,False,
+854,38177,2024-08-21 17:04:14,Velocity Limit Exceeded,True,2024-08-28 00:04:14
+855,30779,2024-12-22 14:01:29,Suspicious Amount Spike,True,2024-12-28 23:01:29
+856,4322,2024-09-22 00:14:45,Card-Not-Present Anomaly,True,2024-09-26 02:14:45
+857,16021,2024-10-30 06:56:27,High Risk Country Match,True,2024-11-05 23:56:27
+858,18516,2024-11-27 20:07:46,Card-Not-Present Anomaly,True,2024-12-03 23:07:46
+859,68905,2024-10-31 08:50:16,High Risk Country Match,True,2024-11-01 17:50:16
+860,78026,2024-12-31 09:33:38,Mismatched Billing Details,True,2025-01-03 06:33:38
+861,48622,2024-09-19 14:32:57,High Risk Country Match,False,
+862,27764,2024-09-10 22:41:33,Card-Not-Present Anomaly,True,2024-09-12 11:41:33
+863,32452,2024-07-10 12:50:41,Card-Not-Present Anomaly,True,2024-07-18 11:50:41
+864,4119,2023-12-26 19:05:24,Mismatched Billing Details,True,2024-01-01 06:05:24
+865,6688,2024-03-29 06:38:56,Velocity Limit Exceeded,False,
+866,10275,2024-06-07 21:41:51,Mismatched Billing Details,True,2024-06-10 13:41:51
+867,49396,2024-12-11 01:35:35,High Risk Country Match,True,2024-12-17 09:35:35
+868,3716,2023-09-21 21:14:15,Suspicious Amount Spike,True,2023-09-27 03:14:15
+869,54853,2024-12-20 10:42:54,Suspicious Amount Spike,True,2024-12-23 13:42:54
+870,67679,2024-07-22 03:28:58,Suspicious Amount Spike,True,2024-07-26 09:28:58
+871,30517,2024-12-19 11:39:05,High Risk Country Match,True,2024-12-27 02:39:05
+872,19306,2024-04-06 22:13:46,Velocity Limit Exceeded,False,
+873,6993,2024-12-11 02:45:05,High Risk Country Match,True,2024-12-18 04:45:05
+874,72816,2024-10-16 23:30:10,Mismatched Billing Details,True,2024-10-19 06:30:10
+875,17253,2024-01-29 01:08:26,Suspicious Amount Spike,True,2024-02-02 14:08:26
+876,72336,2024-12-27 09:41:41,Mismatched Billing Details,True,2024-12-30 07:41:41
+877,46871,2024-04-24 07:11:16,High Risk Country Match,False,
+878,47946,2024-04-29 13:13:06,Velocity Limit Exceeded,False,
+879,2098,2024-12-31 03:58:46,Velocity Limit Exceeded,True,2025-01-03 03:58:46
+880,21111,2024-12-25 07:03:24,Mismatched Billing Details,True,2024-12-30 21:03:24
+881,77215,2024-08-25 12:09:06,Suspicious Amount Spike,True,2024-09-01 06:09:06
+882,3120,2024-12-14 09:29:16,Suspicious Amount Spike,False,
+883,3911,2024-11-17 11:24:59,Card-Not-Present Anomaly,False,
+884,9276,2023-12-14 10:26:32,Velocity Limit Exceeded,False,
+885,23027,2024-10-22 23:48:12,Suspicious Amount Spike,False,
+886,37574,2024-12-09 13:03:43,Suspicious Amount Spike,True,2024-12-16 18:03:43
+887,53350,2024-12-20 14:57:07,Velocity Limit Exceeded,True,2024-12-25 08:57:07
+888,37222,2024-12-11 05:29:54,Velocity Limit Exceeded,False,
+889,6586,2024-11-13 22:53:03,High Risk Country Match,True,2024-11-19 19:53:03
+890,38131,2024-09-23 00:19:39,Mismatched Billing Details,True,2024-09-29 20:19:39
+891,27441,2024-05-15 14:41:39,Mismatched Billing Details,False,
+892,53039,2024-12-31 06:43:39,Suspicious Amount Spike,True,2025-01-04 19:43:39
+893,38136,2024-12-07 02:21:23,Velocity Limit Exceeded,False,
+894,41855,2024-02-08 17:08:14,Card-Not-Present Anomaly,False,
+895,20750,2024-09-13 19:25:22,Mismatched Billing Details,True,2024-09-19 18:25:22
+896,70280,2024-12-25 09:38:42,Suspicious Amount Spike,True,2024-12-30 22:38:42
+897,57051,2024-11-25 23:14:07,Mismatched Billing Details,True,2024-12-01 06:14:07
+898,24068,2023-08-05 22:25:02,High Risk Country Match,True,2023-08-08 20:25:02
+899,31848,2024-12-30 06:14:06,High Risk Country Match,True,2025-01-01 22:14:06
+900,13654,2024-12-11 00:59:13,Velocity Limit Exceeded,True,2024-12-18 01:59:13
+901,34755,2024-09-07 02:06:05,Velocity Limit Exceeded,False,
+902,27991,2024-12-20 05:39:15,Suspicious Amount Spike,True,2024-12-21 15:39:15
+903,60955,2024-12-24 00:19:43,Mismatched Billing Details,True,2024-12-29 00:19:43
+904,41978,2024-11-24 18:56:26,Card-Not-Present Anomaly,True,2024-11-26 03:56:26
+905,9739,2024-12-28 09:29:32,Mismatched Billing Details,True,2025-01-01 09:29:32
+906,53833,2024-09-23 20:51:30,Mismatched Billing Details,True,2024-09-28 11:51:30
+907,78919,2024-12-22 15:08:12,Velocity Limit Exceeded,True,2024-12-25 22:08:12
+908,42935,2024-11-25 12:15:28,Suspicious Amount Spike,True,2024-11-29 17:15:28
+909,47859,2024-11-15 03:29:10,Card-Not-Present Anomaly,False,
+910,9570,2024-11-06 20:35:03,High Risk Country Match,True,2024-11-10 02:35:03
+911,25926,2024-11-05 03:39:34,Suspicious Amount Spike,True,2024-11-10 22:39:34
+912,35366,2024-11-23 03:49:06,Suspicious Amount Spike,False,
+913,68721,2023-10-12 22:14:14,Card-Not-Present Anomaly,True,2023-10-19 04:14:14
+914,43516,2024-07-03 14:55:55,Suspicious Amount Spike,True,2024-07-06 04:55:55
+915,28283,2024-07-25 09:52:39,Mismatched Billing Details,True,2024-08-02 06:52:39
+916,32407,2024-12-07 20:41:32,Velocity Limit Exceeded,True,2024-12-15 13:41:32
+917,16101,2024-06-18 10:43:55,Velocity Limit Exceeded,True,2024-06-25 02:43:55
+918,79530,2024-06-22 13:44:05,High Risk Country Match,False,
+919,72213,2024-09-04 13:05:00,Velocity Limit Exceeded,True,2024-09-09 07:05:00
+920,48134,2024-12-15 08:33:41,High Risk Country Match,True,2024-12-19 11:33:41
+921,3608,2024-07-24 19:22:19,Mismatched Billing Details,True,2024-07-28 00:22:19
+922,53148,2024-02-01 16:47:41,Suspicious Amount Spike,False,
+923,24764,2024-12-02 00:12:30,High Risk Country Match,False,
+924,6599,2024-10-22 03:31:11,Mismatched Billing Details,True,2024-10-25 07:31:11
+925,5423,2024-11-24 13:56:44,Suspicious Amount Spike,True,2024-11-27 23:56:44
+926,9134,2024-12-19 08:35:06,Card-Not-Present Anomaly,True,2024-12-22 08:35:06
+927,45608,2024-06-16 14:39:01,Mismatched Billing Details,True,2024-06-19 09:39:01
+928,27744,2024-06-15 04:17:24,High Risk Country Match,True,2024-06-20 15:17:24
+929,25987,2024-12-17 07:00:39,High Risk Country Match,True,2024-12-24 04:00:39
+930,37809,2024-11-30 02:06:41,Card-Not-Present Anomaly,True,2024-12-04 02:06:41
+931,33037,2024-11-20 15:52:58,High Risk Country Match,True,2024-11-22 01:52:58
+932,2884,2024-12-31 09:16:45,Card-Not-Present Anomaly,True,2025-01-04 15:16:45
+933,55991,2024-12-23 10:10:03,High Risk Country Match,True,2024-12-26 20:10:03
+934,71204,2024-06-16 06:27:36,High Risk Country Match,True,2024-06-21 21:27:36
+935,40241,2024-10-13 14:58:46,Card-Not-Present Anomaly,True,2024-10-19 22:58:46
+936,70702,2022-11-03 22:03:31,Suspicious Amount Spike,False,
+937,72721,2024-09-04 01:59:16,Suspicious Amount Spike,True,2024-09-09 18:59:16
+938,20387,2024-12-19 02:45:50,Mismatched Billing Details,True,2024-12-24 04:45:50
+939,56236,2024-12-22 19:17:32,High Risk Country Match,False,
+940,78464,2024-11-26 00:04:46,Velocity Limit Exceeded,True,2024-11-27 11:04:46
+941,70135,2024-06-24 02:15:27,Card-Not-Present Anomaly,True,2024-06-27 20:15:27
+942,60017,2024-03-27 06:47:22,Card-Not-Present Anomaly,True,2024-04-03 13:47:22
+943,17831,2024-05-03 05:40:59,Suspicious Amount Spike,False,
+944,56184,2024-10-30 05:33:08,Velocity Limit Exceeded,True,2024-11-06 00:33:08
+945,29292,2024-11-04 01:44:14,Mismatched Billing Details,True,2024-11-09 21:44:14
+946,51688,2024-10-28 20:37:50,Mismatched Billing Details,True,2024-11-03 21:37:50
+947,64336,2024-10-14 10:07:55,Mismatched Billing Details,False,
+948,67230,2025-01-01 00:48:58,Suspicious Amount Spike,True,2025-01-03 14:48:58
+949,2116,2024-10-10 01:34:25,Mismatched Billing Details,True,2024-10-17 06:34:25
+950,29685,2024-11-12 10:44:11,Suspicious Amount Spike,True,2024-11-17 20:44:11
+951,16173,2024-06-30 13:39:59,Velocity Limit Exceeded,False,
+952,76142,2024-10-22 23:01:38,Suspicious Amount Spike,True,2024-10-30 14:01:38
+953,10526,2024-10-07 12:59:16,Suspicious Amount Spike,True,2024-10-14 22:59:16
+954,34373,2024-12-25 12:43:15,Mismatched Billing Details,True,2024-12-30 07:43:15
+955,26115,2024-11-23 11:03:38,High Risk Country Match,True,2024-11-30 18:03:38
+956,48192,2024-08-28 08:11:41,Mismatched Billing Details,True,2024-09-04 16:11:41
+957,51653,2024-06-17 10:51:09,Mismatched Billing Details,True,2024-06-22 00:51:09
+958,26733,2024-11-09 08:43:20,High Risk Country Match,True,2024-11-13 07:43:20
+959,18363,2024-11-16 20:55:41,Velocity Limit Exceeded,True,2024-11-22 19:55:41
+960,71601,2024-08-02 23:31:11,Suspicious Amount Spike,True,2024-08-09 08:31:11
+961,67358,2024-12-17 15:25:51,Mismatched Billing Details,False,
+962,10704,2024-12-27 00:00:46,Card-Not-Present Anomaly,True,2025-01-02 03:00:46
+963,28633,2024-12-27 00:26:14,High Risk Country Match,True,2024-12-30 15:26:14
+964,61200,2024-11-20 12:17:22,Suspicious Amount Spike,True,2024-11-23 06:17:22
+965,49388,2024-12-14 13:28:29,Suspicious Amount Spike,True,2024-12-21 02:28:29
+966,44481,2023-10-04 02:57:06,High Risk Country Match,True,2023-10-11 16:57:06
+967,12862,2024-12-16 11:54:58,Card-Not-Present Anomaly,True,2024-12-20 08:54:58
+968,1752,2024-10-07 08:05:50,Velocity Limit Exceeded,False,
+969,30505,2024-12-08 20:27:52,Card-Not-Present Anomaly,True,2024-12-16 17:27:52
+970,41208,2024-11-16 02:20:22,Mismatched Billing Details,True,2024-11-19 06:20:22
+971,6328,2024-12-26 14:21:24,Card-Not-Present Anomaly,False,
+972,26156,2024-12-23 05:47:11,Mismatched Billing Details,True,2024-12-30 23:47:11
+973,60910,2024-10-05 16:26:22,Velocity Limit Exceeded,True,2024-10-06 19:26:22
+974,59182,2024-12-25 21:27:51,Mismatched Billing Details,True,2024-12-30 08:27:51
+975,15670,2024-10-29 18:19:12,Mismatched Billing Details,True,2024-11-05 18:19:12
+976,25523,2024-12-24 01:43:50,Card-Not-Present Anomaly,True,2024-12-27 09:43:50
+977,42746,2024-07-01 01:52:26,High Risk Country Match,True,2024-07-07 01:52:26
+978,33660,2024-09-17 16:05:02,Card-Not-Present Anomaly,True,2024-09-23 16:05:02
+979,61266,2024-11-26 09:17:22,Suspicious Amount Spike,True,2024-11-28 17:17:22
+980,10833,2024-10-18 19:59:51,Card-Not-Present Anomaly,True,2024-10-24 21:59:51
+981,41392,2024-09-05 23:01:03,Velocity Limit Exceeded,True,2024-09-13 22:01:03
+982,74362,2024-12-28 21:17:25,Velocity Limit Exceeded,True,2025-01-01 22:17:25
+983,49387,2024-12-26 01:37:38,Suspicious Amount Spike,True,2024-12-29 10:37:38
+984,24934,2024-10-11 23:11:45,Card-Not-Present Anomaly,True,2024-10-15 16:11:45
+985,10295,2024-11-08 22:32:59,High Risk Country Match,True,2024-11-14 04:32:59
+986,62309,2024-11-16 07:57:42,Velocity Limit Exceeded,True,2024-11-21 21:57:42
+987,47433,2024-12-18 14:26:34,Suspicious Amount Spike,True,2024-12-21 00:26:34
+988,58416,2024-12-02 16:16:46,Suspicious Amount Spike,False,
+989,15907,2024-10-05 17:55:43,Card-Not-Present Anomaly,True,2024-10-12 19:55:43
+990,28172,2024-06-21 23:26:03,Mismatched Billing Details,True,2024-06-25 11:26:03
+991,3956,2024-12-12 18:38:42,Mismatched Billing Details,True,2024-12-19 18:38:42
+992,61484,2024-11-11 04:02:40,Card-Not-Present Anomaly,True,2024-11-13 22:02:40
+993,14789,2024-06-21 08:52:38,Mismatched Billing Details,True,2024-06-24 13:52:38
+994,66479,2023-10-29 15:13:23,High Risk Country Match,True,2023-10-30 16:13:23
+995,2976,2024-09-25 06:23:06,Mismatched Billing Details,True,2024-09-27 10:23:06
+996,51552,2024-11-30 07:23:10,Card-Not-Present Anomaly,True,2024-12-01 11:23:10
+997,29359,2024-06-13 15:47:07,High Risk Country Match,True,2024-06-21 07:47:07
+998,24318,2024-12-11 00:47:39,Mismatched Billing Details,True,2024-12-16 08:47:39
+999,54673,2024-11-24 05:40:40,Card-Not-Present Anomaly,True,2024-11-30 19:40:40
+1000,38533,2024-11-28 09:55:13,Card-Not-Present Anomaly,True,2024-11-30 04:55:13
+1001,10130,2024-09-29 16:36:37,Card-Not-Present Anomaly,True,2024-10-03 02:36:37
+1002,10543,2024-10-15 07:15:56,High Risk Country Match,True,2024-10-16 15:15:56
+1003,69591,2024-12-17 17:31:38,Suspicious Amount Spike,True,2024-12-22 02:31:38
+1004,6687,2024-03-31 05:58:17,Card-Not-Present Anomaly,True,2024-04-07 10:58:17
+1005,57164,2024-12-11 18:41:13,Suspicious Amount Spike,True,2024-12-19 01:41:13
+1006,61881,2024-08-19 22:20:23,Card-Not-Present Anomaly,True,2024-08-23 03:20:23
+1007,34981,2024-11-30 04:15:24,Velocity Limit Exceeded,True,2024-12-02 08:15:24
+1008,76337,2024-07-05 03:44:54,High Risk Country Match,True,2024-07-09 13:44:54
+1009,74355,2024-06-01 03:33:26,High Risk Country Match,True,2024-06-02 15:33:26
+1010,54064,2024-09-24 03:05:23,Suspicious Amount Spike,True,2024-09-25 14:05:23
+1011,14928,2024-12-01 07:56:03,Mismatched Billing Details,True,2024-12-08 23:56:03
+1012,75862,2023-11-29 23:12:24,High Risk Country Match,False,
+1013,57779,2024-11-18 18:06:51,High Risk Country Match,True,2024-11-25 15:06:51
+1014,14774,2024-12-06 13:37:10,Velocity Limit Exceeded,True,2024-12-10 05:37:10
+1015,26926,2024-02-05 23:02:06,Mismatched Billing Details,True,2024-02-09 22:02:06
+1016,37623,2024-12-27 20:13:42,Card-Not-Present Anomaly,True,2025-01-02 16:13:42
+1017,20208,2023-03-18 02:07:29,Card-Not-Present Anomaly,True,2023-03-25 15:07:29
+1018,55522,2024-07-28 15:46:52,Card-Not-Present Anomaly,True,2024-07-30 10:46:52
+1019,50833,2024-12-28 19:24:02,High Risk Country Match,True,2025-01-04 20:24:02
+1020,35983,2024-12-17 16:01:43,Mismatched Billing Details,True,2024-12-20 13:01:43
+1021,75403,2024-12-01 02:06:30,Card-Not-Present Anomaly,False,
+1022,24844,2024-12-16 10:18:40,High Risk Country Match,True,2024-12-21 18:18:40
+1023,36362,2024-10-01 18:41:50,Suspicious Amount Spike,True,2024-10-06 21:41:50
+1024,8641,2024-08-05 06:46:02,High Risk Country Match,True,2024-08-12 23:46:02
+1025,35697,2024-12-09 15:23:18,High Risk Country Match,True,2024-12-13 19:23:18
+1026,74847,2024-05-25 06:49:58,Mismatched Billing Details,True,2024-05-28 17:49:58
+1027,26006,2024-06-09 19:25:52,Suspicious Amount Spike,True,2024-06-17 08:25:52
+1028,11088,2024-10-15 22:51:56,High Risk Country Match,True,2024-10-17 04:51:56
+1029,40196,2024-02-14 09:41:33,High Risk Country Match,True,2024-02-19 23:41:33
+1030,4939,2024-12-31 09:50:10,High Risk Country Match,True,2025-01-01 17:50:10
+1031,31969,2024-12-12 03:01:15,Suspicious Amount Spike,True,2024-12-13 21:01:15
+1032,66175,2024-12-15 13:06:35,Mismatched Billing Details,True,2024-12-23 08:06:35
+1033,16605,2024-11-17 02:40:30,Card-Not-Present Anomaly,True,2024-11-21 10:40:30
+1034,28984,2024-06-14 04:13:22,Mismatched Billing Details,True,2024-06-20 19:13:22
+1035,21338,2024-12-05 21:09:14,Card-Not-Present Anomaly,False,
+1036,27055,2024-02-22 23:04:53,Mismatched Billing Details,True,2024-02-29 06:04:53
+1037,19746,2024-12-28 05:33:26,High Risk Country Match,True,2024-12-29 06:33:26
+1038,73660,2024-12-14 23:38:48,High Risk Country Match,False,
+1039,2640,2024-11-18 06:09:44,Mismatched Billing Details,True,2024-11-22 20:09:44
+1040,9865,2024-12-10 10:56:20,Suspicious Amount Spike,True,2024-12-17 19:56:20
+1041,78099,2024-07-11 16:02:21,Velocity Limit Exceeded,True,2024-07-18 13:02:21
+1042,29887,2023-08-15 14:41:21,Mismatched Billing Details,True,2023-08-17 00:41:21
+1043,70068,2024-03-30 10:06:41,Suspicious Amount Spike,True,2024-04-03 23:06:41
+1044,38494,2024-09-18 17:26:30,Mismatched Billing Details,True,2024-09-24 09:26:30
+1045,57260,2024-06-08 20:10:20,High Risk Country Match,False,
+1046,16855,2024-09-03 16:18:48,Velocity Limit Exceeded,True,2024-09-05 09:18:48
+1047,68948,2024-04-24 21:48:57,Mismatched Billing Details,True,2024-04-30 08:48:57
+1048,58276,2023-10-09 22:20:33,Mismatched Billing Details,True,2023-10-12 06:20:33
+1049,69062,2024-08-08 08:37:03,Mismatched Billing Details,True,2024-08-11 23:37:03
+1050,9992,2024-09-10 17:03:37,Suspicious Amount Spike,True,2024-09-14 16:03:37
+1051,25079,2024-12-04 14:54:26,High Risk Country Match,True,2024-12-07 16:54:26
+1052,10325,2024-11-08 06:16:43,Velocity Limit Exceeded,False,
+1053,72022,2024-10-11 05:26:54,Mismatched Billing Details,True,2024-10-12 22:26:54
+1054,8813,2024-08-05 00:02:49,Mismatched Billing Details,True,2024-08-11 14:02:49
+1055,14633,2024-11-21 23:34:27,Velocity Limit Exceeded,True,2024-11-25 23:34:27
+1056,79809,2024-12-11 12:41:32,High Risk Country Match,True,2024-12-18 16:41:32
+1057,70039,2024-12-19 03:27:03,Card-Not-Present Anomaly,True,2024-12-23 00:27:03
+1058,11046,2024-02-08 02:38:20,Suspicious Amount Spike,True,2024-02-11 11:38:20
+1059,23644,2024-01-16 21:26:42,Suspicious Amount Spike,True,2024-01-23 01:26:42
+1060,31190,2024-10-02 16:56:31,Mismatched Billing Details,True,2024-10-08 10:56:31
+1061,40612,2024-10-21 01:33:45,Suspicious Amount Spike,True,2024-10-29 00:33:45
+1062,64768,2023-08-13 09:55:26,Card-Not-Present Anomaly,False,
+1063,63184,2023-11-26 23:09:38,Velocity Limit Exceeded,True,2023-12-04 07:09:38
+1064,32492,2024-11-02 04:51:30,Mismatched Billing Details,True,2024-11-06 11:51:30
+1065,32574,2024-08-04 18:21:36,Suspicious Amount Spike,True,2024-08-11 03:21:36
+1066,58473,2024-02-20 16:08:07,Velocity Limit Exceeded,True,2024-02-23 15:08:07
+1067,53629,2024-11-21 00:57:43,Mismatched Billing Details,True,2024-11-22 23:57:43
+1068,53505,2024-12-05 03:01:12,High Risk Country Match,True,2024-12-07 16:01:12
+1069,65696,2024-06-08 22:23:14,Mismatched Billing Details,False,
+1070,75900,2024-07-02 08:32:00,Card-Not-Present Anomaly,True,2024-07-07 11:32:00
+1071,50133,2024-09-17 18:00:49,Card-Not-Present Anomaly,True,2024-09-18 21:00:49
+1072,31995,2024-11-16 06:52:08,Card-Not-Present Anomaly,False,
+1073,3408,2024-09-11 00:17:09,High Risk Country Match,False,
+1074,20969,2024-04-30 05:52:20,Mismatched Billing Details,False,
+1075,24706,2024-12-25 03:07:54,Suspicious Amount Spike,True,2025-01-02 02:07:54
+1076,976,2024-07-12 02:56:15,Card-Not-Present Anomaly,True,2024-07-15 10:56:15
+1077,8393,2024-10-04 15:16:57,Card-Not-Present Anomaly,False,
+1078,78918,2024-11-17 01:37:34,Velocity Limit Exceeded,True,2024-11-19 14:37:34
+1079,2851,2024-12-24 18:37:18,Suspicious Amount Spike,True,2024-12-31 04:37:18
+1080,71149,2024-11-30 14:29:05,Card-Not-Present Anomaly,True,2024-12-01 14:29:05
+1081,50659,2024-12-22 00:36:16,Velocity Limit Exceeded,True,2024-12-27 07:36:16
+1082,24143,2024-12-28 18:33:56,Suspicious Amount Spike,False,
+1083,79231,2024-10-19 14:57:35,Card-Not-Present Anomaly,True,2024-10-21 14:57:35
+1084,75270,2024-07-04 21:10:18,Velocity Limit Exceeded,True,2024-07-08 15:10:18
+1085,20459,2024-10-21 04:14:33,Mismatched Billing Details,True,2024-10-24 08:14:33
+1086,17963,2024-08-31 16:02:33,Suspicious Amount Spike,False,
+1087,13300,2024-12-03 05:38:49,High Risk Country Match,True,2024-12-10 21:38:49
+1088,55583,2024-12-23 23:51:04,Suspicious Amount Spike,True,2024-12-28 07:51:04
+1089,1584,2024-07-09 01:14:09,Mismatched Billing Details,False,
+1090,16492,2024-09-26 03:47:14,Mismatched Billing Details,True,2024-10-01 04:47:14
+1091,44877,2024-12-23 14:53:24,Mismatched Billing Details,True,2024-12-28 05:53:24
+1092,7382,2024-10-13 06:40:48,Mismatched Billing Details,False,
+1093,26857,2024-10-21 22:07:48,Velocity Limit Exceeded,False,
+1094,22380,2024-12-31 09:35:01,Suspicious Amount Spike,True,2025-01-02 08:35:01
+1095,41940,2024-05-08 09:16:55,High Risk Country Match,False,
+1096,73717,2024-12-25 23:54:24,Velocity Limit Exceeded,True,2025-01-02 03:54:24
+1097,51809,2024-10-09 15:09:21,Mismatched Billing Details,True,2024-10-15 16:09:21
+1098,58657,2024-11-04 06:31:49,High Risk Country Match,False,
+1099,53970,2024-09-26 18:32:16,Suspicious Amount Spike,True,2024-09-29 14:32:16
+1100,62823,2024-10-28 13:01:44,Suspicious Amount Spike,False,
+1101,16790,2024-07-18 01:11:56,Card-Not-Present Anomaly,False,
+1102,63944,2024-08-31 23:12:54,Card-Not-Present Anomaly,True,2024-09-02 08:12:54
+1103,77819,2023-09-22 15:04:05,Suspicious Amount Spike,False,
+1104,4524,2024-12-30 08:15:17,Velocity Limit Exceeded,True,2024-12-31 20:15:17
+1105,68254,2023-11-23 00:29:20,High Risk Country Match,True,2023-11-30 19:29:20
+1106,58773,2024-12-03 07:14:01,Mismatched Billing Details,True,2024-12-04 17:14:01
+1107,3115,2024-10-20 06:37:09,Suspicious Amount Spike,True,2024-10-25 05:37:09
+1108,2007,2024-04-26 08:21:20,Card-Not-Present Anomaly,False,
+1109,38290,2024-11-01 08:30:02,Velocity Limit Exceeded,True,2024-11-02 20:30:02
+1110,15742,2024-12-02 11:04:30,Mismatched Billing Details,True,2024-12-07 14:04:30
+1111,71494,2024-12-24 04:20:41,Velocity Limit Exceeded,False,
+1112,35713,2024-06-22 14:56:34,Mismatched Billing Details,True,2024-06-24 08:56:34
+1113,51037,2024-12-22 20:25:17,Velocity Limit Exceeded,False,
+1114,35233,2024-06-20 05:09:43,High Risk Country Match,True,2024-06-21 22:09:43
+1115,59965,2024-09-03 00:11:41,Suspicious Amount Spike,True,2024-09-09 10:11:41
+1116,64826,2024-10-19 12:09:04,High Risk Country Match,True,2024-10-26 15:09:04
+1117,44928,2024-09-20 01:33:16,Card-Not-Present Anomaly,True,2024-09-24 22:33:16
+1118,18407,2024-12-27 05:52:06,Mismatched Billing Details,False,
+1119,40290,2024-12-01 21:25:34,Suspicious Amount Spike,True,2024-12-07 11:25:34
+1120,20457,2024-10-22 03:10:52,High Risk Country Match,True,2024-10-28 07:10:52
+1121,64219,2024-11-11 04:18:10,Card-Not-Present Anomaly,True,2024-11-14 07:18:10
+1122,75964,2024-12-09 18:01:14,Suspicious Amount Spike,True,2024-12-17 00:01:14
+1123,4381,2024-11-04 06:36:02,High Risk Country Match,True,2024-11-09 23:36:02
+1124,43380,2024-08-18 20:45:43,Mismatched Billing Details,True,2024-08-23 14:45:43
+1125,28359,2024-12-05 14:09:44,Velocity Limit Exceeded,True,2024-12-06 17:09:44
+1126,7541,2025-01-01 00:36:01,Mismatched Billing Details,True,2025-01-07 23:36:01
+1127,56243,2024-07-08 10:47:12,Card-Not-Present Anomaly,True,2024-07-09 17:47:12
+1128,24759,2024-08-19 07:44:56,High Risk Country Match,True,2024-08-21 16:44:56
+1129,57125,2024-12-22 07:08:55,Card-Not-Present Anomaly,True,2024-12-29 17:08:55
+1130,2630,2024-12-21 02:05:46,High Risk Country Match,False,
+1131,54617,2024-05-10 15:11:14,Suspicious Amount Spike,True,2024-05-12 14:11:14
+1132,72978,2024-11-22 20:26:12,Suspicious Amount Spike,False,
+1133,19095,2024-12-30 17:13:46,Velocity Limit Exceeded,True,2025-01-03 00:13:46
+1134,75218,2024-11-17 04:30:30,Velocity Limit Exceeded,True,2024-11-22 17:30:30
+1135,51451,2024-12-11 20:14:20,Mismatched Billing Details,False,
+1136,53118,2024-12-31 10:43:38,Suspicious Amount Spike,True,2025-01-06 15:43:38
+1137,43787,2024-05-17 06:16:31,Velocity Limit Exceeded,True,2024-05-21 10:16:31
+1138,14104,2024-10-24 02:43:58,High Risk Country Match,True,2024-10-30 14:43:58
+1139,38895,2024-06-20 18:45:06,Velocity Limit Exceeded,True,2024-06-27 11:45:06
+1140,55777,2023-10-04 14:06:28,Suspicious Amount Spike,True,2023-10-11 21:06:28
+1141,39338,2024-10-07 14:48:23,Suspicious Amount Spike,True,2024-10-14 17:48:23
+1142,72970,2024-09-28 08:16:29,Mismatched Billing Details,False,
+1143,52041,2024-08-31 18:54:14,High Risk Country Match,True,2024-09-06 19:54:14
+1144,72465,2024-08-29 05:21:10,Velocity Limit Exceeded,True,2024-09-02 00:21:10
+1145,1156,2024-12-02 23:29:39,Mismatched Billing Details,True,2024-12-08 04:29:39
+1146,4388,2024-08-25 09:09:00,High Risk Country Match,False,
+1147,62270,2024-12-31 17:04:49,Mismatched Billing Details,True,2025-01-08 02:04:49
+1148,57187,2024-09-28 08:54:56,Suspicious Amount Spike,True,2024-10-03 13:54:56
+1149,57016,2024-11-28 22:55:56,Card-Not-Present Anomaly,True,2024-12-02 12:55:56
+1150,36953,2024-12-21 17:37:35,Suspicious Amount Spike,True,2024-12-24 14:37:35
+1151,31157,2024-07-18 18:18:32,Mismatched Billing Details,True,2024-07-20 14:18:32
+1152,37981,2024-12-03 15:12:38,Mismatched Billing Details,False,
+1153,56056,2024-08-21 18:10:15,Card-Not-Present Anomaly,True,2024-08-27 22:10:15
+1154,36090,2024-12-27 07:10:59,Velocity Limit Exceeded,False,
+1155,46938,2024-12-24 13:14:11,Mismatched Billing Details,True,2024-12-26 17:14:11
+1156,41601,2024-12-07 10:17:43,Velocity Limit Exceeded,True,2024-12-13 23:17:43
+1157,24353,2024-06-05 05:25:12,Card-Not-Present Anomaly,True,2024-06-07 23:25:12
+1158,3976,2024-07-29 18:45:47,Card-Not-Present Anomaly,True,2024-07-31 04:45:47
+1159,41418,2024-10-18 23:20:39,Suspicious Amount Spike,False,
+1160,2112,2024-12-28 17:35:33,Mismatched Billing Details,True,2025-01-04 19:35:33
+1161,42064,2024-11-07 08:53:56,Mismatched Billing Details,False,
+1162,106,2024-11-17 13:41:36,Card-Not-Present Anomaly,True,2024-11-22 07:41:36
+1163,68949,2024-08-03 08:02:20,High Risk Country Match,False,
+1164,13643,2024-12-12 12:33:43,Card-Not-Present Anomaly,False,
+1165,20577,2024-09-29 12:26:28,Mismatched Billing Details,False,
+1166,56405,2024-03-10 14:52:15,Mismatched Billing Details,True,2024-03-15 23:52:15
+1167,64464,2024-06-21 13:00:15,Suspicious Amount Spike,True,2024-06-27 16:00:15
+1168,70564,2024-09-27 22:24:27,Card-Not-Present Anomaly,False,
+1169,38395,2024-12-24 04:56:06,Suspicious Amount Spike,True,2024-12-28 00:56:06
+1170,39559,2024-05-15 21:16:16,Card-Not-Present Anomaly,True,2024-05-22 03:16:16
+1171,8652,2024-11-24 07:07:22,Mismatched Billing Details,False,
+1172,18531,2024-01-31 00:02:02,Card-Not-Present Anomaly,True,2024-02-02 04:02:02
+1173,67726,2024-12-30 17:02:18,Suspicious Amount Spike,True,2025-01-01 19:02:18
+1174,20446,2023-04-16 19:26:50,High Risk Country Match,True,2023-04-18 17:26:50
+1175,58571,2024-12-31 13:09:15,Velocity Limit Exceeded,True,2025-01-06 11:09:15
+1176,41792,2024-06-04 18:50:22,Suspicious Amount Spike,True,2024-06-07 17:50:22
+1177,49368,2024-08-25 22:29:40,High Risk Country Match,True,2024-08-29 03:29:40
+1178,79014,2024-09-21 23:32:19,Mismatched Billing Details,True,2024-09-25 16:32:19
+1179,18872,2024-03-30 15:48:53,Velocity Limit Exceeded,False,
+1180,28483,2024-11-11 11:26:47,Velocity Limit Exceeded,True,2024-11-13 12:26:47
+1181,64427,2023-12-28 08:50:22,Mismatched Billing Details,True,2023-12-31 02:50:22
+1182,25195,2024-10-10 17:10:09,Suspicious Amount Spike,True,2024-10-15 06:10:09
+1183,22595,2024-12-02 20:28:37,Suspicious Amount Spike,True,2024-12-10 12:28:37
+1184,69452,2024-10-13 18:56:22,High Risk Country Match,False,
+1185,36865,2024-11-21 02:00:47,Suspicious Amount Spike,True,2024-11-24 19:00:47
+1186,60774,2024-09-24 08:08:20,Velocity Limit Exceeded,True,2024-09-30 19:08:20
+1187,32550,2024-10-09 10:33:57,Mismatched Billing Details,True,2024-10-17 08:33:57
+1188,6181,2024-12-20 05:43:26,High Risk Country Match,True,2024-12-24 22:43:26
+1189,64678,2024-12-28 11:37:50,Velocity Limit Exceeded,True,2024-12-30 06:37:50
+1190,5829,2024-12-10 19:04:04,Card-Not-Present Anomaly,True,2024-12-11 19:04:04
+1191,61245,2024-12-29 16:23:42,Suspicious Amount Spike,True,2024-12-31 00:23:42
+1192,33987,2024-11-20 10:50:37,High Risk Country Match,False,
+1193,39349,2024-08-14 18:21:22,High Risk Country Match,True,2024-08-22 11:21:22
+1194,2792,2024-08-10 11:36:05,Velocity Limit Exceeded,False,
+1195,26351,2023-02-11 23:55:32,Card-Not-Present Anomaly,True,2023-02-13 15:55:32
+1196,56400,2024-09-14 10:26:19,Card-Not-Present Anomaly,False,
+1197,26690,2024-12-23 16:47:51,Card-Not-Present Anomaly,True,2024-12-28 07:47:51
+1198,26783,2024-10-10 01:50:39,Suspicious Amount Spike,True,2024-10-11 22:50:39
+1199,35176,2024-08-09 15:10:30,High Risk Country Match,True,2024-08-17 02:10:30
+1200,1868,2024-12-09 19:49:10,Velocity Limit Exceeded,False,
+1201,20353,2024-12-10 06:36:04,Card-Not-Present Anomaly,False,
+1202,55610,2023-12-31 14:47:03,Card-Not-Present Anomaly,True,2024-01-02 01:47:03
+1203,30163,2024-12-28 11:44:31,Card-Not-Present Anomaly,True,2025-01-03 10:44:31
+1204,45840,2024-10-26 08:42:59,Card-Not-Present Anomaly,True,2024-10-30 16:42:59
+1205,17163,2023-10-27 22:12:19,Mismatched Billing Details,True,2023-10-30 19:12:19
+1206,4844,2024-12-29 01:00:12,Mismatched Billing Details,False,
+1207,11511,2024-11-17 13:09:42,Card-Not-Present Anomaly,False,
+1208,50388,2023-06-12 05:14:54,Mismatched Billing Details,True,2023-06-15 12:14:54
+1209,56674,2024-12-29 13:51:58,Card-Not-Present Anomaly,True,2024-12-31 05:51:58
+1210,18075,2023-09-27 20:56:43,Velocity Limit Exceeded,True,2023-10-05 18:56:43
+1211,48702,2024-04-20 02:30:36,Mismatched Billing Details,True,2024-04-24 03:30:36
+1212,9853,2024-01-27 09:26:34,High Risk Country Match,True,2024-02-03 09:26:34
+1213,60248,2024-09-09 22:37:31,Card-Not-Present Anomaly,True,2024-09-11 06:37:31
+1214,56333,2024-12-14 20:39:03,Suspicious Amount Spike,True,2024-12-17 05:39:03
+1215,71721,2024-10-02 14:42:31,High Risk Country Match,True,2024-10-06 09:42:31
+1216,4249,2024-09-07 15:32:43,High Risk Country Match,False,
+1217,18722,2024-04-03 19:25:33,Mismatched Billing Details,True,2024-04-05 20:25:33
+1218,75712,2024-02-06 04:42:46,Suspicious Amount Spike,False,
+1219,33458,2024-02-07 03:50:31,Mismatched Billing Details,True,2024-02-14 02:50:31
+1220,76449,2024-10-11 14:14:39,Velocity Limit Exceeded,True,2024-10-17 22:14:39
+1221,46869,2024-10-12 01:45:39,Mismatched Billing Details,True,2024-10-17 06:45:39
+1222,5661,2024-10-25 23:37:15,Card-Not-Present Anomaly,True,2024-11-01 02:37:15
+1223,63387,2024-06-28 20:32:45,Card-Not-Present Anomaly,True,2024-07-01 05:32:45
+1224,8725,2024-12-05 06:07:00,Card-Not-Present Anomaly,True,2024-12-06 10:07:00
+1225,13358,2024-07-29 16:30:22,High Risk Country Match,True,2024-08-05 03:30:22
+1226,57395,2024-12-24 16:42:51,Suspicious Amount Spike,False,
+1227,71917,2024-11-13 21:41:08,Card-Not-Present Anomaly,True,2024-11-19 00:41:08
+1228,40681,2024-08-06 16:06:20,Suspicious Amount Spike,True,2024-08-12 07:06:20
+1229,57221,2024-11-27 16:05:45,High Risk Country Match,True,2024-12-02 15:05:45
+1230,48772,2023-10-28 15:51:26,High Risk Country Match,False,
+1231,2399,2024-12-21 04:23:04,Mismatched Billing Details,False,
+1232,54520,2022-11-24 14:04:55,Velocity Limit Exceeded,False,
+1233,56248,2024-12-04 10:54:13,Mismatched Billing Details,True,2024-12-10 06:54:13
+1234,6000,2024-10-21 01:25:43,Suspicious Amount Spike,True,2024-10-25 11:25:43
+1235,65728,2024-11-24 17:23:24,Velocity Limit Exceeded,True,2024-11-27 14:23:24
+1236,48809,2024-04-05 14:49:53,Suspicious Amount Spike,True,2024-04-13 07:49:53
+1237,60973,2024-12-19 23:22:02,Card-Not-Present Anomaly,True,2024-12-22 01:22:02
+1238,79805,2023-10-30 22:36:42,Suspicious Amount Spike,True,2023-11-05 13:36:42
+1239,1170,2024-12-31 10:57:16,Velocity Limit Exceeded,True,2025-01-06 08:57:16
+1240,41267,2024-09-12 11:07:16,Velocity Limit Exceeded,True,2024-09-19 02:07:16
+1241,50384,2024-12-31 04:26:28,Velocity Limit Exceeded,True,2025-01-04 02:26:28
+1242,51994,2024-12-31 06:16:05,Suspicious Amount Spike,True,2025-01-04 22:16:05
+1243,73950,2024-12-29 20:49:34,Mismatched Billing Details,True,2025-01-04 13:49:34
+1244,46291,2024-07-14 19:21:38,Mismatched Billing Details,True,2024-07-16 07:21:38
+1245,8515,2024-12-12 03:27:38,Velocity Limit Exceeded,True,2024-12-15 13:27:38
+1246,26272,2024-01-08 22:39:45,Velocity Limit Exceeded,False,
+1247,3924,2023-02-22 08:58:31,Velocity Limit Exceeded,False,
+1248,9944,2024-11-08 01:02:26,Card-Not-Present Anomaly,True,2024-11-12 18:02:26
+1249,28810,2024-12-25 02:59:25,Suspicious Amount Spike,True,2024-12-30 00:59:25
+1250,48241,2024-12-12 08:40:42,Suspicious Amount Spike,True,2024-12-13 08:40:42
+1251,37003,2024-03-17 23:48:43,Card-Not-Present Anomaly,True,2024-03-25 18:48:43
+1252,2151,2023-08-23 18:24:56,Mismatched Billing Details,True,2023-08-30 15:24:56
+1253,39230,2024-09-08 06:24:36,High Risk Country Match,True,2024-09-10 08:24:36
+1254,32757,2024-10-04 10:28:54,Mismatched Billing Details,True,2024-10-06 03:28:54
+1255,17125,2024-07-28 12:55:55,High Risk Country Match,False,
+1256,54917,2024-12-28 19:42:01,Card-Not-Present Anomaly,False,
+1257,50315,2024-05-18 07:48:03,High Risk Country Match,False,
+1258,516,2024-12-23 16:26:02,Card-Not-Present Anomaly,True,2024-12-27 18:26:02
+1259,40160,2024-07-16 13:27:05,Card-Not-Present Anomaly,True,2024-07-17 21:27:05
+1260,20052,2024-11-14 08:20:20,Suspicious Amount Spike,True,2024-11-15 20:20:20
+1261,50978,2024-05-16 14:40:59,Suspicious Amount Spike,False,
+1262,51687,2024-08-29 08:17:55,Suspicious Amount Spike,True,2024-09-04 00:17:55
+1263,11878,2024-08-18 04:28:12,Velocity Limit Exceeded,True,2024-08-23 10:28:12
+1264,63982,2024-12-18 04:07:32,Suspicious Amount Spike,True,2024-12-19 18:07:32
+1265,33384,2024-12-26 04:06:19,Mismatched Billing Details,True,2024-12-29 09:06:19
+1266,56063,2024-12-08 06:44:26,Card-Not-Present Anomaly,True,2024-12-14 08:44:26
+1267,54450,2024-04-26 23:32:56,Card-Not-Present Anomaly,True,2024-04-29 02:32:56
+1268,35114,2024-12-25 00:59:00,High Risk Country Match,True,2024-12-28 07:59:00
+1269,51635,2024-09-18 15:12:37,Card-Not-Present Anomaly,True,2024-09-23 13:12:37
+1270,3916,2023-09-20 12:25:32,Card-Not-Present Anomaly,True,2023-09-21 21:25:32
+1271,22373,2024-06-27 12:18:40,Velocity Limit Exceeded,True,2024-07-02 01:18:40
+1272,64047,2024-12-02 18:54:23,Suspicious Amount Spike,True,2024-12-03 18:54:23
+1273,1006,2024-12-22 00:21:35,Suspicious Amount Spike,True,2024-12-24 10:21:35
+1274,20756,2024-06-12 15:50:13,High Risk Country Match,False,
+1275,45306,2024-06-27 13:04:18,Velocity Limit Exceeded,True,2024-06-28 13:04:18
+1276,21345,2024-08-09 02:31:10,Mismatched Billing Details,True,2024-08-12 00:31:10
+1277,57184,2024-12-10 07:23:46,Velocity Limit Exceeded,True,2024-12-13 08:23:46
+1278,53407,2024-12-07 01:12:22,Mismatched Billing Details,False,
+1279,19093,2024-11-30 22:53:34,Card-Not-Present Anomaly,False,
+1280,15211,2024-12-11 16:37:58,High Risk Country Match,True,2024-12-18 05:37:58
+1281,40219,2023-01-16 11:12:28,Mismatched Billing Details,True,2023-01-21 17:12:28
+1282,68985,2024-06-07 07:00:30,High Risk Country Match,False,
+1283,17719,2024-12-03 02:45:28,Velocity Limit Exceeded,True,2024-12-08 04:45:28
+1284,20598,2024-10-25 13:55:44,Velocity Limit Exceeded,False,
+1285,16767,2024-04-29 15:04:45,Velocity Limit Exceeded,True,2024-05-02 17:04:45
+1286,73495,2024-12-02 04:46:24,Velocity Limit Exceeded,True,2024-12-10 03:46:24
+1287,54804,2024-01-18 12:51:42,High Risk Country Match,False,
+1288,60563,2024-12-19 23:17:14,Suspicious Amount Spike,False,
+1289,58027,2024-07-20 13:27:13,Card-Not-Present Anomaly,True,2024-07-27 07:27:13
+1290,33907,2024-12-24 19:23:43,Suspicious Amount Spike,True,2024-12-31 08:23:43
+1291,51345,2024-06-04 01:06:06,Velocity Limit Exceeded,True,2024-06-11 00:06:06
+1292,25870,2023-09-13 03:16:22,Mismatched Billing Details,True,2023-09-17 20:16:22
+1293,72344,2024-10-30 02:20:36,Velocity Limit Exceeded,True,2024-11-05 07:20:36
+1294,30743,2024-08-04 17:03:01,High Risk Country Match,True,2024-08-11 19:03:01
+1295,40083,2024-01-28 15:45:55,Velocity Limit Exceeded,True,2024-02-05 05:45:55
+1296,14738,2024-12-23 15:41:38,High Risk Country Match,True,2024-12-26 16:41:38
+1297,20246,2024-11-25 12:36:40,High Risk Country Match,True,2024-12-02 17:36:40
+1298,62129,2024-07-09 20:48:16,High Risk Country Match,True,2024-07-14 07:48:16
+1299,6090,2024-11-26 03:19:22,High Risk Country Match,True,2024-11-29 05:19:22
+1300,73510,2024-12-31 13:05:49,High Risk Country Match,False,
+1301,63953,2024-12-31 15:53:01,Suspicious Amount Spike,False,
+1302,22027,2024-10-20 16:26:00,Card-Not-Present Anomaly,True,2024-10-28 15:26:00
+1303,3838,2024-05-11 20:04:43,Suspicious Amount Spike,True,2024-05-14 00:04:43
+1304,72532,2024-10-31 11:01:26,Mismatched Billing Details,True,2024-11-03 19:01:26
+1305,33145,2024-08-23 21:04:29,Card-Not-Present Anomaly,True,2024-08-29 14:04:29
+1306,72525,2024-09-18 12:41:47,Velocity Limit Exceeded,True,2024-09-24 20:41:47
+1307,77583,2024-12-26 15:50:07,Card-Not-Present Anomaly,True,2024-12-30 00:50:07
+1308,59659,2024-06-24 10:30:58,Velocity Limit Exceeded,True,2024-06-28 07:30:58
+1309,59253,2024-12-10 19:33:02,Velocity Limit Exceeded,True,2024-12-16 19:33:02
+1310,42776,2024-07-22 20:01:03,Mismatched Billing Details,True,2024-07-25 13:01:03
+1311,65002,2024-11-15 17:33:45,Suspicious Amount Spike,True,2024-11-18 18:33:45
+1312,11147,2023-11-28 20:20:22,Velocity Limit Exceeded,True,2023-12-06 03:20:22
+1313,47750,2024-06-04 14:53:31,Card-Not-Present Anomaly,True,2024-06-11 22:53:31
+1314,8953,2024-08-09 16:29:51,Suspicious Amount Spike,False,
+1315,50863,2025-01-01 02:07:52,Velocity Limit Exceeded,True,2025-01-07 12:07:52
+1316,61957,2024-05-26 12:19:58,Card-Not-Present Anomaly,True,2024-05-29 11:19:58
+1317,55362,2024-08-06 16:21:06,Velocity Limit Exceeded,True,2024-08-10 16:21:06
+1318,47156,2024-12-29 15:09:29,Mismatched Billing Details,True,2025-01-04 04:09:29
+1319,13932,2024-11-20 19:01:51,Velocity Limit Exceeded,True,2024-11-28 00:01:51
+1320,33590,2024-11-02 04:53:35,Velocity Limit Exceeded,False,
+1321,12177,2024-06-22 02:52:13,Mismatched Billing Details,True,2024-06-25 21:52:13
+1322,14384,2024-02-06 09:36:15,Mismatched Billing Details,True,2024-02-09 01:36:15
+1323,49632,2024-02-22 02:18:28,High Risk Country Match,True,2024-02-23 11:18:28
+1324,54021,2024-12-18 15:44:55,Suspicious Amount Spike,True,2024-12-26 04:44:55
+1325,48091,2024-05-17 08:56:51,High Risk Country Match,True,2024-05-18 10:56:51
+1326,77439,2024-12-23 10:40:06,Velocity Limit Exceeded,False,
+1327,68020,2024-12-14 11:10:51,Suspicious Amount Spike,False,
+1328,67844,2024-08-23 23:39:37,Mismatched Billing Details,True,2024-08-31 06:39:37
+1329,15813,2024-11-30 17:46:12,Suspicious Amount Spike,True,2024-12-03 16:46:12
+1330,19158,2024-12-24 13:16:00,Velocity Limit Exceeded,False,
+1331,32514,2024-12-16 18:30:58,Suspicious Amount Spike,False,
+1332,33802,2024-03-28 01:53:22,High Risk Country Match,True,2024-04-03 17:53:22
+1333,60905,2024-03-05 01:08:47,Card-Not-Present Anomaly,False,
+1334,67245,2023-12-16 06:55:20,Velocity Limit Exceeded,True,2023-12-19 22:55:20
+1335,60337,2024-12-12 05:47:09,High Risk Country Match,False,
+1336,66109,2024-12-31 23:53:59,Suspicious Amount Spike,True,2025-01-03 12:53:59
+1337,76665,2024-11-21 07:57:49,Mismatched Billing Details,True,2024-11-27 19:57:49
+1338,20800,2024-05-29 00:38:25,Card-Not-Present Anomaly,True,2024-06-01 10:38:25
+1339,79069,2024-11-23 17:19:11,Mismatched Billing Details,False,
+1340,6438,2024-08-28 18:29:49,High Risk Country Match,True,2024-08-30 22:29:49
+1341,10510,2024-04-08 19:19:20,High Risk Country Match,True,2024-04-14 23:19:20
+1342,20404,2024-09-05 18:35:06,Card-Not-Present Anomaly,False,
+1343,11219,2024-11-12 07:01:23,High Risk Country Match,True,2024-11-17 04:01:23
+1344,28042,2024-11-13 15:57:30,Card-Not-Present Anomaly,True,2024-11-15 10:57:30
+1345,12400,2024-12-24 12:35:31,Velocity Limit Exceeded,True,2024-12-31 22:35:31
+1346,5913,2024-12-27 23:49:09,Mismatched Billing Details,True,2024-12-31 09:49:09
+1347,37101,2024-11-27 03:31:46,High Risk Country Match,True,2024-11-29 02:31:46
+1348,7631,2024-09-29 12:05:41,Velocity Limit Exceeded,True,2024-10-02 00:05:41
+1349,45024,2023-04-23 08:55:01,High Risk Country Match,True,2023-04-24 16:55:01
+1350,5350,2024-12-27 20:20:19,Mismatched Billing Details,True,2024-12-31 08:20:19
+1351,21815,2023-04-27 11:50:47,Suspicious Amount Spike,True,2023-05-02 23:50:47
+1352,14903,2024-12-24 22:43:07,High Risk Country Match,False,
+1353,45437,2024-08-16 19:14:02,Velocity Limit Exceeded,True,2024-08-21 05:14:02
+1354,19331,2024-11-16 01:47:13,Suspicious Amount Spike,False,
+1355,12409,2024-09-10 18:33:45,Card-Not-Present Anomaly,True,2024-09-15 03:33:45
+1356,34479,2024-09-08 22:49:39,Suspicious Amount Spike,False,
+1357,29134,2024-12-31 05:22:35,Mismatched Billing Details,True,2025-01-04 06:22:35
+1358,32139,2024-12-12 02:39:12,Card-Not-Present Anomaly,True,2024-12-15 15:39:12
+1359,24689,2024-10-22 10:56:52,Suspicious Amount Spike,True,2024-10-28 10:56:52
+1360,76591,2024-09-09 10:09:41,Velocity Limit Exceeded,True,2024-09-16 23:09:41
+1361,526,2024-12-19 15:04:39,Velocity Limit Exceeded,False,
+1362,43098,2024-12-25 01:41:17,Mismatched Billing Details,True,2025-01-01 15:41:17
+1363,25376,2024-04-20 10:41:18,Mismatched Billing Details,False,
+1364,37190,2024-07-27 10:33:23,High Risk Country Match,True,2024-08-01 08:33:23
+1365,3195,2024-11-26 09:28:59,Suspicious Amount Spike,True,2024-11-30 16:28:59
+1366,16214,2024-10-27 13:19:07,Card-Not-Present Anomaly,True,2024-11-01 15:19:07
+1367,8728,2024-09-26 22:31:18,Suspicious Amount Spike,True,2024-10-02 20:31:18
+1368,77785,2022-10-21 08:02:23,High Risk Country Match,True,2022-10-28 01:02:23
+1369,59287,2024-12-10 23:09:48,High Risk Country Match,True,2024-12-18 09:09:48
+1370,9905,2024-12-12 09:35:35,Mismatched Billing Details,True,2024-12-14 07:35:35
+1371,17192,2024-11-21 07:33:03,Velocity Limit Exceeded,True,2024-11-24 17:33:03
+1372,20207,2024-11-01 10:47:51,Suspicious Amount Spike,True,2024-11-08 03:47:51
+1373,3454,2024-03-09 01:26:04,Card-Not-Present Anomaly,False,
+1374,73499,2024-12-15 08:07:20,Velocity Limit Exceeded,False,
+1375,54310,2023-12-31 07:00:05,Suspicious Amount Spike,True,2024-01-04 19:00:05
+1376,22030,2024-12-11 18:24:21,Suspicious Amount Spike,True,2024-12-13 13:24:21
+1377,73918,2024-12-31 17:22:31,High Risk Country Match,True,2025-01-06 17:22:31
+1378,77281,2024-08-16 19:50:04,Card-Not-Present Anomaly,False,
+1379,70095,2024-11-01 19:51:18,Card-Not-Present Anomaly,True,2024-11-08 19:51:18
+1380,44455,2024-11-20 23:11:59,Mismatched Billing Details,True,2024-11-28 01:11:59
+1381,68632,2024-08-04 18:14:53,Velocity Limit Exceeded,True,2024-08-09 04:14:53
+1382,1152,2024-11-30 05:22:57,High Risk Country Match,True,2024-12-05 03:22:57
+1383,74956,2024-06-11 10:38:06,High Risk Country Match,False,
+1384,64500,2023-03-15 19:45:03,Card-Not-Present Anomaly,True,2023-03-16 19:45:03
+1385,72301,2024-12-11 09:25:58,Mismatched Billing Details,True,2024-12-13 00:25:58
+1386,14904,2024-12-31 21:21:42,Mismatched Billing Details,True,2025-01-05 22:21:42
+1387,60457,2024-11-16 07:08:55,Velocity Limit Exceeded,True,2024-11-19 03:08:55
+1388,1640,2024-08-03 19:54:28,Mismatched Billing Details,False,
+1389,73672,2024-11-10 14:08:23,Card-Not-Present Anomaly,True,2024-11-14 21:08:23
+1390,10620,2024-12-06 20:02:35,Mismatched Billing Details,True,2024-12-11 11:02:35
+1391,76384,2024-12-05 22:11:50,Card-Not-Present Anomaly,True,2024-12-09 07:11:50
+1392,4587,2024-12-25 20:55:12,Velocity Limit Exceeded,True,2024-12-30 01:55:12
+1393,67251,2024-11-12 12:32:02,High Risk Country Match,True,2024-11-14 11:32:02
+1394,2937,2024-12-25 00:18:37,Velocity Limit Exceeded,True,2024-12-30 10:18:37
+1395,45581,2024-12-14 17:16:22,Card-Not-Present Anomaly,True,2024-12-20 11:16:22
+1396,48495,2024-10-20 06:23:10,Suspicious Amount Spike,True,2024-10-27 20:23:10
+1397,17209,2024-09-08 01:45:41,Velocity Limit Exceeded,True,2024-09-14 03:45:41
+1398,67724,2024-12-18 04:05:10,High Risk Country Match,True,2024-12-20 20:05:10
+1399,36699,2024-06-24 23:53:32,High Risk Country Match,True,2024-06-27 01:53:32
+1400,28061,2024-11-03 20:33:42,Suspicious Amount Spike,True,2024-11-06 05:33:42
+1401,20348,2024-11-11 02:18:29,Card-Not-Present Anomaly,False,
+1402,25742,2024-12-22 03:04:54,Card-Not-Present Anomaly,True,2024-12-25 13:04:54
+1403,78833,2024-10-19 10:42:14,Suspicious Amount Spike,True,2024-10-26 16:42:14
+1404,74357,2024-07-06 06:22:01,Mismatched Billing Details,True,2024-07-12 10:22:01
+1405,2610,2023-08-10 13:20:08,Mismatched Billing Details,True,2023-08-12 18:20:08
+1406,43482,2023-08-06 23:27:21,Suspicious Amount Spike,False,
+1407,14075,2024-12-24 12:41:00,Suspicious Amount Spike,True,2024-12-29 02:41:00
+1408,38022,2024-12-07 20:58:38,Velocity Limit Exceeded,True,2024-12-12 02:58:38
+1409,3139,2024-09-28 21:25:02,Card-Not-Present Anomaly,True,2024-10-04 15:25:02
+1410,19316,2024-12-24 13:22:32,Card-Not-Present Anomaly,True,2024-12-30 01:22:32
+1411,244,2024-11-05 11:11:31,Velocity Limit Exceeded,True,2024-11-11 21:11:31
+1412,76749,2024-12-31 17:48:09,Suspicious Amount Spike,False,
+1413,49444,2024-12-17 15:16:21,High Risk Country Match,True,2024-12-22 10:16:21
+1414,43030,2024-11-25 20:07:57,High Risk Country Match,True,2024-12-02 00:07:57
+1415,19845,2024-11-01 06:32:00,Suspicious Amount Spike,True,2024-11-02 06:32:00
+1416,12140,2024-12-22 01:14:42,Velocity Limit Exceeded,True,2024-12-25 01:14:42
+1417,13629,2024-06-16 13:17:41,Suspicious Amount Spike,True,2024-06-19 06:17:41
+1418,69464,2024-06-13 00:47:52,Card-Not-Present Anomaly,True,2024-06-16 17:47:52
+1419,59499,2023-10-06 20:01:11,Velocity Limit Exceeded,False,
+1420,58295,2024-01-29 02:38:09,Velocity Limit Exceeded,True,2024-02-03 08:38:09
+1421,67709,2024-11-09 17:26:15,Velocity Limit Exceeded,False,
+1422,29175,2024-11-28 20:16:36,Mismatched Billing Details,True,2024-12-02 14:16:36
+1423,66861,2024-11-10 19:51:11,Suspicious Amount Spike,True,2024-11-17 21:51:11
+1424,74615,2024-12-27 21:25:06,Velocity Limit Exceeded,True,2025-01-02 15:25:06
+1425,11869,2024-12-06 17:26:13,Mismatched Billing Details,False,
+1426,73668,2022-07-31 11:14:23,Card-Not-Present Anomaly,True,2022-08-04 18:14:23
+1427,66405,2024-12-18 00:23:50,Suspicious Amount Spike,True,2024-12-21 18:23:50
+1428,73328,2024-12-27 17:18:18,Suspicious Amount Spike,True,2025-01-01 11:18:18
+1429,57109,2024-12-26 10:48:58,Velocity Limit Exceeded,True,2025-01-02 22:48:58
+1430,35461,2024-10-29 19:01:54,High Risk Country Match,False,
+1431,1036,2024-11-22 05:37:41,Card-Not-Present Anomaly,True,2024-11-26 18:37:41
+1432,31408,2024-12-28 10:46:21,Suspicious Amount Spike,True,2025-01-01 14:46:21
+1433,6920,2024-07-07 01:51:00,Mismatched Billing Details,True,2024-07-08 19:51:00
+1434,59067,2023-11-19 05:03:25,Suspicious Amount Spike,True,2023-11-23 18:03:25
+1435,12854,2024-12-07 17:57:23,Suspicious Amount Spike,True,2024-12-13 05:57:23
+1436,53613,2024-12-26 12:45:39,Velocity Limit Exceeded,True,2024-12-28 10:45:39
+1437,63726,2024-12-05 08:14:49,Suspicious Amount Spike,True,2024-12-07 17:14:49
+1438,23927,2024-12-30 03:46:25,Card-Not-Present Anomaly,True,2025-01-07 01:46:25
+1439,7738,2024-05-01 21:09:27,Card-Not-Present Anomaly,True,2024-05-09 16:09:27
+1440,77175,2024-11-10 12:44:23,Card-Not-Present Anomaly,False,
+1441,29090,2024-12-09 01:45:53,Velocity Limit Exceeded,True,2024-12-11 10:45:53
+1442,51375,2024-12-22 20:56:04,Mismatched Billing Details,False,
+1443,71391,2024-09-26 15:15:11,Suspicious Amount Spike,True,2024-10-01 17:15:11
+1444,47014,2024-05-17 20:20:42,Card-Not-Present Anomaly,True,2024-05-25 00:20:42
+1445,38221,2024-12-24 07:23:00,Suspicious Amount Spike,True,2024-12-25 17:23:00
+1446,32680,2024-07-23 13:14:13,Suspicious Amount Spike,True,2024-07-29 08:14:13
+1447,26666,2024-08-13 14:11:53,High Risk Country Match,True,2024-08-15 19:11:53
+1448,28868,2024-11-18 20:09:56,Card-Not-Present Anomaly,True,2024-11-26 08:09:56
+1449,76219,2024-12-06 06:24:07,High Risk Country Match,True,2024-12-09 18:24:07
+1450,35623,2024-12-04 13:48:38,Mismatched Billing Details,False,
+1451,50550,2024-12-26 20:43:01,Card-Not-Present Anomaly,True,2025-01-02 23:43:01
+1452,4539,2024-12-08 14:26:16,High Risk Country Match,True,2024-12-10 09:26:16
+1453,62203,2024-12-01 13:52:25,Mismatched Billing Details,True,2024-12-03 06:52:25
+1454,53363,2024-11-12 19:23:27,Suspicious Amount Spike,True,2024-11-20 01:23:27
+1455,4816,2024-09-23 06:33:24,Mismatched Billing Details,True,2024-09-29 18:33:24
+1456,28360,2024-12-16 04:31:29,High Risk Country Match,True,2024-12-18 04:31:29
+1457,39313,2024-12-02 17:53:26,Suspicious Amount Spike,True,2024-12-04 00:53:26
+1458,22179,2024-08-19 10:30:32,Mismatched Billing Details,True,2024-08-27 04:30:32
+1459,58296,2024-05-13 07:10:10,Card-Not-Present Anomaly,True,2024-05-16 02:10:10
+1460,1917,2024-12-19 08:45:20,Velocity Limit Exceeded,True,2024-12-24 12:45:20
+1461,41336,2024-12-15 06:05:52,Velocity Limit Exceeded,True,2024-12-16 22:05:52
+1462,9890,2024-12-08 18:01:10,High Risk Country Match,True,2024-12-14 22:01:10
+1463,25761,2023-05-31 15:04:28,Card-Not-Present Anomaly,False,
+1464,8498,2024-12-12 02:37:15,Suspicious Amount Spike,True,2024-12-18 13:37:15
+1465,8068,2024-11-29 15:51:52,High Risk Country Match,False,
+1466,13122,2024-09-20 23:24:09,Velocity Limit Exceeded,False,
+1467,43201,2024-11-05 02:04:05,High Risk Country Match,True,2024-11-06 21:04:05
+1468,24898,2023-06-09 20:09:39,Mismatched Billing Details,True,2023-06-15 03:09:39
+1469,30336,2024-12-10 22:18:15,Velocity Limit Exceeded,True,2024-12-16 17:18:15
+1470,14338,2024-12-31 21:21:45,High Risk Country Match,True,2025-01-02 12:21:45
+1471,42518,2024-12-02 20:30:45,Velocity Limit Exceeded,True,2024-12-06 22:30:45
+1472,77034,2024-11-20 15:31:33,Suspicious Amount Spike,True,2024-11-22 16:31:33
+1473,71421,2024-08-03 10:16:10,Card-Not-Present Anomaly,True,2024-08-07 14:16:10
+1474,60874,2024-09-07 07:02:50,Suspicious Amount Spike,False,
+1475,76954,2024-12-08 13:16:00,High Risk Country Match,True,2024-12-12 14:16:00
+1476,62266,2023-01-04 09:39:22,Card-Not-Present Anomaly,True,2023-01-10 16:39:22
+1477,62224,2024-10-19 19:47:31,Velocity Limit Exceeded,True,2024-10-22 20:47:31
+1478,72291,2024-07-29 04:09:55,Mismatched Billing Details,True,2024-08-02 22:09:55
+1479,20141,2024-11-29 13:22:11,Card-Not-Present Anomaly,True,2024-11-30 22:22:11
+1480,9111,2024-11-19 23:41:22,Card-Not-Present Anomaly,False,
+1481,79925,2024-11-10 14:15:36,High Risk Country Match,True,2024-11-18 07:15:36
+1482,37228,2024-12-19 18:49:17,Velocity Limit Exceeded,True,2024-12-21 20:49:17
+1483,60420,2024-10-27 21:23:03,Mismatched Billing Details,True,2024-11-02 08:23:03
+1484,68177,2024-12-31 18:06:11,Mismatched Billing Details,False,
+1485,42029,2024-07-25 21:48:01,Velocity Limit Exceeded,True,2024-07-28 04:48:01
+1486,30013,2024-11-16 10:06:31,High Risk Country Match,True,2024-11-19 16:06:31
+1487,47373,2024-11-28 09:27:47,Card-Not-Present Anomaly,False,
+1488,54328,2024-12-12 10:14:44,Suspicious Amount Spike,False,
+1489,33295,2024-12-11 06:33:50,Card-Not-Present Anomaly,False,
+1490,1726,2024-06-05 03:21:10,Velocity Limit Exceeded,True,2024-06-10 11:21:10
+1491,57984,2024-08-01 23:13:43,Velocity Limit Exceeded,False,
+1492,17567,2024-12-13 11:02:33,Velocity Limit Exceeded,True,2024-12-20 23:02:33
+1493,42799,2024-11-17 13:28:03,Velocity Limit Exceeded,True,2024-11-22 07:28:03
+1494,56600,2023-02-02 07:38:20,Velocity Limit Exceeded,True,2023-02-07 15:38:20
+1495,54366,2024-10-06 08:21:12,Card-Not-Present Anomaly,True,2024-10-10 08:21:12
+1496,46296,2024-07-29 08:56:22,Velocity Limit Exceeded,True,2024-08-05 17:56:22
+1497,23208,2024-11-06 02:46:04,Suspicious Amount Spike,True,2024-11-09 07:46:04
+1498,38284,2024-09-04 13:03:40,High Risk Country Match,False,
+1499,1196,2024-10-23 12:06:07,Mismatched Billing Details,True,2024-10-28 14:06:07
+1500,41049,2024-12-25 06:28:12,Velocity Limit Exceeded,True,2025-01-01 08:28:12
+1501,39378,2024-12-28 00:02:58,Card-Not-Present Anomaly,True,2024-12-29 11:02:58
+1502,56575,2024-01-06 14:02:22,Velocity Limit Exceeded,True,2024-01-11 06:02:22
+1503,58630,2024-12-04 11:30:16,Velocity Limit Exceeded,True,2024-12-08 09:30:16
+1504,47429,2024-12-06 13:11:45,Velocity Limit Exceeded,False,
+1505,55024,2024-08-20 21:46:14,Mismatched Billing Details,True,2024-08-22 19:46:14
+1506,12114,2024-06-05 13:52:46,Suspicious Amount Spike,True,2024-06-12 13:52:46
+1507,28902,2024-10-27 12:29:14,Suspicious Amount Spike,True,2024-10-28 22:29:14
+1508,6843,2024-12-19 02:56:56,Mismatched Billing Details,True,2024-12-25 01:56:56
+1509,71436,2024-12-31 03:50:48,High Risk Country Match,True,2025-01-06 22:50:48
+1510,4424,2024-10-31 20:23:05,Suspicious Amount Spike,True,2024-11-02 10:23:05
+1511,16787,2024-05-26 20:42:24,High Risk Country Match,True,2024-05-30 07:42:24
+1512,51384,2024-11-18 11:23:34,Mismatched Billing Details,True,2024-11-25 10:23:34
+1513,64781,2024-12-25 13:31:55,High Risk Country Match,True,2024-12-31 00:31:55
+1514,14990,2024-12-25 06:35:06,Suspicious Amount Spike,True,2024-12-26 13:35:06
+1515,30469,2024-02-17 18:56:53,Mismatched Billing Details,True,2024-02-21 17:56:53
+1516,42927,2024-06-20 06:22:42,Card-Not-Present Anomaly,True,2024-06-27 08:22:42
+1517,5857,2024-06-15 02:44:57,Velocity Limit Exceeded,True,2024-06-20 12:44:57
+1518,26658,2024-10-27 16:44:50,Mismatched Billing Details,True,2024-11-03 04:44:50
+1519,55684,2023-04-19 20:53:48,Mismatched Billing Details,True,2023-04-23 22:53:48
+1520,32245,2024-12-05 02:26:34,Suspicious Amount Spike,True,2024-12-07 01:26:34
+1521,50184,2024-05-26 03:17:00,High Risk Country Match,True,2024-05-30 05:17:00
+1522,57384,2024-10-15 10:11:23,Mismatched Billing Details,True,2024-10-17 05:11:23
+1523,59352,2024-05-25 23:51:14,Mismatched Billing Details,True,2024-05-28 17:51:14
+1524,23835,2024-11-25 18:02:04,Suspicious Amount Spike,True,2024-12-02 18:02:04
+1525,45897,2024-07-18 19:28:00,Card-Not-Present Anomaly,False,
+1526,32711,2024-08-23 23:19:47,Card-Not-Present Anomaly,True,2024-08-30 00:19:47
+1527,40949,2024-12-28 02:13:16,Velocity Limit Exceeded,True,2025-01-03 01:13:16
+1528,69469,2024-03-31 21:40:56,Suspicious Amount Spike,False,
+1529,56264,2024-12-25 21:14:13,Suspicious Amount Spike,True,2024-12-29 18:14:13
+1530,31083,2023-04-08 07:49:58,Velocity Limit Exceeded,True,2023-04-15 22:49:58
+1531,36448,2024-05-06 21:23:34,Card-Not-Present Anomaly,False,
+1532,39247,2024-12-03 09:51:23,Suspicious Amount Spike,True,2024-12-06 23:51:23
+1533,54870,2024-09-14 09:53:44,Mismatched Billing Details,True,2024-09-20 07:53:44
+1534,66534,2024-11-13 00:51:32,Mismatched Billing Details,False,
+1535,12642,2024-06-15 05:37:51,Mismatched Billing Details,True,2024-06-19 04:37:51
+1536,11663,2024-12-07 06:59:01,Suspicious Amount Spike,True,2024-12-15 03:59:01
+1537,40390,2024-10-01 05:50:56,High Risk Country Match,True,2024-10-02 11:50:56
+1538,35255,2024-06-16 11:54:46,Suspicious Amount Spike,True,2024-06-22 03:54:46
+1539,12439,2024-11-25 10:14:31,Velocity Limit Exceeded,True,2024-11-27 05:14:31
+1540,72477,2024-12-31 10:21:44,Card-Not-Present Anomaly,True,2025-01-02 11:21:44
+1541,6283,2024-06-03 20:48:28,Card-Not-Present Anomaly,True,2024-06-07 19:48:28
+1542,33630,2024-12-03 10:15:08,Velocity Limit Exceeded,False,
+1543,54697,2024-11-11 01:43:23,High Risk Country Match,True,2024-11-15 02:43:23
+1544,61928,2025-01-01 02:23:11,High Risk Country Match,True,2025-01-02 15:23:11
+1545,78320,2024-10-16 09:23:00,Suspicious Amount Spike,True,2024-10-21 13:23:00
+1546,53560,2024-10-11 00:06:44,Suspicious Amount Spike,False,
+1547,45631,2024-12-05 17:45:18,Suspicious Amount Spike,True,2024-12-09 10:45:18
+1548,40211,2024-12-20 04:16:54,Mismatched Billing Details,True,2024-12-22 03:16:54
+1549,72300,2024-12-20 23:54:27,Suspicious Amount Spike,True,2024-12-25 22:54:27
+1550,44533,2024-10-08 11:36:27,High Risk Country Match,True,2024-10-10 12:36:27
+1551,72049,2024-12-16 11:56:31,Card-Not-Present Anomaly,False,
+1552,79561,2024-02-11 19:38:34,High Risk Country Match,True,2024-02-14 10:38:34
+1553,23724,2024-12-18 04:32:15,Card-Not-Present Anomaly,True,2024-12-23 12:32:15
+1554,46977,2024-01-11 23:33:50,Card-Not-Present Anomaly,True,2024-01-14 17:33:50
+1555,51640,2024-09-01 20:54:24,Suspicious Amount Spike,True,2024-09-05 03:54:24
+1556,79201,2024-10-23 02:06:14,Suspicious Amount Spike,True,2024-10-28 13:06:14
+1557,6048,2023-08-12 02:42:56,Velocity Limit Exceeded,True,2023-08-17 20:42:56
+1558,17400,2024-09-27 01:39:38,Suspicious Amount Spike,True,2024-09-30 15:39:38
+1559,65721,2024-07-01 21:33:09,Card-Not-Present Anomaly,False,
+1560,50099,2024-09-28 19:16:57,Velocity Limit Exceeded,True,2024-09-30 22:16:57
+1561,44284,2024-11-21 18:55:26,High Risk Country Match,True,2024-11-28 10:55:26
+1562,22522,2024-07-18 19:33:58,Mismatched Billing Details,False,
+1563,73132,2024-09-07 00:20:22,Card-Not-Present Anomaly,True,2024-09-09 16:20:22
+1564,60276,2024-08-02 05:18:19,Suspicious Amount Spike,True,2024-08-07 03:18:19
+1565,37685,2024-08-01 20:45:18,Mismatched Billing Details,True,2024-08-03 11:45:18
+1566,56722,2023-07-06 18:19:19,Mismatched Billing Details,True,2023-07-14 01:19:19
+1567,36437,2024-10-22 01:57:14,Card-Not-Present Anomaly,True,2024-10-25 19:57:14
+1568,57637,2024-03-31 15:21:46,High Risk Country Match,True,2024-04-03 22:21:46
+1569,52989,2024-12-01 18:01:22,Velocity Limit Exceeded,True,2024-12-03 08:01:22
+1570,76812,2024-12-30 17:33:53,Card-Not-Present Anomaly,False,
+1571,16545,2024-12-15 07:32:46,Mismatched Billing Details,True,2024-12-18 02:32:46
+1572,74470,2023-11-05 15:26:11,Suspicious Amount Spike,True,2023-11-07 06:26:11
+1573,4270,2024-07-26 08:01:28,Card-Not-Present Anomaly,False,
+1574,15520,2024-10-19 03:01:01,Suspicious Amount Spike,False,
+1575,8935,2024-09-22 20:57:47,Suspicious Amount Spike,True,2024-09-29 03:57:47
+1576,54774,2024-11-18 01:27:33,Mismatched Billing Details,True,2024-11-20 00:27:33
+1577,79834,2024-06-08 02:02:21,Suspicious Amount Spike,True,2024-06-14 13:02:21
+1578,26734,2024-09-03 03:15:14,Mismatched Billing Details,True,2024-09-08 00:15:14
+1579,72913,2024-03-31 11:54:10,Card-Not-Present Anomaly,False,
+1580,66941,2024-06-08 04:40:15,Velocity Limit Exceeded,True,2024-06-13 22:40:15
+1581,20183,2024-12-19 13:50:09,Mismatched Billing Details,True,2024-12-26 23:50:09
+1582,79775,2024-04-15 07:39:51,Card-Not-Present Anomaly,True,2024-04-20 20:39:51
+1583,53164,2024-12-27 12:33:27,Suspicious Amount Spike,False,
+1584,232,2024-12-01 17:09:28,Suspicious Amount Spike,True,2024-12-03 16:09:28
+1585,29441,2024-05-12 14:22:23,High Risk Country Match,False,
+1586,46505,2024-10-08 01:14:46,High Risk Country Match,True,2024-10-09 22:14:46
+1587,76063,2024-12-30 17:01:50,High Risk Country Match,True,2025-01-03 12:01:50
+1588,78071,2024-11-23 03:44:08,Velocity Limit Exceeded,True,2024-11-24 08:44:08
+1589,9246,2024-06-03 20:42:18,Mismatched Billing Details,True,2024-06-08 11:42:18
+1590,40528,2024-09-09 10:51:12,Suspicious Amount Spike,True,2024-09-15 07:51:12
+1591,16458,2024-12-03 20:57:52,Mismatched Billing Details,True,2024-12-07 03:57:52
+1592,67867,2024-11-28 10:17:50,Velocity Limit Exceeded,True,2024-12-04 15:17:50
+1593,15288,2024-01-19 18:06:43,Suspicious Amount Spike,True,2024-01-26 10:06:43
+1594,43078,2024-04-04 20:15:19,High Risk Country Match,True,2024-04-10 10:15:19
+1595,11399,2024-10-18 01:28:47,Mismatched Billing Details,True,2024-10-23 06:28:47
+1596,41804,2024-10-12 19:07:30,Velocity Limit Exceeded,True,2024-10-19 18:07:30
+1597,62927,2024-12-29 02:46:53,Mismatched Billing Details,True,2025-01-05 02:46:53
+1598,19649,2024-08-15 19:09:48,Card-Not-Present Anomaly,True,2024-08-20 04:09:48
+1599,5426,2024-07-03 18:50:37,High Risk Country Match,True,2024-07-08 04:50:37
+1600,21629,2023-05-15 05:27:43,Suspicious Amount Spike,True,2023-05-22 08:27:43
+1601,664,2024-10-14 16:53:16,Velocity Limit Exceeded,True,2024-10-21 10:53:16
+1602,51518,2024-11-25 14:10:53,Mismatched Billing Details,True,2024-11-28 15:10:53
+1603,27717,2024-12-30 04:54:11,Velocity Limit Exceeded,True,2025-01-02 01:54:11
+1604,67231,2024-12-23 10:33:57,Card-Not-Present Anomaly,True,2024-12-29 08:33:57
+1605,26403,2024-09-26 13:38:47,Suspicious Amount Spike,True,2024-10-01 01:38:47
+1606,71854,2024-10-05 20:05:48,Velocity Limit Exceeded,True,2024-10-13 05:05:48
+1607,40746,2024-09-15 23:17:01,Mismatched Billing Details,True,2024-09-19 12:17:01
+1608,47775,2024-12-27 10:52:51,Suspicious Amount Spike,False,
+1609,44401,2024-12-14 02:38:47,Suspicious Amount Spike,True,2024-12-17 10:38:47
+1610,58441,2024-10-18 06:29:13,Velocity Limit Exceeded,True,2024-10-25 21:29:13
+1611,65359,2024-12-17 20:01:17,Card-Not-Present Anomaly,True,2024-12-20 06:01:17
+1612,25408,2024-12-29 07:29:53,Suspicious Amount Spike,True,2025-01-04 01:29:53
+1613,75068,2024-12-11 19:16:30,Velocity Limit Exceeded,True,2024-12-12 19:16:30
+1614,2011,2024-12-27 03:43:58,Velocity Limit Exceeded,True,2025-01-04 00:43:58
+1615,64950,2024-12-24 14:14:31,Velocity Limit Exceeded,True,2024-12-28 08:14:31
+1616,8793,2024-12-14 14:56:45,Suspicious Amount Spike,True,2024-12-22 12:56:45
+1617,70699,2024-08-24 10:24:29,Card-Not-Present Anomaly,True,2024-08-29 23:24:29
+1618,63750,2024-12-31 23:47:31,Mismatched Billing Details,True,2025-01-06 18:47:31
+1619,24038,2024-11-24 18:26:43,Velocity Limit Exceeded,True,2024-11-30 16:26:43
+1620,38985,2024-04-18 21:28:35,Velocity Limit Exceeded,False,
+1621,36283,2023-04-27 16:40:15,High Risk Country Match,False,
+1622,65396,2024-12-23 16:43:06,Card-Not-Present Anomaly,True,2024-12-31 14:43:06
+1623,29065,2024-12-07 09:20:37,High Risk Country Match,True,2024-12-09 10:20:37
+1624,71455,2024-02-06 21:04:23,High Risk Country Match,True,2024-02-07 22:04:23
+1625,69728,2024-11-21 11:53:37,Mismatched Billing Details,True,2024-11-24 19:53:37
+1626,61914,2024-05-29 05:36:19,Card-Not-Present Anomaly,True,2024-06-03 09:36:19
+1627,75358,2024-12-31 19:38:44,Velocity Limit Exceeded,False,
+1628,35349,2024-11-14 07:37:51,High Risk Country Match,True,2024-11-20 06:37:51
+1629,78582,2024-09-03 12:28:58,High Risk Country Match,True,2024-09-08 22:28:58
+1630,60108,2024-07-25 17:30:10,Mismatched Billing Details,False,
+1631,48311,2024-11-30 22:47:50,Velocity Limit Exceeded,True,2024-12-06 18:47:50
+1632,37649,2024-07-31 17:28:46,High Risk Country Match,True,2024-08-02 03:28:46
+1633,72942,2024-11-24 20:30:12,Suspicious Amount Spike,False,
+1634,1573,2024-01-31 01:30:34,Velocity Limit Exceeded,True,2024-02-07 18:30:34
+1635,54186,2024-08-20 14:16:55,High Risk Country Match,False,
+1636,26724,2024-10-08 19:53:24,Card-Not-Present Anomaly,True,2024-10-10 09:53:24
+1637,76316,2024-12-29 23:10:51,High Risk Country Match,True,2025-01-01 18:10:51
+1638,3463,2023-11-01 02:59:48,Card-Not-Present Anomaly,True,2023-11-03 03:59:48
+1639,26270,2024-12-08 03:14:13,High Risk Country Match,True,2024-12-12 08:14:13
+1640,25141,2024-11-01 04:49:45,Mismatched Billing Details,False,
+1641,12491,2024-08-22 12:24:57,Velocity Limit Exceeded,True,2024-08-29 21:24:57
+1642,63050,2024-12-20 15:09:46,Card-Not-Present Anomaly,True,2024-12-21 15:09:46
+1643,75581,2024-10-14 13:24:53,High Risk Country Match,True,2024-10-21 11:24:53
+1644,63230,2024-12-19 18:29:15,Suspicious Amount Spike,True,2024-12-24 18:29:15
+1645,15223,2024-11-12 21:07:23,Velocity Limit Exceeded,True,2024-11-18 22:07:23
+1646,25136,2024-12-31 00:42:54,Velocity Limit Exceeded,True,2025-01-02 20:42:54
+1647,67602,2024-11-13 19:42:46,Mismatched Billing Details,True,2024-11-17 11:42:46
+1648,77278,2024-12-21 22:20:29,Velocity Limit Exceeded,True,2024-12-26 14:20:29
+1649,12850,2024-09-24 18:42:02,Mismatched Billing Details,True,2024-09-26 07:42:02
+1650,62742,2024-12-30 23:06:48,Velocity Limit Exceeded,False,
+1651,44330,2024-09-10 21:55:52,Card-Not-Present Anomaly,True,2024-09-12 10:55:52
+1652,24450,2024-04-14 02:26:31,Suspicious Amount Spike,True,2024-04-18 05:26:31
+1653,35755,2024-09-05 09:54:44,Mismatched Billing Details,True,2024-09-10 19:54:44
+1654,7837,2024-12-10 17:13:56,Card-Not-Present Anomaly,True,2024-12-16 01:13:56
+1655,45175,2024-08-30 17:40:07,Suspicious Amount Spike,True,2024-09-03 13:40:07
+1656,51426,2024-09-22 12:35:20,Mismatched Billing Details,False,
+1657,62234,2024-01-25 06:19:43,Mismatched Billing Details,True,2024-01-28 16:19:43
+1658,19966,2024-10-16 16:25:29,Suspicious Amount Spike,False,
+1659,46191,2024-07-17 19:45:16,Suspicious Amount Spike,True,2024-07-21 00:45:16
+1660,73897,2024-10-05 13:36:40,Velocity Limit Exceeded,True,2024-10-11 10:36:40
+1661,47004,2023-04-15 16:36:57,Card-Not-Present Anomaly,True,2023-04-19 02:36:57
+1662,37516,2024-12-31 10:21:37,Suspicious Amount Spike,True,2025-01-02 23:21:37
+1663,12576,2024-12-05 17:46:00,Mismatched Billing Details,True,2024-12-12 18:46:00
+1664,40224,2024-06-10 04:27:45,High Risk Country Match,True,2024-06-16 10:27:45
+1665,48812,2024-12-27 00:50:03,Card-Not-Present Anomaly,True,2025-01-01 09:50:03
+1666,67043,2024-12-31 12:20:37,Mismatched Billing Details,True,2025-01-06 13:20:37
+1667,55159,2024-12-20 18:34:40,Velocity Limit Exceeded,True,2024-12-23 09:34:40
+1668,45981,2024-11-30 23:09:22,Velocity Limit Exceeded,True,2024-12-02 19:09:22
+1669,63898,2024-12-28 12:00:43,Suspicious Amount Spike,True,2024-12-29 12:00:43
+1670,62089,2024-12-19 13:48:56,Card-Not-Present Anomaly,True,2024-12-26 01:48:56
+1671,29827,2024-01-08 04:09:55,Card-Not-Present Anomaly,True,2024-01-15 05:09:55
+1672,79514,2024-12-22 07:22:20,Card-Not-Present Anomaly,True,2024-12-27 05:22:20
+1673,20888,2024-09-27 12:53:37,Card-Not-Present Anomaly,True,2024-10-03 19:53:37
+1674,44450,2024-12-11 18:56:29,Card-Not-Present Anomaly,False,
+1675,62172,2024-02-29 07:32:11,Card-Not-Present Anomaly,True,2024-03-02 05:32:11
+1676,16829,2024-11-13 01:20:59,Velocity Limit Exceeded,True,2024-11-15 13:20:59
+1677,48109,2024-04-15 12:00:41,Mismatched Billing Details,True,2024-04-22 18:00:41
+1678,25600,2024-11-12 19:22:46,Mismatched Billing Details,False,
+1679,24356,2024-12-26 22:59:13,Mismatched Billing Details,True,2024-12-29 19:59:13
+1680,71573,2024-08-21 20:44:51,High Risk Country Match,True,2024-08-24 09:44:51
+1681,22515,2024-11-22 19:06:01,Card-Not-Present Anomaly,True,2024-11-30 14:06:01
+1682,16388,2024-08-05 15:04:00,Suspicious Amount Spike,True,2024-08-12 20:04:00
+1683,4128,2024-07-26 14:52:43,Suspicious Amount Spike,True,2024-07-31 19:52:43
+1684,59616,2024-05-26 09:12:17,Card-Not-Present Anomaly,True,2024-06-02 02:12:17
+1685,52106,2024-12-24 05:19:44,Card-Not-Present Anomaly,True,2024-12-27 08:19:44
+1686,44320,2023-08-26 17:17:00,High Risk Country Match,False,
+1687,30708,2024-11-15 05:05:02,Mismatched Billing Details,False,
+1688,48309,2024-10-11 03:47:00,High Risk Country Match,True,2024-10-13 01:47:00
+1689,17056,2024-11-10 20:17:46,High Risk Country Match,True,2024-11-15 20:17:46
+1690,18124,2024-09-05 00:17:11,Card-Not-Present Anomaly,True,2024-09-06 23:17:11
+1691,50255,2024-11-03 04:20:29,Velocity Limit Exceeded,True,2024-11-09 17:20:29
+1692,32253,2024-12-30 08:39:01,Card-Not-Present Anomaly,True,2025-01-06 17:39:01
+1693,47530,2024-11-14 07:11:59,Card-Not-Present Anomaly,False,
+1694,73884,2024-08-24 23:31:35,Velocity Limit Exceeded,True,2024-08-27 13:31:35
+1695,64080,2024-12-13 07:18:46,Suspicious Amount Spike,True,2024-12-19 13:18:46
+1696,74030,2024-11-04 07:05:44,Velocity Limit Exceeded,True,2024-11-10 20:05:44
+1697,31239,2024-12-07 00:09:06,Card-Not-Present Anomaly,False,
+1698,67733,2024-04-04 03:04:40,High Risk Country Match,True,2024-04-05 18:04:40
+1699,73862,2024-11-30 16:38:42,Mismatched Billing Details,True,2024-12-07 00:38:42
+1700,61236,2024-12-01 19:01:14,Suspicious Amount Spike,True,2024-12-03 07:01:14
+1701,55601,2024-11-18 15:26:52,Mismatched Billing Details,False,
+1702,59565,2024-12-24 19:02:20,Velocity Limit Exceeded,False,
+1703,77322,2024-06-27 07:58:42,Card-Not-Present Anomaly,False,
+1704,57854,2024-12-31 21:10:41,Velocity Limit Exceeded,True,2025-01-08 00:10:41
+1705,66655,2024-12-14 01:16:58,Suspicious Amount Spike,True,2024-12-19 08:16:58
+1706,35985,2024-09-05 02:14:24,Mismatched Billing Details,True,2024-09-06 09:14:24
+1707,17642,2024-11-26 13:04:11,High Risk Country Match,True,2024-11-28 04:04:11
+1708,40922,2024-05-25 01:01:17,Mismatched Billing Details,True,2024-05-28 05:01:17
+1709,72975,2024-08-23 21:50:05,Mismatched Billing Details,False,
+1710,1866,2024-12-08 10:01:24,Velocity Limit Exceeded,False,
+1711,74099,2024-10-31 07:37:08,Suspicious Amount Spike,False,
+1712,77768,2024-12-01 22:55:29,Card-Not-Present Anomaly,True,2024-12-04 06:55:29
+1713,14233,2024-12-31 02:37:03,Velocity Limit Exceeded,True,2025-01-02 00:37:03
+1714,77576,2024-07-23 22:29:35,Card-Not-Present Anomaly,True,2024-07-31 10:29:35
+1715,62318,2024-08-05 07:02:00,Card-Not-Present Anomaly,True,2024-08-06 18:02:00
+1716,49049,2024-10-03 05:54:41,Card-Not-Present Anomaly,True,2024-10-06 09:54:41
+1717,25755,2024-12-28 08:25:48,Mismatched Billing Details,True,2024-12-30 20:25:48
+1718,76684,2024-10-14 04:27:51,Velocity Limit Exceeded,True,2024-10-15 23:27:51
+1719,7909,2024-10-25 21:11:23,Velocity Limit Exceeded,False,
+1720,33474,2024-10-04 01:19:23,Velocity Limit Exceeded,True,2024-10-05 15:19:23
+1721,43681,2024-11-10 01:14:46,Mismatched Billing Details,True,2024-11-12 09:14:46
+1722,12725,2023-11-18 09:27:26,High Risk Country Match,True,2023-11-24 05:27:26
+1723,42789,2024-03-10 08:13:33,Card-Not-Present Anomaly,True,2024-03-17 22:13:33
+1724,61777,2024-07-26 19:28:38,High Risk Country Match,True,2024-08-01 16:28:38
+1725,50382,2024-11-17 15:19:12,Card-Not-Present Anomaly,True,2024-11-24 06:19:12
+1726,53924,2024-09-15 09:44:26,High Risk Country Match,False,
+1727,74073,2024-12-03 03:41:48,Card-Not-Present Anomaly,True,2024-12-10 23:41:48
+1728,39323,2024-12-31 02:36:52,Mismatched Billing Details,True,2025-01-04 17:36:52
+1729,72155,2024-10-03 02:37:17,Suspicious Amount Spike,True,2024-10-09 04:37:17
+1730,28397,2024-04-13 13:58:00,Suspicious Amount Spike,True,2024-04-15 11:58:00
+1731,46576,2024-10-21 19:04:45,Velocity Limit Exceeded,False,
+1732,64321,2024-10-10 03:20:07,Velocity Limit Exceeded,False,
+1733,59082,2024-08-22 14:02:21,Suspicious Amount Spike,True,2024-08-26 08:02:21
+1734,3443,2024-11-14 19:04:38,Mismatched Billing Details,True,2024-11-19 08:04:38
+1735,70190,2024-11-23 02:20:29,Suspicious Amount Spike,True,2024-11-25 16:20:29
+1736,52085,2024-04-23 00:33:09,Card-Not-Present Anomaly,True,2024-04-26 23:33:09
+1737,68363,2024-12-15 03:20:16,Mismatched Billing Details,False,
+1738,25218,2024-12-12 22:41:14,High Risk Country Match,True,2024-12-18 13:41:14
+1739,55371,2024-11-02 07:21:54,Card-Not-Present Anomaly,True,2024-11-08 23:21:54
+1740,66431,2024-12-15 15:15:29,Suspicious Amount Spike,True,2024-12-22 09:15:29
+1741,27296,2024-07-26 02:24:42,Card-Not-Present Anomaly,True,2024-07-28 17:24:42
+1742,55,2022-05-21 05:21:57,Mismatched Billing Details,False,
+1743,63647,2024-04-24 04:39:52,Mismatched Billing Details,True,2024-04-29 20:39:52
+1744,17837,2024-03-16 06:30:55,Suspicious Amount Spike,True,2024-03-19 11:30:55
+1745,67099,2024-04-07 21:14:59,Card-Not-Present Anomaly,True,2024-04-10 15:14:59
+1746,61078,2024-08-25 21:39:05,Suspicious Amount Spike,True,2024-08-28 02:39:05
+1747,15598,2024-04-24 02:58:04,Velocity Limit Exceeded,False,
+1748,8602,2024-09-17 16:36:12,Velocity Limit Exceeded,True,2024-09-25 11:36:12
+1749,11754,2024-11-12 04:27:04,High Risk Country Match,False,
+1750,17625,2024-11-22 07:23:29,High Risk Country Match,True,2024-11-29 18:23:29
+1751,61510,2024-07-21 05:47:37,Suspicious Amount Spike,True,2024-07-28 17:47:37
+1752,11312,2024-12-24 12:18:23,Velocity Limit Exceeded,True,2024-12-28 04:18:23
+1753,143,2023-09-21 14:36:42,Velocity Limit Exceeded,True,2023-09-24 00:36:42
+1754,66111,2024-12-29 07:46:51,Suspicious Amount Spike,True,2025-01-03 00:46:51
+1755,75995,2024-12-03 02:29:16,Mismatched Billing Details,True,2024-12-07 03:29:16
+1756,65760,2024-10-20 14:07:16,Card-Not-Present Anomaly,True,2024-10-27 20:07:16
+1757,1980,2024-12-26 07:43:11,Mismatched Billing Details,False,
+1758,69633,2024-08-28 12:23:59,High Risk Country Match,False,
+1759,25561,2024-10-26 20:45:12,Mismatched Billing Details,True,2024-10-30 23:45:12
+1760,27588,2024-09-10 22:06:36,Card-Not-Present Anomaly,True,2024-09-18 18:06:36
+1761,49802,2024-11-19 21:55:12,Velocity Limit Exceeded,True,2024-11-25 08:55:12
+1762,58029,2024-08-26 00:58:04,Velocity Limit Exceeded,True,2024-08-28 22:58:04
+1763,20191,2024-03-04 22:41:53,Velocity Limit Exceeded,True,2024-03-12 20:41:53
+1764,63774,2024-12-31 22:29:30,Velocity Limit Exceeded,True,2025-01-03 18:29:30
+1765,71284,2023-12-03 03:13:47,High Risk Country Match,True,2023-12-07 23:13:47
+1766,66131,2024-11-02 11:03:37,Card-Not-Present Anomaly,True,2024-11-06 14:03:37
+1767,56547,2024-12-01 04:42:34,Velocity Limit Exceeded,True,2024-12-05 06:42:34
+1768,19719,2024-12-15 23:23:40,Velocity Limit Exceeded,False,
+1769,42865,2024-12-02 17:05:07,Velocity Limit Exceeded,True,2024-12-06 16:05:07
+1770,26026,2024-10-17 18:51:50,Velocity Limit Exceeded,True,2024-10-22 08:51:50
+1771,24851,2024-12-14 10:49:17,Card-Not-Present Anomaly,True,2024-12-22 08:49:17
+1772,49422,2024-12-28 02:43:03,Mismatched Billing Details,True,2025-01-01 00:43:03
+1773,58221,2024-12-17 01:26:53,Card-Not-Present Anomaly,True,2024-12-24 17:26:53
+1774,58965,2023-12-11 19:39:13,Mismatched Billing Details,True,2023-12-14 22:39:13
+1775,19138,2024-07-17 02:32:16,Velocity Limit Exceeded,True,2024-07-21 03:32:16
+1776,47756,2024-12-07 00:28:16,Suspicious Amount Spike,True,2024-12-09 18:28:16
+1777,17193,2024-12-25 00:03:24,Mismatched Billing Details,True,2024-12-30 05:03:24
+1778,55593,2024-11-27 16:14:52,Card-Not-Present Anomaly,True,2024-12-05 06:14:52
+1779,32825,2024-03-11 18:56:32,Suspicious Amount Spike,True,2024-03-18 09:56:32
+1780,61436,2024-12-25 20:03:00,High Risk Country Match,True,2025-01-01 12:03:00
+1781,78339,2024-12-31 09:11:27,Velocity Limit Exceeded,True,2025-01-03 22:11:27
+1782,27713,2024-08-11 03:21:47,Velocity Limit Exceeded,False,
+1783,27286,2024-12-31 07:31:21,Suspicious Amount Spike,False,
+1784,54671,2024-10-28 19:20:41,Suspicious Amount Spike,False,
+1785,60825,2024-07-31 22:09:15,Suspicious Amount Spike,True,2024-08-07 20:09:15
+1786,68423,2024-12-14 10:02:02,Velocity Limit Exceeded,True,2024-12-18 13:02:02
+1787,35799,2024-12-10 12:04:00,High Risk Country Match,True,2024-12-11 20:04:00
+1788,54386,2024-09-22 17:16:40,High Risk Country Match,True,2024-09-28 21:16:40
+1789,35880,2024-11-25 08:32:55,Velocity Limit Exceeded,True,2024-11-28 02:32:55
+1790,14366,2024-10-19 03:32:59,High Risk Country Match,True,2024-10-20 19:32:59
+1791,35236,2024-12-24 22:35:39,High Risk Country Match,True,2025-01-01 03:35:39
+1792,28218,2024-01-16 20:20:19,Suspicious Amount Spike,False,
+1793,15036,2024-11-22 21:41:11,Card-Not-Present Anomaly,True,2024-11-30 18:41:11
+1794,54997,2023-10-17 04:32:18,Mismatched Billing Details,True,2023-10-20 10:32:18
+1795,59387,2024-12-20 07:06:34,Mismatched Billing Details,True,2024-12-26 05:06:34
+1796,30883,2024-08-23 10:46:34,Mismatched Billing Details,True,2024-08-28 16:46:34
+1797,40336,2024-11-05 19:07:16,Mismatched Billing Details,False,
+1798,73340,2023-10-14 00:48:36,Suspicious Amount Spike,True,2023-10-17 11:48:36
+1799,35908,2024-12-25 06:36:55,Card-Not-Present Anomaly,True,2024-12-28 16:36:55
+1800,2301,2024-10-08 21:16:25,Velocity Limit Exceeded,False,
+1801,15337,2024-05-03 11:42:21,Velocity Limit Exceeded,True,2024-05-04 13:42:21
+1802,36594,2024-06-20 10:27:58,Velocity Limit Exceeded,True,2024-06-24 19:27:58
+1803,69901,2024-12-17 02:38:33,Mismatched Billing Details,True,2024-12-18 08:38:33
+1804,20384,2024-11-21 14:51:14,Suspicious Amount Spike,False,
+1805,26569,2024-09-28 09:25:27,Card-Not-Present Anomaly,True,2024-10-05 05:25:27
+1806,51420,2024-09-13 14:45:47,High Risk Country Match,True,2024-09-17 10:45:47
+1807,46285,2024-11-14 12:11:11,High Risk Country Match,True,2024-11-19 13:11:11
+1808,6063,2024-12-08 03:35:22,Mismatched Billing Details,True,2024-12-10 04:35:22
+1809,59329,2024-12-31 21:43:28,Suspicious Amount Spike,True,2025-01-02 17:43:28
+1810,42575,2024-09-17 09:34:40,High Risk Country Match,True,2024-09-24 02:34:40
+1811,39196,2024-08-14 21:42:05,Velocity Limit Exceeded,True,2024-08-19 20:42:05
+1812,31133,2024-07-18 08:40:05,Velocity Limit Exceeded,True,2024-07-22 18:40:05
+1813,9419,2024-12-08 06:04:37,Suspicious Amount Spike,False,
+1814,38051,2024-12-23 20:12:34,Mismatched Billing Details,True,2024-12-30 09:12:34
+1815,25541,2024-09-29 11:40:09,Mismatched Billing Details,True,2024-10-04 16:40:09
+1816,13755,2024-12-12 23:50:43,Card-Not-Present Anomaly,False,
+1817,17427,2024-12-26 01:20:11,Suspicious Amount Spike,False,
+1818,10155,2024-08-17 07:06:24,Suspicious Amount Spike,True,2024-08-20 00:06:24
+1819,6887,2024-12-02 10:40:37,Mismatched Billing Details,False,
+1820,69289,2024-05-17 19:34:28,Velocity Limit Exceeded,False,
+1821,51122,2024-10-22 17:01:03,Card-Not-Present Anomaly,True,2024-10-27 19:01:03
+1822,70036,2024-12-25 13:25:15,Suspicious Amount Spike,False,
+1823,59322,2024-12-26 11:55:56,Mismatched Billing Details,True,2025-01-01 13:55:56
+1824,25394,2024-12-23 07:49:44,Velocity Limit Exceeded,True,2024-12-30 15:49:44
+1825,52474,2024-12-16 18:52:30,High Risk Country Match,True,2024-12-19 19:52:30
+1826,6188,2024-12-13 01:43:00,Card-Not-Present Anomaly,True,2024-12-19 19:43:00
+1827,65872,2024-12-01 00:22:26,Card-Not-Present Anomaly,True,2024-12-04 08:22:26
+1828,3402,2024-09-01 17:50:21,Suspicious Amount Spike,True,2024-09-05 17:50:21
+1829,77104,2024-12-19 11:31:45,Velocity Limit Exceeded,False,
+1830,11196,2024-12-21 16:17:02,Suspicious Amount Spike,False,
+1831,61912,2024-12-03 22:27:02,Card-Not-Present Anomaly,True,2024-12-08 04:27:02
+1832,28894,2024-08-31 13:36:18,Card-Not-Present Anomaly,True,2024-09-04 11:36:18
+1833,13524,2023-12-11 18:22:08,Suspicious Amount Spike,True,2023-12-16 20:22:08
+1834,62035,2024-11-06 01:02:33,Card-Not-Present Anomaly,True,2024-11-09 20:02:33
+1835,39860,2024-03-17 04:04:04,Mismatched Billing Details,False,
+1836,71846,2024-12-22 13:30:50,Card-Not-Present Anomaly,False,
+1837,63305,2024-12-25 22:27:32,High Risk Country Match,True,2025-01-01 07:27:32
+1838,47144,2024-12-31 06:36:21,Card-Not-Present Anomaly,True,2025-01-04 13:36:21
+1839,5152,2024-11-12 18:34:20,Card-Not-Present Anomaly,False,
+1840,52419,2024-11-24 01:42:51,High Risk Country Match,True,2024-12-01 23:42:51
+1841,48823,2024-12-31 06:59:41,High Risk Country Match,True,2025-01-02 06:59:41
+1842,1794,2024-08-03 07:59:12,Suspicious Amount Spike,True,2024-08-07 11:59:12
+1843,28449,2024-11-05 10:15:15,Mismatched Billing Details,True,2024-11-10 09:15:15
+1844,26792,2024-09-10 21:37:11,Mismatched Billing Details,True,2024-09-15 08:37:11
+1845,66857,2024-11-26 07:17:03,Velocity Limit Exceeded,True,2024-11-28 10:17:03
+1846,6932,2024-11-13 09:50:07,Mismatched Billing Details,True,2024-11-14 11:50:07
+1847,69049,2024-11-25 20:43:54,Suspicious Amount Spike,True,2024-11-28 07:43:54
+1848,11657,2024-09-28 07:23:41,High Risk Country Match,True,2024-10-03 07:23:41
+1849,32624,2024-09-18 00:58:52,Mismatched Billing Details,True,2024-09-23 08:58:52
+1850,28185,2024-11-05 09:35:46,Card-Not-Present Anomaly,True,2024-11-09 05:35:46
+1851,34440,2024-11-13 10:08:51,Card-Not-Present Anomaly,True,2024-11-17 09:08:51
+1852,66097,2024-11-28 07:10:01,Mismatched Billing Details,True,2024-11-30 15:10:01
+1853,18210,2024-05-08 07:31:49,High Risk Country Match,True,2024-05-15 09:31:49
+1854,212,2024-10-05 12:22:39,Suspicious Amount Spike,False,
+1855,6114,2024-08-24 10:53:10,Suspicious Amount Spike,True,2024-09-01 01:53:10
+1856,33168,2024-09-23 17:34:36,Card-Not-Present Anomaly,True,2024-10-01 03:34:36
+1857,18311,2024-12-11 14:33:08,Card-Not-Present Anomaly,True,2024-12-15 02:33:08
+1858,25780,2024-12-29 07:24:06,High Risk Country Match,True,2025-01-04 16:24:06
+1859,52131,2024-07-21 07:17:35,Mismatched Billing Details,True,2024-07-28 10:17:35
+1860,29520,2024-09-05 14:00:55,Velocity Limit Exceeded,True,2024-09-10 17:00:55
+1861,2140,2024-07-10 02:37:12,High Risk Country Match,False,
+1862,65572,2023-09-22 23:17:52,Mismatched Billing Details,True,2023-09-25 23:17:52
+1863,58651,2024-06-20 02:24:47,Suspicious Amount Spike,True,2024-06-21 05:24:47
+1864,32001,2024-09-24 02:35:47,Mismatched Billing Details,False,
+1865,35704,2024-12-16 16:30:38,Card-Not-Present Anomaly,False,
+1866,11414,2023-02-09 15:46:52,Mismatched Billing Details,True,2023-02-14 20:46:52
+1867,78023,2024-10-16 22:34:38,Mismatched Billing Details,True,2024-10-19 10:34:38
+1868,51785,2024-10-31 03:08:51,Velocity Limit Exceeded,False,
+1869,42653,2024-03-17 05:39:06,High Risk Country Match,True,2024-03-24 15:39:06
+1870,61424,2024-11-10 08:38:05,Mismatched Billing Details,False,
+1871,57115,2024-12-04 10:32:03,Suspicious Amount Spike,True,2024-12-08 04:32:03
+1872,67998,2024-11-03 10:50:22,Card-Not-Present Anomaly,True,2024-11-05 08:50:22
+1873,24748,2024-11-09 04:02:25,Velocity Limit Exceeded,True,2024-11-15 14:02:25
+1874,9617,2024-12-08 11:52:46,Card-Not-Present Anomaly,True,2024-12-14 04:52:46
+1875,28753,2024-10-17 12:56:26,Mismatched Billing Details,True,2024-10-24 23:56:26
+1876,8224,2024-07-23 19:21:55,Mismatched Billing Details,True,2024-07-26 00:21:55
+1877,20229,2024-09-01 15:28:49,High Risk Country Match,False,
+1878,2280,2024-03-19 22:03:47,High Risk Country Match,True,2024-03-27 11:03:47
+1879,67327,2024-01-05 07:45:47,Velocity Limit Exceeded,False,
+1880,71168,2024-12-21 11:11:10,Velocity Limit Exceeded,True,2024-12-28 12:11:10
+1881,34424,2024-12-01 07:04:24,Card-Not-Present Anomaly,True,2024-12-07 14:04:24
+1882,57498,2024-12-15 03:22:17,High Risk Country Match,True,2024-12-18 05:22:17
+1883,3713,2024-07-08 22:26:54,High Risk Country Match,True,2024-07-14 15:26:54
+1884,13871,2022-11-21 02:38:44,Card-Not-Present Anomaly,False,
+1885,36863,2024-04-26 11:48:04,Card-Not-Present Anomaly,False,
+1886,67401,2024-10-25 18:47:15,Suspicious Amount Spike,True,2024-10-27 00:47:15
+1887,204,2024-11-14 22:56:11,High Risk Country Match,True,2024-11-16 13:56:11
+1888,71101,2024-08-10 03:16:58,High Risk Country Match,False,
+1889,17281,2024-07-29 19:13:04,Suspicious Amount Spike,True,2024-08-03 11:13:04
+1890,65579,2024-01-25 20:08:51,Mismatched Billing Details,True,2024-01-31 05:08:51
+1891,16324,2024-08-28 11:27:02,High Risk Country Match,True,2024-09-04 07:27:02
+1892,50478,2023-02-27 22:05:37,Mismatched Billing Details,False,
+1893,39843,2024-12-31 02:54:16,Suspicious Amount Spike,True,2025-01-06 21:54:16
+1894,79708,2024-10-19 22:36:20,Card-Not-Present Anomaly,True,2024-10-25 01:36:20
+1895,8768,2024-12-07 11:33:14,Velocity Limit Exceeded,False,
+1896,51505,2024-12-23 02:29:27,Velocity Limit Exceeded,False,
+1897,70341,2024-12-22 14:28:12,Suspicious Amount Spike,True,2024-12-27 20:28:12
+1898,19592,2024-05-23 00:36:42,Velocity Limit Exceeded,False,
+1899,20687,2023-12-25 04:31:03,Velocity Limit Exceeded,True,2023-12-28 00:31:03
+1900,39395,2024-12-06 12:31:45,High Risk Country Match,True,2024-12-11 11:31:45
+1901,46653,2024-12-31 21:19:52,Mismatched Billing Details,True,2025-01-05 10:19:52
+1902,12560,2024-10-26 04:17:20,Velocity Limit Exceeded,True,2024-10-31 03:17:20
+1903,67275,2024-12-14 21:27:19,High Risk Country Match,True,2024-12-16 00:27:19
+1904,47729,2024-10-29 16:16:00,Velocity Limit Exceeded,False,
+1905,38162,2024-12-29 13:29:36,Suspicious Amount Spike,True,2025-01-05 06:29:36
+1906,37298,2024-12-21 01:42:44,Mismatched Billing Details,True,2024-12-24 13:42:44
+1907,56303,2023-12-30 22:29:17,Velocity Limit Exceeded,True,2024-01-03 21:29:17
+1908,10675,2024-07-01 05:28:21,Card-Not-Present Anomaly,True,2024-07-05 12:28:21
+1909,28971,2024-11-23 13:27:51,Velocity Limit Exceeded,True,2024-11-28 04:27:51
+1910,34582,2024-06-19 08:32:45,Suspicious Amount Spike,True,2024-06-23 08:32:45
+1911,35716,2023-11-12 18:51:57,High Risk Country Match,True,2023-11-20 06:51:57
+1912,78875,2024-12-08 21:48:10,Velocity Limit Exceeded,False,
+1913,26485,2024-12-21 22:16:45,Suspicious Amount Spike,True,2024-12-26 15:16:45
+1914,45611,2024-09-03 12:48:08,Velocity Limit Exceeded,False,
+1915,59293,2024-09-27 02:06:58,Card-Not-Present Anomaly,True,2024-10-01 12:06:58
+1916,63425,2024-10-03 01:32:27,Suspicious Amount Spike,True,2024-10-05 01:32:27
+1917,32420,2024-12-18 13:13:34,Mismatched Billing Details,True,2024-12-21 01:13:34
+1918,10220,2024-11-26 00:08:45,High Risk Country Match,True,2024-11-28 14:08:45
+1919,19485,2024-10-19 02:18:44,Mismatched Billing Details,True,2024-10-24 00:18:44
+1920,46378,2024-10-28 04:21:30,Velocity Limit Exceeded,True,2024-10-31 00:21:30
+1921,64582,2023-09-27 07:12:57,Card-Not-Present Anomaly,True,2023-09-30 19:12:57
+1922,62038,2024-10-14 06:45:19,Card-Not-Present Anomaly,True,2024-10-17 11:45:19
+1923,36991,2024-11-23 02:18:11,Mismatched Billing Details,True,2024-11-29 23:18:11
+1924,12447,2024-12-26 15:56:13,High Risk Country Match,True,2025-01-03 01:56:13
+1925,79917,2024-06-24 05:52:51,Mismatched Billing Details,True,2024-07-01 09:52:51
+1926,51250,2024-12-17 08:35:12,Mismatched Billing Details,True,2024-12-19 17:35:12
+1927,49623,2024-12-19 05:55:58,Card-Not-Present Anomaly,False,
+1928,69275,2024-10-13 12:20:04,Mismatched Billing Details,True,2024-10-19 21:20:04
+1929,15959,2023-11-02 03:48:09,High Risk Country Match,False,
+1930,41746,2023-07-28 01:52:18,High Risk Country Match,True,2023-08-03 23:52:18
+1931,69879,2024-12-15 20:07:40,High Risk Country Match,True,2024-12-20 20:07:40
+1932,67710,2024-11-28 02:49:40,Suspicious Amount Spike,True,2024-12-04 05:49:40
+1933,67634,2024-05-29 10:15:20,Velocity Limit Exceeded,True,2024-06-05 02:15:20
+1934,23287,2024-11-07 06:24:10,Card-Not-Present Anomaly,True,2024-11-09 04:24:10
+1935,15585,2024-08-29 07:40:18,High Risk Country Match,True,2024-08-30 23:40:18
+1936,27185,2024-12-25 15:32:43,Card-Not-Present Anomaly,True,2024-12-27 23:32:43
+1937,62815,2024-12-23 22:03:03,Card-Not-Present Anomaly,True,2024-12-29 13:03:03
+1938,74692,2024-03-01 14:09:32,Velocity Limit Exceeded,True,2024-03-08 17:09:32
+1939,19058,2023-07-22 17:55:35,High Risk Country Match,False,
+1940,38958,2024-09-23 23:46:28,Suspicious Amount Spike,True,2024-09-28 11:46:28
+1941,9219,2024-11-23 09:23:50,Suspicious Amount Spike,False,
+1942,14147,2024-12-17 11:46:24,Card-Not-Present Anomaly,True,2024-12-24 05:46:24
+1943,60049,2024-11-22 22:05:26,Mismatched Billing Details,True,2024-11-29 13:05:26
+1944,28656,2024-05-26 06:08:27,Suspicious Amount Spike,True,2024-06-01 03:08:27
+1945,50119,2024-12-16 19:47:42,High Risk Country Match,True,2024-12-24 01:47:42
+1946,39199,2024-11-15 05:21:47,High Risk Country Match,True,2024-11-16 17:21:47
+1947,77294,2024-09-25 01:35:22,Card-Not-Present Anomaly,True,2024-10-02 15:35:22
+1948,71078,2024-10-28 06:11:23,Velocity Limit Exceeded,True,2024-11-02 12:11:23
+1949,68971,2024-09-17 22:16:47,Velocity Limit Exceeded,True,2024-09-20 02:16:47
+1950,63411,2024-05-25 17:27:21,Card-Not-Present Anomaly,True,2024-05-28 09:27:21
+1951,18117,2024-12-04 06:50:14,Suspicious Amount Spike,False,
+1952,61360,2024-11-21 18:14:54,Suspicious Amount Spike,True,2024-11-26 12:14:54
+1953,70957,2024-12-24 03:09:11,Mismatched Billing Details,True,2024-12-25 04:09:11
+1954,8142,2024-12-12 14:45:17,Mismatched Billing Details,False,
+1955,75077,2024-12-04 08:21:59,Mismatched Billing Details,True,2024-12-05 21:21:59
+1956,67048,2024-10-06 14:30:04,Velocity Limit Exceeded,True,2024-10-14 02:30:04
+1957,60712,2024-07-24 10:04:47,Velocity Limit Exceeded,True,2024-07-31 19:04:47
+1958,30565,2024-09-26 02:22:37,Velocity Limit Exceeded,True,2024-09-27 22:22:37
+1959,18272,2024-12-06 06:05:25,Velocity Limit Exceeded,True,2024-12-12 05:05:25
+1960,15081,2024-07-08 06:36:12,Suspicious Amount Spike,True,2024-07-15 09:36:12
+1961,14151,2024-04-04 05:26:25,Velocity Limit Exceeded,True,2024-04-05 11:26:25
+1962,36409,2024-10-26 20:08:32,Mismatched Billing Details,True,2024-11-02 19:08:32
+1963,13181,2023-05-11 22:02:25,Card-Not-Present Anomaly,True,2023-05-19 21:02:25
+1964,61935,2024-12-30 19:18:08,Mismatched Billing Details,True,2025-01-06 18:18:08
+1965,15673,2024-06-14 05:46:17,Mismatched Billing Details,True,2024-06-15 14:46:17
+1966,73081,2024-12-10 08:07:19,Mismatched Billing Details,False,
+1967,72143,2024-09-27 12:25:08,Mismatched Billing Details,True,2024-10-02 21:25:08
+1968,22524,2024-12-04 13:35:19,Velocity Limit Exceeded,True,2024-12-09 11:35:19
+1969,57532,2024-12-03 11:07:03,Velocity Limit Exceeded,True,2024-12-05 15:07:03
+1970,7190,2024-09-22 17:14:45,Velocity Limit Exceeded,False,
+1971,9504,2023-08-27 23:31:39,Velocity Limit Exceeded,True,2023-08-31 23:31:39
+1972,76615,2024-11-28 08:02:08,Card-Not-Present Anomaly,True,2024-12-04 09:02:08
+1973,75740,2024-01-22 09:37:30,Mismatched Billing Details,False,
+1974,71492,2024-06-06 15:51:08,Suspicious Amount Spike,True,2024-06-07 23:51:08
+1975,5746,2024-12-29 21:07:18,High Risk Country Match,True,2025-01-03 15:07:18
+1976,64300,2024-07-01 09:02:06,Mismatched Billing Details,False,
+1977,58868,2024-07-22 18:36:25,Suspicious Amount Spike,True,2024-07-24 03:36:25
+1978,78869,2024-12-29 01:26:30,Mismatched Billing Details,True,2025-01-03 14:26:30
+1979,37777,2024-12-09 01:49:35,High Risk Country Match,True,2024-12-15 23:49:35
+1980,51120,2024-06-29 09:47:35,Card-Not-Present Anomaly,True,2024-07-01 23:47:35
+1981,45722,2023-10-21 03:44:10,Card-Not-Present Anomaly,True,2023-10-24 06:44:10
+1982,47358,2024-08-27 15:20:04,Card-Not-Present Anomaly,True,2024-08-30 03:20:04
+1983,71212,2024-11-28 07:17:10,High Risk Country Match,True,2024-11-29 13:17:10
+1984,63257,2024-07-29 11:03:31,High Risk Country Match,True,2024-08-01 23:03:31
+1985,40113,2024-08-04 12:50:17,Card-Not-Present Anomaly,True,2024-08-06 12:50:17
+1986,29830,2024-09-10 09:21:41,Velocity Limit Exceeded,True,2024-09-11 21:21:41
+1987,41475,2023-03-01 07:51:10,Suspicious Amount Spike,False,
+1988,40529,2024-12-27 07:07:07,Velocity Limit Exceeded,True,2025-01-03 08:07:07
+1989,35172,2024-12-23 13:29:43,Suspicious Amount Spike,False,
+1990,53890,2024-09-05 07:13:31,Mismatched Billing Details,False,
+1991,29574,2024-08-09 09:18:25,Velocity Limit Exceeded,False,
+1992,20672,2023-09-12 09:45:41,Mismatched Billing Details,True,2023-09-16 08:45:41
+1993,63487,2024-12-08 22:02:05,Mismatched Billing Details,True,2024-12-12 21:02:05
+1994,1003,2024-12-10 02:49:03,Mismatched Billing Details,False,
+1995,63420,2024-11-27 14:50:54,High Risk Country Match,True,2024-11-29 16:50:54
+1996,41847,2024-12-14 15:50:50,Card-Not-Present Anomaly,True,2024-12-16 07:50:50
+1997,13758,2024-12-12 13:40:52,Suspicious Amount Spike,True,2024-12-14 10:40:52
+1998,75546,2024-12-24 20:52:44,High Risk Country Match,True,2024-12-27 06:52:44
+1999,69697,2024-10-25 04:43:04,Card-Not-Present Anomaly,True,2024-10-30 11:43:04
+2000,53839,2024-05-19 06:13:06,High Risk Country Match,True,2024-05-25 08:13:06
+2001,11314,2024-12-31 21:20:20,Suspicious Amount Spike,True,2025-01-05 18:20:20
+2002,41658,2024-01-01 14:48:09,Suspicious Amount Spike,True,2024-01-03 02:48:09
+2003,54859,2024-10-31 02:47:34,Card-Not-Present Anomaly,True,2024-11-05 04:47:34
+2004,47616,2024-12-31 04:03:02,Card-Not-Present Anomaly,True,2025-01-07 18:03:02
+2005,73068,2024-12-30 01:59:37,High Risk Country Match,True,2025-01-05 14:59:37
+2006,6120,2025-01-01 00:56:01,Card-Not-Present Anomaly,True,2025-01-03 17:56:01
+2007,59216,2024-05-31 23:04:30,High Risk Country Match,True,2024-06-03 04:04:30
+2008,10865,2024-12-03 11:56:25,Velocity Limit Exceeded,True,2024-12-08 09:56:25
+2009,62745,2024-06-20 01:54:52,Mismatched Billing Details,True,2024-06-22 08:54:52
+2010,28470,2024-12-07 13:25:37,Velocity Limit Exceeded,True,2024-12-09 15:25:37
+2011,36883,2024-09-25 07:44:19,Mismatched Billing Details,True,2024-09-28 16:44:19
+2012,73576,2024-11-20 16:47:52,High Risk Country Match,True,2024-11-24 09:47:52
+2013,27913,2024-11-10 12:37:35,Mismatched Billing Details,False,
+2014,7224,2024-12-30 01:43:30,Card-Not-Present Anomaly,True,2025-01-03 18:43:30
+2015,15581,2024-06-21 22:35:44,High Risk Country Match,True,2024-06-29 18:35:44
+2016,848,2024-12-23 09:04:05,Suspicious Amount Spike,True,2024-12-27 08:04:05
+2017,51180,2024-10-31 00:31:49,Mismatched Billing Details,True,2024-11-05 11:31:49
+2018,53490,2024-01-22 02:00:36,Velocity Limit Exceeded,False,
+2019,77211,2024-07-26 11:28:35,Mismatched Billing Details,True,2024-07-31 14:28:35
+2020,16680,2024-10-04 11:07:54,Suspicious Amount Spike,True,2024-10-05 20:07:54
+2021,59153,2024-12-21 15:12:26,Card-Not-Present Anomaly,False,
+2022,62925,2024-12-31 18:42:04,High Risk Country Match,True,2025-01-02 23:42:04
+2023,10025,2024-02-14 17:54:23,Card-Not-Present Anomaly,True,2024-02-20 07:54:23
+2024,21163,2024-12-15 16:28:51,Velocity Limit Exceeded,True,2024-12-19 17:28:51
+2025,50431,2024-11-12 11:27:16,Card-Not-Present Anomaly,True,2024-11-14 12:27:16
+2026,29040,2024-11-18 09:35:55,High Risk Country Match,True,2024-11-26 02:35:55
+2027,77971,2024-11-23 11:46:37,Card-Not-Present Anomaly,True,2024-11-26 21:46:37
+2028,47615,2024-05-02 23:34:16,Suspicious Amount Spike,True,2024-05-08 14:34:16
+2029,65511,2024-10-08 18:42:16,High Risk Country Match,False,
+2030,21623,2024-08-14 21:37:11,Suspicious Amount Spike,True,2024-08-16 17:37:11
+2031,77340,2024-12-21 18:30:20,Mismatched Billing Details,True,2024-12-29 16:30:20
+2032,14381,2024-12-28 02:24:25,Suspicious Amount Spike,True,2025-01-01 10:24:25
+2033,34469,2024-11-28 23:05:15,Velocity Limit Exceeded,True,2024-11-30 22:05:15
+2034,64773,2024-11-30 22:57:24,Card-Not-Present Anomaly,True,2024-12-04 19:57:24
+2035,40114,2024-12-31 11:36:07,Suspicious Amount Spike,True,2025-01-02 20:36:07
+2036,23112,2024-09-13 23:24:17,Velocity Limit Exceeded,True,2024-09-17 16:24:17
+2037,38141,2024-12-24 04:52:29,High Risk Country Match,True,2024-12-26 23:52:29
+2038,59303,2024-09-27 20:15:07,Card-Not-Present Anomaly,True,2024-09-30 16:15:07
+2039,11922,2024-09-24 12:01:09,Velocity Limit Exceeded,True,2024-09-29 02:01:09
+2040,10467,2024-12-24 14:32:22,Velocity Limit Exceeded,True,2024-12-31 16:32:22
+2041,874,2024-07-21 09:38:56,High Risk Country Match,True,2024-07-28 18:38:56
+2042,57608,2024-11-16 08:17:52,Card-Not-Present Anomaly,True,2024-11-23 16:17:52
+2043,71061,2024-07-14 21:59:15,Suspicious Amount Spike,True,2024-07-20 02:59:15
+2044,3795,2024-12-26 06:48:03,Suspicious Amount Spike,True,2024-12-30 20:48:03
+2045,57641,2024-04-28 10:00:41,Velocity Limit Exceeded,False,
+2046,2101,2024-06-07 05:41:41,High Risk Country Match,True,2024-06-13 06:41:41
+2047,37523,2024-12-30 13:53:16,Suspicious Amount Spike,True,2025-01-02 05:53:16
+2048,33027,2024-10-16 23:34:54,Suspicious Amount Spike,True,2024-10-21 14:34:54
+2049,41871,2024-05-07 11:46:46,High Risk Country Match,True,2024-05-09 10:46:46
+2050,73609,2024-02-11 11:12:04,Card-Not-Present Anomaly,True,2024-02-16 13:12:04
+2051,39963,2024-11-17 07:35:37,Mismatched Billing Details,True,2024-11-24 11:35:37
+2052,19973,2024-11-13 05:24:25,High Risk Country Match,False,
+2053,56458,2024-12-23 14:28:40,High Risk Country Match,True,2024-12-27 02:28:40
+2054,48329,2024-03-02 14:46:41,High Risk Country Match,True,2024-03-05 10:46:41
+2055,74674,2024-08-08 08:27:26,High Risk Country Match,False,
+2056,51564,2024-12-19 11:19:27,Suspicious Amount Spike,True,2024-12-24 01:19:27
+2057,34946,2024-08-23 19:34:43,High Risk Country Match,True,2024-08-31 02:34:43
+2058,17238,2024-09-18 11:03:36,Velocity Limit Exceeded,True,2024-09-19 16:03:36
+2059,42068,2024-08-04 13:26:06,Card-Not-Present Anomaly,True,2024-08-10 10:26:06
+2060,18386,2024-10-04 13:14:51,Mismatched Billing Details,True,2024-10-12 03:14:51
+2061,66566,2024-10-20 13:19:29,Suspicious Amount Spike,True,2024-10-27 02:19:29
+2062,79808,2024-10-16 19:21:11,Velocity Limit Exceeded,True,2024-10-21 14:21:11
+2063,2266,2024-11-30 15:33:06,High Risk Country Match,True,2024-12-06 06:33:06
+2064,72628,2024-12-31 17:00:37,Mismatched Billing Details,True,2025-01-05 06:00:37
+2065,13913,2024-12-17 20:21:06,Mismatched Billing Details,True,2024-12-23 06:21:06
+2066,52090,2024-08-13 04:36:12,Velocity Limit Exceeded,True,2024-08-19 16:36:12
+2067,22848,2024-06-07 16:35:20,Mismatched Billing Details,True,2024-06-14 00:35:20
+2068,76537,2024-06-05 13:50:58,Velocity Limit Exceeded,True,2024-06-08 12:50:58
+2069,19475,2024-09-26 22:10:11,Velocity Limit Exceeded,True,2024-10-01 02:10:11
+2070,53453,2024-09-10 21:26:09,Suspicious Amount Spike,True,2024-09-12 04:26:09
+2071,67224,2024-11-23 09:44:03,Suspicious Amount Spike,True,2024-11-27 16:44:03
+2072,38564,2024-12-20 14:10:16,Velocity Limit Exceeded,True,2024-12-22 17:10:16
+2073,56036,2024-12-18 20:42:35,High Risk Country Match,False,
+2074,62306,2024-09-23 11:21:23,Suspicious Amount Spike,True,2024-09-27 01:21:23
+2075,12274,2023-06-01 01:20:25,Suspicious Amount Spike,True,2023-06-06 06:20:25
+2076,22770,2024-02-22 04:22:58,Velocity Limit Exceeded,False,
+2077,73546,2024-09-24 13:25:04,Card-Not-Present Anomaly,True,2024-09-25 20:25:04
+2078,76176,2024-12-28 06:24:09,Velocity Limit Exceeded,True,2024-12-30 16:24:09
+2079,46487,2024-12-31 04:48:40,High Risk Country Match,False,
+2080,59218,2024-07-10 09:10:06,Velocity Limit Exceeded,True,2024-07-18 05:10:06
+2081,7337,2024-10-11 09:37:15,High Risk Country Match,True,2024-10-12 12:37:15
+2082,69370,2024-04-22 11:47:41,Mismatched Billing Details,True,2024-04-26 04:47:41
+2083,35628,2024-02-26 03:08:42,Card-Not-Present Anomaly,True,2024-02-27 18:08:42
+2084,55907,2024-12-12 14:32:29,High Risk Country Match,True,2024-12-18 15:32:29
+2085,67216,2024-12-24 00:16:28,Mismatched Billing Details,False,
+2086,35810,2024-09-23 13:11:05,Suspicious Amount Spike,True,2024-09-27 21:11:05
+2087,14337,2024-11-02 20:57:28,Mismatched Billing Details,True,2024-11-06 20:57:28
+2088,68399,2024-12-03 20:41:47,Mismatched Billing Details,True,2024-12-08 08:41:47
+2089,55566,2024-08-15 15:05:31,Mismatched Billing Details,False,
+2090,24841,2024-08-13 22:41:36,Velocity Limit Exceeded,False,
+2091,77597,2024-12-25 11:42:27,Card-Not-Present Anomaly,True,2024-12-30 13:42:27
+2092,21178,2024-11-06 03:46:04,Card-Not-Present Anomaly,True,2024-11-07 08:46:04
+2093,69245,2024-08-15 13:00:42,Card-Not-Present Anomaly,True,2024-08-19 16:00:42
+2094,47390,2024-06-26 22:25:59,Velocity Limit Exceeded,True,2024-07-02 13:25:59
+2095,66182,2024-12-06 03:51:39,Suspicious Amount Spike,True,2024-12-11 13:51:39
+2096,14819,2024-11-03 20:33:33,Card-Not-Present Anomaly,True,2024-11-09 06:33:33
+2097,66054,2024-08-11 10:29:47,Mismatched Billing Details,True,2024-08-15 09:29:47
+2098,37466,2024-12-13 23:17:14,Mismatched Billing Details,True,2024-12-19 07:17:14
+2099,51528,2024-12-04 12:45:42,High Risk Country Match,True,2024-12-12 04:45:42
+2100,48858,2024-10-13 14:58:20,Suspicious Amount Spike,True,2024-10-17 21:58:20
+2101,40320,2024-02-27 07:15:30,Suspicious Amount Spike,False,
+2102,11910,2024-12-11 19:48:19,Velocity Limit Exceeded,True,2024-12-15 20:48:19
+2103,38784,2024-02-22 11:43:15,Mismatched Billing Details,True,2024-02-23 13:43:15
+2104,39710,2024-11-28 03:00:38,Mismatched Billing Details,True,2024-12-04 07:00:38
+2105,5487,2024-12-27 23:57:00,Velocity Limit Exceeded,True,2024-12-31 11:57:00
+2106,58803,2024-06-06 10:19:59,Card-Not-Present Anomaly,False,
+2107,61202,2024-11-18 13:19:04,High Risk Country Match,True,2024-11-20 23:19:04
+2108,21726,2024-12-20 17:27:42,High Risk Country Match,True,2024-12-23 15:27:42
+2109,37609,2024-11-05 16:37:39,Mismatched Billing Details,False,
+2110,22668,2024-11-22 12:28:26,High Risk Country Match,True,2024-11-27 11:28:26
+2111,79840,2024-11-05 14:14:31,Mismatched Billing Details,True,2024-11-06 16:14:31
+2112,45531,2024-12-10 13:03:56,High Risk Country Match,True,2024-12-17 11:03:56
+2113,29620,2024-03-11 06:41:26,Suspicious Amount Spike,True,2024-03-12 11:41:26
+2114,7374,2024-10-03 17:09:13,Suspicious Amount Spike,True,2024-10-07 02:09:13
+2115,71366,2024-12-26 14:10:57,Card-Not-Present Anomaly,True,2024-12-28 23:10:57
+2116,32866,2024-12-20 08:19:44,Mismatched Billing Details,True,2024-12-22 00:19:44
+2117,33636,2024-06-12 21:43:51,Card-Not-Present Anomaly,True,2024-06-14 12:43:51
+2118,41034,2023-05-17 01:59:16,High Risk Country Match,True,2023-05-21 10:59:16
+2119,60047,2024-12-16 13:54:08,Mismatched Billing Details,False,
+2120,76976,2024-12-27 15:38:19,Card-Not-Present Anomaly,True,2025-01-04 13:38:19
+2121,4188,2024-10-30 12:33:50,Card-Not-Present Anomaly,True,2024-11-04 11:33:50
+2122,30486,2024-12-17 05:50:11,Velocity Limit Exceeded,True,2024-12-18 12:50:11
+2123,14728,2023-02-22 22:30:50,Suspicious Amount Spike,True,2023-02-27 13:30:50
+2124,63215,2024-10-25 23:33:54,Card-Not-Present Anomaly,True,2024-10-28 21:33:54
+2125,28029,2024-07-19 21:30:00,Card-Not-Present Anomaly,False,
+2126,2463,2024-08-31 16:21:00,High Risk Country Match,True,2024-09-02 02:21:00
+2127,38187,2024-12-20 12:23:18,Velocity Limit Exceeded,True,2024-12-23 14:23:18
+2128,53078,2024-10-22 14:44:48,Velocity Limit Exceeded,True,2024-10-29 06:44:48
+2129,7712,2024-01-23 11:17:11,Velocity Limit Exceeded,False,
+2130,13585,2024-10-08 01:09:08,Mismatched Billing Details,False,
+2131,11163,2024-05-04 05:38:31,Card-Not-Present Anomaly,True,2024-05-07 06:38:31
+2132,1249,2024-07-25 08:50:47,High Risk Country Match,True,2024-07-28 23:50:47
+2133,47337,2024-11-12 13:30:44,Suspicious Amount Spike,False,
+2134,76509,2024-02-11 03:22:52,Mismatched Billing Details,False,
+2135,34348,2024-03-01 05:53:09,Suspicious Amount Spike,True,2024-03-05 21:53:09
+2136,26364,2024-11-04 23:48:16,Suspicious Amount Spike,True,2024-11-10 05:48:16
+2137,15651,2023-12-12 22:55:51,High Risk Country Match,True,2023-12-15 22:55:51
+2138,50433,2024-12-14 00:16:33,Mismatched Billing Details,True,2024-12-17 05:16:33
+2139,40144,2024-08-25 10:18:04,Velocity Limit Exceeded,True,2024-08-28 15:18:04
+2140,78122,2024-09-06 19:34:18,Velocity Limit Exceeded,True,2024-09-12 23:34:18
+2141,32223,2024-12-31 07:47:32,Suspicious Amount Spike,False,
+2142,22874,2024-07-10 17:10:44,High Risk Country Match,True,2024-07-17 23:10:44
+2143,57629,2024-09-13 11:57:20,Velocity Limit Exceeded,False,
+2144,73632,2024-07-17 21:49:16,Mismatched Billing Details,True,2024-07-20 00:49:16
+2145,16748,2024-12-24 17:06:55,High Risk Country Match,True,2024-12-27 05:06:55
+2146,33477,2024-09-17 16:39:14,Suspicious Amount Spike,True,2024-09-20 15:39:14
+2147,71190,2024-12-07 05:34:21,Card-Not-Present Anomaly,True,2024-12-09 01:34:21
+2148,20338,2024-10-23 02:04:50,Mismatched Billing Details,True,2024-10-30 04:04:50
+2149,15524,2024-10-06 17:09:30,Suspicious Amount Spike,False,
+2150,40208,2024-09-17 20:50:58,Suspicious Amount Spike,True,2024-09-22 05:50:58
+2151,60232,2024-12-01 09:18:18,Card-Not-Present Anomaly,True,2024-12-06 20:18:18
+2152,24176,2024-07-24 06:40:00,Mismatched Billing Details,True,2024-07-25 15:40:00
+2153,4342,2024-06-02 04:25:14,Velocity Limit Exceeded,True,2024-06-08 19:25:14
+2154,33323,2024-12-21 04:35:45,Velocity Limit Exceeded,True,2024-12-26 10:35:45
+2155,35743,2024-12-26 02:50:00,Mismatched Billing Details,True,2024-12-28 18:50:00
+2156,44590,2024-12-27 23:56:46,Card-Not-Present Anomaly,True,2025-01-04 19:56:46
+2157,77403,2024-12-11 21:51:34,Velocity Limit Exceeded,False,
+2158,42840,2024-09-08 22:11:32,Suspicious Amount Spike,True,2024-09-16 06:11:32
+2159,63847,2024-09-24 23:53:47,Velocity Limit Exceeded,True,2024-09-28 20:53:47
+2160,79845,2024-09-16 04:03:29,Card-Not-Present Anomaly,True,2024-09-23 01:03:29
+2161,77874,2024-08-25 08:16:42,Card-Not-Present Anomaly,True,2024-08-28 06:16:42
+2162,52905,2024-10-20 02:07:01,Card-Not-Present Anomaly,False,
+2163,20666,2024-10-16 03:19:05,Velocity Limit Exceeded,True,2024-10-19 13:19:05
+2164,27423,2023-04-22 01:59:33,High Risk Country Match,True,2023-04-25 13:59:33
+2165,27982,2024-10-12 11:59:17,Velocity Limit Exceeded,True,2024-10-14 16:59:17
+2166,62144,2024-12-13 18:24:15,Velocity Limit Exceeded,True,2024-12-15 09:24:15
+2167,20842,2024-11-11 00:23:28,Mismatched Billing Details,True,2024-11-15 17:23:28
+2168,13379,2024-12-19 05:55:39,Velocity Limit Exceeded,False,
+2169,75796,2024-10-15 21:39:11,Card-Not-Present Anomaly,True,2024-10-23 03:39:11
+2170,21292,2024-11-02 00:30:08,Suspicious Amount Spike,True,2024-11-04 16:30:08
+2171,75551,2024-10-21 21:15:00,Card-Not-Present Anomaly,True,2024-10-25 01:15:00
+2172,28887,2024-10-31 11:35:52,Card-Not-Present Anomaly,True,2024-11-06 12:35:52
+2173,54451,2024-12-08 20:15:19,High Risk Country Match,True,2024-12-13 15:15:19
+2174,79676,2024-12-27 06:04:35,High Risk Country Match,True,2025-01-03 10:04:35
+2175,64752,2024-12-07 17:31:23,Velocity Limit Exceeded,True,2024-12-12 18:31:23
+2176,46738,2024-05-03 16:36:20,Mismatched Billing Details,False,
+2177,9590,2024-10-19 21:36:51,Card-Not-Present Anomaly,True,2024-10-25 22:36:51
+2178,52289,2024-07-05 00:11:03,Mismatched Billing Details,True,2024-07-12 03:11:03
+2179,63775,2024-08-16 17:14:11,Mismatched Billing Details,True,2024-08-19 20:14:11
+2180,32279,2024-12-15 09:14:31,Card-Not-Present Anomaly,True,2024-12-22 07:14:31
+2181,59047,2024-12-24 08:09:30,High Risk Country Match,True,2024-12-26 09:09:30
+2182,52578,2024-02-14 13:51:01,Card-Not-Present Anomaly,True,2024-02-19 07:51:01
+2183,58949,2024-12-24 01:47:36,Mismatched Billing Details,True,2024-12-25 11:47:36
+2184,53254,2024-10-22 15:56:42,High Risk Country Match,False,
+2185,34048,2024-11-29 18:33:58,Suspicious Amount Spike,True,2024-12-04 15:33:58
+2186,39778,2024-10-08 08:09:48,Velocity Limit Exceeded,True,2024-10-13 12:09:48
+2187,22954,2024-10-28 02:13:37,Mismatched Billing Details,True,2024-11-03 01:13:37
+2188,10876,2024-12-25 18:03:40,Velocity Limit Exceeded,True,2024-12-28 16:03:40
+2189,540,2024-08-25 20:05:43,Suspicious Amount Spike,True,2024-08-30 07:05:43
+2190,13194,2024-10-03 19:34:26,Mismatched Billing Details,True,2024-10-07 10:34:26
+2191,37467,2023-10-20 00:05:51,High Risk Country Match,False,
+2192,51787,2024-11-28 09:40:30,Suspicious Amount Spike,True,2024-12-03 04:40:30
+2193,1285,2024-12-08 07:29:14,Velocity Limit Exceeded,True,2024-12-12 22:29:14
+2194,41193,2024-11-21 02:39:51,Mismatched Billing Details,True,2024-11-28 10:39:51
+2195,25292,2024-04-11 16:28:24,Velocity Limit Exceeded,True,2024-04-15 22:28:24
+2196,23964,2024-10-26 17:59:48,Velocity Limit Exceeded,True,2024-10-28 17:59:48
+2197,21116,2024-10-27 17:14:48,Suspicious Amount Spike,False,
+2198,60287,2024-10-22 15:08:29,Suspicious Amount Spike,True,2024-10-29 00:08:29
+2199,69967,2024-12-31 10:29:07,Suspicious Amount Spike,True,2025-01-04 14:29:07
+2200,19419,2024-11-24 12:45:09,Suspicious Amount Spike,False,
+2201,13859,2023-08-13 12:17:14,High Risk Country Match,True,2023-08-18 00:17:14
+2202,51472,2023-09-25 04:08:13,Velocity Limit Exceeded,True,2023-09-26 11:08:13
+2203,16630,2024-06-28 02:46:56,Mismatched Billing Details,True,2024-07-05 09:46:56
+2204,39908,2024-11-09 01:04:00,Suspicious Amount Spike,True,2024-11-13 14:04:00
+2205,47352,2024-12-31 22:38:16,Velocity Limit Exceeded,True,2025-01-06 22:38:16
+2206,1060,2024-12-12 20:13:45,Mismatched Billing Details,True,2024-12-19 19:13:45
+2207,7469,2024-12-10 17:52:59,Mismatched Billing Details,True,2024-12-16 02:52:59
+2208,50921,2024-12-29 01:10:49,Velocity Limit Exceeded,True,2025-01-03 15:10:49
+2209,75865,2024-04-16 06:43:44,Velocity Limit Exceeded,True,2024-04-18 00:43:44
+2210,1626,2023-06-12 11:37:39,Mismatched Billing Details,True,2023-06-15 09:37:39
+2211,12156,2024-12-24 15:31:52,Suspicious Amount Spike,True,2024-12-29 01:31:52
+2212,62016,2024-12-05 17:11:59,Velocity Limit Exceeded,True,2024-12-12 23:11:59
+2213,17759,2024-11-18 09:22:59,Suspicious Amount Spike,True,2024-11-23 08:22:59
+2214,36021,2024-05-03 15:49:24,Card-Not-Present Anomaly,False,
+2215,9192,2024-10-29 22:06:21,Mismatched Billing Details,True,2024-11-06 21:06:21
+2216,47289,2024-12-27 07:06:35,High Risk Country Match,True,2025-01-01 16:06:35
+2217,59903,2023-11-25 22:13:41,Suspicious Amount Spike,True,2023-11-28 19:13:41
+2218,7979,2024-12-27 22:12:52,Card-Not-Present Anomaly,True,2024-12-30 19:12:52
+2219,865,2024-02-26 20:20:58,Mismatched Billing Details,True,2024-03-01 17:20:58
+2220,73403,2024-11-22 03:34:35,Suspicious Amount Spike,True,2024-11-29 18:34:35
+2221,8559,2024-09-01 15:24:02,Suspicious Amount Spike,False,
+2222,52132,2024-04-18 19:39:24,Suspicious Amount Spike,True,2024-04-26 09:39:24
+2223,55241,2024-07-21 11:33:59,Suspicious Amount Spike,True,2024-07-25 04:33:59
+2224,62283,2023-12-16 12:18:53,Velocity Limit Exceeded,True,2023-12-20 10:18:53
+2225,74270,2024-11-22 06:41:21,High Risk Country Match,True,2024-11-26 18:41:21
+2226,44820,2024-12-23 03:30:23,Mismatched Billing Details,True,2024-12-25 13:30:23
+2227,2626,2024-12-12 13:33:44,Suspicious Amount Spike,True,2024-12-13 14:33:44
+2228,49150,2024-09-13 05:32:17,Velocity Limit Exceeded,True,2024-09-15 23:32:17
+2229,26896,2024-07-08 01:35:51,Mismatched Billing Details,True,2024-07-14 15:35:51
+2230,71952,2024-12-02 11:26:17,High Risk Country Match,False,
+2231,123,2024-07-25 07:12:16,Card-Not-Present Anomaly,True,2024-08-01 10:12:16
+2232,65190,2024-11-12 16:05:00,Velocity Limit Exceeded,False,
+2233,13867,2024-09-15 07:14:49,Suspicious Amount Spike,True,2024-09-21 12:14:49
+2234,51693,2024-07-26 13:31:42,Card-Not-Present Anomaly,False,
+2235,41567,2023-10-19 10:34:20,Mismatched Billing Details,True,2023-10-21 19:34:20
+2236,73061,2024-05-19 00:11:21,High Risk Country Match,True,2024-05-23 02:11:21
+2237,25259,2024-10-18 20:55:47,High Risk Country Match,True,2024-10-23 03:55:47
+2238,11558,2023-09-19 09:07:02,Card-Not-Present Anomaly,True,2023-09-24 08:07:02
+2239,25204,2024-02-26 21:47:16,Velocity Limit Exceeded,True,2024-03-03 23:47:16
+2240,12898,2024-06-06 06:09:57,Suspicious Amount Spike,True,2024-06-09 23:09:57
+2241,50563,2024-10-06 22:13:18,High Risk Country Match,True,2024-10-10 03:13:18
+2242,44976,2024-09-26 23:45:59,Velocity Limit Exceeded,True,2024-09-28 03:45:59
+2243,2942,2024-08-20 08:33:56,Velocity Limit Exceeded,True,2024-08-25 16:33:56
+2244,52416,2024-12-15 18:05:08,Velocity Limit Exceeded,True,2024-12-19 12:05:08
+2245,49955,2024-05-12 20:16:09,Mismatched Billing Details,False,
+2246,3508,2024-12-04 00:56:24,Velocity Limit Exceeded,True,2024-12-08 03:56:24
+2247,22243,2024-12-01 20:44:16,High Risk Country Match,True,2024-12-03 21:44:16
+2248,29627,2024-10-21 14:57:07,Card-Not-Present Anomaly,True,2024-10-27 05:57:07
+2249,7544,2022-12-24 02:30:30,High Risk Country Match,True,2022-12-27 05:30:30
+2250,19761,2024-10-19 03:42:26,Mismatched Billing Details,True,2024-10-24 02:42:26
+2251,54089,2024-11-12 23:14:58,High Risk Country Match,True,2024-11-17 09:14:58
+2252,8589,2024-02-14 10:50:50,Velocity Limit Exceeded,True,2024-02-17 04:50:50
+2253,55345,2024-12-26 20:05:58,High Risk Country Match,True,2024-12-29 00:05:58
+2254,25489,2024-09-01 02:55:54,Card-Not-Present Anomaly,False,
+2255,6169,2024-12-10 02:10:39,High Risk Country Match,True,2024-12-16 18:10:39
+2256,5447,2024-04-08 05:44:16,Card-Not-Present Anomaly,False,
+2257,14948,2024-11-20 09:45:11,Velocity Limit Exceeded,True,2024-11-25 11:45:11
+2258,25649,2024-10-22 09:43:24,Mismatched Billing Details,True,2024-10-23 23:43:24
+2259,21063,2024-11-06 06:13:40,Suspicious Amount Spike,True,2024-11-11 02:13:40
+2260,12541,2024-09-16 05:55:06,Velocity Limit Exceeded,True,2024-09-19 13:55:06
+2261,37399,2024-12-27 13:40:59,Suspicious Amount Spike,True,2025-01-04 09:40:59
+2262,20323,2024-12-23 23:26:53,Suspicious Amount Spike,True,2024-12-27 17:26:53
+2263,19734,2024-09-08 11:36:24,High Risk Country Match,True,2024-09-15 21:36:24
+2264,19007,2024-10-15 05:50:18,Mismatched Billing Details,True,2024-10-17 03:50:18
+2265,41306,2024-10-23 13:38:37,Card-Not-Present Anomaly,True,2024-10-29 05:38:37
+2266,15809,2024-07-02 16:19:26,High Risk Country Match,True,2024-07-04 22:19:26
+2267,40274,2024-07-18 15:23:55,Card-Not-Present Anomaly,True,2024-07-22 05:23:55
+2268,31134,2024-03-07 10:14:41,Suspicious Amount Spike,True,2024-03-09 21:14:41
+2269,58321,2024-04-13 13:25:45,Mismatched Billing Details,False,
+2270,21274,2024-10-17 19:40:25,Card-Not-Present Anomaly,True,2024-10-19 11:40:25
+2271,53097,2024-06-12 16:15:11,High Risk Country Match,True,2024-06-18 15:15:11
+2272,75419,2024-12-02 06:10:45,High Risk Country Match,True,2024-12-04 04:10:45
+2273,32721,2024-11-12 15:38:32,Card-Not-Present Anomaly,True,2024-11-14 03:38:32
+2274,1399,2024-12-30 18:15:42,Card-Not-Present Anomaly,True,2025-01-06 06:15:42
+2275,56578,2024-12-25 08:05:00,Velocity Limit Exceeded,False,
+2276,79459,2024-06-11 10:00:30,Velocity Limit Exceeded,True,2024-06-18 15:00:30
+2277,67324,2024-12-18 16:18:40,High Risk Country Match,True,2024-12-21 14:18:40
+2278,48754,2024-11-19 22:32:16,Suspicious Amount Spike,True,2024-11-22 17:32:16
+2279,66804,2024-12-25 03:56:27,High Risk Country Match,True,2025-01-01 15:56:27
+2280,22647,2023-10-27 04:43:04,Mismatched Billing Details,True,2023-11-03 20:43:04
+2281,57842,2024-08-25 20:01:35,Card-Not-Present Anomaly,False,
+2282,2335,2024-05-23 11:40:54,Suspicious Amount Spike,True,2024-05-25 07:40:54
+2283,53513,2024-06-04 13:08:22,Mismatched Billing Details,True,2024-06-06 00:08:22
+2284,62261,2024-12-14 13:56:11,Mismatched Billing Details,True,2024-12-21 22:56:11
+2285,44542,2023-06-23 10:32:02,Card-Not-Present Anomaly,True,2023-06-30 23:32:02
+2286,10491,2024-05-16 12:52:10,Suspicious Amount Spike,True,2024-05-21 01:52:10
+2287,58024,2024-09-17 05:17:04,Card-Not-Present Anomaly,True,2024-09-22 22:17:04
+2288,73392,2024-12-02 05:21:51,High Risk Country Match,True,2024-12-09 02:21:51
+2289,78474,2024-12-14 11:44:27,Velocity Limit Exceeded,True,2024-12-20 13:44:27
+2290,7270,2024-12-01 04:51:38,Card-Not-Present Anomaly,True,2024-12-08 15:51:38
+2291,67435,2024-09-14 20:20:54,Velocity Limit Exceeded,True,2024-09-21 05:20:54
+2292,41402,2024-06-29 01:07:53,High Risk Country Match,True,2024-06-30 22:07:53
+2293,64731,2024-10-23 08:09:12,Velocity Limit Exceeded,True,2024-10-24 21:09:12
+2294,79962,2023-05-31 12:54:31,Card-Not-Present Anomaly,True,2023-06-05 19:54:31
+2295,68162,2024-05-01 21:16:22,Mismatched Billing Details,True,2024-05-05 21:16:22
+2296,76556,2024-10-10 23:06:53,High Risk Country Match,False,
+2297,40604,2024-07-22 19:43:33,Card-Not-Present Anomaly,True,2024-07-24 17:43:33
+2298,54236,2024-12-31 13:35:36,Suspicious Amount Spike,True,2025-01-07 20:35:36
+2299,24022,2024-10-18 17:41:14,Velocity Limit Exceeded,True,2024-10-20 14:41:14
+2300,24261,2024-12-30 08:53:12,Velocity Limit Exceeded,True,2025-01-05 19:53:12
+2301,21670,2024-12-05 21:25:01,Suspicious Amount Spike,True,2024-12-07 12:25:01
+2302,25413,2024-12-12 15:49:46,Mismatched Billing Details,False,
+2303,50436,2024-09-26 06:22:43,Mismatched Billing Details,True,2024-09-28 19:22:43
+2304,33923,2024-12-25 23:18:55,Mismatched Billing Details,False,
+2305,37191,2024-10-09 22:02:34,Mismatched Billing Details,True,2024-10-17 08:02:34
+2306,78411,2024-03-30 03:11:32,High Risk Country Match,True,2024-04-02 05:11:32
+2307,46284,2023-12-21 13:20:55,High Risk Country Match,True,2023-12-23 14:20:55
+2308,26170,2024-12-31 20:57:19,Suspicious Amount Spike,True,2025-01-01 20:57:19
+2309,6712,2024-12-23 01:41:06,High Risk Country Match,False,
+2310,22456,2023-09-17 14:32:27,High Risk Country Match,True,2023-09-24 22:32:27
+2311,29767,2024-12-16 13:04:53,High Risk Country Match,True,2024-12-18 13:04:53
+2312,50213,2024-12-21 17:24:16,High Risk Country Match,False,
+2313,16034,2024-12-28 05:35:19,Mismatched Billing Details,True,2025-01-04 15:35:19
+2314,35845,2024-08-05 12:28:07,Suspicious Amount Spike,True,2024-08-07 10:28:07
+2315,27215,2024-12-20 14:26:07,High Risk Country Match,True,2024-12-22 03:26:07
+2316,79138,2024-09-23 00:50:32,Card-Not-Present Anomaly,False,
+2317,51285,2024-07-18 00:01:55,High Risk Country Match,False,
+2318,50651,2024-12-28 08:01:53,High Risk Country Match,True,2025-01-01 23:01:53
+2319,25813,2024-11-16 22:36:18,Card-Not-Present Anomaly,True,2024-11-19 20:36:18
+2320,8625,2024-11-29 17:45:18,Card-Not-Present Anomaly,True,2024-12-06 03:45:18
+2321,79909,2024-11-17 21:33:28,Card-Not-Present Anomaly,True,2024-11-22 06:33:28
+2322,64419,2024-12-26 09:47:52,Mismatched Billing Details,True,2024-12-31 03:47:52
+2323,1579,2024-03-14 07:29:53,Card-Not-Present Anomaly,True,2024-03-20 12:29:53
+2324,7700,2024-12-25 10:20:01,Mismatched Billing Details,True,2024-12-26 16:20:01
+2325,7993,2023-12-29 17:34:08,Velocity Limit Exceeded,True,2024-01-02 04:34:08
+2326,5664,2024-06-18 02:59:22,High Risk Country Match,True,2024-06-21 17:59:22
+2327,9160,2024-11-22 12:22:13,Mismatched Billing Details,True,2024-11-29 22:22:13
+2328,49865,2024-06-07 20:46:26,Card-Not-Present Anomaly,False,
+2329,33218,2024-09-04 05:32:57,High Risk Country Match,True,2024-09-07 09:32:57
+2330,23550,2024-12-03 09:41:09,Mismatched Billing Details,True,2024-12-07 11:41:09
+2331,18506,2024-12-03 09:21:33,High Risk Country Match,True,2024-12-06 01:21:33
+2332,6348,2024-02-20 05:17:37,High Risk Country Match,False,
+2333,2988,2023-10-21 18:28:28,Mismatched Billing Details,False,
+2334,26852,2024-11-05 00:37:51,Suspicious Amount Spike,False,
+2335,70307,2024-05-22 19:20:35,Mismatched Billing Details,False,
+2336,2744,2024-10-27 05:04:40,Mismatched Billing Details,True,2024-11-03 17:04:40
+2337,15930,2024-07-27 18:26:10,Mismatched Billing Details,True,2024-07-31 06:26:10
+2338,78527,2024-10-11 20:25:01,High Risk Country Match,True,2024-10-15 01:25:01
+2339,5313,2024-11-27 02:25:38,High Risk Country Match,True,2024-12-04 17:25:38
+2340,12728,2024-12-17 13:36:01,Card-Not-Present Anomaly,True,2024-12-19 08:36:01
+2341,31487,2024-12-01 15:16:04,Card-Not-Present Anomaly,True,2024-12-03 09:16:04
+2342,19970,2024-11-15 16:49:35,Mismatched Billing Details,True,2024-11-23 01:49:35
+2343,62032,2024-07-17 15:53:21,High Risk Country Match,True,2024-07-21 14:53:21
+2344,70667,2024-12-25 21:24:16,Card-Not-Present Anomaly,True,2024-12-30 17:24:16
+2345,5233,2024-09-10 06:57:33,Mismatched Billing Details,False,
+2346,17900,2024-12-09 23:25:09,Suspicious Amount Spike,True,2024-12-17 16:25:09
+2347,6344,2024-08-07 05:20:28,Suspicious Amount Spike,True,2024-08-13 09:20:28
+2348,62956,2024-05-30 12:37:09,Card-Not-Present Anomaly,True,2024-06-06 00:37:09
+2349,23013,2024-11-14 18:30:46,Card-Not-Present Anomaly,True,2024-11-16 01:30:46
+2350,77359,2024-11-01 18:08:00,High Risk Country Match,True,2024-11-09 12:08:00
+2351,11967,2024-12-10 03:30:00,High Risk Country Match,True,2024-12-17 22:30:00
+2352,57493,2024-02-27 07:19:38,High Risk Country Match,False,
+2353,54938,2024-12-12 18:26:58,High Risk Country Match,True,2024-12-18 09:26:58
+2354,13249,2024-10-30 03:01:07,Suspicious Amount Spike,False,
+2355,78047,2023-07-05 14:56:50,Mismatched Billing Details,True,2023-07-07 08:56:50
+2356,74182,2024-11-03 10:31:08,Mismatched Billing Details,True,2024-11-08 11:31:08
+2357,60818,2024-10-10 06:49:28,Card-Not-Present Anomaly,True,2024-10-12 13:49:28
+2358,55944,2024-12-24 16:13:12,Suspicious Amount Spike,True,2024-12-29 13:13:12
+2359,16102,2024-12-24 14:17:49,Mismatched Billing Details,True,2024-12-27 13:17:49
+2360,70360,2024-12-29 11:46:14,Card-Not-Present Anomaly,True,2025-01-02 14:46:14
+2361,43821,2024-12-28 15:57:43,Card-Not-Present Anomaly,True,2025-01-05 11:57:43
+2362,13576,2024-12-19 22:10:56,Velocity Limit Exceeded,True,2024-12-22 16:10:56
+2363,25821,2024-09-11 10:27:26,Suspicious Amount Spike,True,2024-09-12 16:27:26
+2364,18290,2024-11-15 12:20:30,Mismatched Billing Details,True,2024-11-20 11:20:30
+2365,39730,2024-12-29 20:54:21,Mismatched Billing Details,True,2024-12-31 00:54:21
+2366,10696,2024-09-08 20:14:16,Card-Not-Present Anomaly,True,2024-09-12 23:14:16
+2367,35243,2024-02-07 21:17:48,Suspicious Amount Spike,True,2024-02-12 05:17:48
+2368,69511,2024-12-13 06:32:44,Velocity Limit Exceeded,True,2024-12-19 21:32:44
+2369,31350,2024-11-21 17:37:42,Card-Not-Present Anomaly,False,
+2370,67892,2024-11-30 15:53:46,Velocity Limit Exceeded,False,
+2371,6360,2024-11-23 23:46:43,Mismatched Billing Details,True,2024-11-28 04:46:43
+2372,55184,2024-10-17 10:54:41,High Risk Country Match,True,2024-10-19 21:54:41
+2373,45538,2024-12-03 09:12:05,Mismatched Billing Details,True,2024-12-07 15:12:05
+2374,1058,2024-08-22 08:10:21,Card-Not-Present Anomaly,True,2024-08-28 11:10:21
+2375,72438,2024-11-10 17:16:26,High Risk Country Match,True,2024-11-16 07:16:26
+2376,53207,2024-12-23 01:34:44,Mismatched Billing Details,True,2024-12-25 03:34:44
+2377,18808,2024-11-06 16:21:13,Velocity Limit Exceeded,True,2024-11-13 18:21:13
+2378,64987,2024-11-18 11:36:55,Suspicious Amount Spike,False,
+2379,74248,2024-06-28 13:17:54,Card-Not-Present Anomaly,False,
+2380,72506,2024-12-29 06:32:24,High Risk Country Match,True,2025-01-02 09:32:24
+2381,68767,2023-06-23 23:05:01,High Risk Country Match,True,2023-06-29 03:05:01
+2382,40090,2024-05-15 02:42:09,High Risk Country Match,True,2024-05-16 22:42:09
+2383,56257,2024-10-16 01:20:54,Mismatched Billing Details,True,2024-10-23 17:20:54
+2384,28431,2023-08-11 11:42:09,Velocity Limit Exceeded,True,2023-08-15 00:42:09
+2385,25556,2024-10-22 10:18:42,High Risk Country Match,True,2024-10-23 11:18:42
+2386,61790,2024-09-23 16:42:17,Card-Not-Present Anomaly,True,2024-09-29 17:42:17
+2387,75206,2024-07-20 12:52:11,Mismatched Billing Details,True,2024-07-24 11:52:11
+2388,58201,2024-10-20 11:58:17,Suspicious Amount Spike,True,2024-10-28 02:58:17
+2389,21920,2024-09-28 11:55:08,Mismatched Billing Details,True,2024-10-02 20:55:08
+2390,292,2024-12-05 23:12:02,Velocity Limit Exceeded,True,2024-12-10 04:12:02
+2391,11944,2024-12-19 00:56:11,Mismatched Billing Details,True,2024-12-20 10:56:11
+2392,55331,2024-12-17 10:08:56,Card-Not-Present Anomaly,True,2024-12-22 09:08:56
+2393,73726,2024-11-13 09:56:00,High Risk Country Match,True,2024-11-18 02:56:00
+2394,13800,2024-11-07 23:55:07,Mismatched Billing Details,True,2024-11-11 09:55:07
+2395,49984,2024-12-18 08:56:02,Card-Not-Present Anomaly,True,2024-12-20 00:56:02
+2396,37797,2024-09-13 03:32:44,Card-Not-Present Anomaly,True,2024-09-18 01:32:44
+2397,55312,2024-12-07 17:26:53,Suspicious Amount Spike,False,
+2398,63751,2024-05-19 05:10:49,Velocity Limit Exceeded,True,2024-05-23 05:10:49
+2399,77100,2024-12-08 18:19:06,Mismatched Billing Details,True,2024-12-12 11:19:06
+2400,28517,2024-11-04 21:54:41,High Risk Country Match,True,2024-11-11 06:54:41
+2401,72002,2024-09-20 21:42:06,Card-Not-Present Anomaly,True,2024-09-28 06:42:06
+2402,29024,2023-09-25 11:42:04,Card-Not-Present Anomaly,True,2023-09-26 14:42:04
+2403,67839,2024-12-03 07:17:07,Card-Not-Present Anomaly,True,2024-12-10 05:17:07
+2404,20254,2024-12-06 07:03:47,Mismatched Billing Details,False,
+2405,17213,2024-10-02 17:06:29,Card-Not-Present Anomaly,True,2024-10-09 00:06:29
+2406,43257,2024-12-24 21:28:48,High Risk Country Match,True,2024-12-30 12:28:48
+2407,46705,2024-12-28 18:52:56,Mismatched Billing Details,False,
+2408,8434,2024-12-08 21:06:35,Mismatched Billing Details,True,2024-12-10 11:06:35
+2409,57436,2024-04-15 02:10:33,Card-Not-Present Anomaly,False,
+2410,4626,2024-12-31 08:40:47,High Risk Country Match,True,2025-01-01 19:40:47
+2411,73406,2024-05-18 17:32:19,Suspicious Amount Spike,True,2024-05-24 06:32:19
+2412,55629,2024-12-28 00:49:29,High Risk Country Match,True,2025-01-04 17:49:29
+2413,66603,2024-01-30 05:39:57,High Risk Country Match,False,
+2414,7704,2024-12-24 05:47:44,Mismatched Billing Details,True,2024-12-28 02:47:44
+2415,65708,2024-10-31 17:33:47,Card-Not-Present Anomaly,False,
+2416,1408,2024-09-07 17:51:23,Mismatched Billing Details,True,2024-09-10 13:51:23
+2417,31370,2024-11-03 11:07:34,Card-Not-Present Anomaly,False,
+2418,67342,2024-10-25 01:52:56,Suspicious Amount Spike,True,2024-10-31 20:52:56
+2419,62125,2023-09-15 05:55:51,High Risk Country Match,True,2023-09-21 18:55:51
+2420,36654,2024-06-02 08:24:12,Suspicious Amount Spike,True,2024-06-04 20:24:12
+2421,30143,2024-11-02 22:59:06,Velocity Limit Exceeded,True,2024-11-08 13:59:06
+2422,26943,2024-09-30 09:38:03,Velocity Limit Exceeded,True,2024-10-03 01:38:03
+2423,57657,2024-10-07 15:39:20,Card-Not-Present Anomaly,True,2024-10-12 03:39:20
+2424,68139,2024-06-24 09:49:42,Suspicious Amount Spike,False,
+2425,704,2024-10-31 13:49:28,High Risk Country Match,True,2024-11-06 15:49:28
+2426,61705,2024-08-24 00:36:43,Card-Not-Present Anomaly,False,
+2427,79638,2024-11-25 23:00:31,Card-Not-Present Anomaly,True,2024-11-28 17:00:31
+2428,45165,2024-12-22 07:44:36,Mismatched Billing Details,True,2024-12-23 10:44:36
+2429,59192,2024-11-14 03:40:53,Mismatched Billing Details,True,2024-11-18 08:40:53
+2430,8352,2024-05-18 09:11:53,Velocity Limit Exceeded,False,
+2431,53928,2024-08-11 14:14:08,Velocity Limit Exceeded,False,
+2432,46541,2024-08-12 05:53:36,Mismatched Billing Details,True,2024-08-18 11:53:36
+2433,78384,2024-05-16 16:52:48,Mismatched Billing Details,False,
+2434,62339,2024-12-28 03:44:46,Suspicious Amount Spike,True,2025-01-01 19:44:46
+2435,49328,2024-11-30 16:17:13,Card-Not-Present Anomaly,True,2024-12-02 00:17:13
+2436,43795,2024-11-29 15:53:47,Mismatched Billing Details,True,2024-12-01 12:53:47
+2437,79585,2024-12-23 17:31:44,High Risk Country Match,False,
+2438,62116,2024-02-16 17:20:26,High Risk Country Match,True,2024-02-21 05:20:26
+2439,48574,2024-12-12 13:34:25,Velocity Limit Exceeded,True,2024-12-17 10:34:25
+2440,1789,2023-05-13 02:10:27,Card-Not-Present Anomaly,False,
+2441,72656,2024-10-14 06:29:59,Mismatched Billing Details,True,2024-10-19 15:29:59
+2442,15981,2024-04-10 18:42:31,Suspicious Amount Spike,True,2024-04-13 10:42:31
+2443,59194,2024-03-02 13:19:04,Card-Not-Present Anomaly,True,2024-03-09 20:19:04
+2444,59889,2024-12-08 21:23:27,Velocity Limit Exceeded,True,2024-12-15 09:23:27
+2445,2391,2024-09-20 17:13:00,Velocity Limit Exceeded,False,
+2446,30660,2024-12-13 11:23:08,Card-Not-Present Anomaly,True,2024-12-14 21:23:08
+2447,16694,2024-10-24 09:57:08,Velocity Limit Exceeded,True,2024-10-28 06:57:08
+2448,56504,2024-10-25 07:15:47,Card-Not-Present Anomaly,True,2024-10-30 03:15:47
+2449,57119,2024-07-31 17:58:11,Suspicious Amount Spike,False,
+2450,61403,2024-12-22 03:13:11,High Risk Country Match,True,2024-12-26 12:13:11
+2451,37799,2024-12-19 18:19:05,Suspicious Amount Spike,False,
+2452,46176,2024-08-08 15:34:37,Velocity Limit Exceeded,True,2024-08-12 14:34:37
+2453,30310,2024-04-23 08:03:39,Velocity Limit Exceeded,True,2024-04-26 02:03:39
+2454,32772,2024-12-21 03:26:53,Velocity Limit Exceeded,False,
+2455,17226,2024-06-05 21:43:46,Suspicious Amount Spike,True,2024-06-08 12:43:46
+2456,782,2024-12-11 00:05:28,High Risk Country Match,True,2024-12-18 19:05:28
+2457,10784,2024-12-22 12:09:58,Suspicious Amount Spike,False,
+2458,55325,2024-10-06 00:37:54,Mismatched Billing Details,True,2024-10-12 21:37:54
+2459,28708,2024-12-24 05:10:58,Suspicious Amount Spike,True,2024-12-31 02:10:58
+2460,59832,2024-11-03 11:49:51,Card-Not-Present Anomaly,True,2024-11-06 00:49:51
+2461,77415,2024-11-20 02:31:59,Card-Not-Present Anomaly,True,2024-11-25 22:31:59
+2462,5621,2024-04-01 14:42:15,High Risk Country Match,True,2024-04-05 12:42:15
+2463,15841,2024-02-06 17:46:51,High Risk Country Match,True,2024-02-09 23:46:51
+2464,25711,2024-02-18 20:36:35,High Risk Country Match,True,2024-02-21 21:36:35
+2465,15850,2024-11-22 03:42:38,Mismatched Billing Details,True,2024-11-27 10:42:38
+2466,58260,2024-08-18 15:35:28,Card-Not-Present Anomaly,False,
+2467,40103,2023-05-03 01:45:45,High Risk Country Match,True,2023-05-08 16:45:45
+2468,28977,2024-12-29 14:29:53,Card-Not-Present Anomaly,True,2025-01-01 05:29:53
+2469,38643,2024-12-28 05:30:08,High Risk Country Match,True,2024-12-31 06:30:08
+2470,18467,2024-06-21 15:45:38,High Risk Country Match,False,
+2471,18781,2023-09-13 13:27:44,Card-Not-Present Anomaly,True,2023-09-21 05:27:44
+2472,18942,2024-12-09 12:06:47,Mismatched Billing Details,True,2024-12-13 22:06:47
+2473,48360,2023-11-22 07:06:55,Card-Not-Present Anomaly,True,2023-11-28 12:06:55
+2474,504,2024-11-04 15:24:45,Velocity Limit Exceeded,True,2024-11-08 05:24:45
+2475,22802,2024-11-19 01:48:43,Card-Not-Present Anomaly,True,2024-11-21 23:48:43
+2476,61253,2024-09-02 03:22:30,Velocity Limit Exceeded,True,2024-09-07 14:22:30
+2477,50336,2024-08-06 01:45:42,Mismatched Billing Details,True,2024-08-09 06:45:42
+2478,13308,2024-09-28 02:04:04,Mismatched Billing Details,True,2024-10-01 14:04:04
+2479,46022,2024-10-27 10:25:28,High Risk Country Match,True,2024-11-01 19:25:28
+2480,59790,2024-12-15 21:21:50,High Risk Country Match,False,
+2481,22986,2024-09-14 11:23:10,High Risk Country Match,True,2024-09-21 04:23:10
+2482,25678,2024-12-29 11:25:58,Card-Not-Present Anomaly,True,2025-01-03 03:25:58
+2483,23200,2024-10-21 16:12:17,Mismatched Billing Details,True,2024-10-25 16:12:17
+2484,51919,2024-04-07 05:15:41,Velocity Limit Exceeded,True,2024-04-13 07:15:41
+2485,15051,2024-11-28 13:44:01,Mismatched Billing Details,True,2024-12-03 22:44:01
+2486,16069,2024-12-31 23:36:10,Mismatched Billing Details,True,2025-01-06 22:36:10
+2487,3395,2024-12-09 03:12:34,Mismatched Billing Details,True,2024-12-12 22:12:34
+2488,68564,2024-07-29 21:03:37,High Risk Country Match,True,2024-08-02 00:03:37
+2489,74997,2024-12-31 01:03:25,Suspicious Amount Spike,True,2025-01-05 01:03:25
+2490,5454,2024-05-18 03:59:49,Mismatched Billing Details,True,2024-05-20 14:59:49
+2491,21594,2024-11-02 12:21:21,High Risk Country Match,True,2024-11-03 17:21:21
+2492,77680,2024-12-26 10:45:01,Velocity Limit Exceeded,True,2024-12-28 16:45:01
+2493,35058,2024-11-19 16:52:34,High Risk Country Match,True,2024-11-22 15:52:34
+2494,16570,2024-12-15 12:38:01,Mismatched Billing Details,False,
+2495,48680,2024-04-14 08:58:17,Card-Not-Present Anomaly,True,2024-04-17 00:58:17
+2496,48268,2024-09-01 20:09:45,Mismatched Billing Details,True,2024-09-05 22:09:45
+2497,29841,2024-12-22 00:54:52,Mismatched Billing Details,True,2024-12-28 04:54:52
+2498,56127,2022-12-12 00:36:37,Suspicious Amount Spike,True,2022-12-16 15:36:37
+2499,77801,2024-11-14 15:59:31,Mismatched Billing Details,True,2024-11-17 08:59:31
+2500,37217,2024-05-12 03:09:05,Suspicious Amount Spike,False,

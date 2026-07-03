@@ -702,7 +702,7 @@ try:
             f"{scope['settlement_count']:,} settlement records",
         )
 except Exception:
-    st.info("Dataset context will appear after the PostgreSQL tables are available.")
+    st.warning("Could not load dataset scope. Check that the data files are available.")
 
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs(
