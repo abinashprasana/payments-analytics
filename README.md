@@ -1,136 +1,166 @@
 <div align="center">
 
-<h1>💳 Payments Analytics</h1>
+# 💳 Payments Analytics
 
-<p><em>A PostgreSQL analytics project on synthetic commercial transaction data, demonstrating intermediate SQL patterns across a six-table relational schema, a Python data pipeline, a Streamlit dashboard, and a Power BI intelligence dashboard.</em></p>
+<p><em>A full-stack analytics project built around a synthetic commercial payments dataset, covering PostgreSQL schema design, Python data generation, SQL analysis, a live Streamlit dashboard, and a Power BI report.</em></p>
 
 <br/>
 
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
-[![Plotly](https://img.shields.io/badge/Plotly-Visualisation-3F4F75?style=for-the-badge&logo=plotly&logoColor=white)](https://plotly.com)
-[![PowerBI](https://img.shields.io/badge/Power%20BI-Dashboard-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](powerbi/payments_analytics_dashboard.pbix)
-[![Data](https://img.shields.io/badge/Data-Synthetic-94A3B8?style=for-the-badge)](data/generate_data.py)
+[![Plotly](https://img.shields.io/badge/Plotly-Visuals-3F4F75?style=for-the-badge&logo=plotly&logoColor=white)](https://plotly.com)
+[![Power BI](https://img.shields.io/badge/Power%20BI-Report-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](Power%20BI/payments_analytics_dashboard.pbix)
+[![Pandas](https://img.shields.io/badge/Pandas-Data-150458?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org)
+[![Faker](https://img.shields.io/badge/Faker-Synthetic%20Data-00B4D8?style=for-the-badge)](https://faker.readthedocs.io)
+[![Status](https://img.shields.io/badge/Status-Portfolio%20Project-8A2387?style=for-the-badge)](.)
 
 </div>
 
 ---
 
-## 🧠 Why This Project?
+## 🧠 What This Project Is About
 
-Most public datasets used in SQL portfolios are either too simple or unrelated to commercial data work. This schema was designed to reflect how transactional data is typically structured in payments and financial services systems, with separate tables for customers, accounts, merchants, transactions, settlements and fraud compliance.
+I built this project to practice the kind of data analysis that shows up in real payments and fintech environments. The idea was to create something that goes beyond a simple CSV analysis and actually models how transactional data lives across multiple related tables in a production-style database.
 
-The separation of concerns mirrors real-world data warehouse design and forces the kinds of multi-table joins and aggregations that appear in actual analytics roles. The data is fully synthetic, generated with Python Faker using a fixed seed for reproducibility.
+The dataset is fully synthetic, generated with Python and the Faker library, and covers three years of fictional commercial payment activity across 10 countries and 8 merchant categories. From there, the data gets loaded into PostgreSQL, analysed through a set of SQL queries covering everything from customer segmentation to fraud risk, and then presented through two separate dashboard layers: an interactive Streamlit app and a Power BI report.
+
+The structure is intentionally close to how real payment data looks in practice. Nothing is kept in a single flat file. Customers own accounts, accounts originate transactions, merchants receive settlements, and a separate compliance table tracks fraud flags independently.
 
 ---
 
-## 🔍 Key Findings
+## 📌 Dataset Snapshot
 
-> Run the queries in `queries/` against the generated dataset to reproduce these results.
+These values are calculated from the generated CSV files in `data/raw/` and verified against the source data.
 
-| Finding | Result |
+| Metric | Value |
+|---|---:|
+| Customers | 5,000 |
+| Accounts | 6,000 |
+| Merchants | 800 |
+| Transactions | 80,000 |
+| Completed transactions | 71,870 |
+| Settlement records | 61,124 |
+| Fraud flags | 2,500 |
+| Transaction date range | 2022-02-07 to 2024-12-31 |
+| Completed transaction value | EUR 170,718,812.07 |
+| Average completed transaction value | EUR 2,375.38 |
+
+---
+
+## 🔍 Key Results
+
+| Area | Result |
 |---|---|
-| 🚨 Fraud flag rate difference | High-risk tier merchants had approximately **4x** the fraud flag rate of low-risk merchants |
-| ⏱️ Settlement delay | Average delay was **2.1 days** for low-risk merchants versus **4.8 days** for high-risk merchants |
-| 👥 Retail volume share | Retail segment customers account for **80%** of transaction volume |
-| 💎 High-value customers | Premium customers have **35% higher** average transaction values than retail |
-| 📉 Cohort retention | Month 3 cohort retention drops to approximately **60%** across all customer segments |
+| ✅ Completed payment activity | 71,870 transactions completed out of 80,000 total, giving a 90% completion rate. |
+| 💶 Transaction value | Completed transactions total EUR 170.72M across the three-year period, with an average value of EUR 2,375.38 per transaction. |
+| 👥 Customer segment activity | Retail customers generated 64,104 transactions, representing 80.13% of all transaction records across all three segments. |
+| 🚨 Fraud flags by category | Services has the highest fraud flag rate at 3.39% and Travel has the lowest at 2.92%, with all categories sitting between 2.9% and 3.4%. |
+| ⏱️ Settlement status | Of 61,124 settlement records, 57,381 are fully settled, 3,117 are delayed, and 626 are disputed. |
+| 🧾 Settlement value | The settlement table holds EUR 141.68M in settled payouts and EUR 2.31M in processing fees collected from merchants. |
 
 ---
 
-## 📸 Streamlit Dashboard Preview
+## ✨ Streamlit Dashboard
 
-> To regenerate these images locally, run:
-> ```bash
-> python scripts/export_charts.py
-> ```
+The Streamlit dashboard lives in [`dashboard/app.py`](dashboard/app.py) and connects directly to the PostgreSQL database to serve live query results.
 
-### 📈 Overview — Monthly Transaction Trends
+The layout uses a dark glass-style design with a gradient background, glass-effect metric cards, and Plotly charts styled to match throughout. At the top of every page there is a row of four scope cards showing the total customer count, merchant count, transaction date window, and fraud flag count pulled live from the database.
+
+The dashboard has five tabs:
+
+| Tab | What it shows |
+|---|---|
+| Overview | Three KPI cards (completed transactions, total volume, average transaction size) followed by two separate stacked charts: a bar chart for monthly transaction count and an area line chart for monthly transaction value |
+| Merchants | Horizontal bar chart ranking the top 10 merchants by settled revenue, colour-coded by industry category, with a supporting detail table below |
+| Risk | Fraud flag rate bar chart using a green-to-red colour scale across merchant categories, with an insight note naming the highest-risk category, plus a compact risk rates table alongside |
+| Retention | Plotly heatmap of the monthly customer cohort retention matrix, showing the percentage of each join-month cohort returning for completed transactions across their first 12 months |
+| Summary | Scope cards repeating the dataset totals, followed by a written explanation of what the project is, how it was built, and what techniques it covers |
+
+To run the dashboard locally:
+
+```bash
+streamlit run dashboard/app.py
+```
+
+The app opens in your browser at:
+
+```text
+http://localhost:8501
+```
+
+---
+
+## 📸 Chart Exports
+
+Static chart exports are stored in `outputs/charts/`. The export script at [`scripts/export_charts.py`](scripts/export_charts.py) connects to the database and generates PNGs that match the current dashboard design: dark background, blue bar chart and teal area line chart for transaction trends, category-coloured horizontal bars for merchants, a green-to-red gradient for the fraud rate chart, and a Plotly heatmap for cohort retention.
+
+To regenerate the exports after the database is loaded:
+
+```bash
+python scripts/export_charts.py
+```
+
+### 📈 Transaction Trends
+
+Two stacked panels showing monthly completed transaction count (bar) and total value (area line).
+
 ![Transaction Trends](outputs/charts/transaction_trends.png)
 
-### 🏪 Merchant Analysis — Top Merchants by Revenue
+### 🏬 Merchant Performance
+
+Top 10 merchants by settled revenue, coloured by industry category.
+
 ![Merchant Performance](outputs/charts/merchant_performance.png)
 
-### 🚨 Risk Overview — Fraud Rate by Category
+### 🚨 Fraud Risk by Category
+
+Fraud flag rate per merchant category, coloured from low (green) to high (red).
+
 ![Fraud Risk](outputs/charts/fraud_risk_by_category.png)
 
-### 👥 Cohort Retention — Month-over-Month
+### 👥 Cohort Retention
+
+Monthly customer retention heatmap. Each row is a join-month cohort, each column is months since joining.
+
 ![Cohort Retention](outputs/charts/cohort_retention.png)
 
 ---
 
 ## 📊 Power BI Dashboard
 
-Built a four page interactive Power BI dashboard on top of the same synthetic dataset, demonstrating end to end BI development including data modelling, DAX measures and multi page dashboard design.
+The Power BI report is included at [`Power BI/payments_analytics_dashboard.pbix`](Power%20BI/payments_analytics_dashboard.pbix).
 
-> 📥 **To explore the full interactive dashboard:** Download [`payments_analytics_dashboard.pbix`](Power%20BI/payments_analytics_dashboard.pbix) and open it in Power BI Desktop.
+It was built from the same six CSV files and provides a separate business intelligence view of the project, covering the same analytical themes as the Streamlit dashboard but in a layout designed for presentation and stakeholder sharing.
 
-### What Was Built
-- Designed a star schema data model connecting all six tables with five relationships
-- Wrote 12 DAX measures covering transaction KPIs, fraud metrics, settlement analysis and customer counts
-- Used Power Query to clean and type-cast all columns across every table
-- Built four fully interactive pages with slicers, filters and cross-page navigation
-
-### 📋 Pages Covered
-
-| Page | Visuals |
+| Page | Focus |
 |---|---|
-| 🏠 Executive Overview | KPI cards, monthly transaction trend combo chart, transaction type donut, year and currency slicers |
-| 🏪 Merchant Performance | Revenue leaderboard, category breakdown, merchant details table, risk distribution donut |
-| 🚨 Fraud & Risk | Fraud KPI cards, flag rate by category, reasons distribution, resolution status chart, unresolved flags table |
-| 👥 Customer Segments | Geographic map, country and segment bar chart, monthly acquisition trend, active customer ratio |
+| 🏠 Executive Overview | KPI cards, monthly transaction trends, transaction type split, and date filters |
+| 🏬 Merchant Performance | Revenue leaderboard, category breakdown, merchant detail table, and risk tier distribution |
+| 🚨 Fraud and Risk | Fraud rate indicators, category risk chart, flag reason breakdown, monthly resolution trend, and unresolved flag list |
+| 👥 Customer Segments | Country and segment distribution, monthly acquisition trend, active customer ratio, and geographic map |
 
-### 🖼️ Dashboard Screenshots
+### Dashboard screenshots
 
 #### 🏠 Executive Overview
+
 ![Executive Overview](Power%20BI/executive_overview.png)
 
-#### 🏪 Merchant Performance
+#### 🏬 Merchant Performance
+
 ![Merchant Performance](Power%20BI/merchant_performance.png)
 
-#### 🚨 Fraud & Risk
+#### 🚨 Fraud and Risk
+
 ![Fraud and Risk](Power%20BI/fraud_risk.png)
 
 #### 👥 Customer Segments
+
 ![Customer Segments](Power%20BI/customer_segments.png)
 
 ---
 
-## 🎬 Demo Video
-
-> A walkthrough of the Streamlit dashboard covering all four analytical tabs.
-
-[![Demo Video](https://img.shields.io/badge/Demo-Coming%20Soon-FF4B4B?style=for-the-badge&logo=youtube&logoColor=white)](#)
-
-> 📌 **To add your recording:** Record a 60 to 90 second screen capture of the running dashboard, upload the video file to this repository or YouTube, then replace the badge above with either a YouTube link or a GitHub-hosted video using:
-> ```
-> https://github.com/abinashprasana/payments-analytics/assets/your-video-file.mp4
-> ```
-
----
-
-## 🛠️ Tech Stack
-
-<div align="center">
-
-| Layer | Technology | Purpose |
-|---|---|---|
-| 🗄️ Database | PostgreSQL 15+ | Relational schema, analytical queries |
-| 🐍 Data Generation | Python + Faker | Synthetic dataset creation |
-| 📥 Ingestion | psycopg2 + COPY | High-speed bulk loading |
-| 📊 BI Dashboard | Streamlit + Plotly | Interactive web front-end |
-| 📈 BI Reporting | Power BI Desktop + DAX | Professional analytics dashboard |
-| 🖼️ Export | Kaleido | Static PNG chart rendering |
-| 🔐 Config | python-dotenv | Credential management |
-
-</div>
-
----
-
 ## 🗂️ Schema Design
-
-### Entity Relationship Diagram
 
 ```mermaid
 erDiagram
@@ -199,71 +229,63 @@ erDiagram
 ```
 
 <details>
-<summary>📖 Data Dictionary & Constraints</summary>
+<summary>📖 Data dictionary and constraints</summary>
 
 <br/>
 
 **`customers`**
-- Holds profile data for retail, business and premium customers
-- `email` is `UNIQUE` and `NOT NULL`
-- `segment` constrained: `CHECK (segment IN ('retail', 'business', 'premium'))`
+
+Holds customer profile data. The `email` column is unique and required. The `segment` column is constrained to `retail`, `business`, or `premium`.
 
 **`accounts`**
-- Financial accounts owned by customers
-- `customer_id` foreign key with `ON DELETE CASCADE`
-- `account_type` constrained: `CHECK (account_type IN ('current', 'savings', 'merchant'))`
+
+Stores financial accounts owned by customers. Each account links back to a customer via `customer_id`. The `account_type` column is constrained to `current`, `savings`, or `merchant`.
 
 **`merchants`**
-- Registered merchant profiles accepting payments
-- `risk_tier` constrained: `CHECK (risk_tier IN ('low', 'medium', 'high'))`
+
+Stores merchant profiles for businesses accepting payments. The `risk_tier` column is constrained to `low`, `medium`, or `high`.
 
 **`transactions`**
-- Core financial ledger
-- `amount` must be positive: `CHECK (amount > 0)`
-- `merchant_id` uses `ON DELETE SET NULL` to preserve historical records
-- `transaction_type` constrained: `purchase`, `refund`, or `transfer`
-- `status` constrained: `completed`, `pending`, or `failed`
+
+The main payment activity table. The `amount` column must be positive. The `transaction_type` column is constrained to `purchase`, `refund`, or `transfer`. The `status` column is constrained to `completed`, `pending`, or `failed`.
 
 **`settlements`**
-- Post-transaction payout records
-- `transaction_id` is `UNIQUE`, enforcing a strict 1:1 relationship
-- `settled_amount` and `processing_fee` must be non-negative
+
+Stores settlement records for completed merchant transactions. The `transaction_id` column is unique, enforcing one settlement record per transaction at most. Both `settled_amount` and `processing_fee` must be non-negative.
 
 **`fraud_flags`**
-- Compliance alerts raised against transactions
-- `transaction_id` is a `UNIQUE` foreign key
-- `resolved_date` can be null when `is_resolved` is false
+
+Stores compliance flags raised against transactions. The `resolved_date` column can be empty when a flag has not yet been resolved.
 
 </details>
 
 <details>
-<summary>⚡ Performance Indexing Strategy</summary>
+<summary>⚡ Indexing approach</summary>
 
 <br/>
 
-To prevent full table scans on large tables such as `transactions` with 80,000 rows:
+The schema includes performance indexes targeting the most common analytics access patterns:
 
-- **Foreign Key Indexes:** `idx_accounts_customer_id`, `idx_transactions_account_id`, `idx_transactions_merchant_id` — speed up joins across the schema
-- **Temporal Indexes:** `idx_transactions_transaction_date`, `idx_settlements_settlement_date` — accelerate month-over-month cohorting and rolling window calculations
-- **Filter Index:** `idx_transactions_status` — fast-filters completed transactions for settlement analysis
-- **Surveillance Index:** `idx_fraud_flags_flagged_date` — optimises time-based fraud flag queries
+Foreign key joins between customers, accounts, merchants, and transactions are indexed to keep multi-table aggregation fast. Transaction and settlement dates are indexed for time-series groupings and rolling window queries. The transaction status column is indexed to speed up the completed-only filters used across most queries. Fraud flag dates are indexed to support time-based compliance analysis.
 
 </details>
 
 ---
 
-## 📝 SQL Patterns Covered
+## 📝 SQL Analysis Queries
 
-| # | File | Pattern Demonstrated |
+Eight analytical queries cover the full scope of the dataset, from simple aggregations to window functions and multi-step CTEs.
+
+| # | File | Focus |
 |---|---|---|
-| 01 | `01_customer_segments.sql` | `COUNT()`, `GROUP BY`, `HAVING`, `ORDER BY` |
-| 02 | `02_transaction_trends.sql` | `DATE_TRUNC` monthly binning, time-series aggregation |
-| 03 | `03_merchant_performance.sql` | `RANK() OVER (PARTITION BY ... ORDER BY ...)` |
-| 04 | `04_settlement_analysis.sql` | Timestamp arithmetic, `EXTRACT(EPOCH ...)` latency |
-| 05 | `05_risk_indicators.sql` | Benchmarking with chained CTEs vs category averages |
-| 06 | `06_cohort_analysis.sql` | Cohort lifecycle with `AGE()`, `DATE_TRUNC`, `LAG()` |
-| 07 | `07_rolling_metrics.sql` | `ROWS BETWEEN N PRECEDING AND CURRENT ROW` moving averages |
-| 08 | `08_cte_complex.sql` | Customer Lifetime Value via multi-step chained CTEs |
+| 01 | [`queries/01_customer_segments.sql`](queries/01_customer_segments.sql) | Customer count by country and segment |
+| 02 | [`queries/02_transaction_trends.sql`](queries/02_transaction_trends.sql) | Monthly transaction volume and average value |
+| 03 | [`queries/03_merchant_performance.sql`](queries/03_merchant_performance.sql) | Merchant revenue ranking with window functions |
+| 04 | [`queries/04_settlement_analysis.sql`](queries/04_settlement_analysis.sql) | Average settlement latency by merchant category |
+| 05 | [`queries/05_risk_indicators.sql`](queries/05_risk_indicators.sql) | Merchants exceeding their category fraud rate benchmark |
+| 06 | [`queries/06_cohort_analysis.sql`](queries/06_cohort_analysis.sql) | Monthly customer cohort retention with LAG comparison |
+| 07 | [`queries/07_rolling_metrics.sql`](queries/07_rolling_metrics.sql) | 7-day and 30-day rolling averages with day-over-day change |
+| 08 | [`queries/08_cte_complex.sql`](queries/08_cte_complex.sql) | Customer lifetime value with chained CTEs |
 
 ---
 
@@ -272,29 +294,29 @@ To prevent full table scans on large tables such as `transactions` with 80,000 r
 ```text
 payments-analytics/
 │
-├── .env.example               # Template for database credentials
-├── .gitignore                 # Excludes .env, venv, raw data
-├── requirements.txt           # Python dependencies
-├── README.md                  # Project documentation
+├── .env.example
+├── .gitignore
+├── requirements.txt
+├── README.md
 │
 ├── schema/
-│   ├── create_tables.sql      # DDL: drop and recreate all tables
-│   └── indexes.sql            # Performance indexes
+│   ├── create_tables.sql
+│   └── indexes.sql
 │
 ├── data/
-│   ├── generate_data.py       # Synthetic data generator (Faker)
-│   └── raw/                   # Generated CSVs (gitignored)
-│       ├── customers.csv      # 5,000 customers
-│       ├── accounts.csv       # 6,000 accounts
-│       ├── merchants.csv      # 800 merchants
-│       ├── transactions.csv   # 80,000 transactions
-│       ├── settlements.csv    # ~61,000 settlement records
-│       └── fraud_flags.csv    # 2,500 compliance flags
+│   ├── generate_data.py
+│   └── raw/
+│       ├── customers.csv
+│       ├── accounts.csv
+│       ├── merchants.csv
+│       ├── transactions.csv
+│       ├── settlements.csv
+│       └── fraud_flags.csv
 │
 ├── scripts/
-│   ├── db_connection.py       # psycopg2 connection via .env
-│   ├── load_data.py           # Bulk CSV ingestion using COPY
-│   └── export_charts.py       # Exports dashboard charts as PNG
+│   ├── db_connection.py
+│   ├── load_data.py
+│   └── export_charts.py
 │
 ├── queries/
 │   ├── 01_customer_segments.sql
@@ -307,64 +329,73 @@ payments-analytics/
 │   └── 08_cte_complex.sql
 │
 ├── dashboard/
-│   └── app.py                 # Streamlit BI dashboard
+│   └── app.py
 │
 ├── Power BI/
-│   ├── payments_analytics_dashboard.pbix   # Full interactive Power BI file
-│   ├── executive_overview.png              # Page 1 screenshot
-│   ├── merchant_performance.png            # Page 2 screenshot
-│   ├── fraud_risk.png                      # Page 3 screenshot
-│   └── customer_segments.png              # Page 4 screenshot
+│   ├── payments_analytics_dashboard.pbix
+│   ├── executive_overview.png
+│   ├── merchant_performance.png
+│   ├── fraud_risk.png
+│   └── customer_segments.png
 │
 └── outputs/
-    └── charts/                # PNG exports from export_charts.py
+    └── charts/
+        ├── transaction_trends.png
+        ├── merchant_performance.png
+        ├── fraud_risk_by_category.png
+        └── cohort_retention.png
 ```
 
 ---
 
 ## ⚙️ Setup Instructions
 
-### 1️⃣ Prerequisites
-- Python 3.10+
-- PostgreSQL 15+ running locally
+### 1. Prerequisites
 
-### 2️⃣ Clone and Install
+Python 3.10 or later, PostgreSQL 15 or later, and Power BI Desktop if you want to open the `.pbix` report.
+
+### 2. Clone and set up the environment
 
 ```bash
-# Clone the repository
 git clone https://github.com/abinashprasana/payments-analytics.git
 cd payments-analytics
-
-# Create and activate virtual environment
 python -m venv venv
+```
 
-# Windows
+Activate the virtual environment on Windows:
+
+```powershell
 .\venv\Scripts\Activate.ps1
+```
 
-# Mac / Linux
+Or on Mac and Linux:
+
+```bash
 source venv/bin/activate
+```
 
-# Install dependencies
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 3️⃣ Create the Database
+### 3. Create the database
 
 ```bash
-# Connect to PostgreSQL
 psql -h localhost -U postgres
+```
 
-# Inside psql
+Inside the `psql` shell:
+
+```sql
 CREATE DATABASE payments_analytics;
 \q
 ```
 
-### 4️⃣ Configure Credentials
+### 4. Configure credentials
 
-```bash
-# Copy the example file and fill in your details
-cp .env.example .env
-```
+Copy `.env.example` to `.env` and fill in your PostgreSQL connection details:
 
 ```env
 DB_HOST=localhost
@@ -374,63 +405,37 @@ DB_USER=postgres
 DB_PASSWORD=your_password_here
 ```
 
-> ⚠️ **Never commit `.env` to version control.** It is excluded via `.gitignore`.
-
-### 5️⃣ Create Tables and Indexes
+### 5. Create tables and indexes
 
 ```bash
 psql -h localhost -U postgres -d payments_analytics -f schema/create_tables.sql
 psql -h localhost -U postgres -d payments_analytics -f schema/indexes.sql
 ```
 
-### 6️⃣ Generate and Load Data
+### 6. Generate and load data
 
 ```bash
-# Generate synthetic CSVs
 python data/generate_data.py
-
-# Load into PostgreSQL
 python scripts/load_data.py
 ```
 
-### 7️⃣ Launch the Streamlit Dashboard
+### 7. Launch Streamlit
 
 ```bash
 streamlit run dashboard/app.py
 ```
 
-The dashboard opens automatically at `http://localhost:8501`
-
-### 8️⃣ Open the Power BI Dashboard
-
-```text
-1. Download Power BI Desktop from https://powerbi.microsoft.com/desktop
-2. Open Power BI/payments_analytics_dashboard.pbix
-3. All data is embedded — no database connection required
-```
-
 ---
 
-## 🖼️ Exporting Visualisations
+## 🖼️ Exporting Visuals
 
-### From the Streamlit Dashboard
-Every Plotly chart has a built-in **camera icon** in the top-right corner. Click it to download that chart as a PNG directly from the browser.
-
-### Programmatic Export
+Every chart in the Streamlit dashboard can be downloaded directly from the browser using the Plotly toolbar that appears on hover. To export all four charts programmatically as PNG files, run the export script instead:
 
 ```bash
-# Install kaleido for PNG rendering
-pip install kaleido
-
-# Export all charts to outputs/charts/
 python scripts/export_charts.py
 ```
 
-Charts are saved to `outputs/charts/` as:
-- `transaction_trends.png`
-- `merchant_performance.png`
-- `fraud_risk_by_category.png`
-- `cohort_retention.png`
+Generated images are saved to `outputs/charts/`.
 
 ---
 

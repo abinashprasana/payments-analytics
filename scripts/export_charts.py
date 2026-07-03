@@ -4,16 +4,36 @@ import sys
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from db_connection import get_connection
 
 SAVE_DIR = "outputs/charts/"
+
+# Colour palette matches dashboard/app.py exactly
+SUCCESS  = "#14B8A6"
+WARNING  = "#F59E0B"
+DANGER   = "#F43F5E"
+INFO     = "#3B82F6"
+GRID     = "rgba(255, 255, 255, 0.08)"
+BG       = "rgba(14, 18, 30, 1)"
+
+CATEGORY_COLORS = [
+    "#8A2387", "#E94057", "#F27121",
+    INFO, SUCCESS, WARNING, "#A855F7", "#22C55E",
+]
+
 CHART_LAYOUT = dict(
     template="plotly_dark",
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor=BG,
+    plot_bgcolor=BG,
+    font=dict(family="Arial, sans-serif", color="#E8ECF7"),
 )
+
+
+def chart_title(text):
+    return dict(text=text, font=dict(size=17, color="#EEF2FF"), x=0.02, xanchor="left")
 
 
 def ensure_save_dir():
@@ -34,38 +54,55 @@ def export_transaction_trends(conn):
     """
     df = pd.read_sql_query(query, conn)
 
-    fig = go.Figure()
-    fig.add_trace(go.Bar(
-        x=df["transaction_month"],
-        y=df["transaction_volume"],
-        name="Transaction Count",
-        yaxis="y",
-        marker_color="#8A2387",
-        opacity=0.85,
-    ))
-    fig.add_trace(go.Scatter(
-        x=df["transaction_month"],
-        y=df["total_value"],
-        name="Transaction Volume (EUR)",
-        yaxis="y2",
-        line=dict(color="#F27121", width=3),
-    ))
+    # Two stacked panels — count on top, value on bottom — matching app.py layout
+    fig = make_subplots(
+        rows=2, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.10,
+        subplot_titles=["Completed Transaction Count", "Completed Transaction Value"],
+    )
+
+    fig.add_trace(
+        go.Bar(
+            x=df["transaction_month"],
+            y=df["transaction_volume"],
+            name="Transaction Count",
+            marker_color=INFO,
+            opacity=0.9,
+        ),
+        row=1, col=1,
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=df["transaction_month"],
+            y=df["total_value"],
+            name="Transaction Value",
+            line=dict(color=SUCCESS, width=3),
+            mode="lines+markers",
+            marker=dict(size=5, color=SUCCESS),
+            fill="tozeroy",
+            fillcolor="rgba(20, 184, 166, 0.14)",
+        ),
+        row=2, col=1,
+    )
 
     fig.update_layout(
         **CHART_LAYOUT,
-        title="Transaction Trends Over Time",
-        legend=dict(x=0.01, y=0.99),
-        yaxis=dict(title="Transaction Count", side="left"),
-        yaxis2=dict(
-            title="Total Value (EUR)",
-            side="right",
-            overlaying="y",
-            showgrid=False,
-        ),
-        xaxis=dict(title="Month"),
-        height=450,
+        title=chart_title("Transaction Trends Over Time"),
+        showlegend=False,
+        height=620,
+        bargap=0.18,
+        margin=dict(l=70, r=30, t=70, b=50),
     )
-    fig.write_image(os.path.join(SAVE_DIR, "transaction_trends.png"), engine="kaleido")
+    fig.update_yaxes(title_text="Transactions", gridcolor=GRID, row=1, col=1)
+    fig.update_yaxes(title_text="Value (EUR)", gridcolor=GRID, tickprefix="EUR ", row=2, col=1)
+    fig.update_xaxes(tickformat="%b %Y", gridcolor=GRID, row=2, col=1)
+    for annotation in fig.layout.annotations:
+        annotation.font.color = "#AEB8CD"
+        annotation.font.size = 13
+
+    fig.write_image(os.path.join(SAVE_DIR, "transaction_trends.png"), engine="kaleido", width=1100, height=620)
     print(" done")
 
 
@@ -98,17 +135,19 @@ def export_merchant_performance(conn):
             "merchant_name": "Merchant Name",
             "category": "Industry Category",
         },
-        color_discrete_sequence=px.colors.qualitative.Bold,
+        color_discrete_sequence=CATEGORY_COLORS,
         category_orders={"merchant_name": df["merchant_name"].tolist()},
     )
     fig.update_layout(
         **CHART_LAYOUT,
-        title="Merchant Revenue Leaderboard",
-        xaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)"),
+        title=chart_title("Top Merchants by Settled Revenue"),
+        legend=dict(bgcolor="rgba(0,0,0,0)"),
+        xaxis=dict(showgrid=True, gridcolor=GRID),
         yaxis=dict(autorange="reversed"),
         height=480,
+        margin=dict(l=30, r=30, t=70, b=50),
     )
-    fig.write_image(os.path.join(SAVE_DIR, "merchant_performance.png"), engine="kaleido")
+    fig.write_image(os.path.join(SAVE_DIR, "merchant_performance.png"), engine="kaleido", width=1100, height=480)
     print(" done")
 
 
@@ -137,17 +176,22 @@ def export_fraud_risk_by_category(conn):
             "fraud_rate_pct": "Fraud Flag Rate (%)",
         },
         color="fraud_rate_pct",
-        color_continuous_scale="Purples",
+        color_continuous_scale=[
+            (0.0, SUCCESS),
+            (0.5, WARNING),
+            (1.0, DANGER),
+        ],
     )
     fig.update_layout(
         **CHART_LAYOUT,
-        title="Compliance and Fraud Risk by Category",
-        yaxis=dict(title="Fraud Rate (%)", showgrid=True, gridcolor="rgba(255,255,255,0.05)"),
-        xaxis=dict(title="Category"),
+        title=chart_title("Fraud Flag Rate by Category"),
+        yaxis=dict(title="Fraud Rate (%)", showgrid=True, gridcolor=GRID),
+        xaxis=dict(title="Category", tickangle=-20),
         coloraxis_showscale=False,
-        height=400,
+        height=420,
+        margin=dict(l=60, r=30, t=70, b=80),
     )
-    fig.write_image(os.path.join(SAVE_DIR, "fraud_risk_by_category.png"), engine="kaleido")
+    fig.write_image(os.path.join(SAVE_DIR, "fraud_risk_by_category.png"), engine="kaleido", width=1100, height=420)
     print(" done")
 
 
@@ -205,19 +249,32 @@ def export_cohort_retention(conn):
     )
     cohort_pivot.index = pd.to_datetime(cohort_pivot.index).strftime("%Y-%m")
 
-    fig = px.imshow(
-        cohort_pivot,
-        text_auto=".2f",
-        color_continuous_scale="Purples",
-        labels=dict(x="Months Since Join", y="Cohort Month", color="Retention (%)"),
-        aspect="auto",
+    # Plotly heatmap matching app.py tab4 exactly
+    fig = go.Figure(
+        data=go.Heatmap(
+            z=cohort_pivot.values,
+            x=[f"Month {int(m)}" for m in cohort_pivot.columns],
+            y=cohort_pivot.index,
+            colorscale=[
+                (0.0, "rgba(31, 41, 55, 0.92)"),
+                (0.35, INFO),
+                (0.7, SUCCESS),
+                (1.0, WARNING),
+            ],
+            colorbar=dict(title="Retention (%)", ticksuffix="%"),
+            zmin=0,
+            zmax=max(20, df["retention_rate"].max()),
+        )
     )
     fig.update_layout(
         **CHART_LAYOUT,
-        title="Monthly Customer Retention Matrix Heatmap",
-        height=450,
+        title=chart_title("Monthly Customer Retention Heatmap"),
+        xaxis=dict(title="Months After Joining"),
+        yaxis=dict(title="Cohort Month", autorange="reversed"),
+        height=580,
+        margin=dict(l=80, r=30, t=70, b=60),
     )
-    fig.write_image(os.path.join(SAVE_DIR, "cohort_retention.png"), engine="kaleido")
+    fig.write_image(os.path.join(SAVE_DIR, "cohort_retention.png"), engine="kaleido", width=1100, height=580)
     print(" done")
 
 

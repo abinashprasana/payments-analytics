@@ -495,8 +495,12 @@ st.markdown(
     <section class="hero-panel">
         <h1 class="main-title">Corporate Payments Analytics</h1>
         <p class="hero-copy">
-            A synthetic payments analytics dashboard built from the customers, accounts,
-            merchants, transactions, settlements, and fraud flag data generated for this project.
+            Built as part of an MSc AI portfolio project to practice real-world analytics
+            on commercial payments data. The dataset spans three years of synthetic transaction
+            activity across six relational tables: customers, accounts, merchants, transactions,
+            settlements, and fraud flags. Each tab answers one analytical question about
+            the data — from payment volume trends to merchant performance, fraud detection
+            patterns, and customer retention.
         </p>
     </section>
     """,
@@ -577,8 +581,6 @@ with tab1:
 
         trends_df = fetch_monthly_trends()
 
-        count_col, value_col = st.columns(2)
-
         fig_count = go.Figure()
         fig_count.add_trace(
             go.Bar(
@@ -597,7 +599,7 @@ with tab1:
             showlegend=False,
             yaxis=dict(title="Transactions", gridcolor=GRID, tickformat="~s"),
             xaxis=dict(title="Month", tickformat="%b %Y"),
-            height=390,
+            height=420,
             bargap=0.18,
             margin=dict(l=16, r=16, t=54, b=16),
         )
@@ -623,14 +625,12 @@ with tab1:
             showlegend=False,
             yaxis=dict(title="Value (EUR)", gridcolor=GRID, tickprefix="EUR ", tickformat="~s"),
             xaxis=dict(title="Month", tickformat="%b %Y"),
-            height=390,
+            height=420,
             margin=dict(l=16, r=16, t=54, b=16),
         )
 
-        with count_col:
-            st.plotly_chart(fig_count, use_container_width=True)
-        with value_col:
-            st.plotly_chart(fig_value, use_container_width=True)
+        st.plotly_chart(fig_count, use_container_width=True)
+        st.plotly_chart(fig_value, use_container_width=True)
 
         if not trends_df.empty:
             peak_row = trends_df.loc[trends_df["transaction_volume"].idxmax()]
@@ -871,17 +871,25 @@ with tab5:
         st.markdown(
             """
             <div class="summary-panel">
-                <h3>Analysis Focus</h3>
+                <h3>About This Project</h3>
                 <p>
-                    The dashboard brings together completed payment activity, merchant
-                    settlement revenue, fraud flag rates, and customer retention patterns.
-                    Each tab answers one part of the payments analysis instead of mixing
-                    every result into one page.
+                    I built this project to get hands-on experience with the kind of data
+                    analysis that comes up in real fintech and payments environments. Rather
+                    than working with a single flat CSV, I designed a six-table relational
+                    schema in PostgreSQL and wrote SQL queries to explore different parts of
+                    the data: customer segmentation, merchant revenue, fraud compliance, and
+                    cohort retention.
                 </p>
                 <p>
-                    The structure is intentionally simple: SQL handles the analytical
-                    queries, Python loads the results, and Streamlit presents the findings
-                    as readable metrics, charts, and tables.
+                    The data is fully synthetic, generated using Python and the Faker library,
+                    so nothing here is real transaction data. The goal was to make the dataset
+                    realistic enough that the analysis techniques and patterns would be meaningful
+                    and transferable to real projects.
+                </p>
+                <p>
+                    The Streamlit dashboard and a separate Power BI report both pull from the
+                    same underlying data, which gave me practice presenting the same findings
+                    in two different BI tools.
                 </p>
             </div>
             """,
