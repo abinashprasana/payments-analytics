@@ -1,4 +1,3 @@
--- Track monthly customer retention cohorts over time based on completed transactions
 WITH customer_cohorts AS (
     SELECT
         customer_id,
@@ -34,7 +33,6 @@ cohort_sizes AS (
 cohort_retention AS (
     SELECT
         ma.cohort_month,
-        -- Calculate the month offset since joining the platform
         (EXTRACT(YEAR FROM AGE(ma.activity_month, ma.cohort_month)) * 12 +
          EXTRACT(MONTH FROM AGE(ma.activity_month, ma.cohort_month)))::INTEGER AS months_active_offset,
         COUNT(DISTINCT ma.customer_id) AS active_customers
@@ -50,7 +48,6 @@ SELECT
     cr.months_active_offset,
     cr.active_customers,
     ROUND(cr.active_customers::NUMERIC / sz.cohort_size, 4) AS retention_rate,
-    -- Compute the step-change in active customer count compared to the previous month
     LAG(cr.active_customers) OVER (
         PARTITION BY cr.cohort_month
         ORDER BY cr.months_active_offset

@@ -1,4 +1,3 @@
--- Compute daily processing velocity, rolling averages, and lead/lag differences to capture daily shifts
 WITH daily_transactions AS (
     SELECT
         DATE_TRUNC('day', transaction_date)::DATE AS transaction_date,
@@ -15,7 +14,6 @@ SELECT
     transaction_date,
     transaction_count,
     total_amount AS daily_amount,
-    -- Calculate 7-day rolling average transaction amount
     ROUND(
         AVG(total_amount) OVER (
             ORDER BY transaction_date
@@ -23,7 +21,6 @@ SELECT
         ),
         2
     ) AS rolling_avg_7d,
-    -- Calculate 30-day rolling average transaction amount
     ROUND(
         AVG(total_amount) OVER (
             ORDER BY transaction_date
@@ -31,7 +28,6 @@ SELECT
         ),
         2
     ) AS rolling_avg_30d,
-    -- Calculate 30-day rolling cumulative sum of transaction amount
     ROUND(
         SUM(total_amount) OVER (
             ORDER BY transaction_date
@@ -39,15 +35,12 @@ SELECT
         ),
         2
     ) AS rolling_sum_30d,
-    -- Fetch the previous day's value to calculate change
     LAG(total_amount, 1) OVER (
         ORDER BY transaction_date
     ) AS prev_day_amount,
-    -- Fetch the next day's value to show predictive trend
     LEAD(total_amount, 1) OVER (
         ORDER BY transaction_date
     ) AS next_day_amount,
-    -- Compute day-over-day raw variance in total amount
     ROUND(
         total_amount - LAG(total_amount, 1) OVER (
             ORDER BY transaction_date

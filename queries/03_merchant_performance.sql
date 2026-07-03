@@ -1,4 +1,3 @@
--- Rank merchants by total settled revenue within their categories to identify top partners
 WITH merchant_revenue AS (
     SELECT
         m.merchant_id,

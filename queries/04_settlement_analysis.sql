@@ -1,4 +1,3 @@
--- Audit payout processing latency across merchant categories to monitor SLA targets
 SELECT
     m.category AS merchant_category,
     COUNT(s.settlement_id) AS settlement_count,

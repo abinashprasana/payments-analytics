@@ -1,4 +1,3 @@
--- Identify merchants whose fraud rates exceed their category benchmark for risk mitigation
 WITH merchant_metrics AS (
     SELECT
         t.merchant_id,

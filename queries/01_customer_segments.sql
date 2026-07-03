@@ -1,4 +1,3 @@
--- Analyze customer distribution across countries and tier segments to focus regional marketing
 SELECT
     country,
     segment,

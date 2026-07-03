@@ -1,4 +1,3 @@
--- Calculate customer lifetime value metrics by chaining spending aggregates, active lifespan, and profile joins
 WITH customer_spending AS (
     SELECT
         a.customer_id,
@@ -42,7 +41,6 @@ SELECT
     cs.total_spend AS customer_lifetime_value,
     cs.avg_transaction_value,
     cl.months_active,
-    -- Compute average customer spending volume per active month
     ROUND(cs.total_spend / cl.months_active, 2) AS revenue_per_month
 FROM
     customers c

@@ -1,4 +1,3 @@
--- Trace processing volume and total revenue growth trends over monthly periods
 SELECT
     DATE_TRUNC('month', transaction_date) AS transaction_month,
     COUNT(transaction_id) AS transaction_volume,
