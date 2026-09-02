@@ -1,12 +1,12 @@
-# Power BI Dashboard Guide — Payments Analytics Project
+# Power BI Dashboard Guide — Payment Observatory
 
-> **Who this is for:** Complete beginners to Power BI who want to turn this project's data into a portfolio-worthy dashboard that shows real analytical skill.
+> **Purpose:** Build a consistent Power BI reporting layer from the Payment Observatory source data.
 
 ---
 
-## 1. What This Project Contains (Plain English)
+## 1. System contents
 
-This project is a **simulated corporate payments system** — like a mini version of how Stripe, PayPal, or a bank's back-end works. It has **6 tables** of realistic synthetic data covering 3 years (2022–2024):
+Payment Observatory models a **simulated corporate payments system** with **6 tables** of synthetic data covering 2022–2024:
 
 | Table | What It Holds | Row Count |
 |---|---|---|
@@ -14,14 +14,14 @@ This project is a **simulated corporate payments system** — like a mini versio
 | `accounts.csv` | Bank-style accounts owned by customers | 6,000 |
 | `merchants.csv` | Shops/businesses receiving payments | 800 |
 | `transactions.csv` | Every payment event (purchase, refund, transfer) | 80,000 |
-| `settlements.csv` | Money paid out to merchants after fees | 70,000 |
+| `settlements.csv` | Money paid out to merchants after fees | 61,124 |
 | `fraud_flags.csv` | Transactions flagged as suspicious | 2,500 |
 
 ---
 
 ## 2. The Files You Import Into Power BI
 
-All 6 CSV files live in `data/raw/`. Import all of them.
+All 6 CSV files are located in `data/raw/`. Import all of them.
 
 ### Step-by-Step Import:
 1. Open Power BI Desktop → **Get Data** → **Text/CSV**
@@ -208,7 +208,7 @@ Failed Transaction Rate % =
 
 ## 7. Dashboard Pages to Build (Recommended Layout)
 
-Build **4 pages** — one per topic. This matches exactly what the SQL queries in this project analyze.
+Build **4 pages** — one per topic. This matches the analytical coverage of the SQL query set.
 
 ---
 
@@ -273,7 +273,7 @@ Build **4 pages** — one per topic. This matches exactly what the SQL queries i
 
 ### Page 3: Fraud & Risk Overview
 
-**Purpose:** Show compliance and risk patterns — a very impressive section for any analytics portfolio.
+**Purpose:** Show compliance and risk patterns with clear operational hierarchy.
 
 **Visuals to add:**
 1. **3 KPI Cards** across the top:
@@ -338,7 +338,7 @@ Build **4 pages** — one per topic. This matches exactly what the SQL queries i
    - Rows: Cohort month (join_date grouped by Month)
    - Columns: Months since joining (0, 1, 2 ... 12)
    - Values: Count of distinct customers still active
-   - This is the most impressive visual — it shows who keeps coming back
+   - This shows the share of each joining cohort that remains active
 
 6. **Slicer** — Segment filter (retail / business / premium)
 7. **Slicer** — Country filter
@@ -350,14 +350,14 @@ Build **4 pages** — one per topic. This matches exactly what the SQL queries i
 To make it look professional (not like a default Power BI report):
 
 1. **Use a dark theme**: Go to View → Themes → pick a dark theme or import a custom one
-2. **Color palette** (matches the project's existing charts):
+2. **Color palette** (matches the application charts):
    - Purple: `#8A2387`
    - Orange: `#F27121`
    - Red-Pink: `#E94057`
 3. **Consistent card borders**: Add subtle border lines to all visual cards
 4. **Page navigation buttons**: Add buttons linking pages so it looks like an app
 5. **Title on every page**: Use a text box with a large bold title
-6. **Add this subtitle**: "MSc AI Portfolio Project — Synthetic Payments Intelligence (2022–2024)"
+6. **Add this subtitle**: "Payment Observatory — Payments Intelligence (2022–2024)"
 
 ---
 
@@ -371,7 +371,7 @@ When someone looks at your Power BI dashboard, here is what they will see you kn
 | DAX calculations | KPI cards, fraud rate %, resolution rate % |
 | Time intelligence | Monthly trends, cohort retention |
 | Data storytelling | 4 well-structured pages with clear titles |
-| SQL knowledge | The 8 SQL queries this project already has |
+| SQL knowledge | The 8 analytical SQL queries |
 | Risk/compliance analytics | Fraud & Risk page |
 | Customer analytics | Cohort retention, segmentation |
 | Financial analytics | Settlement fees, revenue leaderboard |
@@ -401,7 +401,7 @@ These are the approximate values you'll see in your dashboard based on the gener
 | Low-risk merchants | ~680 (85%) |
 | High-risk merchants | ~24 (3%) |
 | Merchant categories | 8 categories |
-| Total settlements | 70,000 |
+| Total settlements | 61,124 |
 | Settlement fee range | 1%–5% (based on risk tier) |
 | Settled status | ~65,800 (94%) |
 | Disputed settlements | ~700 (1%) |
@@ -426,8 +426,8 @@ These are the approximate values you'll see in your dashboard based on the gener
 9. Build Page 4 (Customer Segments)
 10. Apply a dark theme and consistent colours
 11. Add page navigation buttons and titles
-12. Save as a `.pbix` file and add it to your portfolio/GitHub
+12. Save the `.pbix` file with the repository reporting assets
 
 ---
 
-*This guide was generated from the `payments_analytics_sql` project — a synthetic corporate payments analytics system built with PostgreSQL, Python, and Streamlit.*
+*This guide describes the Power BI reporting layer for a synthetic corporate payments system built with PostgreSQL, Python, and Streamlit.*

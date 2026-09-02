@@ -1,0 +1,22 @@
+[theme]
+base = "dark"
+primaryColor = "#68DCFF"
+backgroundColor = "#050607"
+secondaryBackgroundColor = "#0C0F13"
+textColor = "#F1F3EF"
+font = "sans-serif"
+headingFont = "space-grotesk"
+
+[[theme.fontFaces]]
+family = "space-grotesk"
+url = "app/static/fonts/SpaceGrotesk-VariableFont_wght.woff2"
+style = "normal"
+weight = "300 700"
+
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true
+enableWebsocketCompression = false
+enableStaticServing = true

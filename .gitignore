@@ -20,6 +20,9 @@ outputs/charts/.gitkeep
 .idea/
 *.iml
 
+# Local runtime logs
+streamlit_*.log
+
 # OS
 .DS_Store
 Thumbs.db

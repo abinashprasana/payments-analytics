@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from db_connection import get_connection
+from db_connection import get_read_engine
 
 SAVE_DIR = "outputs/charts/"
 
@@ -280,17 +280,18 @@ def export_cohort_retention(conn):
 
 def main():
     ensure_save_dir()
-    conn = get_connection()
+    engine = get_read_engine()
     try:
-        export_transaction_trends(conn)
-        export_merchant_performance(conn)
-        export_fraud_risk_by_category(conn)
-        export_cohort_retention(conn)
+        with engine.connect() as connection:
+            export_transaction_trends(connection)
+            export_merchant_performance(connection)
+            export_fraud_risk_by_category(connection)
+            export_cohort_retention(connection)
     except Exception as e:
         print(f"\nError during chart export: {e}")
         sys.exit(1)
     finally:
-        conn.close()
+        engine.dispose()
 
 
 if __name__ == "__main__":

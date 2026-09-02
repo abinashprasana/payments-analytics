@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "datasetWindow": {
+    "firstTransactionDate": "2022-02-07",
+    "lastTransactionDate": "2024-12-31"
+  },
+  "recordCounts": {
+    "customers": 5000,
+    "accounts": 6000,
+    "merchants": 800,
+    "transactions": 80000,
+    "settlements": 61124,
+    "fraudFlags": 2500,
+    "merchantlessTransactions": 11934
+  },
+  "relationships": {
+    "customerToAccounts": {
+      "cardinality": "one-to-many",
+      "description": "One customer can hold multiple accounts.",
+      "linkedRecords": 6000
+    },
+    "accountToTransactions": {
+      "cardinality": "one-to-many",
+      "description": "Every transaction belongs to one account.",
+      "linkedRecords": 80000
+    },
+    "transactionToMerchant": {
+      "cardinality": "many-to-zero-or-one",
+      "description": "Purchases and refunds can link to a merchant; transfers can remain merchantless.",
+      "linkedRecords": 68066
+    },
+    "transactionToSettlement": {
+      "cardinality": "one-to-zero-or-one",
+      "description": "A transaction can produce at most one settlement record.",
+      "linkedRecords": 61124
+    },
+    "transactionToFraudFlag": {
+      "cardinality": "one-to-zero-or-one",
+      "description": "A transaction can carry at most one review flag.",
+      "linkedRecords": 2500
+    }
+  },
+  "settlementOutcomes": [
+    {
+      "status": "settled",
+      "count": 57381,
+      "share": 93.88
+    },
+    {
+      "status": "delayed",
+      "count": 3117,
+      "share": 5.1
+    },
+    {
+      "status": "disputed",
+      "count": 626,
+      "share": 1.02
+    }
+  ],
+  "reviewOutcomes": {
+    "total": 2500,
+    "resolved": 2014,
+    "unresolved": 486,
+    "resolutionRate": 80.56,
+    "flagRate": 3.12
+  },
+  "technology": [
+    "PostgreSQL",
+    "Python",
+    "Pandas",
+    "Streamlit",
+    "Plotly",
+    "OGL",
+    "Next.js",
+    "TypeScript"
+  ],
+  "limitations": [
+    "The repository dataset is synthetic and demonstrates analytical workflows rather than real customer behaviour.",
+    "Currency values are aggregated nominally; no foreign-exchange conversion is applied.",
+    "Fraud flags are generated, randomly sampled review signals and must not be interpreted as confirmed fraud or predictive risk."
+  ]
+}

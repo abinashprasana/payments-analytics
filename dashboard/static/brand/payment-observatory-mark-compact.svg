@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="po-compact-orbit" x1="8" y1="48" x2="56" y2="13" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4E72FF"/>
+      <stop offset="0.52" stop-color="#68DCFF"/>
+      <stop offset="1" stop-color="#8AF6C7"/>
+    </linearGradient>
+  </defs>
+  <path d="M12.2 48.8C4.9 39.6 5.6 25.8 14 17.4C22.3 9 36 7.8 45.5 14.7C50.3 18.2 53.9 23.3 55.2 29" stroke="url(#po-compact-orbit)" stroke-width="4.4" stroke-linecap="round"/>
+  <path d="M5 32H21M43 32H58" stroke="#68DCFF" stroke-width="3.8" stroke-linecap="round"/>
+  <path d="M32 17.8L44.3 24.9V39.1L32 46.2L19.7 39.1V24.9L32 17.8Z" fill="#08111A" stroke="#68DCFF" stroke-width="2.2"/>
+  <path d="M32 25L38.1 28.5V35.5L32 39L25.9 35.5V28.5L32 25Z" fill="#E7FCFF"/>
+  <circle cx="32" cy="32" r="2.8" fill="#071018"/>
+  <circle cx="58.5" cy="20" r="3.5" fill="#68DCFF" stroke="#071018" stroke-width="1.5"/>
+  <circle cx="60" cy="32" r="3.5" fill="#8AF6C7" stroke="#071018" stroke-width="1.5"/>
+  <circle cx="58.5" cy="44" r="3.5" fill="#FF756F" stroke="#071018" stroke-width="1.5"/>
+</svg>

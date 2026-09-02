@@ -1,1064 +1,1219 @@
+"""Interactive payments intelligence dashboard."""
+
+from __future__ import annotations
+
 import os
 import sys
+from dataclasses import dataclass
+from datetime import date
+from typing import Mapping
 
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-try:
-    from scripts.db_connection import get_connection
-    _DB_IMPORT_OK = True
-except Exception:
-    _DB_IMPORT_OK = False
 
-# Absolute path to the raw CSV directory, works both locally and on Streamlit Cloud
-_RAW = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "raw")
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RAW_DATA_DIR = os.path.join(PROJECT_DIR, "data", "raw")
+BRAND_ICON = os.path.join(
+    PROJECT_DIR,
+    "dashboard",
+    "static",
+    "brand",
+    "payment-observatory-mark-compact.svg",
+)
+if PROJECT_DIR not in sys.path:
+    sys.path.append(PROJECT_DIR)
+
+from dashboard.analytics import (  # noqa: E402
+    DashboardFilters,
+    apply_filters,
+    cohort_retention,
+    dataset_scope,
+    enrich_transactions,
+    filtered_flags,
+    filtered_settlements,
+    merchant_performance,
+    monthly_trends,
+    normalise_tables,
+    overview_metrics,
+    previous_period_filters,
+    risk_by_category,
+    risk_metrics,
+    risk_review_flow,
+    settlement_metrics,
+    settlement_statuses,
+    transaction_statuses,
+)
+from dashboard.ui import (  # noqa: E402
+    apply_theme,
+    data_note,
+    mount_page_motion,
+    render_data_model,
+    render_empty_state,
+    render_filter_controls,
+    render_filter_note,
+    render_footer,
+    render_hero,
+    render_kpi_grid,
+    render_measure_switch,
+    render_metric_strip,
+    render_method_cards,
+    render_navigation,
+    render_settlement_corridor,
+    render_status_rail,
+    render_topbar,
+    section_header,
+)
+
+try:
+    from scripts.db_connection import get_read_engine
+
+    DB_IMPORT_OK = True
+except Exception:
+    DB_IMPORT_OK = False
 
 
 st.set_page_config(
-    page_title="Corporate Payments Analytics",
-    page_icon=":credit_card:",
+    page_title="Payment Observatory | Payments Intelligence",
+    page_icon=BRAND_ICON,
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 
-ACCENT_PURPLE = "#8A2387"
-ACCENT_PINK = "#E94057"
-ACCENT_ORANGE = "#F27121"
-SUCCESS = "#14B8A6"
-WARNING = "#F59E0B"
-DANGER = "#F43F5E"
-INFO = "#3B82F6"
-GRID = "rgba(255, 255, 255, 0.08)"
-CATEGORY_COLORS = [
-    ACCENT_PURPLE,
-    ACCENT_PINK,
-    ACCENT_ORANGE,
-    INFO,
-    SUCCESS,
-    WARNING,
-    "#A855F7",
-    "#22C55E",
-]
+INK = "#F1F3EF"
+MUTED = "#8D99A5"
+CYAN = "#68DCFF"
+TEAL = "#8AF6C7"
+AMBER = "#F5BB62"
+CORAL = "#FF756F"
+VIOLET = "#A58CFF"
+GRID = "rgba(203, 219, 233, 0.09)"
+PLOT_CONFIG = {
+    "displayModeBar": False,
+    "responsive": True,
+}
+CATEGORY_COLORS = {
+    "Retail": "#68DCFF",
+    "Food & Beverage": "#8AF6C7",
+    "Travel": "#A58CFF",
+    "Entertainment": "#F5BB62",
+    "Healthcare": "#7EA4FF",
+    "Utilities": "#71C8C8",
+    "Services": "#C083FF",
+    "Electronics": "#FF8F6B",
+}
+VALID_VIEWS = ("overview", "merchant", "risk", "retention", "model")
+DEFAULT_VIEW = VALID_VIEWS[0]
+CASE_STUDY_URL = os.getenv(
+    "CASE_STUDY_URL",
+    "https://payment-observatory.vercel.app/",
+).strip()
 
-CHART_LAYOUT = dict(
-    template="plotly_dark",
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
-    font=dict(family="Outfit, sans-serif", color="#E8ECF7"),
-    hoverlabel=dict(
-        bgcolor="rgba(18, 22, 35, 0.95)",
-        bordercolor="rgba(255,255,255,0.18)",
-        font_size=13,
+
+@dataclass(frozen=True)
+class DashboardUIState:
+    """Persistent presentation state shared by the operational views."""
+
+    active_view: str
+    filters: DashboardFilters
+    trend_mode: str = "Transaction count"
+
+
+def chart_layout(title: str, height: int = 430) -> dict[str, object]:
+    return {
+        "title": {
+            "text": title,
+            "font": {"size": 16, "color": INK},
+            "x": 0.025,
+            "xanchor": "left",
+        },
+        "height": height,
+        "margin": {"l": 42, "r": 24, "t": 64, "b": 42},
+        "paper_bgcolor": "rgba(0,0,0,0)",
+        "plot_bgcolor": "rgba(0,0,0,0)",
+        "font": {
+            "family": "Source Sans, Segoe UI, sans-serif",
+            "color": MUTED,
+            "size": 12,
+        },
+        "hoverlabel": {
+            "bgcolor": "#0D1116",
+            "bordercolor": "rgba(203,219,233,0.22)",
+            "font": {
+                "color": INK,
+                "family": "Source Sans, Segoe UI, sans-serif",
+                "size": 12,
+            },
+        },
+        "legend": {
+            "orientation": "h",
+            "yanchor": "bottom",
+            "y": 1.02,
+            "xanchor": "right",
+            "x": 1,
+        },
+    }
+
+
+def style_axes(figure: go.Figure) -> go.Figure:
+    figure.update_xaxes(
+        gridcolor=GRID,
+        zeroline=False,
+        linecolor=GRID,
+        tickfont={"color": MUTED, "size": 11},
+        title_font={"color": MUTED, "size": 12},
+    )
+    figure.update_yaxes(
+        gridcolor=GRID,
+        zeroline=False,
+        linecolor=GRID,
+        tickfont={"color": MUTED, "size": 11},
+        title_font={"color": MUTED, "size": 12},
+    )
+    return figure
+
+
+@st.cache_data(show_spinner=False)
+def load_csvs() -> tuple[pd.DataFrame, ...]:
+    tables = (
+        pd.read_csv(os.path.join(RAW_DATA_DIR, "customers.csv")),
+        pd.read_csv(os.path.join(RAW_DATA_DIR, "accounts.csv")),
+        pd.read_csv(os.path.join(RAW_DATA_DIR, "merchants.csv")),
+        pd.read_csv(os.path.join(RAW_DATA_DIR, "transactions.csv")),
+        pd.read_csv(os.path.join(RAW_DATA_DIR, "settlements.csv")),
+        pd.read_csv(os.path.join(RAW_DATA_DIR, "fraud_flags.csv")),
+    )
+    return normalise_tables(*tables)
+
+
+def load_database_tables() -> tuple[pd.DataFrame, ...]:
+    engine = get_read_engine()
+    try:
+        table_names = [
+            "customers",
+            "accounts",
+            "merchants",
+            "transactions",
+            "settlements",
+            "fraud_flags",
+        ]
+        tables = tuple(
+            pd.read_sql_query(f"SELECT * FROM {table_name};", engine)
+            for table_name in table_names
+        )
+    finally:
+        engine.dispose()
+    return normalise_tables(*tables)
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def load_payment_data() -> tuple[pd.DataFrame, ...]:
+    if DB_IMPORT_OK:
+        try:
+            return (*load_database_tables(), True)
+        except Exception:
+            pass
+    return (*load_csvs(), False)
+
+
+def format_date_window(start: date, end: date) -> str:
+    return f"{start.strftime('%d %b %Y')} to {end.strftime('%d %b %Y')}"
+
+
+def canonical_query_view() -> str:
+    """Return a supported deep-link view and repair missing or invalid URLs."""
+
+    raw_view = st.query_params.get("view", DEFAULT_VIEW)
+    if isinstance(raw_view, list):
+        raw_view = raw_view[-1] if raw_view else DEFAULT_VIEW
+    selected = str(raw_view).strip().lower()
+    if selected not in VALID_VIEWS:
+        selected = DEFAULT_VIEW
+    if "view" not in st.query_params or raw_view != selected:
+        st.query_params["view"] = selected
+    return selected
+
+
+def compact_amount(value: float) -> tuple[float, int, str]:
+    magnitude = abs(value)
+    if magnitude >= 1_000_000_000:
+        return value / 1_000_000_000, 2, "B"
+    if magnitude >= 1_000_000:
+        return value / 1_000_000, 2, "M"
+    if magnitude >= 1_000:
+        return value / 1_000, 1, "K"
+    return value, 2, ""
+
+
+def display_amount(value: float, currency_prefix: str = "") -> str:
+    scaled, decimals, suffix = compact_amount(value)
+    return f"{currency_prefix}{scaled:,.{decimals}f}{suffix}"
+
+
+def comparison_badge(
+    current: float,
+    previous: float | None,
+    *,
+    percentage_points: bool = False,
+) -> tuple[str, str]:
+    if previous is None:
+        return "N/A · prior period unavailable", ""
+    if percentage_points:
+        change = current - previous
+        text = f"{change:+.2f} pp vs previous"
+    elif previous == 0:
+        return "N/A · previous value was zero", ""
+    else:
+        change = (current - previous) / abs(previous) * 100
+        text = f"{change:+.1f}% vs previous"
+    tone = "up" if change > 0 else "down" if change < 0 else ""
+    return text, tone
+
+
+def reset_dashboard_filters(
+    dataset_start: date,
+    dataset_end: date,
+    currencies: tuple[str, ...],
+    categories: tuple[str, ...],
+) -> None:
+    payload = {
+        "startDate": dataset_start.isoformat(),
+        "endDate": dataset_end.isoformat(),
+        "currencies": list(currencies),
+        "categories": list(categories),
+        "comparePrevious": False,
+    }
+    st.session_state["pay_filter_state"] = payload
+    component_state = st.session_state.get("pay_filter_deck")
+    if isinstance(component_state, dict):
+        component_state["filters"] = payload
+
+
+def build_kpi_cards(
+    metrics: Mapping[str, float],
+    previous: Mapping[str, float] | None,
+    filters: DashboardFilters,
+) -> list[dict[str, object]]:
+    one_currency = len(filters.currencies) == 1
+    currency_prefix = f"{filters.currencies[0]} " if one_currency else ""
+    scaled_value, value_decimals, value_suffix = compact_amount(
+        metrics["completed_value"]
+    )
+
+    comparisons: dict[str, tuple[str, str]] = {}
+    if filters.compare_previous_period:
+        for key in ["transaction_count", "active_customers", "completed_value"]:
+            comparisons[key] = comparison_badge(
+                metrics[key],
+                previous[key] if previous else None,
+            )
+        comparisons["completion_rate"] = comparison_badge(
+            metrics["completion_rate"],
+            previous["completion_rate"] if previous else None,
+            percentage_points=True,
+        )
+
+    value_label = (
+        f"Completed value ({filters.currencies[0]})"
+        if one_currency
+        else "Nominal completed value"
+    )
+    value_note = (
+        "One source currency in view"
+        if one_currency
+        else "Selected currencies are not FX-converted"
+    )
+
+    definitions = [
+        {
+            "key": "transaction_count",
+            "label": "Transactions in view",
+            "number": metrics["transaction_count"],
+            "decimals": 0,
+            "prefix": "",
+            "suffix": "",
+            "value": f"{int(metrics['transaction_count']):,}",
+            "note": "All statuses within the active filters",
+            "tone": "cyan",
+        },
+        {
+            "key": "completion_rate",
+            "label": "Completion rate",
+            "number": metrics["completion_rate"],
+            "decimals": 2,
+            "prefix": "",
+            "suffix": "%",
+            "value": f"{metrics['completion_rate']:.2f}%",
+            "note": f"{int(metrics['completed_count']):,} completed payments",
+            "tone": "teal",
+        },
+        {
+            "key": "active_customers",
+            "label": "Active customers",
+            "number": metrics["active_customers"],
+            "decimals": 0,
+            "prefix": "",
+            "suffix": "",
+            "value": f"{int(metrics['active_customers']):,}",
+            "note": "Customers with a completed payment",
+            "tone": "violet",
+        },
+        {
+            "key": "completed_value",
+            "label": value_label,
+            "number": scaled_value,
+            "decimals": value_decimals,
+            "prefix": currency_prefix,
+            "suffix": value_suffix,
+            "value": display_amount(
+                metrics["completed_value"],
+                currency_prefix=currency_prefix,
+            ),
+            "note": value_note,
+            "tone": "amber",
+        },
+    ]
+    for definition in definitions:
+        comparison, tone = comparisons.get(definition["key"], ("", ""))
+        definition["comparison"] = comparison
+        definition["comparison_tone"] = tone
+    return definitions
+
+
+apply_theme()
+
+with st.spinner("Loading payment records"):
+    (
+        customers,
+        accounts,
+        merchants,
+        transactions,
+        settlements,
+        fraud_flags,
+        using_database,
+    ) = load_payment_data()
+
+scope = dataset_scope(
+    customers,
+    accounts,
+    merchants,
+    transactions,
+    settlements,
+    fraud_flags,
+)
+dataset_start = scope["first_transaction_date"]
+dataset_end = scope["last_transaction_date"]
+source_label = (
+    "PostgreSQL connected" if using_database else "Repository CSV snapshot"
+)
+first_date_label = pd.Timestamp(dataset_start).strftime("%b %Y")
+last_date_label = pd.Timestamp(dataset_end).strftime("%b %Y")
+
+render_topbar(
+    source_label,
+    first_date_label,
+    last_date_label,
+    case_study_url=CASE_STUDY_URL,
+)
+render_hero(scope, source_label)
+
+enriched_transactions = enrich_transactions(transactions, accounts, merchants)
+all_currencies = tuple(
+    sorted(enriched_transactions["currency"].dropna().astype(str).unique())
+)
+all_categories = tuple(sorted(merchants["category"].dropna().astype(str).unique()))
+
+query_view = canonical_query_view()
+last_query_view = st.session_state.get("pay_last_query_view")
+query_changed = last_query_view is None or query_view != last_query_view
+if query_changed:
+    component_state = st.session_state.get("pay_view_rail")
+    if isinstance(component_state, dict):
+        component_state["view"] = query_view
+navigation_seed = (
+    query_view
+    if query_changed
+    else str(st.session_state.get("pay_active_view", query_view))
+)
+
+sticky_controls = st.container(key="pay_sticky_controls")
+with sticky_controls:
+    active_view = render_navigation(navigation_seed)
+if active_view not in VALID_VIEWS:
+    active_view = DEFAULT_VIEW
+st.session_state["pay_active_view"] = active_view
+st.session_state["pay_last_query_view"] = active_view
+if st.query_params.get("view") != active_view:
+    st.query_params["view"] = active_view
+
+default_filter_state = {
+    "startDate": dataset_start.isoformat(),
+    "endDate": dataset_end.isoformat(),
+    "currencies": list(all_currencies),
+    "categories": list(all_categories),
+    "comparePrevious": False,
+}
+current_filter_state = st.session_state.get(
+    "pay_filter_state",
+    default_filter_state,
+)
+with sticky_controls:
+    control_state = render_filter_controls(
+        dataset_start=dataset_start.isoformat(),
+        dataset_end=dataset_end.isoformat(),
+        currencies=all_currencies,
+        categories=all_categories,
+        current=current_filter_state,
+    )
+
+if control_state is None:
+    with st.form("native_filter_fallback", border=True):
+        filter_columns = st.columns([1.2, 1.0, 1.35, 0.85])
+        with filter_columns[0]:
+            selected_dates = st.date_input(
+                "Transaction dates",
+                value=(dataset_start, dataset_end),
+                min_value=dataset_start,
+                max_value=dataset_end,
+                key="pay_native_date_range",
+            )
+        with filter_columns[1]:
+            selected_currencies = st.multiselect(
+                "Currencies",
+                options=list(all_currencies),
+                default=list(all_currencies),
+                key="pay_native_currencies",
+            )
+        with filter_columns[2]:
+            selected_categories = st.multiselect(
+                "Merchant categories",
+                options=list(all_categories),
+                default=list(all_categories),
+                key="pay_native_categories",
+            )
+        with filter_columns[3]:
+            compare_previous = st.toggle(
+                "Compare previous",
+                value=False,
+                key="pay_native_compare",
+                help="Uses the immediately preceding date range of equal length.",
+            )
+        st.form_submit_button("Apply scope", use_container_width=True)
+    if isinstance(selected_dates, tuple) and len(selected_dates) == 2:
+        selected_start, selected_end = selected_dates
+    elif isinstance(selected_dates, (date, pd.Timestamp)):
+        selected_start = selected_end = selected_dates
+    else:
+        selected_start, selected_end = dataset_start, dataset_end
+else:
+    st.session_state["pay_filter_state"] = control_state
+    selected_start = pd.Timestamp(
+        control_state.get("startDate", dataset_start)
+    ).date()
+    selected_end = pd.Timestamp(
+        control_state.get("endDate", dataset_end)
+    ).date()
+    selected_currencies = list(
+        control_state.get("currencies", all_currencies)
+    )
+    selected_categories = list(
+        control_state.get("categories", all_categories)
+    )
+    compare_previous = bool(
+        control_state.get("comparePrevious", False)
+    )
+
+filters = DashboardFilters(
+    start_date=pd.Timestamp(selected_start).date(),
+    end_date=pd.Timestamp(selected_end).date(),
+    currencies=tuple(selected_currencies),
+    merchant_categories=tuple(selected_categories),
+    compare_previous_period=bool(compare_previous),
+)
+filtered_transactions = apply_filters(
+    enriched_transactions,
+    filters,
+    all_categories,
+)
+
+filter_explanation = (
+    f"Showing {len(filtered_transactions):,} of {len(transactions):,} transactions "
+    f"for {format_date_window(filters.start_date, filters.end_date)}."
+)
+if set(filters.merchant_categories) != set(all_categories):
+    filter_explanation += (
+        " The merchant category filter excludes transfers because those records "
+        "do not have a merchant."
+    )
+if len(filters.currencies) != 1:
+    filter_explanation += " Value totals are nominal; currencies are not converted."
+render_filter_note(filter_explanation)
+
+if filtered_transactions.empty:
+    render_empty_state()
+    st.button(
+        "Reset filters",
+        on_click=reset_dashboard_filters,
+        args=(dataset_start, dataset_end, all_currencies, all_categories),
+    )
+    render_footer()
+    mount_page_motion()
+    st.stop()
+
+current_metrics = overview_metrics(filtered_transactions)
+previous_metrics = None
+if filters.compare_previous_period:
+    comparison_filters = previous_period_filters(filters, dataset_start)
+    if comparison_filters:
+        previous_transactions = apply_filters(
+            enriched_transactions,
+            comparison_filters,
+            all_categories,
+        )
+        previous_metrics = overview_metrics(previous_transactions)
+
+settlement_records = filtered_settlements(settlements, filtered_transactions)
+flag_records = filtered_flags(fraud_flags, filtered_transactions)
+ui_state = DashboardUIState(
+    active_view=active_view,
+    filters=filters,
+    trend_mode=str(
+        st.session_state.get("pay_trend_measure", "Transaction count")
     ),
 )
 
 
-def section_header(title, body):
-    st.markdown(
-        f"""
-        <div class="section-heading">
-            <h2>{title}</h2>
-            <p>{body}</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
-def render_scope_card(label, value, note):
-    st.markdown(
-        f"""
-        <div class="scope-card">
-            <span>{label}</span>
-            <strong>{value}</strong>
-            <small>{note}</small>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
-def insight_note(text):
-    st.markdown(f'<p class="insight-note">{text}</p>', unsafe_allow_html=True)
-
-
-def chart_title(text):
-    return dict(text=text, font=dict(size=17, color="#EEF2FF"), x=0.02, xanchor="left")
-
-
-st.markdown(
-    """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-
-    :root {
-        --surface: rgba(18, 22, 35, 0.62);
-        --border: rgba(255, 255, 255, 0.14);
-        --border-soft: rgba(255, 255, 255, 0.07);
-        --text: #EEF2FF;
-        --muted: #AEB8CD;
-    }
-
-    html, body, [class*="css"], .stApp {
-        font-family: 'Outfit', sans-serif;
-    }
-
-    .stApp {
-        color: var(--text);
-        background:
-            radial-gradient(circle at 12% 8%, rgba(138, 35, 135, 0.24), transparent 26%),
-            radial-gradient(circle at 88% 12%, rgba(242, 113, 33, 0.20), transparent 24%),
-            linear-gradient(135deg, #080B13 0%, #101522 48%, #080B13 100%);
-    }
-
-    .block-container {
-        max-width: 1260px;
-        padding-top: 2.1rem;
-        padding-bottom: 3rem;
-    }
-
-    header[data-testid="stHeader"] {
-        background: transparent;
-    }
-
-    .hero-panel {
-        position: relative;
-        overflow: hidden;
-        padding: 30px 34px;
-        margin-bottom: 22px;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        background:
-            linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05)),
-            var(--surface);
-        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
-        backdrop-filter: blur(22px);
-    }
-
-    .hero-panel:before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-top: 1px solid rgba(255,255,255,0.24);
-        pointer-events: none;
-    }
-
-    .main-title {
-        font-size: 42px;
-        line-height: 1.05;
-        font-weight: 800;
-        background: linear-gradient(90deg, #8A2387 0%, #E94057 50%, #F27121 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin: 0 0 12px;
-        letter-spacing: 0;
-    }
-
-    .hero-copy {
-        max-width: 780px;
-        color: var(--muted);
-        font-size: 17px;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-    .section-heading {
-        margin: 22px 0 14px;
-    }
-
-    .section-heading h2 {
-        color: var(--text);
-        font-size: 24px;
-        line-height: 1.2;
-        font-weight: 700;
-        margin: 0 0 6px;
-        letter-spacing: 0;
-    }
-
-    .section-heading p {
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.55;
-        margin: 0;
-    }
-
-    .scope-card {
-        box-sizing: border-box;
-        height: 146px;
-        padding: 18px 18px 16px;
-        margin-bottom: 6px;
-        border-radius: 8px;
-        border: 1px solid var(--border-soft);
-        background:
-            linear-gradient(150deg, rgba(255,255,255,0.12), rgba(255,255,255,0.035)),
-            rgba(13, 18, 31, 0.54);
-        box-shadow: 0 16px 42px rgba(0, 0, 0, 0.20);
-        backdrop-filter: blur(18px);
-    }
-
-    .scope-card span {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-bottom: 8px;
-    }
-
-    .scope-card strong {
-        display: block;
-        color: #FFFFFF;
-        font-size: 25px;
-        line-height: 1.15;
-        font-weight: 750;
-        letter-spacing: 0;
-        margin-bottom: 8px;
-    }
-
-    .scope-card small {
-        display: block;
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.45;
-    }
-
-    div[data-testid="stTabs"] button {
-        color: var(--muted);
-        background: rgba(255, 255, 255, 0.04);
-        border-radius: 8px 8px 0 0;
-        border: 1px solid rgba(255,255,255,0.06);
-        margin-right: 4px;
-        transition: all 160ms ease;
-        font-weight: 500;
-    }
-
-    div[data-testid="stTabs"] button[aria-selected="true"] {
-        color: #FFFFFF;
-        background:
-            linear-gradient(135deg, rgba(233,64,87,0.34), rgba(242,113,33,0.16)),
-            rgba(255,255,255,0.08);
-        border-color: rgba(255,255,255,0.24);
-        box-shadow:
-            inset 0 -2px 0 #E94057,
-            0 10px 24px rgba(233, 64, 87, 0.16);
-        font-weight: 700;
-    }
-
-    .stMetric {
-        min-height: 132px;
-        padding: 22px 20px;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        background:
-            linear-gradient(150deg, rgba(255,255,255,0.15), rgba(255,255,255,0.045)),
-            var(--surface);
-        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
-        backdrop-filter: blur(20px);
-    }
-
-    div[data-testid="stMetricValue"] {
-        font-size: 30px;
-        font-weight: 700;
-        color: #FFFFFF;
-        letter-spacing: 0;
-    }
-
-    div[data-testid="stMetricLabel"] {
-        font-size: 12px;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }
-
-    label[data-testid="stMetricLabel"],
-    label[data-testid="stMetricLabel"] * {
-        color: var(--muted) !important;
-        opacity: 1 !important;
-    }
-
-    div[data-testid="stMetricLabel"] p,
-    div[data-testid="stMetricLabel"] div {
-        color: var(--muted) !important;
-        opacity: 1 !important;
-    }
-
-    div[data-testid="stMetricValue"] div {
-        color: #FFFFFF !important;
-    }
-
-    div[data-testid="stPlotlyChart"],
-    div[data-testid="stDataFrame"] {
-        border-radius: 8px;
-        border: 1px solid var(--border-soft);
-        background:
-            linear-gradient(145deg, rgba(255,255,255,0.09), rgba(255,255,255,0.025)),
-            rgba(12, 16, 27, 0.50);
-        box-shadow: 0 18px 48px rgba(0,0,0,0.22);
-        padding: 8px;
-        backdrop-filter: blur(18px);
-    }
-
-    .insight-note {
-        margin: 8px 0 16px;
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.5;
-    }
-
-    .summary-panel {
-        margin-top: 14px;
-        padding: 22px 24px;
-        border-radius: 8px;
-        border: 1px solid var(--border-soft);
-        background:
-            linear-gradient(145deg, rgba(255,255,255,0.09), rgba(255,255,255,0.025)),
-            rgba(12, 16, 27, 0.50);
-        box-shadow: 0 18px 48px rgba(0,0,0,0.22);
-        backdrop-filter: blur(18px);
-    }
-
-    .summary-panel h3 {
-        color: var(--text);
-        font-size: 18px;
-        margin: 0 0 10px;
-        letter-spacing: 0;
-    }
-
-    .summary-panel p {
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.6;
-        margin: 0 0 10px;
-    }
-
-    hr {
-        border-color: rgba(255,255,255,0.08);
-        margin: 24px 0 10px;
-    }
-
-    .stAlert {
-        border-radius: 8px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-# ---------------------------------------------------------------------------
-# CSV fallback — used automatically when PostgreSQL is not available
-# (e.g. deployed on Streamlit Cloud without a hosted database)
-# ---------------------------------------------------------------------------
-
-@st.cache_data(show_spinner=False)
-def _load_csvs():
-    """Load all six raw CSV files into DataFrames. Cached for the session."""
-    customers    = pd.read_csv(os.path.join(_RAW, "customers.csv"),    parse_dates=["join_date"])
-    accounts     = pd.read_csv(os.path.join(_RAW, "accounts.csv"))
-    merchants    = pd.read_csv(os.path.join(_RAW, "merchants.csv"))
-    transactions = pd.read_csv(os.path.join(_RAW, "transactions.csv"), parse_dates=["transaction_date"])
-    settlements  = pd.read_csv(os.path.join(_RAW, "settlements.csv"))
-    fraud_flags  = pd.read_csv(os.path.join(_RAW, "fraud_flags.csv"))
-    return customers, accounts, merchants, transactions, settlements, fraud_flags
-
-
-def _scope_csv():
-    customers, accounts, merchants, transactions, settlements, fraud_flags = _load_csvs()
-    return pd.Series({
-        "customer_count":      len(customers),
-        "account_count":       len(accounts),
-        "merchant_count":      len(merchants),
-        "transaction_count":   len(transactions),
-        "settlement_count":    len(settlements),
-        "fraud_flag_count":    len(fraud_flags),
-        "first_transaction_date": transactions["transaction_date"].min().date(),
-        "last_transaction_date":  transactions["transaction_date"].max().date(),
-    })
-
-
-def _overview_csv():
-    _, _, _, transactions, _, _ = _load_csvs()
-    completed = transactions[transactions["status"] == "completed"]
-    return pd.Series({
-        "total_tx_count":  len(completed),
-        "total_tx_volume": completed["amount"].sum(),
-        "avg_tx_value":    completed["amount"].mean(),
-    })
-
-
-def _monthly_trends_csv():
-    _, _, _, transactions, _, _ = _load_csvs()
-    completed = transactions[transactions["status"] == "completed"].copy()
-    completed["transaction_month"] = completed["transaction_date"].dt.to_period("M").dt.to_timestamp()
-    return (
-        completed.groupby("transaction_month")
-        .agg(transaction_volume=("transaction_id", "count"), total_value=("amount", "sum"))
-        .reset_index()
-        .sort_values("transaction_month")
-    )
-
-
-def _merchant_performance_csv():
-    _, accounts, merchants, transactions, settlements, _ = _load_csvs()
-    completed = transactions[transactions["status"] == "completed"]
-    merged = (
-        completed
-        .merge(settlements[["transaction_id", "settled_amount"]], on="transaction_id")
-        .merge(merchants[["merchant_id", "merchant_name", "category", "risk_tier"]], on="merchant_id")
-    )
-    result = (
-        merged.groupby(["merchant_id", "merchant_name", "category", "risk_tier"])["settled_amount"]
-        .sum()
-        .reset_index()
-        .rename(columns={"settled_amount": "total_revenue"})
-        .nlargest(10, "total_revenue")
-        [["merchant_name", "category", "risk_tier", "total_revenue"]]
-        .reset_index(drop=True)
-    )
-    return result
-
-
-def _risk_overview_csv():
-    _, _, merchants, transactions, _, fraud_flags = _load_csvs()
-    tx_m = transactions.merge(merchants[["merchant_id", "category"]], on="merchant_id")
-    tx_f = tx_m.merge(fraud_flags[["transaction_id", "flag_id"]], on="transaction_id", how="left")
-    result = (
-        tx_f.groupby("category")
-        .agg(
-            total_transactions=("transaction_id", "count"),
-            flagged_transactions=("flag_id", lambda x: x.notna().sum()),
-        )
-        .reset_index()
-    )
-    result["fraud_rate_pct"] = (result["flagged_transactions"] / result["total_transactions"] * 100).round(2)
-    return result.sort_values("fraud_rate_pct", ascending=False).reset_index(drop=True)
-
-
-def _cohort_retention_csv():
-    customers, accounts, _, transactions, _, _ = _load_csvs()
-    cust = customers[["customer_id", "join_date"]].copy()
-    cust["cohort_month"] = cust["join_date"].dt.to_period("M").dt.to_timestamp()
-
-    completed = transactions[transactions["status"] == "completed"].copy()
-    completed["activity_month"] = completed["transaction_date"].dt.to_period("M").dt.to_timestamp()
-
-    tx_acc = completed.merge(accounts[["account_id", "customer_id"]], on="account_id")
-    tx_cust = tx_acc.merge(cust[["customer_id", "cohort_month"]], on="customer_id")
-
-    active = tx_cust[["customer_id", "cohort_month", "activity_month"]].drop_duplicates()
-    active = active.copy()
-    active["months_active_offset"] = (
-        (active["activity_month"].dt.year  - active["cohort_month"].dt.year)  * 12 +
-        (active["activity_month"].dt.month - active["cohort_month"].dt.month)
-    ).astype(int)
-
-    cohort_sizes = cust.groupby("cohort_month")["customer_id"].count().reset_index(name="cohort_size")
-    retention = (
-        active.groupby(["cohort_month", "months_active_offset"])["customer_id"]
-        .nunique()
-        .reset_index(name="active_customers")
-    )
-    result = retention.merge(cohort_sizes, on="cohort_month")
-    result["retention_rate"] = (result["active_customers"] / result["cohort_size"] * 100).round(2)
-    result = result[result["months_active_offset"] <= 12]
-    return result[["cohort_month", "cohort_size", "months_active_offset", "retention_rate"]].sort_values(
-        ["cohort_month", "months_active_offset"]
-    ).reset_index(drop=True)
-
-
-# ---------------------------------------------------------------------------
-
-
-@st.cache_data(ttl=600)
-def fetch_dataset_scope():
-    try:
-        conn = get_connection()
-        query = """
-            SELECT
-                (SELECT COUNT(*) FROM customers) AS customer_count,
-                (SELECT COUNT(*) FROM accounts) AS account_count,
-                (SELECT COUNT(*) FROM merchants) AS merchant_count,
-                (SELECT COUNT(*) FROM transactions) AS transaction_count,
-                (SELECT COUNT(*) FROM settlements) AS settlement_count,
-                (SELECT COUNT(*) FROM fraud_flags) AS fraud_flag_count,
-                (SELECT MIN(transaction_date)::DATE FROM transactions) AS first_transaction_date,
-                (SELECT MAX(transaction_date)::DATE FROM transactions) AS last_transaction_date;
-        """
-        df = pd.read_sql_query(query, conn)
-        conn.close()
-        return df.iloc[0]
-    except Exception:
-        return _scope_csv()
-
-
-@st.cache_data(ttl=600)
-def fetch_overview_metrics():
-    try:
-        conn = get_connection()
-        query = """
-            SELECT
-                COUNT(transaction_id) AS total_tx_count,
-                COALESCE(SUM(amount), 0) AS total_tx_volume,
-                COALESCE(AVG(amount), 0) AS avg_tx_value
-            FROM transactions
-            WHERE status = 'completed';
-        """
-        df = pd.read_sql_query(query, conn)
-        conn.close()
-        return df.iloc[0]
-    except Exception:
-        return _overview_csv()
-
-
-@st.cache_data(ttl=600)
-def fetch_monthly_trends():
-    try:
-        conn = get_connection()
-        query = """
-            SELECT
-                DATE_TRUNC('month', transaction_date)::DATE AS transaction_month,
-                COUNT(transaction_id) AS transaction_volume,
-                SUM(amount) AS total_value
-            FROM transactions
-            WHERE status = 'completed'
-            GROUP BY 1
-            ORDER BY 1;
-        """
-        df = pd.read_sql_query(query, conn)
-        conn.close()
-        return df
-    except Exception:
-        return _monthly_trends_csv()
-
-
-@st.cache_data(ttl=600)
-def fetch_merchant_performance():
-    try:
-        conn = get_connection()
-        query = """
-            SELECT
-                m.merchant_name,
-                m.category,
-                m.risk_tier,
-                COALESCE(SUM(s.settled_amount), 0) AS total_revenue
-            FROM merchants m
-            INNER JOIN transactions t ON m.merchant_id = t.merchant_id
-            INNER JOIN settlements s ON t.transaction_id = s.transaction_id
-            WHERE t.status = 'completed'
-            GROUP BY m.merchant_id, m.merchant_name, m.category, m.risk_tier
-            ORDER BY total_revenue DESC
-            LIMIT 10;
-        """
-        df = pd.read_sql_query(query, conn)
-        conn.close()
-        return df
-    except Exception:
-        return _merchant_performance_csv()
-
-
-@st.cache_data(ttl=600)
-def fetch_risk_overview():
-    try:
-        conn = get_connection()
-        query = """
-            SELECT
-                m.category,
-                COUNT(t.transaction_id) AS total_transactions,
-                COUNT(f.flag_id) AS flagged_transactions,
-                ROUND(COUNT(f.flag_id)::NUMERIC / COUNT(t.transaction_id) * 100, 2) AS fraud_rate_pct
-            FROM transactions t
-            INNER JOIN merchants m ON t.merchant_id = m.merchant_id
-            LEFT JOIN fraud_flags f ON t.transaction_id = f.transaction_id
-            GROUP BY m.category
-            ORDER BY fraud_rate_pct DESC;
-        """
-        df = pd.read_sql_query(query, conn)
-        conn.close()
-        return df
-    except Exception:
-        return _risk_overview_csv()
-
-
-@st.cache_data(ttl=600)
-def fetch_cohort_retention():
-    try:
-        conn = get_connection()
-        query = """
-            WITH customer_cohorts AS (
-                SELECT
-                    customer_id,
-                    DATE_TRUNC('month', join_date)::DATE AS cohort_month
-                FROM customers
-            ),
-            monthly_active_customers AS (
-                SELECT DISTINCT
-                    c.customer_id,
-                    cc.cohort_month,
-                    DATE_TRUNC('month', t.transaction_date)::DATE AS activity_month
-                FROM transactions t
-                INNER JOIN accounts a ON t.account_id = a.account_id
-                INNER JOIN customers c ON a.customer_id = c.customer_id
-                INNER JOIN customer_cohorts cc ON c.customer_id = cc.customer_id
-                WHERE t.status = 'completed'
-            ),
-            cohort_sizes AS (
-                SELECT
-                    cohort_month,
-                    COUNT(customer_id) AS cohort_size
-                FROM customer_cohorts
-                GROUP BY cohort_month
-            ),
-            cohort_retention AS (
-                SELECT
-                    ma.cohort_month,
-                    (EXTRACT(YEAR FROM AGE(ma.activity_month, ma.cohort_month)) * 12 +
-                     EXTRACT(MONTH FROM AGE(ma.activity_month, ma.cohort_month)))::INTEGER AS months_active_offset,
-                    COUNT(DISTINCT ma.customer_id) AS active_customers
-                FROM monthly_active_customers ma
-                GROUP BY ma.cohort_month, months_active_offset
-            )
-            SELECT
-                cr.cohort_month,
-                sz.cohort_size,
-                cr.months_active_offset,
-                ROUND(cr.active_customers::NUMERIC / sz.cohort_size * 100, 2) AS retention_rate
-            FROM cohort_retention cr
-            INNER JOIN cohort_sizes sz ON cr.cohort_month = sz.cohort_month
-            WHERE cr.months_active_offset <= 12
-            ORDER BY cr.cohort_month ASC, cr.months_active_offset ASC;
-        """
-        df = pd.read_sql_query(query, conn)
-        conn.close()
-        return df
-    except Exception:
-        return _cohort_retention_csv()
-
-
-st.markdown(
-    """
-    <section class="hero-panel">
-        <h1 class="main-title">Corporate Payments Analytics</h1>
-        <p class="hero-copy">
-            A commercial payments analytics system built on a six-table relational
-            database. The dataset spans three years of synthetic transaction activity
-            across customers, accounts, merchants, transactions, settlements, and fraud
-            flags. Each tab answers one analytical question about the data — from payment
-            volume trends to merchant performance, fraud detection patterns, and customer
-            retention.
-        </p>
-    </section>
-    """,
-    unsafe_allow_html=True,
-)
-
-try:
-    if _DB_IMPORT_OK:
-        get_connection().close()
-        _using_db = True
-    else:
-        _using_db = False
-except Exception:
-    _using_db = False
-
-if not _using_db:
-    st.info(
-        "Running in read-only mode — loading data from CSV files. "
-        "All charts and metrics are fully functional.",
-        icon="📂",
-    )
-
-try:
-    scope = fetch_dataset_scope()
-    scope_cols = st.columns(4)
-    with scope_cols[0]:
-        render_scope_card(
-            "Customer Base",
-            f"{scope['customer_count']:,}",
-            f"{scope['account_count']:,} linked accounts",
-        )
-    with scope_cols[1]:
-        render_scope_card(
-            "Merchants",
-            f"{scope['merchant_count']:,}",
-            "Grouped by category and risk tier",
-        )
-    with scope_cols[2]:
-        first_date = pd.to_datetime(scope["first_transaction_date"]).strftime("%b %Y")
-        last_date = pd.to_datetime(scope["last_transaction_date"]).strftime("%b %Y")
-        render_scope_card(
-            "Transaction Window",
-            f"{first_date} to {last_date}",
-            f"{scope['transaction_count']:,} total transactions",
-        )
-    with scope_cols[3]:
-        render_scope_card(
-            "Risk Records",
-            f"{scope['fraud_flag_count']:,}",
-            f"{scope['settlement_count']:,} settlement records",
-        )
-except Exception:
-    st.warning("Could not load dataset scope. Check that the data files are available.")
-
-
-tab1, tab2, tab3, tab4, tab5 = st.tabs(
-    [
-        "Overview",
-        "Merchants",
-        "Risk",
-        "Retention",
-        "Summary",
-    ]
-)
-
-
-with tab1:
+if ui_state.active_view == "overview":
     section_header(
-        "Executive Overview",
-        "A quick view of completed transaction activity, total completed transaction amount, and average payment size.",
+        "Read the payment system in one pass",
+        "Activity, completion, customer reach, nominal value and status stay close enough to scan as one operational picture.",
+        "System overview",
     )
-    try:
-        metrics = fetch_overview_metrics()
-
-        col1, col2, col3 = st.columns(3)
-        col1.metric(
-            label="Total Completed Transactions",
-            value=f"{int(metrics['total_tx_count']):,}",
-        )
-        col2.metric(
-            label="Total Transaction Volume (EUR)",
-            value=f"EUR {metrics['total_tx_volume']:,.2f}",
-        )
-        col3.metric(
-            label="Average Transaction Size",
-            value=f"EUR {metrics['avg_tx_value']:,.2f}",
-        )
-
-        st.write("---")
-        section_header(
-            "Transaction Trends Over Time",
-            "Monthly completed transaction counts and completed transaction value are shown separately so the scale stays readable.",
-        )
-
-        trends_df = fetch_monthly_trends()
-
-        fig_count = go.Figure()
-        fig_count.add_trace(
-            go.Bar(
-                x=trends_df["transaction_month"],
-                y=trends_df["transaction_volume"],
-                name="Completed Transactions",
-                marker_color=INFO,
-                opacity=0.9,
-                hovertemplate="%{x|%b %Y}<br>%{y:,.0f} completed payments<extra></extra>",
-            )
-        )
-
-        fig_count.update_layout(
-            **CHART_LAYOUT,
-            title=chart_title("Completed Transaction Count"),
-            showlegend=False,
-            yaxis=dict(title="Transactions", gridcolor=GRID, tickformat="~s"),
-            xaxis=dict(title="Month", tickformat="%b %Y"),
-            height=420,
-            bargap=0.18,
-            margin=dict(l=16, r=16, t=54, b=16),
-        )
-
-        fig_value = go.Figure()
-        fig_value.add_trace(
-            go.Scatter(
-                x=trends_df["transaction_month"],
-                y=trends_df["total_value"],
-                name="Completed Value",
-                line=dict(color=SUCCESS, width=3),
-                mode="lines+markers",
-                marker=dict(size=6, color=SUCCESS),
-                fill="tozeroy",
-                fillcolor="rgba(20, 184, 166, 0.14)",
-                hovertemplate="%{x|%b %Y}<br>EUR %{y:,.2f}<extra></extra>",
-            )
-        )
-
-        fig_value.update_layout(
-            **CHART_LAYOUT,
-            title=chart_title("Completed Transaction Value"),
-            showlegend=False,
-            yaxis=dict(title="Value (EUR)", gridcolor=GRID, tickprefix="EUR ", tickformat="~s"),
-            xaxis=dict(title="Month", tickformat="%b %Y"),
-            height=420,
-            margin=dict(l=16, r=16, t=54, b=16),
-        )
-
-        st.plotly_chart(fig_count, use_container_width=True)
-        st.plotly_chart(fig_value, use_container_width=True)
-
-        if not trends_df.empty:
-            peak_row = trends_df.loc[trends_df["transaction_volume"].idxmax()]
-            peak_month = pd.to_datetime(peak_row["transaction_month"]).strftime("%b %Y")
-            insight_note(
-                f"The highest completed transaction count is in {peak_month}, "
-                f"with {int(peak_row['transaction_volume']):,} completed payments."
-            )
-
-    except Exception as err:
-        st.error(f"Failed to fetch overview metrics. Verify database state. Error: {err}")
-
-
-with tab2:
-    section_header(
-        "Merchant Revenue Leaderboard",
-        "Merchants are ranked by settled amount, using completed transactions that have matching settlement records.",
+    render_kpi_grid(
+        build_kpi_cards(current_metrics, previous_metrics, filters)
     )
 
-    try:
-        merchant_df = fetch_merchant_performance()
+    status_frame = transaction_statuses(filtered_transactions)
+    render_status_rail(
+        "Transaction status",
+        f"{len(filtered_transactions):,} records in the current view",
+        status_frame,
+        {
+            "completed": TEAL,
+            "pending": AMBER,
+            "failed": CORAL,
+        },
+    )
 
-        fig_merchants = px.bar(
-            merchant_df,
-            x="total_revenue",
-            y="merchant_name",
-            color="category",
-            orientation="h",
-            labels={
-                "total_revenue": "Settled Revenue (EUR)",
-                "merchant_name": "Merchant Name",
-                "category": "Industry Category",
+    trend_choice = render_measure_switch(ui_state.trend_mode)
+    st.session_state["pay_trend_measure"] = trend_choice
+    trend_frame = monthly_trends(filtered_transactions)
+    trend_field = (
+        "transaction_count"
+        if trend_choice == "Transaction count"
+        else "completed_value"
+    )
+    trend_color = CYAN if trend_field == "transaction_count" else AMBER
+    trend_title = (
+        "Completed payments by month"
+        if trend_field == "transaction_count"
+        else "Nominal completed value by month"
+    )
+    trend_figure = go.Figure()
+    trend_figure.add_trace(
+        go.Scatter(
+            x=trend_frame["transaction_month"],
+            y=trend_frame[trend_field],
+            mode="lines+markers",
+            line={"color": trend_color, "width": 2.5, "shape": "spline"},
+            marker={
+                "size": 6,
+                "color": trend_color,
+                "line": {"color": "#07111A", "width": 1},
             },
-            color_discrete_sequence=CATEGORY_COLORS,
-            category_orders={"merchant_name": merchant_df["merchant_name"].tolist()},
+            fill="tozeroy",
+            fillcolor=(
+                "rgba(75,216,255,0.07)"
+                if trend_field == "transaction_count"
+                else "rgba(244,200,106,0.07)"
+            ),
+            hovertemplate=(
+                "%{x|%b %Y}<br>%{y:,.0f} completed payments<extra></extra>"
+                if trend_field == "transaction_count"
+                else "%{x|%b %Y}<br>%{y:,.2f} nominal value<extra></extra>"
+            ),
+        )
+    )
+    trend_layout = chart_layout(trend_title, 450)
+    trend_layout["margin"]["r"] = 86
+    trend_figure.update_layout(**trend_layout)
+    trend_figure.update_xaxes(title=None)
+    trend_figure.update_yaxes(
+        title="Payments" if trend_field == "transaction_count" else "Nominal value"
+    )
+    style_axes(trend_figure)
+    if not trend_frame.empty:
+        last_point = trend_frame.iloc[-1]
+        direct_label = (
+            f"{int(last_point[trend_field]):,}"
+            if trend_field == "transaction_count"
+            else display_amount(float(last_point[trend_field]))
+        )
+        trend_figure.add_annotation(
+            x=last_point["transaction_month"],
+            y=last_point[trend_field],
+            text=direct_label,
+            showarrow=False,
+            xanchor="left",
+            xshift=10,
+            font={"color": trend_color, "size": 12},
+        )
+    st.plotly_chart(
+        trend_figure,
+        width="stretch",
+        config=PLOT_CONFIG,
+        key=f"overview_{trend_field}",
+    )
+    if len(filters.currencies) != 1:
+        data_note(
+            "The value view adds EUR, GBP, AUD, and CAD as recorded. It supports aggregation analysis, but it is not a converted system value."
         )
 
-        fig_merchants.update_layout(
-            **CHART_LAYOUT,
-            title=chart_title("Top Merchants by Settled Revenue"),
-            legend=dict(bgcolor="rgba(0,0,0,0)"),
-            xaxis=dict(showgrid=True, gridcolor=GRID),
-            yaxis=dict(autorange="reversed"),
-            height=480,
-            margin=dict(l=16, r=16, t=54, b=16),
+
+if ui_state.active_view == "merchant":
+    section_header(
+        "Track merchant value through settlement",
+        "Settlement records are tied back to the filtered transactions, so the ranking and status rail use the same date, currency, and category scope.",
+        "Merchant flow",
+    )
+    settlement_summary = settlement_metrics(settlement_records)
+    one_currency = len(filters.currencies) == 1
+    amount_prefix = f"{filters.currencies[0]} " if one_currency else ""
+    render_metric_strip(
+        [
+            {
+                "label": "Settlement records",
+                "value": f"{int(settlement_summary['settlement_count']):,}",
+                "note": "Linked payout records",
+                "tone": "cyan",
+            },
+            {
+                "label": "Settled amount",
+                "value": display_amount(
+                    settlement_summary["settled_amount"],
+                    currency_prefix=amount_prefix,
+                ),
+                "note": "Completed settlement value",
+                "tone": "teal",
+            },
+            {
+                "label": "Processing fees",
+                "value": display_amount(
+                    settlement_summary["processing_fees"],
+                    currency_prefix=amount_prefix,
+                ),
+                "note": "Recorded processing fees",
+                "tone": "amber",
+            },
+            {
+                "label": "Delayed",
+                "value": f"{int(settlement_summary['delayed_count']):,}",
+                "note": "Awaiting completion",
+                "tone": "coral",
+            },
+        ]
+    )
+
+    if settlement_records.empty:
+        render_empty_state(
+            "No settlements match this view.",
+            "The selected transactions do not have linked settlement records.",
+        )
+    else:
+        render_settlement_corridor(settlement_statuses(settlement_records))
+        merchant_frame = merchant_performance(settlement_records)
+        top_merchants = merchant_frame.head(12).sort_values(
+            "settled_amount", ascending=True
+        )
+        merchant_figure = px.bar(
+            top_merchants,
+            x="settled_amount",
+            y="merchant_name",
+            orientation="h",
+            color="category",
+            color_discrete_map=CATEGORY_COLORS,
+            custom_data=["category", "risk_tier", "settlement_count"],
+        )
+        merchant_figure.update_traces(
+            marker_line_width=0,
+            texttemplate="%{x:,.3s}",
+            textposition="outside",
+            textfont={"color": INK, "size": 11},
+            cliponaxis=False,
+            hovertemplate=(
+                "<b>%{y}</b><br>%{customdata[0]} · %{customdata[1]} risk"
+                "<br>%{x:,.2f} nominal settled amount"
+                "<br>%{customdata[2]:,.0f} settlements<extra></extra>"
+            ),
+        )
+        merchant_layout = chart_layout(
+            "Leading merchants by settled amount", 520
+        )
+        merchant_layout["margin"]["r"] = 78
+        merchant_figure.update_layout(
+            **merchant_layout,
+            xaxis_title="Nominal settled amount",
+            yaxis_title=None,
+            bargap=0.28,
+        )
+        style_axes(merchant_figure)
+        st.plotly_chart(
+            merchant_figure,
+            width="stretch",
+            config=PLOT_CONFIG,
+            key="merchant_ranking",
         )
 
-        st.plotly_chart(fig_merchants, use_container_width=True)
-        if not merchant_df.empty:
-            top_merchant = merchant_df.iloc[0]
-            insight_note(
-                f"{top_merchant['merchant_name']} leads the table with "
-                f"EUR {top_merchant['total_revenue']:,.2f} in settled revenue."
-            )
-
-        st.dataframe(
-            merchant_df.rename(
+        with st.expander("Open merchant settlement detail"):
+            merchant_table = merchant_frame[
+                [
+                    "merchant_name",
+                    "category",
+                    "risk_tier",
+                    "settlement_count",
+                    "settled_amount",
+                    "processing_fees",
+                ]
+            ].rename(
                 columns={
                     "merchant_name": "Merchant",
                     "category": "Category",
-                    "risk_tier": "Risk Tier",
-                    "total_revenue": "Revenue (EUR)",
+                    "risk_tier": "Risk tier",
+                    "settlement_count": "Settlements",
+                    "settled_amount": "Settled amount",
+                    "processing_fees": "Processing fees",
                 }
-            ),
-            column_config={
-                "Revenue (EUR)": st.column_config.NumberColumn(format="EUR %,.2f")
-            },
-            use_container_width=True,
-            hide_index=True,
-        )
-
-    except Exception as err:
-        st.error(f"Failed to load merchant insights: {err}")
-
-
-with tab3:
-    section_header(
-        "Compliance and Fraud Risk",
-        "Fraud flag rates are compared across merchant categories using the fraud flag records in the dataset.",
-    )
-
-    try:
-        risk_df = fetch_risk_overview()
-
-        col_chart, col_data = st.columns([2, 1])
-
-        with col_chart:
-            fig_risk = px.bar(
-                risk_df,
-                x="category",
-                y="fraud_rate_pct",
-                labels={
-                    "category": "Category",
-                    "fraud_rate_pct": "Fraud Flag Rate (%)",
-                },
-                color="fraud_rate_pct",
-                color_continuous_scale=[
-                    (0.0, SUCCESS),
-                    (0.5, WARNING),
-                    (1.0, DANGER),
-                ],
-            )
-            fig_risk.update_layout(
-                **CHART_LAYOUT,
-                title=chart_title("Fraud Flag Rate by Category"),
-                yaxis=dict(title="Fraud Rate (%)", showgrid=True, gridcolor=GRID),
-                xaxis=dict(title="Category", tickangle=-20),
-                coloraxis_showscale=False,
-                height=400,
-                margin=dict(l=16, r=16, t=54, b=16),
-            )
-            st.plotly_chart(fig_risk, use_container_width=True)
-            if not risk_df.empty:
-                highest_risk = risk_df.iloc[0]
-                insight_note(
-                    f"{highest_risk['category']} has the highest fraud flag rate "
-                    f"at {highest_risk['fraud_rate_pct']:.2f}% in this dataset."
-                )
-
-        with col_data:
-            section_header(
-                "Risk Rates Table",
-                "A category-level table showing transaction counts, fraud flags, and fraud rate.",
             )
             st.dataframe(
-                risk_df.rename(
-                    columns={
-                        "category": "Category",
-                        "total_transactions": "Total Transactions",
-                        "flagged_transactions": "Flags",
-                        "fraud_rate_pct": "Fraud Rate",
-                    }
-                ),
-                column_config={
-                    "Fraud Rate": st.column_config.NumberColumn(format="%.2f%%")
-                },
-                use_container_width=True,
+                merchant_table,
+                width="stretch",
                 hide_index=True,
+                column_config={
+                    "Settled amount": st.column_config.NumberColumn(format="%.2f"),
+                    "Processing fees": st.column_config.NumberColumn(format="%.2f"),
+                },
+            )
+        if not one_currency:
+            data_note(
+                "Merchant and settlement values are ranked in nominal source-currency units. No exchange rate is applied."
             )
 
-    except Exception as err:
-        st.error(f"Failed to load risk configurations: {err}")
 
-
-with tab4:
+if ui_state.active_view == "risk":
     section_header(
-        "Monthly Customer Retention Matrix",
-        "The matrix shows the share of each registration cohort returning for completed transactions in later months.",
+        "See what entered review and what cleared",
+        "Category rates show where flags appear in the generated records. The review flow then separates the recorded reasons into resolved and unresolved outcomes.",
+        "Risk monitor",
+    )
+    risk_summary = risk_metrics(filtered_transactions, flag_records)
+    render_metric_strip(
+        [
+            {
+                "label": "Flags in view",
+                "value": f"{int(risk_summary['flag_count']):,}",
+                "note": "Review records in scope",
+                "tone": "cyan",
+            },
+            {
+                "label": "Resolved",
+                "value": f"{int(risk_summary['resolved_count']):,}",
+                "note": "Marked complete",
+                "tone": "teal",
+            },
+            {
+                "label": "Unresolved",
+                "value": f"{int(risk_summary['unresolved_count']):,}",
+                "note": "Still open",
+                "tone": "coral",
+            },
+            {
+                "label": "Resolution rate",
+                "value": f"{risk_summary['resolution_rate']:.2f}%",
+                "note": "Share of flags resolved",
+                "tone": "amber",
+            },
+        ]
     )
 
-    try:
-        cohort_raw = fetch_cohort_retention()
+    category_risk = risk_by_category(filtered_transactions, flag_records)
+    if category_risk.empty:
+        render_empty_state(
+            "No merchant risk rates are available.",
+            "This view needs transactions with a linked merchant category.",
+        )
+    else:
+        risk_plot = category_risk.sort_values("flag_rate", ascending=True)
+        risk_figure = px.bar(
+            risk_plot,
+            x="flag_rate",
+            y="category",
+            orientation="h",
+            color="flag_rate",
+            color_continuous_scale=[
+                [0, "#1B5966"],
+                [0.55, "#F4C86A"],
+                [1, "#FF7E8F"],
+            ],
+            custom_data=["flagged_transactions", "total_transactions"],
+        )
+        risk_figure.update_traces(
+            hovertemplate=(
+                "<b>%{y}</b><br>%{x:.2f}% observed flag rate"
+                "<br>%{customdata[0]:,.0f} flags across "
+                "%{customdata[1]:,.0f} transactions<extra></extra>"
+            ),
+            marker_line_width=0,
+            texttemplate="%{x:.2f}%",
+            textposition="outside",
+            textfont={"color": INK, "size": 11},
+            cliponaxis=False,
+        )
+        risk_layout = chart_layout(
+            "Observed flag rate by merchant category", 460
+        )
+        risk_layout["margin"]["r"] = 74
+        risk_figure.update_layout(
+            **risk_layout,
+            xaxis_title="Flagged transactions (%)",
+            yaxis_title=None,
+            coloraxis_showscale=False,
+        )
+        style_axes(risk_figure)
+        st.plotly_chart(
+            risk_figure,
+            width="stretch",
+            config=PLOT_CONFIG,
+            key="risk_category_rate",
+        )
 
-        cohort_pivot = cohort_raw.pivot(
-            index="cohort_month",
+    review_flow = risk_review_flow(flag_records)
+    if review_flow.empty:
+        render_empty_state(
+            "No fraud flags match this view.",
+            "Widen the active filters to restore the review flow.",
+        )
+    else:
+        reasons = sorted(review_flow["flag_reason"].unique().tolist())
+        outcomes = ["Resolved", "Unresolved"]
+        labels = reasons + outcomes
+        label_index = {label: index for index, label in enumerate(labels)}
+        source_indices = [
+            label_index[row.flag_reason]
+            for row in review_flow.itertuples(index=False)
+        ]
+        target_indices = [
+            label_index[row.outcome]
+            for row in review_flow.itertuples(index=False)
+        ]
+        values = [int(row.count) for row in review_flow.itertuples(index=False)]
+        link_colors = [
+            "rgba(66,232,180,0.20)"
+            if row.outcome == "Resolved"
+            else "rgba(255,126,143,0.24)"
+            for row in review_flow.itertuples(index=False)
+        ]
+        link_hover_colors = [
+            "rgba(138,246,199,0.62)"
+            if row.outcome == "Resolved"
+            else "rgba(255,117,111,0.66)"
+            for row in review_flow.itertuples(index=False)
+        ]
+        sankey_figure = go.Figure(
+            go.Sankey(
+                arrangement="snap",
+                node={
+                    "pad": 18,
+                    "thickness": 16,
+                    "line": {"color": "rgba(145,183,207,0.25)", "width": 1},
+                    "label": labels,
+                    "color": [
+                        "rgba(75,216,255,0.72)" for _ in reasons
+                    ]
+                    + [TEAL, CORAL],
+                    "hovertemplate": "%{label}<br>%{value:,.0f} flags<extra></extra>",
+                },
+                link={
+                    "source": source_indices,
+                    "target": target_indices,
+                    "value": values,
+                    "color": link_colors,
+                    "hovercolor": link_hover_colors,
+                    "hovertemplate": (
+                        "%{source.label} → %{target.label}"
+                        "<br>%{value:,.0f} flags<extra></extra>"
+                    ),
+                },
+            )
+        )
+        sankey_layout = chart_layout("Flag reason to review outcome", 500)
+        sankey_layout["hoverlabel"] = {
+            "bgcolor": "#0B1118",
+            "bordercolor": "#68DCFF",
+            "font": {"color": INK, "size": 12},
+        }
+        sankey_figure.update_layout(**sankey_layout)
+        st.plotly_chart(
+            sankey_figure,
+            width="stretch",
+            config=PLOT_CONFIG,
+            key="risk_review_flow",
+        )
+
+        with st.expander("Open review-flow data table"):
+            review_flow_table = review_flow.rename(
+                columns={
+                    "flag_reason": "Flag reason",
+                    "outcome": "Review outcome",
+                    "count": "Flags",
+                }
+            )
+            st.table(
+                review_flow_table,
+                width="stretch",
+                hide_index=True,
+                border="horizontal",
+            )
+
+        with st.expander("Open category risk detail"):
+            risk_table = category_risk.rename(
+                columns={
+                    "category": "Merchant category",
+                    "total_transactions": "Transactions",
+                    "flagged_transactions": "Flags",
+                    "flag_rate": "Observed flag rate",
+                }
+            )
+            st.dataframe(
+                risk_table,
+                width="stretch",
+                hide_index=True,
+                column_config={
+                    "Observed flag rate": st.column_config.NumberColumn(
+                        format="%.2f%%"
+                    )
+                },
+            )
+
+    data_note(
+        "Fraud flags were randomly sampled when the synthetic dataset was generated. These rates describe the sample; they are not a fraud model or a production risk score.",
+        "coral",
+    )
+
+
+if ui_state.active_view == "retention":
+    section_header(
+        "Read customer return patterns without filling the future",
+        "Each cell is the share of a joining cohort with at least one completed payment in that month. Periods beyond the dataset window stay blank.",
+        "Customer retention",
+    )
+    cohort_min = customers["join_date"].min().date()
+    cohort_max = customers["join_date"].max().date()
+    cohort_dates = st.date_input(
+        "Cohort join window",
+        value=(cohort_min, cohort_max),
+        min_value=cohort_min,
+        max_value=cohort_max,
+        key="pay_cohort_range",
+    )
+    if isinstance(cohort_dates, tuple) and len(cohort_dates) == 2:
+        cohort_start, cohort_end = cohort_dates
+    else:
+        cohort_start = cohort_end = cohort_dates
+    retention_frame = cohort_retention(
+        customers,
+        accounts,
+        transactions,
+        pd.Timestamp(cohort_start).date(),
+        pd.Timestamp(cohort_end).date(),
+    )
+
+    if retention_frame.empty:
+        render_empty_state(
+            "No customer cohorts match this window.",
+            "Choose a wider join-date range to restore the heatmap.",
+        )
+    else:
+        cohort_count = retention_frame["cohort_month"].nunique()
+        cohort_customers = (
+            retention_frame[["cohort_month", "cohort_size"]]
+            .drop_duplicates()["cohort_size"]
+            .sum()
+        )
+        month_one = retention_frame[
+            retention_frame["months_active_offset"].eq(1)
+            & retention_frame["observable"]
+        ]["retention_rate"]
+        median_month_one = float(month_one.median()) if not month_one.empty else 0.0
+
+        render_metric_strip(
+            [
+                {
+                    "label": "Cohorts observed",
+                    "value": f"{cohort_count:,}",
+                    "note": "Monthly join cohorts",
+                    "tone": "violet",
+                },
+                {
+                    "label": "Customers in cohorts",
+                    "value": f"{int(cohort_customers):,}",
+                    "note": "Customers inside the selected join window",
+                    "tone": "cyan",
+                },
+                {
+                    "label": "Median month 1 return",
+                    "value": f"{median_month_one:.1f}%",
+                    "note": "Median observed return rate",
+                    "tone": "teal",
+                },
+            ]
+        )
+
+        retention_frame = retention_frame.copy()
+        retention_frame["cohort_label"] = retention_frame[
+            "cohort_month"
+        ].dt.strftime("%b %Y")
+        heatmap_values = retention_frame.pivot(
+            index="cohort_label",
             columns="months_active_offset",
             values="retention_rate",
         )
-
-        cohort_pivot.index = pd.to_datetime(cohort_pivot.index).strftime("%Y-%m")
-
+        heatmap_values = heatmap_values.reindex(
+            retention_frame[
+                ["cohort_month", "cohort_label"]
+            ]
+            .drop_duplicates()
+            .sort_values("cohort_month")["cohort_label"]
+        )
+        show_cell_text = cohort_count <= 20
         heatmap = go.Figure(
-            data=go.Heatmap(
-                z=cohort_pivot.values,
-                x=[f"Month {int(month)}" for month in cohort_pivot.columns],
-                y=cohort_pivot.index,
+            go.Heatmap(
+                z=heatmap_values.values,
+                x=[f"Month {int(column)}" for column in heatmap_values.columns],
+                y=heatmap_values.index,
                 colorscale=[
-                    (0.0, "rgba(31, 41, 55, 0.92)"),
-                    (0.35, INFO),
-                    (0.7, SUCCESS),
-                    (1.0, WARNING),
+                    [0.0, "#101824"],
+                    [0.22, "#25234A"],
+                    [0.48, "#5546A3"],
+                    [0.72, "#4B9FC0"],
+                    [1.0, "#42E8B4"],
                 ],
-                colorbar=dict(title="Retention", ticksuffix="%"),
-                hovertemplate=(
-                    "Cohort %{y}<br>%{x}<br>Retention %{z:.2f}%<extra></extra>"
-                ),
                 zmin=0,
-                zmax=max(20, cohort_raw["retention_rate"].max()),
+                zmax=100,
+                colorbar={
+                    "title": {"text": "Return %", "side": "right"},
+                    "thickness": 10,
+                    "outlinewidth": 0,
+                    "tickfont": {"color": MUTED},
+                },
+                text=heatmap_values.values if show_cell_text else None,
+                texttemplate="%{text:.0f}%" if show_cell_text else None,
+                textfont={"size": 11, "color": "#F5F9FC"},
+                hovertemplate=(
+                    "<b>%{y}</b><br>%{x}<br>%{z:.2f}% active<extra></extra>"
+                ),
+                hoverongaps=False,
+                xgap=2,
+                ygap=2,
             )
         )
-
+        heatmap_height = max(500, min(840, cohort_count * 22 + 190))
+        heatmap_layout = chart_layout("Cohort activity retention", heatmap_height)
+        heatmap_layout["hoverlabel"] = {
+            "bgcolor": "#0B1118",
+            "bordercolor": "#A390FF",
+            "font": {"color": INK, "size": 12},
+        }
         heatmap.update_layout(
-            **CHART_LAYOUT,
-            title=chart_title("Retention Heatmap"),
-            xaxis=dict(title="Months After Joining"),
-            yaxis=dict(title="Cohort Month", autorange="reversed"),
-            height=560,
-            margin=dict(l=16, r=16, t=54, b=44),
+            **heatmap_layout,
+            xaxis_title=None,
+            yaxis_title="Joining cohort",
+        )
+        heatmap.update_xaxes(
+            side="top",
+            gridcolor="rgba(145,183,207,0.08)",
+            tickangle=0,
+        )
+        heatmap.update_yaxes(
+            autorange="reversed",
+            gridcolor="rgba(145,183,207,0.08)",
+        )
+        st.plotly_chart(
+            heatmap,
+            width="stretch",
+            config=PLOT_CONFIG,
+            key="retention_heatmap",
+        )
+        with st.expander("Open retention data table"):
+            retention_table = retention_frame[
+                [
+                    "cohort_label",
+                    "months_active_offset",
+                    "cohort_size",
+                    "active_customers",
+                    "retention_rate",
+                    "observable",
+                ]
+            ].rename(
+                columns={
+                    "cohort_label": "Joining cohort",
+                    "months_active_offset": "Active month",
+                    "cohort_size": "Cohort size",
+                    "active_customers": "Active customers",
+                    "retention_rate": "Retention rate",
+                    "observable": "Observable",
+                }
+            )
+            retention_table["Retention rate"] = retention_table[
+                "Retention rate"
+            ].map(
+                lambda value: (
+                    "Not observable"
+                    if pd.isna(value)
+                    else f"{float(value):.2f}%"
+                )
+            )
+            retention_table["Observable"] = retention_table[
+                "Observable"
+            ].map({True: "Yes", False: "No"})
+            st.table(
+                retention_table,
+                width="stretch",
+                height=560,
+                hide_index=True,
+                border="horizontal",
+            )
+        data_note(
+            "Blank cells are outside the observable dataset window. A visible 0% cell is an observed month in which no customer from that cohort completed a payment."
         )
 
-        st.plotly_chart(heatmap, use_container_width=True)
-        month_one = cohort_raw[cohort_raw["months_active_offset"] == 1]
-        if not month_one.empty:
-            insight_note(
-                f"Average month-one retention across available cohorts is "
-                f"{month_one['retention_rate'].mean():.2f}%."
-            )
 
-    except Exception as err:
-        st.error(f"Failed to calculate customer cohort retention: {err}")
-
-
-with tab5:
+if ui_state.active_view == "model":
     section_header(
-        "Project Summary",
-        "A concise view of what this dashboard covers and how the analysis is organised.",
+        "Trace the data before reading the metrics",
+        "The model view shows the relationships used by the dashboard and keeps the important limitations close to the analysis.",
+        "Data model and method",
     )
-
-    try:
-        summary_scope = fetch_dataset_scope()
-
-        summary_cols = st.columns(4)
-        with summary_cols[0]:
-            render_scope_card(
-                "Data Coverage",
-                f"{summary_scope['transaction_count']:,}",
-                "transactions analysed across the project",
-            )
-        with summary_cols[1]:
-            render_scope_card(
-                "Core Tables",
-                "6",
-                "customers, accounts, merchants, transactions, settlements, fraud flags",
-            )
-        with summary_cols[2]:
-            render_scope_card(
-                "Main Views",
-                "4",
-                "overview, merchants, risk, and retention",
-            )
-        with summary_cols[3]:
-            render_scope_card(
-                "Tools Used",
-                "SQL + Python",
-                "Streamlit dashboard with Plotly charts",
-            )
-
-        st.markdown(
-            """
-            <div class="summary-panel">
-                <h3>About This Project</h3>
-                <p>
-                    I built this project to get hands-on experience with the kind of data
-                    analysis that comes up in real fintech and payments environments. Rather
-                    than working with a single flat CSV, I designed a six-table relational
-                    schema in PostgreSQL and wrote SQL queries to explore different parts of
-                    the data: customer segmentation, merchant revenue, fraud compliance, and
-                    cohort retention.
-                </p>
-                <p>
-                    The data is fully synthetic, generated using Python and the Faker library,
-                    so nothing here is real transaction data. The goal was to make the dataset
-                    realistic enough that the analysis techniques and patterns would be meaningful
-                    and transferable to real projects.
-                </p>
-                <p>
-                    The Streamlit dashboard and a separate Power BI report both pull from the
-                    same underlying data, which gave me practice presenting the same findings
-                    in two different BI tools.
-                </p>
-            </div>
-            """,
-            unsafe_allow_html=True,
+    render_data_model(scope)
+    with st.expander("Read data and calculation notes"):
+        render_method_cards()
+        data_note(
+            f"The transaction window runs from {first_date_label} to {last_date_label}. "
+            f"The current source is {source_label.lower()}, and the dashboard cache can retain a loaded source for up to ten minutes."
         )
-    except Exception as err:
-        st.error(f"Failed to load project summary: {err}")
+
+
+render_footer()
+mount_page_motion()
