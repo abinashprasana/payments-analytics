@@ -2,6 +2,3 @@
 
 # Deterministic synthetic-data generation.
 faker==40.19.1
-
-# Static Plotly image exports; not required by the Streamlit deployment.
-kaleido==1.3.0

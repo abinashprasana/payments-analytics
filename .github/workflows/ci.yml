@@ -15,9 +15,9 @@ concurrency:
 
 jobs:
   python:
-    name: Python tests and project-data drift
+    name: Python contracts and generated-data drift
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -38,19 +38,62 @@ jobs:
         run: python -m unittest discover -s tests -p "test_*.py" -v
 
       - name: Verify generated case-study data
-        run: python scripts/export_site_data.py --check
+        run: python scripts/generate_artifacts.py --check
+
+  postgres-parity:
+    name: DuckDB and PostgreSQL model parity
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: payments_analytics
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d payments_analytics"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: "5432"
+      DB_NAME: payments_analytics
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_CONNECT_TIMEOUT: "5"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install runtime dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Compare canonical models on both engines
+        run: python scripts/check_sql_parity.py
 
   site:
-    name: Case-study lint, types, and build
+    name: Case-study lint, types, and static export
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
       run:
         working-directory: site
     env:
-      NEXT_PUBLIC_SITE_URL: https://example.com
-      NEXT_PUBLIC_LAB_URL: https://example.com/lab
-      NEXT_PUBLIC_REPOSITORY_URL: https://github.com/example/payment-observatory
+      NEXT_PUBLIC_BASE_PATH: /payments-analytics
+      NEXT_PUBLIC_SITE_URL: https://abinashprasana.github.io/payments-analytics/
+      NEXT_PUBLIC_WORKBENCH_URL: https://abinashprasana-payments-analytics-dashboardapp-mrsz1m.streamlit.app/
+      NEXT_PUBLIC_REPOSITORY_URL: https://github.com/abinashprasana/payments-analytics
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -71,26 +114,28 @@ jobs:
       - name: Type-check site
         run: npm run typecheck
 
-      - name: Build site
+      - name: Build static export
         run: npm run build
 
   browser-smoke:
     name: Browser smoke at four responsive widths
     needs:
       - python
+      - postgres-parity
       - site
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     defaults:
       run:
         working-directory: site
     env:
-      CASE_STUDY_BASE_URL: http://127.0.0.1:3000
-      LAB_BASE_URL: http://127.0.0.1:8501
-      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
-      NEXT_PUBLIC_LAB_URL: http://127.0.0.1:8501
-      NEXT_PUBLIC_REPOSITORY_URL: https://github.com/example/payment-observatory
-      CASE_STUDY_URL: http://127.0.0.1:3000
+      CASE_STUDY_BASE_URL: http://127.0.0.1:3000/payments-analytics
+      WORKBENCH_BASE_URL: http://127.0.0.1:8501
+      NEXT_PUBLIC_BASE_PATH: /payments-analytics
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000/payments-analytics/
+      NEXT_PUBLIC_WORKBENCH_URL: http://127.0.0.1:8501/
+      NEXT_PUBLIC_REPOSITORY_URL: https://github.com/abinashprasana/payments-analytics
+      CASE_STUDY_URL: http://127.0.0.1:3000/payments-analytics/
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -109,7 +154,7 @@ jobs:
           cache: npm
           cache-dependency-path: site/package-lock.json
 
-      - name: Install dashboard dependencies
+      - name: Install workbench dependencies
         run: python -m pip install -r ../requirements.txt
 
       - name: Install site dependencies
@@ -145,10 +190,11 @@ jobs:
       run:
         working-directory: site
     env:
-      CASE_STUDY_BASE_URL: http://127.0.0.1:3000
-      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
-      NEXT_PUBLIC_LAB_URL: http://127.0.0.1:8501
-      NEXT_PUBLIC_REPOSITORY_URL: https://github.com/example/payment-observatory
+      CASE_STUDY_BASE_URL: http://127.0.0.1:3000/payments-analytics/
+      NEXT_PUBLIC_BASE_PATH: /payments-analytics
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000/payments-analytics/
+      NEXT_PUBLIC_WORKBENCH_URL: http://127.0.0.1:8501/
+      NEXT_PUBLIC_REPOSITORY_URL: https://github.com/abinashprasana/payments-analytics
     steps:
       - name: Check out repository
         uses: actions/checkout@v7

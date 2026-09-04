@@ -1,169 +1,55 @@
-# Payment Observatory design system
+# Payments Analytics v2 design contract
 
-This file is the shared visual contract and the detailed contract for the interactive lab. The product has two deliberately different dark surfaces: a midnight-slate editorial case study for orientation and evidence, and a deeper carbon operational lab for exploration. They share a name, mark, factual language, data contract, and semantic outcomes without pretending to be one continuous application screen.
+Payments Analytics v2 has two complementary surfaces with one data contract:
 
-The editorial rules live in `site/DESIGN.md`. Changes should extend the appropriate surface rather than blend their palettes or introduce a third style language.
+- **The Settlement Gap** is an authored, editorial case study that explains one SQL investigation.
+- **Settlement Operations Workbench** is a compact product surface for daily-close triage and payment tracing.
 
-## Two-surface model
+They share metric definitions, scenario IDs, dataset metadata, query IDs, status language, and deep links. They do not repeat each other's navigation or charts.
 
-| Property | Editorial case study | Interactive lab |
-| --- | --- | --- |
-| Primary task | Explain the system and establish evidence | Explore and compare the analytical views |
-| Canvas | Midnight mineral slate, `#141C22` | Carbon black, `#050607` |
-| Density | 4/10 | 7/10 |
-| Motion | 5/10, limited to navigation and SVG trace | 4/10 after the hero |
-| Depth | Contained real screenshots and flat diagrams | One 2.5D transaction reactor |
-| Primary URL role | Portfolio and review entry point | Secondary interactive lab |
+## Design read
 
-### Cross-surface locks
+The audience is data analyst and BI hiring managers. The visual direction is a refinement of the existing mineral-slate identity: technically credible, calm, specific, and evidence-led. The case study uses variance 6/10, motion 3/10, and density 5/10. The repeated-use workbench is denser and more conventional by design.
 
-- Keep the Payment Observatory name, logo, entity names, relationship meanings, dataset window, and public numerical claims consistent.
-- Generate public claims from `site/src/data/project-data.json`; do not transcribe or round new claims by hand.
-- Keep outcome meaning stable even when the editorial and operational palettes use different shades: settled is green, delayed is amber, review is coral, and retention is violet.
-- Pair every status colour with text, an icon, or both. Colour cannot be the only carrier of meaning.
-- Keep both cross-links visible: “Open interactive lab” in the case study and “Read case study” in the lab.
-- The case study may show the reactor only as a static real capture. The single live WebGL context belongs to the lab.
-- Both surfaces use locally hosted fonts and assets. No font CDN, analytics script, or second WebGL runtime is permitted.
+## Shared foundations
 
-## Product character
+- Space follows an 8px rhythm, with compact controls allowed at 4px increments.
+- One cool cobalt/cyan accent system identifies links and selection; mint means reconciled, amber means late or attention, and coral means mismatch or missing evidence.
+- Surfaces use tinted off-black and off-white values rather than pure black or white.
+- Cards exist only when they group a real unit such as a metric contract, close, queue record, or trace stage. Avoid cards nested inside cards.
+- Use one radius system: 8–10px controls, 14–18px panels, pills only for compact status tags.
+- Text and icons must carry every status meaning; colour is never the sole signal.
+- Local fonts and assets only. No tracking scripts, remote font CDNs, paid assets, WebGL runtime, particles, fake application screenshots, or decorative 3D charts.
 
-Payment Observatory is an operational payments interface. It should feel precise, calm and technically credible. The observatory metaphor appears through measured routes, instrument labels, narrow edge light and controlled depth. It should never become a science-fiction illustration.
+## Case study
 
-The hero, payment lifecycle rail, transaction reactor and payment orrery logo are stable product anchors. Changes elsewhere should not rebuild or restyle them unless the task specifically targets one of those areas.
+- Treat the page as a long-form investigation, not a dashboard catalogue.
+- Keep the stakeholder answer and primary actions in the initial viewport.
+- Use readable prose measures, asymmetric evidence layouts, flat relational diagrams, real SQL excerpts, and generated result tables.
+- At most one real workbench preview may appear.
+- Every displayed number, chart series, result row, SQL excerpt, query ID, scenario label, dataset version, and limitation comes from `CaseStudyDataV2`.
+- Section motion is limited to purposeful opacity/transform reveal and must become static under `prefers-reduced-motion`.
+- The layout collapses to one column at narrow widths without turning evidence tables into unreadable screenshots.
 
-## Canonical tokens
+## Workbench
 
-### Colour
+- Follow a 90-second task path: identify an unhealthy currency close, filter exceptions, open one payment, understand the SQL rule, export evidence.
+- Stable views are `close`, `exceptions`, `trace`, and `catalog`.
+- Keep navigation, scenario, currency, and as-of context continuously visible without consuming the page with a decorative hero.
+- Use a compact HTML lifecycle diagram only where it clarifies transaction → term → settlement → exception lineage.
+- Tables prioritize sticky headers, scan-friendly numeric alignment, keyboard access, explicit empty states, and native download behavior.
+- Review status, notes, and resolution actions are visibly marked “session only” and never imply a source write.
 
-| Token | Value | Use |
-| --- | --- | --- |
-| Canvas | `#050607` | Page background |
-| Canvas soft | `#080A0D` | Background variation |
-| Surface | `#0C0F13` | Standard panels |
-| Raised surface | `#11151B` | Inputs and elevated controls |
-| Ink | `#F1F3EF` | Primary text |
-| Muted | `#8D99A5` | Supporting text |
-| Cobalt | `#4E72FF` | Primary action and inbound signal |
-| Cyan | `#68DCFF` | Transaction and general information |
-| Mint | `#8AF6C7` | Completed and settled outcomes |
-| Amber | `#F5BB62` | Delay and nominal value |
-| Coral | `#FF756F` | Review and unresolved outcomes |
-| Violet | `#A58CFF` | Cohort analysis only |
+## Copy and evidence
 
-Use thin translucent borders rather than bright outlines. Broad neon glows, rainbow gradients and unrelated accent colours do not belong in the product.
+- Prefer payment, gross, expected fee, recorded fee, net settlement, due date, exception, and source snapshot.
+- Never call mixed-currency totals revenue, gross spend customer lifetime value, or a random flag confirmed fraud.
+- Always state “Synthetic demo snapshot,” dataset version, as-of date, runtime mode, and commit SHA.
+- Never imply real-time operations, predictive fraud, compliance assurance, customer impact, or real incidents.
 
-### Type
+## Accessibility and quality bar
 
-- Display: locally hosted Space Grotesk, weights 480–560.
-- Interface: Streamlit's bundled Source Sans, with Segoe UI as fallback.
-- Technical labels: Source Code Pro or a local monospace fallback.
-- Headings use sentence case and no terminal punctuation.
-- Numerical readouts use tabular-looking spacing and short factual labels.
-
-### Shape and spacing
-
-- Spacing follows an 8px base rhythm, with 5–6px used only inside compact controls.
-- Small radius: 8–10px.
-- Panel radius: 13–18px.
-- Hero radius: 26px.
-- Use one main border and one stronger focus border. Do not invent local border colours.
-- Prefer negative space to extra dividers.
-
-### Depth
-
-- Standard cards use a dark matte surface and a narrow top or side light.
-- Large analytical panels may use a soft shadow for separation.
-- Only interactive diagrams and primary KPI cards may move in depth.
-- Glass blur is limited to the application shell. Data cards remain opaque enough to read quickly.
-
-### Motion
-
-| Token | Duration | Use |
-| --- | --- | --- |
-| Snap | 120ms | Press and focus feedback |
-| UI | 190–220ms | Control and selection changes |
-| Reveal | 460–520ms | One-time section entrances |
-| Route | 850–950ms | One measured connection between lifecycle stages |
-| System trace | About 7.55s | One complete customer-to-outcome sequence |
-
-The hero owns ambient motion. Everything below it moves only when revealed, focused, selected or updated. The complete system trace plays once per browser session and can be replayed from the hero. Reduced motion removes route travel, tilt, counting and large transforms while keeping state changes clear.
-
-### System trace storyboard
-
-1. The calibration frame and perspective grid resolve.
-2. One signal follows Customers to Accounts and then enters Transactions.
-3. The transaction reactor compresses briefly while the ledger identifies the event spine.
-4. The signal visits Merchants, Settlements and Fraud flags in sequence. Each route uses its established colour and factual relationship text.
-5. The progress instrument completes and the hero returns to its quiet idle state.
-
-The desktop sequence lasts about 7.55 seconds. Mobile uses the same order as a vertical focus sequence without WebGL or route travel. Reduced-motion and data-saving modes use the shorter focus sequence. Leaving the hero or hiding the browser pauses the sequence; returning does not restart it automatically.
-
-### Responsive behavior
-
-- At 960px and above, the lifecycle uses the full observatory plane and reactor.
-- Between 680px and 959px, the same three-column structure remains, with reduced reactor detail and no pointer tilt.
-- Below 680px, the lifecycle becomes a vertical transaction trace. Relationship text stays outside the route area.
-- The five-view navigation begins horizontal overflow handling at 1120px, before labels can collide.
-
-## Component rules
-
-### Product shell
-
-Keep the payment orrery, product name, observed window, entity count and source state legible at every width. Do not repeat the logo inside charts or cards.
-
-### Navigation
-
-The five analytical views use one numbered rail. The selected view has a restrained cobalt-to-cyan signal; inactive views remain quiet. Horizontal scrolling is acceptable on narrow screens.
-
-### Operational scope
-
-The default state is a compact summary of the applied date, currencies, categories and comparison mode. Editing expands inline. Applying or resetting is explicit; changing a draft control must not silently alter the analysis.
-
-### Metrics
-
-The Overview uses the asymmetric KPI bento. Merchant, risk and retention views use the shallower metric strip. Metric colour signals meaning, not decoration.
-
-### Charts and records
-
-Charts stay two-dimensional. Direct labels, stable category colours and honest units take priority over visual effects. Detailed records remain available through accessible expanders and tables.
-
-### Empty and failure states
-
-Explain what the current scope removed and provide a clear reset path. A failed optional component must reveal the native Streamlit fallback without blocking data or charts.
-
-## Copy rules
-
-- Use operational language: payment, settlement, review, cohort, record and source.
-- State synthetic-data and mixed-currency limitations accurately, but keep them inside concise methodology or data notes.
-- Do not claim real-time, predictive or converted values.
-- Avoid student, portfolio, demonstration, CV or recruitment language.
-- Keep headings short and natural. Avoid marketing filler and inflated claims.
-
-## Do not add
-
-- Additional WebGL canvases, particles, 3D charts or decorative models.
-- Remote fonts, CDNs, analytics scripts or paid visual services.
-- Custom cursors, scroll hijacking or continuous card motion.
-- A second component library or a parallel colour and spacing system.
-- Raw visual experiments in stable product areas without a screenshot comparison.
-
-## Component locks
-
-- Keep the payment orrery logo, product name and hero copy unchanged unless product positioning changes.
-- Keep one OGL context behind Transactions. A graphical failure must leave the HTML nodes, SVG routes and relationship ledger intact.
-- Keep colour meaning stable: cobalt for inbound flow, cyan for the transaction spine, mint for settlement, coral for review and violet for retention.
-- Keep charts and tables two-dimensional. Depth belongs to the hero, KPI cards and interactive relationship maps.
-
-## Art-direction prompt
-
-> Design a production payments observatory on a carbon-black canvas. Centre the experience on one measured 2.5D transaction reactor connected to customer, account, merchant, settlement and review records. Use narrow cobalt and cyan signal routes, mint settlement light and coral review light. Surfaces are matte graphite with crisp hairlines, restrained depth and precise technical labels. Motion follows the payment lifecycle once, then becomes quiet. Charts remain flat, readable and evidence-led. Avoid particles, glass-heavy cards, 3D charts, marketing claims and generic neon decoration.
-
-## Review checklist
-
-Before a UI change is complete:
-
-1. Run the analytical and UI-integrity tests.
-2. Check 1440, 1024, 768 and 390px widths.
-3. Test keyboard focus, Escape behaviour and reduced motion.
-4. Compare screenshots with the last approved desktop and mobile captures.
-5. Confirm there are no new external requests, browser errors or data changes.
+- WCAG AA contrast, visible focus, semantic heading order, ≥44px primary touch targets, reduced-motion support, and text/table alternatives for complex charts.
+- Verify 1440, 1024, 768, and 390px widths, keyboard-only use, empty filters, invalid deep links, long exception labels, and Streamlit wake states.
+- Motion must explain hierarchy, feedback, or state change. No bounce or elastic easing.
+- Preserve the existing Lighthouse budgets and reserve dimensions for images to avoid layout shift.

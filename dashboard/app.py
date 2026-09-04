@@ -1,1219 +1,1216 @@
-"""Interactive payments intelligence dashboard."""
+"""Settlement Operations Workbench.
+
+The application is a task-oriented reader for the repository's canonical SQL
+marts. Business rules stay in SQL; Pandas only formats and presents returned
+rows.
+"""
 
 from __future__ import annotations
 
 import os
 import sys
-from dataclasses import dataclass
 from datetime import date
-from typing import Mapping
+from html import escape
+from pathlib import Path
+from typing import Any, Mapping
+from urllib.parse import urlencode
 
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
 import streamlit as st
 
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RAW_DATA_DIR = os.path.join(PROJECT_DIR, "data", "raw")
-BRAND_ICON = os.path.join(
-    PROJECT_DIR,
-    "dashboard",
-    "static",
-    "brand",
-    "payment-observatory-mark-compact.svg",
-)
-if PROJECT_DIR not in sys.path:
-    sys.path.append(PROJECT_DIR)
+PROJECT_DIR = Path(__file__).resolve().parents[1]
+if str(PROJECT_DIR) not in sys.path:
+    sys.path.insert(0, str(PROJECT_DIR))
 
-from dashboard.analytics import (  # noqa: E402
-    DashboardFilters,
-    apply_filters,
-    cohort_retention,
-    dataset_scope,
-    enrich_transactions,
-    filtered_flags,
-    filtered_settlements,
-    merchant_performance,
-    monthly_trends,
-    normalise_tables,
-    overview_metrics,
-    previous_period_filters,
-    risk_by_category,
-    risk_metrics,
-    risk_review_flow,
-    settlement_metrics,
-    settlement_statuses,
-    transaction_statuses,
-)
-from dashboard.ui import (  # noqa: E402
-    apply_theme,
-    data_note,
-    mount_page_motion,
-    render_data_model,
-    render_empty_state,
-    render_filter_controls,
-    render_filter_note,
-    render_footer,
-    render_hero,
-    render_kpi_grid,
-    render_measure_switch,
-    render_metric_strip,
-    render_method_cards,
-    render_navigation,
-    render_settlement_corridor,
-    render_status_rail,
-    render_topbar,
-    section_header,
+from dashboard.workbench_ui import (  # noqa: E402
+    DEFAULT_VIEW,
+    PRIMARY_REASON_ORDER,
+    VALID_VIEWS,
+    VIEW_LABELS,
+    apply_workbench_theme,
+    default_scenario,
+    display_frame,
+    first_present,
+    format_count,
+    format_minor_units,
+    format_percent,
+    normalise_reasons,
+    parse_date,
+    reason_label,
+    reason_tags,
+    render_disclosure,
+    render_header,
+    render_kpi,
+    render_lifecycle,
+    render_section,
+    scalar,
+    scenario_options,
+    trace_money_table,
 )
 
 try:
-    from scripts.db_connection import get_read_engine
+    from scripts.analytics_engine import AnalyticsEngine
 
-    DB_IMPORT_OK = True
-except Exception:
-    DB_IMPORT_OK = False
+    ENGINE_IMPORT_ERROR: Exception | None = None
+except Exception as exc:  # pragma: no cover - actionable runtime state
+    AnalyticsEngine = None  # type: ignore[assignment,misc]
+    ENGINE_IMPORT_ERROR = exc
 
 
-st.set_page_config(
-    page_title="Payment Observatory | Payments Intelligence",
-    page_icon=BRAND_ICON,
-    layout="wide",
-    initial_sidebar_state="collapsed",
+BRAND_ICON = str(
+    PROJECT_DIR
+    / "dashboard"
+    / "static"
+    / "brand"
+    / "payment-observatory-mark-compact.svg"
 )
-
-
-INK = "#F1F3EF"
-MUTED = "#8D99A5"
-CYAN = "#68DCFF"
-TEAL = "#8AF6C7"
-AMBER = "#F5BB62"
-CORAL = "#FF756F"
-VIOLET = "#A58CFF"
-GRID = "rgba(203, 219, 233, 0.09)"
-PLOT_CONFIG = {
-    "displayModeBar": False,
-    "responsive": True,
-}
-CATEGORY_COLORS = {
-    "Retail": "#68DCFF",
-    "Food & Beverage": "#8AF6C7",
-    "Travel": "#A58CFF",
-    "Entertainment": "#F5BB62",
-    "Healthcare": "#7EA4FF",
-    "Utilities": "#71C8C8",
-    "Services": "#C083FF",
-    "Electronics": "#FF8F6B",
-}
-VALID_VIEWS = ("overview", "merchant", "risk", "retention", "model")
-DEFAULT_VIEW = VALID_VIEWS[0]
 CASE_STUDY_URL = os.getenv(
     "CASE_STUDY_URL",
-    "https://payment-observatory.vercel.app/",
+    "https://abinashprasana.github.io/payments-analytics/",
+).strip()
+REPOSITORY_URL = os.getenv(
+    "REPOSITORY_URL",
+    "https://github.com/abinashprasana/payments-analytics",
 ).strip()
 
+st.set_page_config(
+    page_title="Settlement Operations Workbench",
+    page_icon=BRAND_ICON,
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+apply_workbench_theme()
 
-@dataclass(frozen=True)
-class DashboardUIState:
-    """Persistent presentation state shared by the operational views."""
 
-    active_view: str
-    filters: DashboardFilters
-    trend_mode: str = "Transaction count"
+def query_value(name: str, default: str = "") -> str:
+    """Read one query-string value across Streamlit representations."""
+
+    value = st.query_params.get(name, default)
+    if isinstance(value, list):
+        value = value[-1] if value else default
+    return str(value).strip()
 
 
-def chart_layout(title: str, height: int = 430) -> dict[str, object]:
-    return {
-        "title": {
-            "text": title,
-            "font": {"size": 16, "color": INK},
-            "x": 0.025,
-            "xanchor": "left",
-        },
-        "height": height,
-        "margin": {"l": 42, "r": 24, "t": 64, "b": 42},
-        "paper_bgcolor": "rgba(0,0,0,0)",
-        "plot_bgcolor": "rgba(0,0,0,0)",
-        "font": {
-            "family": "Source Sans, Segoe UI, sans-serif",
-            "color": MUTED,
-            "size": 12,
-        },
-        "hoverlabel": {
-            "bgcolor": "#0D1116",
-            "bordercolor": "rgba(203,219,233,0.22)",
-            "font": {
-                "color": INK,
-                "family": "Source Sans, Segoe UI, sans-serif",
-                "size": 12,
-            },
-        },
-        "legend": {
-            "orientation": "h",
-            "yanchor": "bottom",
-            "y": 1.02,
-            "xanchor": "right",
-            "x": 1,
-        },
+def update_location(**changes: str | None) -> None:
+    """Update only the documented workbench deep-link parameters."""
+
+    for name, value in changes.items():
+        if name not in {"view", "scenario", "payment_id"}:
+            continue
+        if value is None or value == "":
+            if name in st.query_params:
+                del st.query_params[name]
+        else:
+            st.query_params[name] = value
+
+
+def navigate_to_view(view: str, payment_id: str | None = None) -> None:
+    """Keep the navigation widget and documented deep link in sync."""
+
+    st.session_state["workbench_navigation"] = view
+    update_location(view=view, payment_id=payment_id)
+
+
+def navigation_changed() -> None:
+    """Mirror a user-selected radio view into the deep-link contract."""
+
+    view = str(st.session_state.get("workbench_navigation", DEFAULT_VIEW))
+    payment_id = query_value("payment_id") if view == "trace" else None
+    update_location(view=view, payment_id=payment_id)
+
+
+def scenario_changed() -> None:
+    """Make the scenario selector update the documented deep link."""
+
+    scenario = str(st.session_state.get("workbench_scenario", ""))
+    update_location(scenario=scenario, payment_id=None)
+
+
+@st.cache_resource(show_spinner=False)
+def get_engine() -> Any:
+    """Build the cached in-memory snapshot and canonical SQL marts."""
+
+    if AnalyticsEngine is None:
+        raise RuntimeError("The canonical analytics engine could not be imported.")
+    return AnalyticsEngine(repo_root=None)
+
+
+def engine_metadata(engine: Any) -> dict[str, Any]:
+    """Read non-analytical build metadata exposed by the engine."""
+
+    metadata: dict[str, Any] = {}
+    for attribute_name in ("build_metadata", "metadata"):
+        attribute = getattr(engine, attribute_name, None)
+        if callable(attribute):
+            try:
+                attribute = attribute()
+            except Exception:
+                attribute = None
+        if isinstance(attribute, Mapping):
+            metadata.update(attribute)
+
+    metadata.setdefault("dataset_version", os.getenv("DATASET_VERSION", "v2"))
+    metadata.setdefault(
+        "build_sha", os.getenv("GITHUB_SHA", os.getenv("BUILD_SHA", "local"))
+    )
+    metadata.setdefault("runtime_mode", "DuckDB · in-memory repository snapshot")
+    return metadata
+
+
+def run_query(
+    engine: Any,
+    query_id: str,
+    params: Mapping[str, Any] | None = None,
+    *,
+    show_error: bool = True,
+) -> pd.DataFrame:
+    """Execute a registered query and expose a safe, useful error state."""
+
+    clean_params = {
+        key: value
+        for key, value in dict(params or {}).items()
+        if value is not None and value != ""
     }
-
-
-def style_axes(figure: go.Figure) -> go.Figure:
-    figure.update_xaxes(
-        gridcolor=GRID,
-        zeroline=False,
-        linecolor=GRID,
-        tickfont={"color": MUTED, "size": 11},
-        title_font={"color": MUTED, "size": 12},
-    )
-    figure.update_yaxes(
-        gridcolor=GRID,
-        zeroline=False,
-        linecolor=GRID,
-        tickfont={"color": MUTED, "size": 11},
-        title_font={"color": MUTED, "size": 12},
-    )
-    return figure
-
-
-@st.cache_data(show_spinner=False)
-def load_csvs() -> tuple[pd.DataFrame, ...]:
-    tables = (
-        pd.read_csv(os.path.join(RAW_DATA_DIR, "customers.csv")),
-        pd.read_csv(os.path.join(RAW_DATA_DIR, "accounts.csv")),
-        pd.read_csv(os.path.join(RAW_DATA_DIR, "merchants.csv")),
-        pd.read_csv(os.path.join(RAW_DATA_DIR, "transactions.csv")),
-        pd.read_csv(os.path.join(RAW_DATA_DIR, "settlements.csv")),
-        pd.read_csv(os.path.join(RAW_DATA_DIR, "fraud_flags.csv")),
-    )
-    return normalise_tables(*tables)
-
-
-def load_database_tables() -> tuple[pd.DataFrame, ...]:
-    engine = get_read_engine()
     try:
-        table_names = [
-            "customers",
-            "accounts",
-            "merchants",
-            "transactions",
-            "settlements",
-            "fraud_flags",
-        ]
-        tables = tuple(
-            pd.read_sql_query(f"SELECT * FROM {table_name};", engine)
-            for table_name in table_names
-        )
-    finally:
-        engine.dispose()
-    return normalise_tables(*tables)
+        result = engine.query(query_id, clean_params)
+    except Exception as exc:  # pragma: no cover - environment-dependent
+        if show_error:
+            st.error(
+                f"The `{query_id}` SQL result is unavailable. "
+                "The source snapshot was not changed."
+            )
+            with st.expander("Technical detail"):
+                st.code(f"{type(exc).__name__}: {exc}", language="text")
+        return pd.DataFrame()
+    if not isinstance(result, pd.DataFrame):
+        if show_error:
+            st.error(f"The `{query_id}` query returned an unsupported result type.")
+        return pd.DataFrame()
+    return result.copy()
 
 
-@st.cache_data(ttl=600, show_spinner=False)
-def load_payment_data() -> tuple[pd.DataFrame, ...]:
-    if DB_IMPORT_OK:
-        try:
-            return (*load_database_tables(), True)
-        except Exception:
-            pass
-    return (*load_csvs(), False)
-
-
-def format_date_window(start: date, end: date) -> str:
-    return f"{start.strftime('%d %b %Y')} to {end.strftime('%d %b %Y')}"
-
-
-def canonical_query_view() -> str:
-    """Return a supported deep-link view and repair missing or invalid URLs."""
-
-    raw_view = st.query_params.get("view", DEFAULT_VIEW)
-    if isinstance(raw_view, list):
-        raw_view = raw_view[-1] if raw_view else DEFAULT_VIEW
-    selected = str(raw_view).strip().lower()
-    if selected not in VALID_VIEWS:
-        selected = DEFAULT_VIEW
-    if "view" not in st.query_params or raw_view != selected:
-        st.query_params["view"] = selected
+def canonical_view() -> str:
+    requested = query_value("view", DEFAULT_VIEW).lower()
+    selected = requested if requested in VALID_VIEWS else DEFAULT_VIEW
+    if requested != selected or query_value("view") != selected:
+        update_location(view=selected, payment_id=None)
     return selected
 
 
-def compact_amount(value: float) -> tuple[float, int, str]:
-    magnitude = abs(value)
-    if magnitude >= 1_000_000_000:
-        return value / 1_000_000_000, 2, "B"
-    if magnitude >= 1_000_000:
-        return value / 1_000_000, 2, "M"
-    if magnitude >= 1_000:
-        return value / 1_000, 1, "K"
-    return value, 2, ""
-
-
-def display_amount(value: float, currency_prefix: str = "") -> str:
-    scaled, decimals, suffix = compact_amount(value)
-    return f"{currency_prefix}{scaled:,.{decimals}f}{suffix}"
-
-
-def comparison_badge(
-    current: float,
-    previous: float | None,
-    *,
-    percentage_points: bool = False,
-) -> tuple[str, str]:
-    if previous is None:
-        return "N/A · prior period unavailable", ""
-    if percentage_points:
-        change = current - previous
-        text = f"{change:+.2f} pp vs previous"
-    elif previous == 0:
-        return "N/A · previous value was zero", ""
-    else:
-        change = (current - previous) / abs(previous) * 100
-        text = f"{change:+.1f}% vs previous"
-    tone = "up" if change > 0 else "down" if change < 0 else ""
-    return text, tone
-
-
-def reset_dashboard_filters(
-    dataset_start: date,
-    dataset_end: date,
-    currencies: tuple[str, ...],
-    categories: tuple[str, ...],
-) -> None:
-    payload = {
-        "startDate": dataset_start.isoformat(),
-        "endDate": dataset_end.isoformat(),
-        "currencies": list(currencies),
-        "categories": list(categories),
-        "comparePrevious": False,
-    }
-    st.session_state["pay_filter_state"] = payload
-    component_state = st.session_state.get("pay_filter_deck")
-    if isinstance(component_state, dict):
-        component_state["filters"] = payload
-
-
-def build_kpi_cards(
-    metrics: Mapping[str, float],
-    previous: Mapping[str, float] | None,
-    filters: DashboardFilters,
-) -> list[dict[str, object]]:
-    one_currency = len(filters.currencies) == 1
-    currency_prefix = f"{filters.currencies[0]} " if one_currency else ""
-    scaled_value, value_decimals, value_suffix = compact_amount(
-        metrics["completed_value"]
+def frame_date_bounds(frame: pd.DataFrame) -> tuple[date | None, date | None]:
+    date_column = next(
+        (
+            name
+            for name in ("close_date", "transaction_date", "date")
+            if name in frame.columns
+        ),
+        None,
     )
+    if date_column is None or frame.empty:
+        return None, None
+    values = pd.to_datetime(frame[date_column], errors="coerce").dropna()
+    if values.empty:
+        return None, None
+    return values.min().date(), values.max().date()
 
-    comparisons: dict[str, tuple[str, str]] = {}
-    if filters.compare_previous_period:
-        for key in ["transaction_count", "active_customers", "completed_value"]:
-            comparisons[key] = comparison_badge(
-                metrics[key],
-                previous[key] if previous else None,
-            )
-        comparisons["completion_rate"] = comparison_badge(
-            metrics["completion_rate"],
-            previous["completion_rate"] if previous else None,
-            percentage_points=True,
+
+def frame_currencies(frame: pd.DataFrame) -> list[str]:
+    if "currency" not in frame.columns:
+        return []
+    return sorted(frame["currency"].dropna().astype(str).unique().tolist())
+
+
+def filter_params(
+    scenario: str,
+    currency: str | None,
+    start_date: date | None,
+    end_date: date | None,
+    *,
+    as_of_date: date | None = None,
+) -> dict[str, Any]:
+    return {
+        "scenario": scenario,
+        "currency": currency,
+        "start_date": start_date.isoformat() if start_date else None,
+        "end_date": end_date.isoformat() if end_date else None,
+        "as_of_date": as_of_date.isoformat() if as_of_date else None,
+    }
+
+
+def latest_close_row(frame: pd.DataFrame) -> dict[str, Any]:
+    if frame.empty:
+        return {}
+    if "close_date" in frame.columns:
+        ordered = frame.assign(
+            _display_date=pd.to_datetime(frame["close_date"], errors="coerce")
+        ).sort_values("_display_date", kind="stable")
+        return ordered.drop(columns="_display_date").iloc[-1].to_dict()
+    return frame.iloc[-1].to_dict()
+
+
+def render_close_view(
+    engine: Any,
+    params: Mapping[str, Any],
+    selected_currency: str | None,
+) -> None:
+    render_section(
+        "Close health by currency",
+        "Start with the unhealthy processing date. Coverage, overdue value, fee "
+        "delta, and reasons all come from mart_daily_close.",
+        "Step 1 · Identify",
+    )
+    close_frame = run_query(engine, "close_summary", params)
+    if close_frame.empty:
+        st.info("No daily-close rows match this scenario and scope.")
+        return
+
+    if "close_date" in close_frame.columns:
+        close_frame = close_frame.sort_values("close_date", kind="stable")
+    row = latest_close_row(close_frame)
+    currency = str(first_present(row, ("currency",), selected_currency or ""))
+    close_date_value = first_present(row, ("close_date", "date"), "selected scope")
+    parsed_close_date = parse_date(close_date_value)
+    close_date = (
+        parsed_close_date.isoformat() if parsed_close_date else str(close_date_value)
+    )
+    exception_count = int(first_present(row, ("exception_count",), 0))
+    matched_count = first_present(row, ("matched_count", "reconciled_count"), 0)
+    eligible_count = first_present(row, ("eligible_count", "purchase_count"), 0)
+    coverage = first_present(
+        row, ("coverage_rate", "settlement_coverage_rate"), 0
+    )
+    overdue = first_present(
+        row, ("overdue_minor_units", "overdue_value_minor_units"), 0
+    )
+    fee_delta = first_present(row, ("fee_delta_minor_units",), 0)
+
+    st.caption(f"Closing row: {close_date} · {currency or 'currency not returned'}")
+    columns = st.columns(4)
+    with columns[0]:
+        render_kpi(
+            "Settlement coverage",
+            format_percent(coverage),
+            f"{format_count(matched_count)} of {format_count(eligible_count)} eligible purchases",
+            "good" if exception_count == 0 else "warning",
+        )
+    with columns[1]:
+        render_kpi(
+            "Exceptions",
+            format_count(exception_count),
+            "Payments with one or more SQL exception flags",
+            "good" if exception_count == 0 else "critical",
+        )
+    with columns[2]:
+        render_kpi(
+            "Overdue value",
+            format_minor_units(overdue, currency),
+            "Expected gross value past the applicable SLA",
+            "good" if int(overdue or 0) == 0 else "critical",
+        )
+    with columns[3]:
+        render_kpi(
+            "Fee delta",
+            format_minor_units(fee_delta, currency),
+            "Recorded fee minus the effective merchant term",
+            "good" if int(fee_delta or 0) == 0 else "warning",
         )
 
-    value_label = (
-        f"Completed value ({filters.currencies[0]})"
-        if one_currency
-        else "Nominal completed value"
-    )
-    value_note = (
-        "One source currency in view"
-        if one_currency
-        else "Selected currencies are not FX-converted"
-    )
-
-    definitions = [
-        {
-            "key": "transaction_count",
-            "label": "Transactions in view",
-            "number": metrics["transaction_count"],
-            "decimals": 0,
-            "prefix": "",
-            "suffix": "",
-            "value": f"{int(metrics['transaction_count']):,}",
-            "note": "All statuses within the active filters",
-            "tone": "cyan",
-        },
-        {
-            "key": "completion_rate",
-            "label": "Completion rate",
-            "number": metrics["completion_rate"],
-            "decimals": 2,
-            "prefix": "",
-            "suffix": "%",
-            "value": f"{metrics['completion_rate']:.2f}%",
-            "note": f"{int(metrics['completed_count']):,} completed payments",
-            "tone": "teal",
-        },
-        {
-            "key": "active_customers",
-            "label": "Active customers",
-            "number": metrics["active_customers"],
-            "decimals": 0,
-            "prefix": "",
-            "suffix": "",
-            "value": f"{int(metrics['active_customers']):,}",
-            "note": "Customers with a completed payment",
-            "tone": "violet",
-        },
-        {
-            "key": "completed_value",
-            "label": value_label,
-            "number": scaled_value,
-            "decimals": value_decimals,
-            "prefix": currency_prefix,
-            "suffix": value_suffix,
-            "value": display_amount(
-                metrics["completed_value"],
-                currency_prefix=currency_prefix,
-            ),
-            "note": value_note,
-            "tone": "amber",
-        },
-    ]
-    for definition in definitions:
-        comparison, tone = comparisons.get(definition["key"], ("", ""))
-        definition["comparison"] = comparison
-        definition["comparison_tone"] = tone
-    return definitions
-
-
-apply_theme()
-
-with st.spinner("Loading payment records"):
-    (
-        customers,
-        accounts,
-        merchants,
-        transactions,
-        settlements,
-        fraud_flags,
-        using_database,
-    ) = load_payment_data()
-
-scope = dataset_scope(
-    customers,
-    accounts,
-    merchants,
-    transactions,
-    settlements,
-    fraud_flags,
-)
-dataset_start = scope["first_transaction_date"]
-dataset_end = scope["last_transaction_date"]
-source_label = (
-    "PostgreSQL connected" if using_database else "Repository CSV snapshot"
-)
-first_date_label = pd.Timestamp(dataset_start).strftime("%b %Y")
-last_date_label = pd.Timestamp(dataset_end).strftime("%b %Y")
-
-render_topbar(
-    source_label,
-    first_date_label,
-    last_date_label,
-    case_study_url=CASE_STUDY_URL,
-)
-render_hero(scope, source_label)
-
-enriched_transactions = enrich_transactions(transactions, accounts, merchants)
-all_currencies = tuple(
-    sorted(enriched_transactions["currency"].dropna().astype(str).unique())
-)
-all_categories = tuple(sorted(merchants["category"].dropna().astype(str).unique()))
-
-query_view = canonical_query_view()
-last_query_view = st.session_state.get("pay_last_query_view")
-query_changed = last_query_view is None or query_view != last_query_view
-if query_changed:
-    component_state = st.session_state.get("pay_view_rail")
-    if isinstance(component_state, dict):
-        component_state["view"] = query_view
-navigation_seed = (
-    query_view
-    if query_changed
-    else str(st.session_state.get("pay_active_view", query_view))
-)
-
-sticky_controls = st.container(key="pay_sticky_controls")
-with sticky_controls:
-    active_view = render_navigation(navigation_seed)
-if active_view not in VALID_VIEWS:
-    active_view = DEFAULT_VIEW
-st.session_state["pay_active_view"] = active_view
-st.session_state["pay_last_query_view"] = active_view
-if st.query_params.get("view") != active_view:
-    st.query_params["view"] = active_view
-
-default_filter_state = {
-    "startDate": dataset_start.isoformat(),
-    "endDate": dataset_end.isoformat(),
-    "currencies": list(all_currencies),
-    "categories": list(all_categories),
-    "comparePrevious": False,
-}
-current_filter_state = st.session_state.get(
-    "pay_filter_state",
-    default_filter_state,
-)
-with sticky_controls:
-    control_state = render_filter_controls(
-        dataset_start=dataset_start.isoformat(),
-        dataset_end=dataset_end.isoformat(),
-        currencies=all_currencies,
-        categories=all_categories,
-        current=current_filter_state,
-    )
-
-if control_state is None:
-    with st.form("native_filter_fallback", border=True):
-        filter_columns = st.columns([1.2, 1.0, 1.35, 0.85])
-        with filter_columns[0]:
-            selected_dates = st.date_input(
-                "Transaction dates",
-                value=(dataset_start, dataset_end),
-                min_value=dataset_start,
-                max_value=dataset_end,
-                key="pay_native_date_range",
-            )
-        with filter_columns[1]:
-            selected_currencies = st.multiselect(
-                "Currencies",
-                options=list(all_currencies),
-                default=list(all_currencies),
-                key="pay_native_currencies",
-            )
-        with filter_columns[2]:
-            selected_categories = st.multiselect(
-                "Merchant categories",
-                options=list(all_categories),
-                default=list(all_categories),
-                key="pay_native_categories",
-            )
-        with filter_columns[3]:
-            compare_previous = st.toggle(
-                "Compare previous",
-                value=False,
-                key="pay_native_compare",
-                help="Uses the immediately preceding date range of equal length.",
-            )
-        st.form_submit_button("Apply scope", use_container_width=True)
-    if isinstance(selected_dates, tuple) and len(selected_dates) == 2:
-        selected_start, selected_end = selected_dates
-    elif isinstance(selected_dates, (date, pd.Timestamp)):
-        selected_start = selected_end = selected_dates
+    if exception_count:
+        st.warning(
+            "This close needs investigation. Open Exceptions to isolate the "
+            "payments behind the SQL flags."
+        )
     else:
-        selected_start, selected_end = dataset_start, dataset_end
-else:
-    st.session_state["pay_filter_state"] = control_state
-    selected_start = pd.Timestamp(
-        control_state.get("startDate", dataset_start)
-    ).date()
-    selected_end = pd.Timestamp(
-        control_state.get("endDate", dataset_end)
-    ).date()
-    selected_currencies = list(
-        control_state.get("currencies", all_currencies)
-    )
-    selected_categories = list(
-        control_state.get("categories", all_categories)
-    )
-    compare_previous = bool(
-        control_state.get("comparePrevious", False)
-    )
+        st.success("No exception flags were returned for this closing row.")
 
-filters = DashboardFilters(
-    start_date=pd.Timestamp(selected_start).date(),
-    end_date=pd.Timestamp(selected_end).date(),
-    currencies=tuple(selected_currencies),
-    merchant_categories=tuple(selected_categories),
-    compare_previous_period=bool(compare_previous),
-)
-filtered_transactions = apply_filters(
-    enriched_transactions,
-    filters,
-    all_categories,
-)
-
-filter_explanation = (
-    f"Showing {len(filtered_transactions):,} of {len(transactions):,} transactions "
-    f"for {format_date_window(filters.start_date, filters.end_date)}."
-)
-if set(filters.merchant_categories) != set(all_categories):
-    filter_explanation += (
-        " The merchant category filter excludes transfers because those records "
-        "do not have a merchant."
+    composition_columns = {
+        "missing_count": "Missing",
+        "currency_mismatch_count": "Currency",
+        "amount_mismatch_count": "Amount",
+        "fee_mismatch_count": "Fee",
+        "late_count": "Late",
+        "disputed_count": "Disputed",
+    }
+    composition = pd.DataFrame(
+        {
+            "Reason": [
+                label
+                for column, label in composition_columns.items()
+                if column in row
+            ],
+            "Payments": [
+                int(scalar(row.get(column), 0))
+                for column in composition_columns
+                if column in row
+            ],
+        }
     )
-if len(filters.currencies) != 1:
-    filter_explanation += " Value totals are nominal; currencies are not converted."
-render_filter_note(filter_explanation)
+    history_column, reason_column = st.columns([1.45, 1])
+    with history_column:
+        st.subheader("Daily coverage history")
+        if {"close_date", "coverage_rate"}.issubset(close_frame.columns):
+            history = close_frame[["close_date", "coverage_rate"]].copy()
+            history["close_date"] = pd.to_datetime(
+                history["close_date"], errors="coerce"
+            )
+            values = pd.to_numeric(history["coverage_rate"], errors="coerce")
+            history["coverage_rate"] = values.where(
+                values.abs() > 1, values * 100
+            )
+            st.line_chart(
+                history.set_index("close_date"),
+                y="coverage_rate",
+                y_label="Coverage (%)",
+                x_label="Processing date",
+                color="#73d7f2",
+            )
+        else:
+            st.info("Coverage history is not present in this query result.")
+    with reason_column:
+        st.subheader("Exception composition")
+        if not composition.empty:
+            st.bar_chart(
+                composition.set_index("Reason"),
+                y="Payments",
+                y_label="Payments",
+                x_label="Reason",
+                color="#f2c670",
+            )
+        else:
+            st.info("Exception count columns are not present in this result.")
 
-if filtered_transactions.empty:
-    render_empty_state()
+    with st.expander("Open daily-close evidence table"):
+        st.dataframe(close_frame, width="stretch", hide_index=True)
+    with st.expander("Open metric contract and SQL lineage"):
+        st.markdown(
+            "**Query ID:** `close_summary`  \n"
+            "**Source model:** `mart_daily_close`  \n"
+            "**Grain:** processing date × currency"
+        )
+        st.code(
+            "population = completed merchant purchases\n"
+            "match = settlement present\n"
+            "        AND settlement.currency = payment.currency\n"
+            "        AND abs(gross - settled_amount - processing_fee) <= 0.01\n"
+            "sla_breach = missing past SLA OR actual settlement later than SLA",
+            language="text",
+        )
+
     st.button(
-        "Reset filters",
-        on_click=reset_dashboard_filters,
-        args=(dataset_start, dataset_end, all_currencies, all_categories),
+        "Investigate this close",
+        type="primary",
+        width="stretch",
+        on_click=navigate_to_view,
+        args=("exceptions",),
+        key="investigate_close",
     )
-    render_footer()
-    mount_page_motion()
+
+
+def queue_reason_set(frame: pd.DataFrame) -> list[str]:
+    reasons: set[str] = set()
+    if "exception_reasons" in frame.columns:
+        for value in frame["exception_reasons"].tolist():
+            reasons.update(normalise_reasons(value))
+    elif "primary_reason" in frame.columns:
+        reasons.update(frame["primary_reason"].dropna().astype(str).tolist())
+    order = {reason: index for index, reason in enumerate(PRIMARY_REASON_ORDER)}
+    return sorted(reasons, key=lambda reason: order.get(reason, 99))
+
+
+def session_reviews() -> dict[str, dict[str, str]]:
+    if "settlement_review_state" not in st.session_state:
+        st.session_state["settlement_review_state"] = {}
+    return st.session_state["settlement_review_state"]
+
+
+def clear_session_review(payment_id: str) -> None:
+    """Clear one review and its widget drafts before the app reruns."""
+
+    session_reviews().pop(payment_id, None)
+    for widget_key in list(st.session_state):
+        if (
+            widget_key.startswith(("review_status_", "review_note_"))
+            and widget_key.endswith(f"_{payment_id}")
+        ):
+            del st.session_state[widget_key]
+
+
+def reset_session_reviews() -> None:
+    """Reset all browser-session review data and draft widgets."""
+
+    st.session_state["settlement_review_state"] = {}
+    for widget_key in list(st.session_state):
+        if widget_key.startswith(("review_status_", "review_note_")):
+            del st.session_state[widget_key]
+    # A fresh widget identity prevents the browser from replaying the old form
+    # value into the rerun after the session data has been cleared.
+    st.session_state["review_widget_generation"] = (
+        int(st.session_state.get("review_widget_generation", 0)) + 1
+    )
+    st.session_state["review_reset_notice"] = True
+
+
+def render_review_panel(payment_id: str) -> None:
+    reviews = session_reviews()
+    existing = reviews.get(payment_id, {})
+    generation = int(st.session_state.get("review_widget_generation", 0))
+    status_key = f"review_status_{generation}_{payment_id}"
+    note_key = f"review_note_{generation}_{payment_id}"
+    render_disclosure(
+        "Review status and notes live only in this browser session. They never "
+        "update the repository snapshot or simulate a real payment operation."
+    )
+    with st.form(f"review_{payment_id}", border=True):
+        status_options = [
+            "Unreviewed",
+            "Investigating",
+            "Needs evidence",
+            "Resolved in demo",
+        ]
+        current_status = existing.get("status", status_options[0])
+        status = st.selectbox(
+            "Session review status",
+            status_options,
+            index=(
+                status_options.index(current_status)
+                if current_status in status_options
+                else 0
+            ),
+            key=status_key,
+        )
+        notes = st.text_area(
+            "Session note",
+            value=existing.get("notes", ""),
+            placeholder="Record what you checked; this clears when the session resets.",
+            max_chars=600,
+            key=note_key,
+        )
+        if st.form_submit_button("Save session note", type="primary"):
+            reviews[payment_id] = {"status": status, "notes": notes.strip()}
+            st.success("Saved for this session only.")
+    if payment_id in reviews:
+        st.button(
+            "Clear this session review",
+            key=f"clear_{payment_id}",
+            on_click=clear_session_review,
+            args=(payment_id,),
+        )
+
+
+def apply_queue_display_filters(
+    frame: pd.DataFrame,
+    reasons: list[str],
+    merchant_search: str,
+) -> pd.DataFrame:
+    """Apply presentation filters to already classified SQL rows."""
+
+    filtered = frame.copy()
+    if reasons:
+        selected = set(reasons)
+        if "exception_reasons" in filtered.columns:
+            mask = filtered["exception_reasons"].map(
+                lambda value: bool(selected.intersection(normalise_reasons(value)))
+            )
+            filtered = filtered.loc[mask]
+        elif "primary_reason" in filtered.columns:
+            filtered = filtered.loc[filtered["primary_reason"].isin(reasons)]
+    search = merchant_search.strip().casefold()
+    if search:
+        search_columns = [
+            column
+            for column in ("merchant_name", "merchant_category", "payment_id")
+            if column in filtered.columns
+        ]
+        if search_columns:
+            mask = pd.Series(False, index=filtered.index)
+            for column in search_columns:
+                mask |= filtered[column].astype(str).str.casefold().str.contains(
+                    search, regex=False
+                )
+            filtered = filtered.loc[mask]
+    return filtered
+
+
+def sort_queue_for_display(frame: pd.DataFrame, choice: str) -> pd.DataFrame:
+    """Sort rows already classified by SQL without recomputing priority."""
+
+    sort_contract = {
+        "Oldest purchase first": ("transaction_date", True),
+        "Most overdue first": ("days_overdue", False),
+        "Largest gross first": ("gross_minor_units", False),
+    }
+    column_and_direction = sort_contract.get(choice)
+    if column_and_direction is None:
+        return frame
+    column, ascending = column_and_direction
+    if column not in frame.columns:
+        return frame
+    return frame.sort_values(
+        column,
+        ascending=ascending,
+        kind="stable",
+        na_position="last",
+    )
+
+
+def render_exceptions_view(
+    engine: Any,
+    params: Mapping[str, Any],
+    scenario_id: str,
+) -> None:
+    render_section(
+        "Exception queue",
+        "Narrow SQL-classified exceptions, inspect every reason attached to a "
+        "payment, and export the evidence without altering the snapshot.",
+        "Step 2 · Isolate",
+    )
+    queue = run_query(engine, "exception_queue", params)
+    if queue.empty:
+        st.success("No exception rows match this scenario and scope.")
+        return
+
+    all_reasons = queue_reason_set(queue)
+    reason_filter_key = f"exception_reason_filter_{scenario_id}"
+    stored_reasons = st.session_state.get(reason_filter_key, [])
+    if any(reason not in all_reasons for reason in stored_reasons):
+        st.session_state[reason_filter_key] = [
+            reason for reason in stored_reasons if reason in all_reasons
+        ]
+    filter_columns = st.columns([1.2, 1, 1])
+    with filter_columns[0]:
+        selected_reasons = st.multiselect(
+            "Exception reasons",
+            options=all_reasons,
+            format_func=reason_label,
+            placeholder="All reasons",
+            key=reason_filter_key,
+        )
+    with filter_columns[1]:
+        merchant_search = st.text_input(
+            "Merchant or payment",
+            placeholder="Search returned rows",
+            key=f"exception_text_filter_{scenario_id}",
+        )
+    with filter_columns[2]:
+        sort_choice = st.selectbox(
+            "Sort queue by",
+            (
+                "SQL priority",
+                "Oldest purchase first",
+                "Most overdue first",
+                "Largest gross first",
+            ),
+            key=f"exception_sort_{scenario_id}",
+        )
+    filtered = apply_queue_display_filters(
+        queue, selected_reasons, merchant_search
+    )
+    filtered = sort_queue_for_display(filtered, sort_choice)
+    st.caption(
+        f"Showing {len(filtered):,} of {len(queue):,} SQL-classified payments."
+    )
+
+    if filtered.empty:
+        st.info("No queue rows match the display filters. Clear them to continue.")
+        return
+
+    evidence = filtered.copy()
+    if "exception_reasons" in evidence.columns:
+        evidence["exception_reasons"] = evidence["exception_reasons"].map(
+            lambda value: " · ".join(
+                reason_label(reason) for reason in normalise_reasons(value)
+            )
+        )
+    if "primary_reason" in evidence.columns:
+        evidence["primary_reason"] = evidence["primary_reason"].map(
+            lambda value: reason_label(str(scalar(value, "")))
+        )
+    if "gross_minor_units" in evidence.columns:
+        evidence["gross"] = evidence.apply(
+            lambda row: format_minor_units(
+                row["gross_minor_units"], scalar(row.get("currency"), "")
+            ),
+            axis=1,
+        )
+
+    shown = display_frame(
+        evidence,
+        (
+            "payment_id",
+            "transaction_date",
+            "currency",
+            "gross",
+            "merchant_name",
+            "merchant_category",
+            "primary_reason",
+            "exception_reasons",
+            "days_overdue",
+            "expected_settlement_date",
+        ),
+    )
+    st.dataframe(
+        shown,
+        width="stretch",
+        hide_index=True,
+        column_config={
+            "payment_id": st.column_config.TextColumn("Payment ID"),
+            "transaction_date": st.column_config.DateColumn("Purchase date"),
+            "gross": st.column_config.TextColumn("Gross"),
+            "merchant_name": st.column_config.TextColumn("Merchant"),
+            "merchant_category": st.column_config.TextColumn("Category"),
+            "primary_reason": st.column_config.TextColumn("Primary reason"),
+            "exception_reasons": st.column_config.TextColumn(
+                "All reasons", width="large"
+            ),
+            "days_overdue": st.column_config.NumberColumn(
+                "Days overdue", format="%d"
+            ),
+            "expected_settlement_date": st.column_config.DateColumn(
+                "Expected by"
+            ),
+        },
+    )
+
+    if "payment_id" not in filtered.columns:
+        st.error("The exception queue did not return a payment_id column.")
+        return
+    payment_ids = filtered["payment_id"].dropna().astype(str).tolist()
+    payment_selector_key = f"queue_payment_to_inspect_{scenario_id}"
+    if st.session_state.get(payment_selector_key) not in payment_ids:
+        st.session_state[payment_selector_key] = payment_ids[0]
+    action_columns = st.columns([1.25, 1, 1])
+    with action_columns[0]:
+        chosen_payment = st.selectbox(
+            "Payment to inspect",
+            payment_ids,
+            key=payment_selector_key,
+        )
+    with action_columns[1]:
+        st.write("")
+        st.write("")
+        st.button(
+            "Open payment trace",
+            type="primary",
+            width="stretch",
+            on_click=navigate_to_view,
+            args=("trace", chosen_payment),
+            key=f"open_payment_trace_{scenario_id}",
+        )
+    with action_columns[2]:
+        st.write("")
+        st.write("")
+        st.download_button(
+            "Export filtered evidence",
+            data=filtered.to_csv(index=False).encode("utf-8"),
+            file_name=f"settlement-exceptions-{scenario_id}.csv",
+            mime="text/csv",
+            width="stretch",
+            key=f"export_exception_evidence_{scenario_id}",
+        )
+
+    with st.expander("Session-only review controls"):
+        render_review_panel(chosen_payment)
+
+    with st.expander("Open queue contract and SQL lineage"):
+        st.markdown(
+            "**Query ID:** `exception_queue`  \n"
+            "**Source model:** `mart_exception_queue`  \n"
+            "**Grain:** one completed merchant purchase with at least one flag"
+        )
+        st.code(
+            "independent flags = missing, currency, amount, fee, late, disputed\n"
+            "primary order = missing > currency > amount > fee > late > disputed",
+            language="text",
+        )
+
+
+def trace_payment_id(
+    engine: Any,
+    params: Mapping[str, Any],
+    requested: str,
+) -> tuple[str, pd.DataFrame]:
+    if requested:
+        trace = run_query(
+            engine,
+            "payment_trace",
+            {**params, "payment_id": requested},
+            show_error=False,
+        )
+        if not trace.empty:
+            return requested, trace
+
+    queue = run_query(engine, "exception_queue", params, show_error=False)
+    if queue.empty or "payment_id" not in queue.columns:
+        return requested, pd.DataFrame()
+    fallback = str(queue["payment_id"].dropna().astype(str).iloc[0])
+    trace = run_query(
+        engine,
+        "payment_trace",
+        {**params, "payment_id": fallback},
+        show_error=False,
+    )
+    return fallback, trace
+
+
+def flag_explanations(reasons: list[str]) -> list[str]:
+    explanations = {
+        "missing": "No settlement evidence exists after the term-based expected date.",
+        "currency_mismatch": "Settlement and purchase currencies differ.",
+        "amount_mismatch": "Gross does not equal settled amount plus recorded fee within 0.01.",
+        "fee_mismatch": "Recorded fee differs from the effective merchant fee term.",
+        "late": "Actual settlement date exceeds the effective merchant SLA.",
+        "disputed": "The purchase has linked dispute evidence in the source snapshot.",
+    }
+    return [explanations.get(reason, reason_label(reason)) for reason in reasons]
+
+
+def render_trace_view(
+    engine: Any,
+    params: Mapping[str, Any],
+    requested_payment_id: str,
+) -> None:
+    render_section(
+        "Payment trace",
+        "Follow one completed merchant purchase through its effective term, "
+        "expected settlement, recorded evidence, and every SQL flag.",
+        "Step 3 · Explain",
+    )
+    payment_id, trace = trace_payment_id(engine, params, requested_payment_id)
+    if trace.empty:
+        st.info("No traceable exception is available for this scenario and scope.")
+        return
+    if payment_id != requested_payment_id:
+        if requested_payment_id:
+            st.warning(
+                f"Payment `{requested_payment_id}` is not valid in this scenario. "
+                f"Showing `{payment_id}` instead."
+            )
+        update_location(payment_id=payment_id)
+
+    row = trace.iloc[0].to_dict()
+    reasons = normalise_reasons(
+        first_present(row, ("exception_reasons",)), row
+    )
+    primary = str(
+        first_present(
+            row, ("primary_reason",), reasons[0] if reasons else "matched"
+        )
+    )
+
+    st.markdown(f"### `{escape(payment_id)}`")
+    st.markdown(reason_tags(reasons or [primary]), unsafe_allow_html=True)
+    identity = st.columns(4)
+    identity[0].metric(
+        "Merchant", str(first_present(row, ("merchant_name",), "Not linked"))
+    )
+    identity[1].metric(
+        "Category",
+        str(first_present(row, ("merchant_category", "category"), "Not linked")),
+    )
+    identity[2].metric(
+        "Purchase date",
+        str(first_present(row, ("transaction_date", "purchase_date"), "Unknown")),
+    )
+    identity[3].metric("Primary label", reason_label(primary))
+
+    money_column, term_column = st.columns([1.15, 1])
+    with money_column:
+        st.subheader("Expected versus recorded")
+        money = trace_money_table(row)
+        if money.empty:
+            st.info("Money fields are not present in the trace result.")
+        else:
+            st.table(money)
+        transaction_currency = first_present(
+            row, ("transaction_currency", "currency"), "—"
+        )
+        settlement_currency = first_present(
+            row, ("settlement_currency",), "Missing"
+        )
+        st.caption(
+            f"Purchase currency: {transaction_currency} · "
+            f"Settlement currency: {settlement_currency}"
+        )
+    with term_column:
+        st.subheader("Applicable merchant term")
+        term_rows = {
+            "Effective from": first_present(
+                row,
+                ("term_valid_from", "valid_from", "effective_from"),
+                "—",
+            ),
+            "Effective to": first_present(
+                row,
+                ("term_valid_to", "valid_to", "effective_to"),
+                "Open-ended",
+            ),
+            "Fee rate": f"{first_present(row, ('fee_rate_bps',), '—')} bps",
+            "Settlement SLA": (
+                f"{first_present(row, ('settlement_sla_days', 'sla_days'), '—')} days"
+            ),
+            "Expected by": first_present(
+                row, ("expected_settlement_date",), "—"
+            ),
+            "Actually settled": first_present(
+                row,
+                ("actual_settlement_date", "settlement_date"),
+                "Missing",
+            ),
+        }
+        st.dataframe(
+            pd.DataFrame(
+                {
+                    "Field": term_rows.keys(),
+                    "Value": [str(value) for value in term_rows.values()],
+                }
+            ),
+            width="stretch",
+            hide_index=True,
+        )
+
+    st.subheader("Recorded evidence")
+    evidence_rows = {
+        "Transaction ID": first_present(row, ("transaction_id",), "—"),
+        "Account ID": first_present(row, ("account_id",), "—"),
+        "Settlement ID": first_present(row, ("settlement_id",), "Missing"),
+        "Settlement status": first_present(
+            row, ("settlement_status",), "Missing"
+        ),
+        "Settlement currency": first_present(
+            row, ("settlement_currency",), "Missing"
+        ),
+        "Linked review reason": first_present(
+            row, ("fraud_reason",), "None linked"
+        ),
+    }
+    st.dataframe(
+        pd.DataFrame(
+            {
+                "Field": evidence_rows.keys(),
+                "Value": [str(value) for value in evidence_rows.values()],
+            }
+        ),
+        width="stretch",
+        hide_index=True,
+    )
+
+    st.subheader("Why SQL flagged it")
+    if reasons:
+        for explanation in flag_explanations(reasons):
+            st.markdown(f"- {explanation}")
+    else:
+        st.success("This payment satisfies the settlement match contract.")
+    lineage_query = first_present(
+        row,
+        ("lineage_query_id", "query_id", "model_query_id"),
+        "payment_trace",
+    )
+    lineage_model = first_present(
+        row,
+        ("lineage_model", "sql_model"),
+        "int_settlement_reconciliation",
+    )
+    st.markdown(
+        f'<div class="wb-query"><strong>Query ID:</strong> '
+        f"<code>{escape(str(lineage_query))}</code><br>"
+        f'<strong>Rule model:</strong> <code>{escape(str(lineage_model))}</code><br>'
+        "Flags are independent booleans. The primary label only supplies stable "
+        "queue order: missing → currency → amount → fee → late → disputed.</div>",
+        unsafe_allow_html=True,
+    )
+
+    with st.expander("Open complete trace row"):
+        st.dataframe(trace, width="stretch", hide_index=True)
+    with st.expander("Session-only review controls", expanded=True):
+        render_review_panel(payment_id)
+
+    navigation = st.columns(2)
+    with navigation[0]:
+        st.button(
+            "Back to exception queue",
+            width="stretch",
+            on_click=navigate_to_view,
+            args=("exceptions",),
+        )
+    with navigation[1]:
+        st.link_button(
+            "Read the investigation case study",
+            CASE_STUDY_URL,
+            width="stretch",
+        )
+
+
+def render_catalog_view(engine: Any, metadata: Mapping[str, Any]) -> None:
+    render_section(
+        "Metric and model catalog",
+        "Audit the contract behind every public number: population, grain, "
+        "currency boundary, SQL model, quality status, and build identity.",
+        "Reference · Verify",
+    )
+    render_disclosure(
+        "This is a wholly synthetic demonstration snapshot. It contains no real "
+        "payments, credentials, personal data, operational write path, fraud model, "
+        "or business-impact claim."
+    )
+
+    st.subheader("Build identity")
+    metadata_rows = pd.DataFrame(
+        {
+            "Field": [
+                "Dataset version",
+                "As-of date",
+                "Commit SHA",
+                "Runtime mode",
+                "Snapshot",
+            ],
+            "Value": [
+                first_present(
+                    metadata, ("dataset_version", "version"), "Unavailable"
+                ),
+                first_present(metadata, ("as_of_date", "as_of"), "Unavailable"),
+                first_present(
+                    metadata,
+                    ("build_sha", "commit_sha", "sha"),
+                    "local",
+                ),
+                first_present(
+                    metadata,
+                    ("runtime_mode", "runtime"),
+                    "DuckDB in-memory",
+                ),
+                "Synthetic demo snapshot",
+            ],
+        }
+    )
+    st.dataframe(metadata_rows, width="stretch", hide_index=True)
+
+    st.subheader("Metric contracts")
+    metrics = run_query(engine, "catalog_metrics", {})
+    if metrics.empty:
+        st.info("Metric catalog rows are unavailable.")
+    else:
+        st.dataframe(metrics, width="stretch", hide_index=True)
+
+    st.subheader("Canonical model chain")
+    grains = pd.DataFrame(
+        [
+            ("int_expected_settlements", "one eligible completed merchant purchase"),
+            (
+                "int_settlement_reconciliation",
+                "one eligible purchase with independent flags",
+            ),
+            ("mart_daily_close", "processing date × currency"),
+            ("mart_exception_queue", "payment"),
+            ("mart_merchant_health", "merchant × date × currency"),
+            ("mart_payment_trace", "payment"),
+        ],
+        columns=["SQL model", "Grain"],
+    )
+    st.table(grains)
+
+    st.subheader("Data-quality results")
+    quality = run_query(engine, "quality_results", {})
+    if quality.empty:
+        st.info("Data-quality result rows are unavailable.")
+    else:
+        st.dataframe(quality, width="stretch", hide_index=True)
+
+    st.info(
+        "Streamlit Community Cloud may ask you to wake this free application after "
+        "inactivity. Waking restores the same repository snapshot; it is not an incident."
+    )
+    links = st.columns(2)
+    links[0].link_button("Read the case study", CASE_STUDY_URL, width="stretch")
+    links[1].link_button(
+        "Inspect the SQL repository", REPOSITORY_URL, width="stretch"
+    )
+
+
+if ENGINE_IMPORT_ERROR is not None:
+    st.error(
+        "The workbench cannot start because the canonical analytics engine is unavailable."
+    )
+    st.code(
+        f"{type(ENGINE_IMPORT_ERROR).__name__}: {ENGINE_IMPORT_ERROR}",
+        language="text",
+    )
     st.stop()
 
-current_metrics = overview_metrics(filtered_transactions)
-previous_metrics = None
-if filters.compare_previous_period:
-    comparison_filters = previous_period_filters(filters, dataset_start)
-    if comparison_filters:
-        previous_transactions = apply_filters(
-            enriched_transactions,
-            comparison_filters,
-            all_categories,
-        )
-        previous_metrics = overview_metrics(previous_transactions)
+try:
+    with st.spinner("Building the synthetic settlement snapshot"):
+        analytics = get_engine()
+except Exception as exc:  # pragma: no cover - deployment-dependent
+    st.error(
+        "The workbench could not build its in-memory SQL snapshot. "
+        "No source data was changed."
+    )
+    st.code(f"{type(exc).__name__}: {exc}", language="text")
+    st.stop()
 
-settlement_records = filtered_settlements(settlements, filtered_transactions)
-flag_records = filtered_flags(fraud_flags, filtered_transactions)
-ui_state = DashboardUIState(
-    active_view=active_view,
-    filters=filters,
-    trend_mode=str(
-        st.session_state.get("pay_trend_measure", "Transaction count")
-    ),
+registry = run_query(analytics, "scenario_options", {})
+options = scenario_options(registry)
+if not options:
+    st.error("The versioned scenario registry did not return any supported scenarios.")
+    st.stop()
+
+default_scenario_id = default_scenario(options)
+valid_scenario_ids = {option.scenario_id for option in options}
+requested_scenario = query_value("scenario", default_scenario_id)
+selected_scenario_id = (
+    requested_scenario
+    if requested_scenario in valid_scenario_ids
+    else default_scenario_id
+)
+if (
+    requested_scenario != selected_scenario_id
+    or query_value("scenario") != selected_scenario_id
+):
+    update_location(scenario=selected_scenario_id, payment_id=None)
+
+option_by_id = {option.scenario_id: option for option in options}
+selected_scenario = option_by_id[selected_scenario_id]
+metadata = engine_metadata(analytics)
+default_as_of_date = (
+    selected_scenario.as_of_date
+    or parse_date(first_present(metadata, ("as_of_date", "as_of")))
+    or selected_scenario.close_date
+    or date.today()
+)
+as_of_state_key = f"workbench_as_of_{selected_scenario_id}"
+if as_of_state_key not in st.session_state:
+    st.session_state[as_of_state_key] = default_as_of_date
+selected_as_of = parse_date(
+    st.session_state[as_of_state_key]
+) or default_as_of_date
+metadata["as_of_date"] = selected_as_of.isoformat()
+
+render_header(metadata)
+render_lifecycle()
+
+active_view = canonical_view()
+if st.session_state.get("workbench_navigation") != active_view:
+    st.session_state["workbench_navigation"] = active_view
+st.radio(
+    "Workbench view",
+    options=list(VALID_VIEWS),
+    format_func=lambda view: VIEW_LABELS[view],
+    horizontal=True,
+    label_visibility="collapsed",
+    key="workbench_navigation",
+    on_change=navigation_changed,
 )
 
-
-if ui_state.active_view == "overview":
-    section_header(
-        "Read the payment system in one pass",
-        "Activity, completion, customer reach, nominal value and status stay close enough to scan as one operational picture.",
-        "System overview",
+with st.sidebar:
+    st.markdown("## Investigation scope")
+    if st.session_state.get("workbench_scenario") != selected_scenario_id:
+        st.session_state["workbench_scenario"] = selected_scenario_id
+    st.selectbox(
+        "Synthetic scenario",
+        options=list(option_by_id),
+        format_func=lambda scenario_id: option_by_id[scenario_id].name,
+        help="Each scenario is deterministic and documented in the repository manifest.",
+        key="workbench_scenario",
+        on_change=scenario_changed,
     )
-    render_kpi_grid(
-        build_kpi_cards(current_metrics, previous_metrics, filters)
+    st.caption(selected_scenario.description)
+    render_disclosure("Synthetic scenario—not a real incident.")
+
+    selected_as_of = st.date_input(
+        "As-of date",
+        key=as_of_state_key,
+        help=(
+            "Re-evaluate missing and overdue rules at this date. "
+            "The source snapshot remains unchanged."
+        ),
     )
 
-    status_frame = transaction_statuses(filtered_transactions)
-    render_status_rail(
-        "Transaction status",
-        f"{len(filtered_transactions):,} records in the current view",
-        status_frame,
+    seed = run_query(
+        analytics,
+        "close_summary",
         {
-            "completed": TEAL,
-            "pending": AMBER,
-            "failed": CORAL,
+            "scenario": selected_scenario_id,
+            "as_of_date": selected_as_of.isoformat(),
         },
+        show_error=False,
     )
+    currency_options = frame_currencies(seed)
+    if currency_options:
+        default_currency_index = (
+            currency_options.index(selected_scenario.default_currency)
+            if selected_scenario.default_currency in currency_options
+            else 0
+        )
+        selected_currency = st.selectbox(
+            "Currency",
+            currency_options,
+            index=default_currency_index,
+            key=f"workbench_currency_{selected_scenario_id}",
+        )
+    else:
+        selected_currency = None
+        st.caption("Currency options unavailable")
 
-    trend_choice = render_measure_switch(ui_state.trend_mode)
-    st.session_state["pay_trend_measure"] = trend_choice
-    trend_frame = monthly_trends(filtered_transactions)
-    trend_field = (
-        "transaction_count"
-        if trend_choice == "Transaction count"
-        else "completed_value"
-    )
-    trend_color = CYAN if trend_field == "transaction_count" else AMBER
-    trend_title = (
-        "Completed payments by month"
-        if trend_field == "transaction_count"
-        else "Nominal completed value by month"
-    )
-    trend_figure = go.Figure()
-    trend_figure.add_trace(
-        go.Scatter(
-            x=trend_frame["transaction_month"],
-            y=trend_frame[trend_field],
-            mode="lines+markers",
-            line={"color": trend_color, "width": 2.5, "shape": "spline"},
-            marker={
-                "size": 6,
-                "color": trend_color,
-                "line": {"color": "#07111A", "width": 1},
-            },
-            fill="tozeroy",
-            fillcolor=(
-                "rgba(75,216,255,0.07)"
-                if trend_field == "transaction_count"
-                else "rgba(244,200,106,0.07)"
-            ),
-            hovertemplate=(
-                "%{x|%b %Y}<br>%{y:,.0f} completed payments<extra></extra>"
-                if trend_field == "transaction_count"
-                else "%{x|%b %Y}<br>%{y:,.2f} nominal value<extra></extra>"
-            ),
+    dataset_start, dataset_end = frame_date_bounds(seed)
+    if dataset_start and dataset_end:
+        selected_dates = st.date_input(
+            "Processing dates",
+            value=(dataset_start, dataset_end),
+            min_value=dataset_start,
+            max_value=dataset_end,
+            key=f"workbench_dates_{selected_scenario_id}",
         )
-    )
-    trend_layout = chart_layout(trend_title, 450)
-    trend_layout["margin"]["r"] = 86
-    trend_figure.update_layout(**trend_layout)
-    trend_figure.update_xaxes(title=None)
-    trend_figure.update_yaxes(
-        title="Payments" if trend_field == "transaction_count" else "Nominal value"
-    )
-    style_axes(trend_figure)
-    if not trend_frame.empty:
-        last_point = trend_frame.iloc[-1]
-        direct_label = (
-            f"{int(last_point[trend_field]):,}"
-            if trend_field == "transaction_count"
-            else display_amount(float(last_point[trend_field]))
-        )
-        trend_figure.add_annotation(
-            x=last_point["transaction_month"],
-            y=last_point[trend_field],
-            text=direct_label,
-            showarrow=False,
-            xanchor="left",
-            xshift=10,
-            font={"color": trend_color, "size": 12},
-        )
-    st.plotly_chart(
-        trend_figure,
+        if isinstance(selected_dates, tuple) and len(selected_dates) == 2:
+            selected_start, selected_end = selected_dates
+        elif isinstance(selected_dates, date):
+            selected_start = selected_end = selected_dates
+        else:
+            selected_start, selected_end = dataset_start, dataset_end
+    else:
+        selected_start = selected_end = selected_scenario.close_date
+        st.caption("Processing-date bounds unavailable")
+
+    st.divider()
+    st.link_button("Case study", CASE_STUDY_URL, width="stretch")
+    st.button(
+        "Reset session-only reviews",
         width="stretch",
-        config=PLOT_CONFIG,
-        key=f"overview_{trend_field}",
+        on_click=reset_session_reviews,
+        key="reset_session_reviews",
     )
-    if len(filters.currencies) != 1:
-        data_note(
-            "The value view adds EUR, GBP, AUD, and CAD as recorded. It supports aggregation analysis, but it is not a converted system value."
-        )
+    if st.session_state.pop("review_reset_notice", False):
+        st.success("Session review state cleared.")
 
+params = filter_params(
+    selected_scenario_id,
+    selected_currency,
+    selected_start,
+    selected_end,
+    as_of_date=selected_as_of,
+)
 
-if ui_state.active_view == "merchant":
-    section_header(
-        "Track merchant value through settlement",
-        "Settlement records are tied back to the filtered transactions, so the ranking and status rail use the same date, currency, and category scope.",
-        "Merchant flow",
-    )
-    settlement_summary = settlement_metrics(settlement_records)
-    one_currency = len(filters.currencies) == 1
-    amount_prefix = f"{filters.currencies[0]} " if one_currency else ""
-    render_metric_strip(
-        [
-            {
-                "label": "Settlement records",
-                "value": f"{int(settlement_summary['settlement_count']):,}",
-                "note": "Linked payout records",
-                "tone": "cyan",
-            },
-            {
-                "label": "Settled amount",
-                "value": display_amount(
-                    settlement_summary["settled_amount"],
-                    currency_prefix=amount_prefix,
-                ),
-                "note": "Completed settlement value",
-                "tone": "teal",
-            },
-            {
-                "label": "Processing fees",
-                "value": display_amount(
-                    settlement_summary["processing_fees"],
-                    currency_prefix=amount_prefix,
-                ),
-                "note": "Recorded processing fees",
-                "tone": "amber",
-            },
-            {
-                "label": "Delayed",
-                "value": f"{int(settlement_summary['delayed_count']):,}",
-                "note": "Awaiting completion",
-                "tone": "coral",
-            },
-        ]
-    )
+if active_view == "close":
+    render_close_view(analytics, params, selected_currency)
+elif active_view == "exceptions":
+    render_exceptions_view(analytics, params, selected_scenario_id)
+elif active_view == "trace":
+    render_trace_view(analytics, params, query_value("payment_id"))
+elif active_view == "catalog":
+    render_catalog_view(analytics, metadata)
 
-    if settlement_records.empty:
-        render_empty_state(
-            "No settlements match this view.",
-            "The selected transactions do not have linked settlement records.",
-        )
-    else:
-        render_settlement_corridor(settlement_statuses(settlement_records))
-        merchant_frame = merchant_performance(settlement_records)
-        top_merchants = merchant_frame.head(12).sort_values(
-            "settled_amount", ascending=True
-        )
-        merchant_figure = px.bar(
-            top_merchants,
-            x="settled_amount",
-            y="merchant_name",
-            orientation="h",
-            color="category",
-            color_discrete_map=CATEGORY_COLORS,
-            custom_data=["category", "risk_tier", "settlement_count"],
-        )
-        merchant_figure.update_traces(
-            marker_line_width=0,
-            texttemplate="%{x:,.3s}",
-            textposition="outside",
-            textfont={"color": INK, "size": 11},
-            cliponaxis=False,
-            hovertemplate=(
-                "<b>%{y}</b><br>%{customdata[0]} · %{customdata[1]} risk"
-                "<br>%{x:,.2f} nominal settled amount"
-                "<br>%{customdata[2]:,.0f} settlements<extra></extra>"
-            ),
-        )
-        merchant_layout = chart_layout(
-            "Leading merchants by settled amount", 520
-        )
-        merchant_layout["margin"]["r"] = 78
-        merchant_figure.update_layout(
-            **merchant_layout,
-            xaxis_title="Nominal settled amount",
-            yaxis_title=None,
-            bargap=0.28,
-        )
-        style_axes(merchant_figure)
-        st.plotly_chart(
-            merchant_figure,
-            width="stretch",
-            config=PLOT_CONFIG,
-            key="merchant_ranking",
-        )
-
-        with st.expander("Open merchant settlement detail"):
-            merchant_table = merchant_frame[
-                [
-                    "merchant_name",
-                    "category",
-                    "risk_tier",
-                    "settlement_count",
-                    "settled_amount",
-                    "processing_fees",
-                ]
-            ].rename(
-                columns={
-                    "merchant_name": "Merchant",
-                    "category": "Category",
-                    "risk_tier": "Risk tier",
-                    "settlement_count": "Settlements",
-                    "settled_amount": "Settled amount",
-                    "processing_fees": "Processing fees",
-                }
-            )
-            st.dataframe(
-                merchant_table,
-                width="stretch",
-                hide_index=True,
-                column_config={
-                    "Settled amount": st.column_config.NumberColumn(format="%.2f"),
-                    "Processing fees": st.column_config.NumberColumn(format="%.2f"),
-                },
-            )
-        if not one_currency:
-            data_note(
-                "Merchant and settlement values are ranked in nominal source-currency units. No exchange rate is applied."
-            )
-
-
-if ui_state.active_view == "risk":
-    section_header(
-        "See what entered review and what cleared",
-        "Category rates show where flags appear in the generated records. The review flow then separates the recorded reasons into resolved and unresolved outcomes.",
-        "Risk monitor",
-    )
-    risk_summary = risk_metrics(filtered_transactions, flag_records)
-    render_metric_strip(
-        [
-            {
-                "label": "Flags in view",
-                "value": f"{int(risk_summary['flag_count']):,}",
-                "note": "Review records in scope",
-                "tone": "cyan",
-            },
-            {
-                "label": "Resolved",
-                "value": f"{int(risk_summary['resolved_count']):,}",
-                "note": "Marked complete",
-                "tone": "teal",
-            },
-            {
-                "label": "Unresolved",
-                "value": f"{int(risk_summary['unresolved_count']):,}",
-                "note": "Still open",
-                "tone": "coral",
-            },
-            {
-                "label": "Resolution rate",
-                "value": f"{risk_summary['resolution_rate']:.2f}%",
-                "note": "Share of flags resolved",
-                "tone": "amber",
-            },
-        ]
-    )
-
-    category_risk = risk_by_category(filtered_transactions, flag_records)
-    if category_risk.empty:
-        render_empty_state(
-            "No merchant risk rates are available.",
-            "This view needs transactions with a linked merchant category.",
-        )
-    else:
-        risk_plot = category_risk.sort_values("flag_rate", ascending=True)
-        risk_figure = px.bar(
-            risk_plot,
-            x="flag_rate",
-            y="category",
-            orientation="h",
-            color="flag_rate",
-            color_continuous_scale=[
-                [0, "#1B5966"],
-                [0.55, "#F4C86A"],
-                [1, "#FF7E8F"],
-            ],
-            custom_data=["flagged_transactions", "total_transactions"],
-        )
-        risk_figure.update_traces(
-            hovertemplate=(
-                "<b>%{y}</b><br>%{x:.2f}% observed flag rate"
-                "<br>%{customdata[0]:,.0f} flags across "
-                "%{customdata[1]:,.0f} transactions<extra></extra>"
-            ),
-            marker_line_width=0,
-            texttemplate="%{x:.2f}%",
-            textposition="outside",
-            textfont={"color": INK, "size": 11},
-            cliponaxis=False,
-        )
-        risk_layout = chart_layout(
-            "Observed flag rate by merchant category", 460
-        )
-        risk_layout["margin"]["r"] = 74
-        risk_figure.update_layout(
-            **risk_layout,
-            xaxis_title="Flagged transactions (%)",
-            yaxis_title=None,
-            coloraxis_showscale=False,
-        )
-        style_axes(risk_figure)
-        st.plotly_chart(
-            risk_figure,
-            width="stretch",
-            config=PLOT_CONFIG,
-            key="risk_category_rate",
-        )
-
-    review_flow = risk_review_flow(flag_records)
-    if review_flow.empty:
-        render_empty_state(
-            "No fraud flags match this view.",
-            "Widen the active filters to restore the review flow.",
-        )
-    else:
-        reasons = sorted(review_flow["flag_reason"].unique().tolist())
-        outcomes = ["Resolved", "Unresolved"]
-        labels = reasons + outcomes
-        label_index = {label: index for index, label in enumerate(labels)}
-        source_indices = [
-            label_index[row.flag_reason]
-            for row in review_flow.itertuples(index=False)
-        ]
-        target_indices = [
-            label_index[row.outcome]
-            for row in review_flow.itertuples(index=False)
-        ]
-        values = [int(row.count) for row in review_flow.itertuples(index=False)]
-        link_colors = [
-            "rgba(66,232,180,0.20)"
-            if row.outcome == "Resolved"
-            else "rgba(255,126,143,0.24)"
-            for row in review_flow.itertuples(index=False)
-        ]
-        link_hover_colors = [
-            "rgba(138,246,199,0.62)"
-            if row.outcome == "Resolved"
-            else "rgba(255,117,111,0.66)"
-            for row in review_flow.itertuples(index=False)
-        ]
-        sankey_figure = go.Figure(
-            go.Sankey(
-                arrangement="snap",
-                node={
-                    "pad": 18,
-                    "thickness": 16,
-                    "line": {"color": "rgba(145,183,207,0.25)", "width": 1},
-                    "label": labels,
-                    "color": [
-                        "rgba(75,216,255,0.72)" for _ in reasons
-                    ]
-                    + [TEAL, CORAL],
-                    "hovertemplate": "%{label}<br>%{value:,.0f} flags<extra></extra>",
-                },
-                link={
-                    "source": source_indices,
-                    "target": target_indices,
-                    "value": values,
-                    "color": link_colors,
-                    "hovercolor": link_hover_colors,
-                    "hovertemplate": (
-                        "%{source.label} → %{target.label}"
-                        "<br>%{value:,.0f} flags<extra></extra>"
-                    ),
-                },
-            )
-        )
-        sankey_layout = chart_layout("Flag reason to review outcome", 500)
-        sankey_layout["hoverlabel"] = {
-            "bgcolor": "#0B1118",
-            "bordercolor": "#68DCFF",
-            "font": {"color": INK, "size": 12},
-        }
-        sankey_figure.update_layout(**sankey_layout)
-        st.plotly_chart(
-            sankey_figure,
-            width="stretch",
-            config=PLOT_CONFIG,
-            key="risk_review_flow",
-        )
-
-        with st.expander("Open review-flow data table"):
-            review_flow_table = review_flow.rename(
-                columns={
-                    "flag_reason": "Flag reason",
-                    "outcome": "Review outcome",
-                    "count": "Flags",
-                }
-            )
-            st.table(
-                review_flow_table,
-                width="stretch",
-                hide_index=True,
-                border="horizontal",
-            )
-
-        with st.expander("Open category risk detail"):
-            risk_table = category_risk.rename(
-                columns={
-                    "category": "Merchant category",
-                    "total_transactions": "Transactions",
-                    "flagged_transactions": "Flags",
-                    "flag_rate": "Observed flag rate",
-                }
-            )
-            st.dataframe(
-                risk_table,
-                width="stretch",
-                hide_index=True,
-                column_config={
-                    "Observed flag rate": st.column_config.NumberColumn(
-                        format="%.2f%%"
-                    )
-                },
-            )
-
-    data_note(
-        "Fraud flags were randomly sampled when the synthetic dataset was generated. These rates describe the sample; they are not a fraud model or a production risk score.",
-        "coral",
-    )
-
-
-if ui_state.active_view == "retention":
-    section_header(
-        "Read customer return patterns without filling the future",
-        "Each cell is the share of a joining cohort with at least one completed payment in that month. Periods beyond the dataset window stay blank.",
-        "Customer retention",
-    )
-    cohort_min = customers["join_date"].min().date()
-    cohort_max = customers["join_date"].max().date()
-    cohort_dates = st.date_input(
-        "Cohort join window",
-        value=(cohort_min, cohort_max),
-        min_value=cohort_min,
-        max_value=cohort_max,
-        key="pay_cohort_range",
-    )
-    if isinstance(cohort_dates, tuple) and len(cohort_dates) == 2:
-        cohort_start, cohort_end = cohort_dates
-    else:
-        cohort_start = cohort_end = cohort_dates
-    retention_frame = cohort_retention(
-        customers,
-        accounts,
-        transactions,
-        pd.Timestamp(cohort_start).date(),
-        pd.Timestamp(cohort_end).date(),
-    )
-
-    if retention_frame.empty:
-        render_empty_state(
-            "No customer cohorts match this window.",
-            "Choose a wider join-date range to restore the heatmap.",
-        )
-    else:
-        cohort_count = retention_frame["cohort_month"].nunique()
-        cohort_customers = (
-            retention_frame[["cohort_month", "cohort_size"]]
-            .drop_duplicates()["cohort_size"]
-            .sum()
-        )
-        month_one = retention_frame[
-            retention_frame["months_active_offset"].eq(1)
-            & retention_frame["observable"]
-        ]["retention_rate"]
-        median_month_one = float(month_one.median()) if not month_one.empty else 0.0
-
-        render_metric_strip(
-            [
-                {
-                    "label": "Cohorts observed",
-                    "value": f"{cohort_count:,}",
-                    "note": "Monthly join cohorts",
-                    "tone": "violet",
-                },
-                {
-                    "label": "Customers in cohorts",
-                    "value": f"{int(cohort_customers):,}",
-                    "note": "Customers inside the selected join window",
-                    "tone": "cyan",
-                },
-                {
-                    "label": "Median month 1 return",
-                    "value": f"{median_month_one:.1f}%",
-                    "note": "Median observed return rate",
-                    "tone": "teal",
-                },
-            ]
-        )
-
-        retention_frame = retention_frame.copy()
-        retention_frame["cohort_label"] = retention_frame[
-            "cohort_month"
-        ].dt.strftime("%b %Y")
-        heatmap_values = retention_frame.pivot(
-            index="cohort_label",
-            columns="months_active_offset",
-            values="retention_rate",
-        )
-        heatmap_values = heatmap_values.reindex(
-            retention_frame[
-                ["cohort_month", "cohort_label"]
-            ]
-            .drop_duplicates()
-            .sort_values("cohort_month")["cohort_label"]
-        )
-        show_cell_text = cohort_count <= 20
-        heatmap = go.Figure(
-            go.Heatmap(
-                z=heatmap_values.values,
-                x=[f"Month {int(column)}" for column in heatmap_values.columns],
-                y=heatmap_values.index,
-                colorscale=[
-                    [0.0, "#101824"],
-                    [0.22, "#25234A"],
-                    [0.48, "#5546A3"],
-                    [0.72, "#4B9FC0"],
-                    [1.0, "#42E8B4"],
-                ],
-                zmin=0,
-                zmax=100,
-                colorbar={
-                    "title": {"text": "Return %", "side": "right"},
-                    "thickness": 10,
-                    "outlinewidth": 0,
-                    "tickfont": {"color": MUTED},
-                },
-                text=heatmap_values.values if show_cell_text else None,
-                texttemplate="%{text:.0f}%" if show_cell_text else None,
-                textfont={"size": 11, "color": "#F5F9FC"},
-                hovertemplate=(
-                    "<b>%{y}</b><br>%{x}<br>%{z:.2f}% active<extra></extra>"
-                ),
-                hoverongaps=False,
-                xgap=2,
-                ygap=2,
-            )
-        )
-        heatmap_height = max(500, min(840, cohort_count * 22 + 190))
-        heatmap_layout = chart_layout("Cohort activity retention", heatmap_height)
-        heatmap_layout["hoverlabel"] = {
-            "bgcolor": "#0B1118",
-            "bordercolor": "#A390FF",
-            "font": {"color": INK, "size": 12},
-        }
-        heatmap.update_layout(
-            **heatmap_layout,
-            xaxis_title=None,
-            yaxis_title="Joining cohort",
-        )
-        heatmap.update_xaxes(
-            side="top",
-            gridcolor="rgba(145,183,207,0.08)",
-            tickangle=0,
-        )
-        heatmap.update_yaxes(
-            autorange="reversed",
-            gridcolor="rgba(145,183,207,0.08)",
-        )
-        st.plotly_chart(
-            heatmap,
-            width="stretch",
-            config=PLOT_CONFIG,
-            key="retention_heatmap",
-        )
-        with st.expander("Open retention data table"):
-            retention_table = retention_frame[
-                [
-                    "cohort_label",
-                    "months_active_offset",
-                    "cohort_size",
-                    "active_customers",
-                    "retention_rate",
-                    "observable",
-                ]
-            ].rename(
-                columns={
-                    "cohort_label": "Joining cohort",
-                    "months_active_offset": "Active month",
-                    "cohort_size": "Cohort size",
-                    "active_customers": "Active customers",
-                    "retention_rate": "Retention rate",
-                    "observable": "Observable",
-                }
-            )
-            retention_table["Retention rate"] = retention_table[
-                "Retention rate"
-            ].map(
-                lambda value: (
-                    "Not observable"
-                    if pd.isna(value)
-                    else f"{float(value):.2f}%"
-                )
-            )
-            retention_table["Observable"] = retention_table[
-                "Observable"
-            ].map({True: "Yes", False: "No"})
-            st.table(
-                retention_table,
-                width="stretch",
-                height=560,
-                hide_index=True,
-                border="horizontal",
-            )
-        data_note(
-            "Blank cells are outside the observable dataset window. A visible 0% cell is an observed month in which no customer from that cohort completed a payment."
-        )
-
-
-if ui_state.active_view == "model":
-    section_header(
-        "Trace the data before reading the metrics",
-        "The model view shows the relationships used by the dashboard and keeps the important limitations close to the analysis.",
-        "Data model and method",
-    )
-    render_data_model(scope)
-    with st.expander("Read data and calculation notes"):
-        render_method_cards()
-        data_note(
-            f"The transaction window runs from {first_date_label} to {last_date_label}. "
-            f"The current source is {source_label.lower()}, and the dashboard cache can retain a loaded source for up to ten minutes."
-        )
-
-
-render_footer()
-mount_page_motion()
+st.divider()
+deep_link = urlencode(
+    {
+        "view": active_view,
+        "scenario": selected_scenario_id,
+        **(
+            {"payment_id": query_value("payment_id")}
+            if active_view == "trace" and query_value("payment_id")
+            else {}
+        ),
+    }
+)
+st.caption(
+    "Synthetic demo snapshot · Session actions never mutate source data · "
+    f"Deep-link contract: `?{deep_link}`"
+)

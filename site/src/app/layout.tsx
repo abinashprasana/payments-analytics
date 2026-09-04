@@ -7,39 +7,48 @@ import "./globals.css";
 
 import { publicConfig } from "@/lib/config";
 
-const title = "Payment Observatory — Payments intelligence case study";
+const title = "The Settlement Gap — SQL reconciliation case study";
 const description =
-  "An evidence-led case study of a deployable payments analytics system spanning transaction activity, merchant settlement, review outcomes, retention, and relational data design.";
+  "A reproducible SQL investigation into completed purchases that do not reconcile to recorded settlement value.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(publicConfig.siteUrl),
   title,
   description,
-  applicationName: "Payment Observatory",
+  applicationName: "The Settlement Gap",
   authors: [{ name: "Abinash Prasana", url: publicConfig.repositoryUrl }],
   creator: "Abinash Prasana",
   category: "Data analytics",
   keywords: [
     "payment analytics",
     "SQL portfolio",
-    "Streamlit dashboard",
+    "settlement reconciliation",
+    "Streamlit workbench",
     "PostgreSQL analytics",
     "financial data visualization",
   ],
-  alternates: { canonical: "/" },
+  icons: {
+    icon: [
+      {
+        url: `${publicConfig.siteUrl}/brand/payment-observatory-mark-mono.svg`,
+        type: "image/svg+xml",
+      },
+    ],
+  },
+  alternates: { canonical: publicConfig.siteUrl },
   openGraph: {
     type: "website",
-    url: "/",
-    siteName: "Payment Observatory",
+    url: publicConfig.siteUrl,
+    siteName: "The Settlement Gap",
     title,
     description,
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Payment Observatory transaction reactor and case-study title" }],
+    images: [{ url: `${publicConfig.siteUrl}/opengraph-image`, width: 1200, height: 630, alt: "The Settlement Gap SQL reconciliation case study" }],
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/opengraph-image"],
+    images: [`${publicConfig.siteUrl}/opengraph-image`],
   },
 };
 

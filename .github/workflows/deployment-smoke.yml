@@ -1,0 +1,72 @@
+name: Verify public deployment
+
+on:
+  workflow_run:
+    workflows:
+      - Deploy case study to GitHub Pages
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact deployed commit SHA; defaults to the current remote main revision
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deployment-smoke-${{ github.event.workflow_run.head_sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Pages and Streamlit release parity
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: site
+    env:
+      PUBLIC_DEPLOYMENT: "1"
+      PUBLIC_CASE_STUDY_URL: https://abinashprasana.github.io/payments-analytics
+      PUBLIC_WORKBENCH_URL: https://abinashprasana-payments-analytics-dashboardapp-mrsz1m.streamlit.app
+      EXPECTED_BUILD_SHA: ${{ inputs.expected_sha || github.event.workflow_run.head_sha || github.sha }}
+      RELEASE_SHA: ${{ inputs.expected_sha || github.event.workflow_run.head_sha || github.sha }}
+    steps:
+      - name: Check out deployed test contract
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.RELEASE_SHA }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install site test dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify Pages, workbench health, cross-links, and build SHA
+        run: npm run test:deployment -- --retries=2
+
+      - name: Upload deployment diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-smoke-${{ env.RELEASE_SHA }}
+          path: |
+            site/playwright-report
+            site/test-results
+          if-no-files-found: ignore
+          retention-days: 7

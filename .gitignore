@@ -11,9 +11,14 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+*.duckdb
+*.duckdb.wal
+.pytest_cache/
 
-# Chart export working files (keep PNG exports tracked for README and deployment)
+# Generated analytical artifacts (v1 chart exports live under archive/)
 outputs/charts/.gitkeep
+outputs/marts/*.csv
+site/out/
 
 # IDE
 .vscode/

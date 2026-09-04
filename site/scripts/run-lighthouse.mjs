@@ -15,7 +15,7 @@ const siteDirectory = path.resolve(scriptDirectory, "..");
 const targetUrl =
   process.env.LIGHTHOUSE_URL ??
   process.env.CASE_STUDY_BASE_URL ??
-  "http://127.0.0.1:3000";
+  "http://127.0.0.1:3000/payments-analytics/";
 const target = new URL(targetUrl);
 const outputDirectory = path.join(siteDirectory, ".lighthouse");
 const outputPath = path.join(outputDirectory, "report.json");
@@ -44,27 +44,17 @@ let chrome;
 
 try {
   if (!useExistingServer) {
-    const nextCli = path.join(
-      siteDirectory,
-      "node_modules",
-      "next",
-      "dist",
-      "bin",
-      "next",
-    );
+    const staticServer = path.join(siteDirectory, "scripts", "serve-static.mjs");
     siteProcess = spawn(
       process.execPath,
-      [
-        nextCli,
-        "start",
-        "--hostname",
-        target.hostname,
-        "--port",
-        target.port || "3000",
-      ],
+      [staticServer],
       {
         cwd: siteDirectory,
-        env: process.env,
+        env: {
+          ...process.env,
+          STATIC_HOST: target.hostname,
+          STATIC_PORT: target.port || "3000",
+        },
         stdio: ["ignore", "inherit", "inherit"],
       },
     );
@@ -122,5 +112,12 @@ try {
   console.log(JSON.stringify(summary, null, 2));
 } finally {
   siteProcess?.kill("SIGTERM");
-  chrome?.kill();
+  // chrome-launcher uses `taskkill /T` on Windows, which can be denied inside
+  // constrained local shells even though this process owns the browser. Kill
+  // the direct child there; Linux CI keeps the launcher's process-tree cleanup.
+  if (process.platform === "win32") {
+    chrome?.process?.kill("SIGTERM");
+  } else {
+    chrome?.kill();
+  }
 }

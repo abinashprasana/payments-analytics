@@ -1,32 +1,35 @@
-const sources = ["PostgreSQL", "Repository CSV"];
+import type { ModelDefinition } from "@/lib/project-data";
 
-export function ArchitectureDiagram() {
+export function ArchitectureDiagram({
+  engines,
+  models,
+}: {
+  engines: string[];
+  models: ModelDefinition[];
+}) {
   return (
     <figure className="architecture-figure">
-      <div className="architecture-map" role="img" aria-label="PostgreSQL or repository CSV data enters one normalization and analytics path before the Observatory interface">
+      <div className="architecture-map" role="img" aria-label="Canonical SQL model chain">
         <div className="architecture-map__sources">
-          {sources.map((source) => (
-            <span key={source}>{source}</span>
+          {engines.map((engine) => <span key={engine}>{engine}</span>)}
+        </div>
+        <span className="architecture-map__arrow" aria-hidden="true">→</span>
+        <div className="architecture-map__models">
+          {models.map((model) => (
+            <div key={model.name}>
+              <code>{model.name}</code>
+              <span>{model.grain}</span>
+            </div>
           ))}
         </div>
         <span className="architecture-map__arrow" aria-hidden="true">→</span>
-        <div className="architecture-map__stage">
-          <span>Source loader</span>
-          <small>bounded fallback</small>
-        </div>
-        <span className="architecture-map__arrow" aria-hidden="true">→</span>
-        <div className="architecture-map__stage">
-          <span>Normalization</span>
-          <small>shared types</small>
-        </div>
-        <span className="architecture-map__arrow" aria-hidden="true">→</span>
         <div className="architecture-map__stage architecture-map__stage--final">
-          <span>Observatory</span>
-          <small>one analytical path</small>
+          <strong>Case payload</strong>
+          <span>Workbench queries</span>
         </div>
       </div>
       <figcaption>
-        Database access changes the source, not the calculation contract. CSV fallback feeds the same normalization, filters, and analytical functions.
+        The engines execute the same SQL chain. Presentation code consumes model results instead of redefining business rules.
       </figcaption>
     </figure>
   );

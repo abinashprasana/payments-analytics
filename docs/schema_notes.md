@@ -1,49 +1,41 @@
-# Relational Schema Design & Architecture Notes
+# Relational schema and model notes
 
-This document captures the design details and rationale for the `payments-analytics-sql` database schema, representing a real-world enterprise transactional database system.
+Payments Analytics v2 keeps the original six synthetic source entities and adds an effective-dated merchant-terms table. Source constraints protect the transactional snapshot; SQL models derive the settlement investigation without changing source rows.
 
-## 1. Key Database Entities & Relationships
+## Source entities
 
-### Customers
-- **Purpose**: Represents the core client profile.
-- **Constraints**: 
-  - `email` is enforced with a `UNIQUE` constraint to prevent double registrations.
-  - `segment` contains a CHECK constraint restricting input to standard client categories: `retail`, `business`, or `premium`.
+| Entity | Grain | Important constraints |
+| --- | --- | --- |
+| `customers` | one synthetic customer | unique email; accepted segment and active status |
+| `accounts` | one account | required customer; accepted account type, currency, and status |
+| `merchants` | one merchant | accepted category and risk tier |
+| `merchant_terms` | one merchant-term validity interval | required merchant; non-overlapping effective dates; non-negative fee bps; positive SLA days |
+| `transactions` | one payment event | required account; positive amount; accepted type/status/currency; merchant required for purchases/refunds and absent for transfers |
+| `settlements` | at most one settlement per transaction | transaction uniqueness; accepted status/currency; non-negative net amount and fee |
+| `fraud_flags` | at most one review record per transaction | non-null review reason; resolved date required exactly when resolved |
 
-### Accounts
-- **Purpose**: Financial accounts held by customers. One customer can have multiple accounts (e.g. current and savings accounts).
-- **Constraints**:
-  - `customer_id` is a foreign key with `ON DELETE CASCADE`, ensuring data is automatically cleaned if a customer profile is removed.
-  - `account_type` is restricted via a CHECK constraint (`current`, `savings`, `merchant`).
+Deleting a parent in a local scratch database cascades where it avoids orphans. Merchants referenced by purchase or refund history are restricted from deletion so the transaction-type nullability contract remains valid.
 
-### Merchants
-- **Purpose**: Companies or entities accepting commercial payments.
-- **Constraints**:
-  - `risk_tier` is bounded (`low`, `medium`, `high`) using a CHECK constraint to enforce risk profiles.
+## Effective terms
 
-### Transactions
-- **Purpose**: The centerpiece ledger recording individual transfers, purchases, and refunds.
-- **Constraints**:
-  - `account_id` links directly to a customer account. If an account is deleted, transactions cascade.
-  - `merchant_id` is set to `NULL` on delete (`ON DELETE SET NULL`) to retain transaction history even if a merchant is deactivated.
-  - `amount` is enforced to be strictly positive (`CHECK (amount > 0)`).
-  - `status` and `transaction_type` are constrained to valid processing states.
+`merchant_terms` uses `(merchant_id, valid_from)` as its business key. A transaction joins to the one row where its transaction date is on or after `valid_from` and on or before `valid_to`; an open-ended term has a null `valid_to`. Tests reject overlapping intervals and missing term coverage for eligible purchases.
 
-### Settlements
-- **Purpose**: Payout logs for merchants. Each completed transaction is settled to the merchant minus processing fees.
-- **Constraints**:
-  - `transaction_id` is defined as a `UNIQUE` foreign key to enforce a strict **1:1** or **0:1** relationship (a transaction can be settled at most once).
-  - Both `settled_amount` and `processing_fee` must be non-negative.
+The recorded settlement fee is evidence, not the fee expectation. `int_expected_settlements` computes the expected fee from the effective term so a deliberately stale fee schedule can be detected.
 
-### Fraud Flags
-- **Purpose**: Compliance monitoring logs. Transactions flagged as potential risk triggers are captured here.
-- **Constraints**:
-  - `transaction_id` is defined as a `UNIQUE` foreign key to ensure a transaction is flagged at most once.
-  - `resolved_date` can be `NULL` if `is_resolved` is false.
+## Analytical flow
 
-## 2. Performance Indexes
+```text
+source CSVs
+  -> typed/validated staging views
+  -> int_expected_settlements
+  -> int_settlement_reconciliation
+  -> mart_daily_close
+  -> mart_exception_queue
+  -> mart_merchant_health
+  -> mart_payment_trace
+  -> mart_category_health (authored segment-isolation support)
+```
 
-To support complex aggregation and high-velocity analytical queries, the following indexes are applied:
-1. **Foreign Key Indexes**: On `accounts(customer_id)`, `transactions(account_id)`, and `transactions(merchant_id)`. These accelerate multi-table joins during queries like merchant performance and CLV.
-2. **Temporal Indexes**: On `transactions(transaction_date)` and `settlements(settlement_date)` to speed up time-series groupings, rolling windows, and cohort grouping.
-3. **Categorical/Status Indexes**: On `transactions(status)` to fast-filter transactions based on their outcome.
+The portable model files stay inside the shared PostgreSQL/DuckDB SQL subset. Both engines execute the same statements; parity checks compare grains, exception identities, classifications, and currency-specific decimal aggregates.
+
+See [the metric catalogue](metric_catalog.md) for the population, match identity, SLA rule, multi-flag precedence, and public query IDs.

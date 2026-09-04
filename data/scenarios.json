@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "settlement-gap-v2.0.0",
+  "snapshotLabel": "Synthetic demo snapshot",
+  "asOfDate": "2025-01-10",
+  "generatedWithSeed": 42,
+  "description": "A deterministic, wholly synthetic snapshot designed to demonstrate settlement reconciliation. Scenario outcomes are injected test fixtures, not real incidents or business claims.",
+  "scenarios": [
+    {
+      "scenarioId": "normal",
+      "name": "Normal daily close",
+      "description": "A clean Services/EUR close used as the control case.",
+      "closeDate": "2024-09-17",
+      "defaultCurrency": "EUR",
+      "focusCategory": "Services",
+      "isDefault": true,
+      "expectedSignal": {"primaryReason": "matched", "affectedPayments": 0}
+    },
+    {
+      "scenarioId": "delayed_travel_gbp",
+      "name": "Delayed Travel / GBP batch",
+      "description": "A Travel batch settles three calendar days beyond each merchant's applicable SLA.",
+      "closeDate": "2024-10-08",
+      "investigationAsOfDate": "2024-10-11",
+      "defaultCurrency": "GBP",
+      "focusCategory": "Travel",
+      "isDefault": false,
+      "expectedSignal": {"primaryReason": "late", "affectedPayments": 48}
+    },
+    {
+      "scenarioId": "stale_electronics_eur_fee",
+      "name": "Stale Electronics / EUR fee schedule",
+      "description": "Recorded fees use the prior schedule after new effective-dated merchant terms begin.",
+      "closeDate": "2024-11-12",
+      "defaultCurrency": "EUR",
+      "focusCategory": "Electronics",
+      "isDefault": false,
+      "expectedSignal": {"primaryReason": "fee_mismatch", "affectedPayments": 48}
+    },
+    {
+      "scenarioId": "missing_retail_cad",
+      "name": "Missing Retail / CAD batch",
+      "description": "A completed Retail batch has no settlement evidence after its SLA expires.",
+      "closeDate": "2024-12-03",
+      "defaultCurrency": "CAD",
+      "focusCategory": "Retail",
+      "isDefault": false,
+      "expectedSignal": {"primaryReason": "missing", "affectedPayments": 48}
+    }
+  ]
+}

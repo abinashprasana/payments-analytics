@@ -1,6 +1,6 @@
 {
-  "name": "payment-observatory-case-study",
-  "version": "1.0.0",
+  "name": "settlement-gap-case-study",
+  "version": "2.0.0",
   "private": true,
   "engines": {
     "node": ">=24 <25"
@@ -8,11 +8,15 @@
   "packageManager": "npm@11.12.1",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && node scripts/strip-next-runtime.mjs",
+    "start": "npm run serve:static",
+    "serve:static": "node scripts/serve-static.mjs",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
+    "test:e2e:case": "playwright test e2e/case-study.spec.ts",
+    "test:e2e:workbench": "playwright test e2e/workbench.spec.ts",
+    "test:deployment": "playwright test e2e/deployment-smoke.spec.ts --project=desktop-1440",
     "test:e2e:list": "playwright test --list",
     "test:lighthouse": "node scripts/run-lighthouse.mjs"
   },

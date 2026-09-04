@@ -1,0 +1,87 @@
+name: Deploy case study to GitHub Pages
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build static case study
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - name: Check out verified revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.RELEASE_SHA }}
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install artifact dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Generate release evidence from canonical marts
+        run: python scripts/generate_artifacts.py --build-sha "${RELEASE_SHA}"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install site dependencies
+        working-directory: site
+        run: npm ci
+
+      - name: Build static export
+        working-directory: site
+        env:
+          NEXT_PUBLIC_BASE_PATH: /payments-analytics
+          NEXT_PUBLIC_SITE_URL: https://abinashprasana.github.io/payments-analytics/
+          NEXT_PUBLIC_WORKBENCH_URL: https://abinashprasana-payments-analytics-dashboardapp-mrsz1m.streamlit.app/
+          NEXT_PUBLIC_REPOSITORY_URL: https://github.com/abinashprasana/payments-analytics
+        run: npm run build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site/out
+
+  deploy:
+    name: Publish GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

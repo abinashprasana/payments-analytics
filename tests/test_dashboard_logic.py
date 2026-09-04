@@ -1,229 +1,242 @@
-"""Regression tests for dashboard filtering and metric rules."""
+"""Regression tests for the SQL-backed Settlement Operations Workbench."""
 
 from __future__ import annotations
 
-import os
+import json
 import unittest
-from datetime import date
+from pathlib import Path
 
 import pandas as pd
 
-from dashboard.analytics import (
-    DashboardFilters,
-    apply_filters,
-    cohort_retention,
-    dataset_scope,
-    enrich_transactions,
-    normalise_tables,
-    previous_period_filters,
-    risk_metrics,
-    settlement_statuses,
+from dashboard.workbench_ui import (
+    PRIMARY_REASON_ORDER,
+    default_scenario,
+    display_frame,
+    format_minor_units,
+    format_percent,
+    normalise_reasons,
+    reason_tags,
+    scenario_options,
+    trace_money_table,
 )
+from scripts.analytics_engine import AnalyticsEngine
 
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RAW_DATA_DIR = os.path.join(PROJECT_DIR, "data", "raw")
+PROJECT_DIR = Path(__file__).resolve().parents[1]
+MANIFEST_PATH = PROJECT_DIR / "data" / "scenarios.json"
 
 
-class DashboardFilterTests(unittest.TestCase):
-    def setUp(self) -> None:
-        self.accounts = pd.DataFrame(
+class WorkbenchPresentationTests(unittest.TestCase):
+    def test_money_uses_integer_minor_units_and_keeps_currency(self) -> None:
+        self.assertEqual(format_minor_units(12_345, "GBP"), "GBP 123.45")
+        self.assertEqual(format_minor_units(-105, "EUR"), "EUR -1.05")
+        self.assertEqual(format_percent("0.925"), "92.5%")
+
+    def test_trace_money_never_relabels_recorded_currency(self) -> None:
+        result = trace_money_table(
             {
-                "account_id": [1, 2],
-                "customer_id": [10, 20],
+                "transaction_currency": "EUR",
+                "settlement_currency": "GBP",
+                "expected_gross_minor_units": 10_000,
+                "recorded_gross_minor_units": 9_800,
+                "expected_fee_minor_units": 200,
+                "recorded_fee_minor_units": 200,
+                "expected_settled_minor_units": 9_800,
+                "recorded_settled_minor_units": 9_600,
             }
         )
-        self.merchants = pd.DataFrame(
-            {
-                "merchant_id": [100],
-                "merchant_name": ["Example Merchant"],
-                "category": ["Retail"],
-                "country": ["Ireland"],
-                "risk_tier": ["low"],
-            }
+        self.assertTrue(result["Expected"].str.startswith("EUR ").all())
+        self.assertTrue(result["Recorded"].str.startswith("GBP ").all())
+
+    def test_reason_tags_keep_sql_precedence_and_deduplicate(self) -> None:
+        reasons = normalise_reasons(
+            "disputed,late,missing,fee_mismatch,late,currency_mismatch"
         )
-        self.transactions = pd.DataFrame(
-            {
-                "transaction_id": [1, 2],
-                "account_id": [1, 2],
-                "merchant_id": [100, pd.NA],
-                "amount": [50.0, 75.0],
-                "currency": ["EUR", "EUR"],
-                "transaction_date": pd.to_datetime(
-                    ["2024-02-10", "2024-02-11"]
-                ),
-                "transaction_type": ["purchase", "transfer"],
-                "status": ["completed", "completed"],
-            }
+        self.assertEqual(
+            reasons,
+            [
+                "missing",
+                "currency_mismatch",
+                "fee_mismatch",
+                "late",
+                "disputed",
+            ],
         )
-        self.enriched = enrich_transactions(
-            self.transactions,
-            self.accounts,
-            self.merchants,
+        tags = reason_tags(reasons)
+        self.assertLess(tags.index("Missing settlement"), tags.index("Late settlement"))
+
+    def test_reason_fallback_reads_independent_sql_flags(self) -> None:
+        row = {
+            "is_late": True,
+            "is_missing": False,
+            "is_amount_mismatch": True,
+        }
+        self.assertEqual(
+            normalise_reasons(None, row),
+            ["amount_mismatch", "late"],
         )
 
-    def test_all_categories_keep_merchantless_transfers(self) -> None:
-        filters = DashboardFilters(
-            date(2024, 2, 1),
-            date(2024, 2, 29),
-            ("EUR",),
-            ("Retail",),
+    def test_scenario_registry_has_a_stable_normal_default(self) -> None:
+        frame = pd.DataFrame(
+            [
+                {"scenario_id": "incident", "name": "Incident"},
+                {
+                    "scenario_id": "normal",
+                    "name": "Normal daily close",
+                    "is_default": True,
+                    "close_date": "2024-09-17",
+                    "as_of_date": "2025-01-10",
+                    "default_currency": "EUR",
+                },
+            ]
         )
-        result = apply_filters(self.enriched, filters, ("Retail",))
-        self.assertEqual(set(result["transaction_id"]), {1, 2})
+        options = scenario_options(frame)
+        self.assertEqual(default_scenario(options), "normal")
+        normal = next(option for option in options if option.scenario_id == "normal")
+        self.assertEqual(normal.default_currency, "EUR")
+        self.assertEqual(normal.close_date.isoformat(), "2024-09-17")
 
-    def test_category_subset_excludes_merchantless_transfers(self) -> None:
-        filters = DashboardFilters(
-            date(2024, 2, 1),
-            date(2024, 2, 29),
-            ("EUR",),
-            tuple(),
-        )
-        result = apply_filters(self.enriched, filters, ("Retail",))
-        self.assertTrue(result.empty)
-
-    def test_dates_are_inclusive_and_currency_is_exact(self) -> None:
-        extra = self.enriched.copy()
-        extra.loc[extra["transaction_id"].eq(2), "currency"] = "GBP"
-        filters = DashboardFilters(
-            date(2024, 2, 10),
-            date(2024, 2, 10),
-            ("EUR",),
-            ("Retail",),
-        )
-        result = apply_filters(extra, filters, ("Retail",))
-        self.assertEqual(result["transaction_id"].tolist(), [1])
-
-    def test_previous_period_has_equal_inclusive_length(self) -> None:
-        filters = DashboardFilters(
-            date(2024, 4, 10),
-            date(2024, 4, 19),
-            ("EUR",),
-            ("Retail",),
-            True,
-        )
-        previous = previous_period_filters(filters, date(2024, 1, 1))
-        self.assertIsNotNone(previous)
-        self.assertEqual(previous.start_date, date(2024, 3, 31))
-        self.assertEqual(previous.end_date, date(2024, 4, 9))
-
-    def test_previous_period_requires_complete_history(self) -> None:
-        filters = DashboardFilters(
-            date(2024, 1, 1),
-            date(2024, 1, 10),
-            ("EUR",),
-            ("Retail",),
-            True,
-        )
-        self.assertIsNone(previous_period_filters(filters, date(2024, 1, 1)))
+    def test_display_frame_does_not_invent_analytical_columns(self) -> None:
+        frame = pd.DataFrame({"payment_id": [1], "currency": ["CAD"]})
+        result = display_frame(frame, ("payment_id", "gross", "currency"))
+        self.assertEqual(result.columns.tolist(), ["payment_id", "currency"])
 
 
-class RetentionTests(unittest.TestCase):
-    def test_observed_zero_is_not_confused_with_future_month(self) -> None:
-        customers = pd.DataFrame(
-            {
-                "customer_id": [10, 20],
-                "join_date": pd.to_datetime(["2024-01-03", "2024-03-02"]),
-            }
-        )
-        accounts = pd.DataFrame(
-            {
-                "account_id": [1, 2],
-                "customer_id": [10, 20],
-            }
-        )
-        transactions = pd.DataFrame(
-            {
-                "transaction_id": [1, 2],
-                "account_id": [1, 2],
-                "transaction_date": pd.to_datetime(
-                    ["2024-01-12", "2024-03-12"]
-                ),
-                "status": ["completed", "completed"],
-            }
-        )
-        result = cohort_retention(
-            customers,
-            accounts,
-            transactions,
-            date(2024, 1, 1),
-            date(2024, 3, 31),
-        )
-        january = result[result["cohort_month"].eq(pd.Timestamp("2024-01-01"))]
-        observed_month_one = january[january["months_active_offset"].eq(1)].iloc[0]
-        future_month_three = january[january["months_active_offset"].eq(3)].iloc[0]
-        self.assertTrue(observed_month_one["observable"])
-        self.assertEqual(observed_month_one["retention_rate"], 0.0)
-        self.assertFalse(future_month_three["observable"])
-        self.assertTrue(pd.isna(future_month_three["retention_rate"]))
-
-
-class SourceParityTests(unittest.TestCase):
+class AnalyticsEngineContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.customers = pd.read_csv(os.path.join(RAW_DATA_DIR, "customers.csv"))
-        cls.accounts = pd.read_csv(os.path.join(RAW_DATA_DIR, "accounts.csv"))
-        cls.merchants = pd.read_csv(os.path.join(RAW_DATA_DIR, "merchants.csv"))
-        cls.transactions = pd.read_csv(
-            os.path.join(RAW_DATA_DIR, "transactions.csv")
-        )
-        cls.settlements = pd.read_csv(
-            os.path.join(RAW_DATA_DIR, "settlements.csv")
-        )
-        cls.flags = pd.read_csv(os.path.join(RAW_DATA_DIR, "fraud_flags.csv"))
-        (
-            cls.customers,
-            cls.accounts,
-            cls.merchants,
-            cls.transactions,
-            cls.settlements,
-            cls.flags,
-        ) = normalise_tables(
-            cls.customers,
-            cls.accounts,
-            cls.merchants,
-            cls.transactions,
-            cls.settlements,
-            cls.flags,
-        )
+        cls.manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        cls.engine = AnalyticsEngine(repo_root=PROJECT_DIR, build_sha="test-build")
+        cls.scenarios = {
+            item["scenarioId"]: item for item in cls.manifest["scenarios"]
+        }
 
-    def test_source_record_counts(self) -> None:
-        self.assertEqual(len(self.customers), 5_000)
-        self.assertEqual(len(self.accounts), 6_000)
-        self.assertEqual(len(self.merchants), 800)
-        self.assertEqual(len(self.transactions), 80_000)
-        self.assertEqual(len(self.settlements), 61_124)
-        self.assertEqual(len(self.flags), 2_500)
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.engine.close()
 
-    def test_dataset_scope_includes_merchantless_transactions(self) -> None:
-        scope = dataset_scope(
-            self.customers,
-            self.accounts,
-            self.merchants,
-            self.transactions,
-            self.settlements,
-            self.flags,
+    def scenario_params(self, scenario_id: str, **extra: object) -> dict[str, object]:
+        scenario = self.scenarios[scenario_id]
+        return {
+            "scenario": scenario_id,
+            "currency": scenario["defaultCurrency"],
+            "start_date": scenario["closeDate"],
+            "end_date": scenario["closeDate"],
+            **extra,
+        }
+
+    def close_row(self, scenario_id: str, *, as_of: str | None = None) -> pd.Series:
+        params = self.scenario_params(
+            scenario_id,
+            as_of_date=as_of or self.manifest["asOfDate"],
         )
-        self.assertEqual(scope["merchantless_transaction_count"], 11_934)
+        frame = self.engine.query("close_summary", params)
+        self.assertEqual(len(frame), 1)
+        return frame.iloc[0]
+
+    def test_registry_exposes_only_the_four_versioned_scenarios(self) -> None:
+        registry = self.engine.query("scenario_options")
         self.assertEqual(
-            scope["first_transaction_date"],
-            date(2022, 2, 7),
+            registry["scenario_id"].tolist(),
+            [
+                "normal",
+                "delayed_travel_gbp",
+                "stale_electronics_eur_fee",
+                "missing_retail_cad",
+            ],
+        )
+        self.assertEqual(default_scenario(scenario_options(registry)), "normal")
+        delayed = registry.loc[
+            registry["scenario_id"] == "delayed_travel_gbp"
+        ].iloc[0]
+        self.assertEqual(str(delayed["as_of_date"]), "2024-10-11")
+
+    def test_query_registry_rejects_arbitrary_sql_and_invalid_parameters(self) -> None:
+        invalid_calls = (
+            ("select * from settlements", {}),
+            ("close_summary", {}),
+            ("close_summary", {"unexpected": "value"}),
+            ("close_summary", {"scenario": "unknown"}),
+            ("close_summary", {"currency": "USD"}),
+            ("close_summary", {"as_of_date": "03/12/2024"}),
+            ("payment_trace", {"payment_id": "1 OR 1=1"}),
+            ("payment_trace", {"scenario": "normal"}),
+            (
+                "close_summary",
+                {"start_date": "2024-12-31", "end_date": "2024-01-01"},
+            ),
+        )
+        for query_id, params in invalid_calls:
+            with self.subTest(query_id=query_id, params=params):
+                with self.assertRaises(ValueError):
+                    self.engine.query(query_id, params)
+
+    def test_normal_close_is_a_clean_control(self) -> None:
+        row = self.close_row("normal")
+        self.assertEqual(int(row["exception_count"]), 0)
+        self.assertEqual(int(row["eligible_count"]), int(row["matched_count"]))
+        self.assertEqual(float(row["coverage_rate"]), 1.0)
+        self.assertEqual(int(row["overdue_minor_units"]), 0)
+
+    def test_delayed_batch_changes_from_open_gap_to_late_evidence(self) -> None:
+        scenario = self.scenarios["delayed_travel_gbp"]
+        early = self.close_row(
+            "delayed_travel_gbp", as_of=scenario["closeDate"]
+        )
+        final = self.close_row("delayed_travel_gbp")
+        expected = int(scenario["expectedSignal"]["affectedPayments"])
+
+        self.assertEqual(int(early["missing_count"]), 0)
+        self.assertLess(int(early["matched_count"]), int(final["matched_count"]))
+        self.assertEqual(int(final["late_count"]), expected)
+        self.assertEqual(int(final["matched_count"]), int(final["eligible_count"]))
+
+    def test_fee_and_missing_scenarios_match_the_manifest_signals(self) -> None:
+        fee = self.close_row("stale_electronics_eur_fee")
+        missing = self.close_row("missing_retail_cad")
+        self.assertEqual(
+            int(fee["fee_mismatch_count"]),
+            int(
+                self.scenarios["stale_electronics_eur_fee"]["expectedSignal"][
+                    "affectedPayments"
+                ]
+            ),
         )
         self.assertEqual(
-            scope["last_transaction_date"],
-            date(2024, 12, 31),
+            int(missing["missing_count"]),
+            int(
+                self.scenarios["missing_retail_cad"]["expectedSignal"][
+                    "affectedPayments"
+                ]
+            ),
         )
 
-    def test_settlement_outcomes(self) -> None:
-        outcomes = settlement_statuses(self.settlements).set_index("status")
-        self.assertEqual(int(outcomes.loc["settled", "count"]), 57_381)
-        self.assertEqual(int(outcomes.loc["delayed", "count"]), 3_117)
-        self.assertEqual(int(outcomes.loc["disputed", "count"]), 626)
+    def test_queue_keeps_all_flags_and_sql_primary_precedence(self) -> None:
+        queue = self.engine.query(
+            "exception_queue", self.scenario_params("delayed_travel_gbp")
+        )
+        self.assertFalse(queue.empty)
+        for row in queue.to_dict(orient="records"):
+            reasons = normalise_reasons(row["exception_reasons"], row)
+            self.assertTrue(reasons)
+            self.assertEqual(row["primary_reason"], reasons[0])
+            ranks = [PRIMARY_REASON_ORDER.index(reason) for reason in reasons]
+            self.assertEqual(ranks, sorted(ranks))
 
-    def test_flag_resolution_outcomes(self) -> None:
-        metrics = risk_metrics(self.transactions, self.flags)
-        self.assertEqual(int(metrics["resolved_count"]), 2_014)
-        self.assertEqual(int(metrics["unresolved_count"]), 486)
+    def test_payment_trace_is_one_validated_currency_specific_row(self) -> None:
+        params = self.scenario_params("delayed_travel_gbp")
+        queue = self.engine.query("exception_queue", params)
+        payment_id = str(int(queue.iloc[0]["payment_id"]))
+        trace = self.engine.query(
+            "payment_trace", {**params, "payment_id": payment_id}
+        )
+        self.assertEqual(len(trace), 1)
+        self.assertEqual(str(int(trace.iloc[0]["payment_id"])), payment_id)
+        self.assertEqual(trace.iloc[0]["transaction_currency"], "GBP")
+        self.assertEqual(trace.iloc[0]["lineage_query_id"], "payment_trace")
+        self.assertEqual(
+            trace.iloc[0]["lineage_model"], "int_settlement_reconciliation"
+        )
 
 
 if __name__ == "__main__":

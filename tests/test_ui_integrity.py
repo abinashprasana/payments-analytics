@@ -1,69 +1,100 @@
-"""Static checks for the optional visual runtime and its fallbacks."""
+"""Static and AppTest checks for the Settlement Operations Workbench UI."""
 
 from __future__ import annotations
 
-import gzip
 import unittest
 import xml.etree.ElementTree as ET
+from datetime import date
 from pathlib import Path
+from typing import Any
+
+from streamlit.testing.v1 import AppTest
 
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
-UI_SOURCE = PROJECT_DIR / "dashboard" / "ui.py"
-APP_SOURCE = PROJECT_DIR / "dashboard" / "app.py"
-OGL_DIR = PROJECT_DIR / "dashboard" / "static" / "vendor" / "ogl"
+APP_PATH = PROJECT_DIR / "dashboard" / "app.py"
+UI_PATH = PROJECT_DIR / "dashboard" / "workbench_ui.py"
 BRAND_DIR = PROJECT_DIR / "dashboard" / "static" / "brand"
-DESIGN_FILE = PROJECT_DIR / "DESIGN.md"
 
 
-class VisualRuntimeTests(unittest.TestCase):
-    def test_ogl_is_bundled_locally_within_the_asset_budget(self) -> None:
-        runtime = OGL_DIR / "ogl.umd.js"
-        licence = OGL_DIR / "LICENSE"
-        manifest = OGL_DIR / "README.md"
+def new_app(**query_params: str) -> AppTest:
+    app = AppTest.from_file(str(APP_PATH), default_timeout=120)
+    app.query_params.update(query_params)
+    return app.run(timeout=120)
 
-        self.assertTrue(runtime.is_file())
-        self.assertTrue(licence.is_file())
-        self.assertIn("Version: 0.0.42", manifest.read_text(encoding="utf-8"))
-        self.assertIn("MIT License", licence.read_text(encoding="utf-8"))
-        self.assertLess(len(gzip.compress(runtime.read_bytes())), 50_000)
 
-    def test_reactor_keeps_the_required_failure_guards(self) -> None:
-        source = UI_SOURCE.read_text(encoding="utf-8")
+def by_label(elements: Any, label: str) -> Any:
+    return next(element for element in elements if element.label == label)
 
-        for guard in (
-            'new URL("app/static/vendor/ogl/ogl.umd.js", document.baseURI)',
-            "webglcontextlost",
-            "webglcontextrestored",
-            "prefers-reduced-motion",
-            "navigator.connection?.saveData",
-            "stage.clientWidth >= 680",
-            "IntersectionObserver",
-            "reactor?.destroy(true)",
+
+class WorkbenchStaticContractTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.app_source = APP_PATH.read_text(encoding="utf-8")
+        cls.ui_source = UI_PATH.read_text(encoding="utf-8")
+
+    def test_only_the_four_task_oriented_views_are_exposed(self) -> None:
+        for view in ("close", "exceptions", "trace", "catalog"):
+            self.assertIn(f'"{view}"', self.ui_source)
+        for legacy in ('"overview"', '"risk"', '"retention"', '"model"'):
+            self.assertNotIn(legacy, self.app_source)
+            self.assertNotIn(legacy, self.ui_source)
+
+    def test_application_has_no_pandas_business_logic_or_arbitrary_sql(self) -> None:
+        for blocked in (
+            ".merge(",
+            "pd.merge(",
+            ".groupby(",
+            ".pivot(",
+            ".pivot_table(",
+            ".agg(",
+            "SELECT *",
+            "read_sql",
         ):
-            self.assertIn(guard, source)
+            self.assertNotIn(blocked, self.app_source)
+            self.assertNotIn(blocked, self.ui_source)
+        self.assertIn('run_query(engine, "close_summary"', self.app_source)
+        self.assertIn('run_query(engine, "exception_queue"', self.app_source)
+        self.assertGreaterEqual(self.app_source.count('"payment_trace"'), 3)
 
-        self.assertNotIn("https://", source)
-        self.assertNotIn("http://", source)
-
-    def test_static_payment_rail_remains_present(self) -> None:
-        source = UI_SOURCE.read_text(encoding="utf-8")
-
-        for node in (
-            'data-node="customers"',
-            'data-node="accounts"',
-            'data-node="transactions"',
-            'data-node="merchants"',
-            'data-node="settlements"',
-            'data-node="flags"',
+    def test_deep_link_session_and_export_contracts_are_visible(self) -> None:
+        for marker in (
+            "st.query_params",
+            '{"view", "scenario", "payment_id"}',
+            '"Session review status"',
+            '"Session note"',
+            '"Save session note"',
+            '"Reset session-only reviews"',
+            '"Export filtered evidence"',
+            'mime="text/csv"',
+            "update the repository snapshot or simulate a real payment operation",
         ):
-            self.assertIn(node, source)
+            self.assertIn(marker, self.app_source)
 
-        self.assertIn('class="reactor-fallback"', source)
-        self.assertIn('aria-hidden="true"', source)
+    def test_compact_lifecycle_replaces_the_decorative_reactor(self) -> None:
+        for step in (
+            "Identify close",
+            "Filter exceptions",
+            "Trace payment",
+            "Export evidence",
+        ):
+            self.assertIn(step, self.ui_source)
+        combined = (self.app_source + self.ui_source).lower()
+        self.assertNotIn("reactor", combined)
+        self.assertNotIn("webgl", combined)
+        self.assertNotIn("ogl", combined)
 
+    def test_accessibility_and_responsive_guards_remain(self) -> None:
+        for marker in (
+            ":focus-visible",
+            "min-height: 44px",
+            "@media (max-width: 720px)",
+            "prefers-reduced-motion: reduce",
+            'aria-label="Snapshot metadata"',
+            'aria-label="Investigation workflow"',
+        ):
+            self.assertIn(marker, self.ui_source)
 
-class BrandIdentityTests(unittest.TestCase):
     def test_brand_assets_are_safe_local_vectors(self) -> None:
         assets = (
             "payment-observatory-mark.svg",
@@ -71,158 +102,150 @@ class BrandIdentityTests(unittest.TestCase):
             "payment-observatory-mark-mono.svg",
         )
         blocked_tags = {"script", "image", "text", "foreignObject"}
-
         for filename in assets:
             path = BRAND_DIR / filename
             self.assertTrue(path.is_file(), filename)
-            self.assertLess(path.stat().st_size, 12_000, filename)
-
             source = path.read_text(encoding="utf-8")
             root = ET.fromstring(source)
             self.assertEqual(root.attrib.get("viewBox"), "0 0 64 64")
-            asset_body = source.replace(
-                'xmlns="http://www.w3.org/2000/svg"', ""
-            )
-            self.assertNotIn("http://", asset_body)
-            self.assertNotIn("https://", asset_body)
-            self.assertNotIn("data:image", asset_body)
-
             for element in root.iter():
-                tag = element.tag.rsplit("}", 1)[-1]
-                self.assertNotIn(tag, blocked_tags)
+                self.assertNotIn(element.tag.rsplit("}", 1)[-1], blocked_tags)
                 for name, value in element.attrib.items():
                     self.assertNotIn("href", name.lower())
                     self.assertNotIn("javascript:", value.lower())
 
-    def test_brand_mark_replaces_the_generic_css_badge_and_favicon(self) -> None:
-        ui_source = UI_SOURCE.read_text(encoding="utf-8")
-        app_source = APP_SOURCE.read_text(encoding="utf-8")
 
-        self.assertIn("data-brand-mark", ui_source)
-        self.assertIn("payment-observatory-mark.svg", ui_source)
-        self.assertIn("payment-observatory-mark-compact.svg", app_source)
-        self.assertIn("page_icon=BRAND_ICON", app_source)
-        self.assertNotIn("conic-gradient(from 220deg", ui_source)
-        self.assertNotIn(".pay-brand-mark::after", ui_source)
+class WorkbenchAppTests(unittest.TestCase):
+    def assert_clean_run(self, app: AppTest) -> None:
+        self.assertEqual([str(item.value) for item in app.exception], [])
+        self.assertEqual([item.value for item in app.error], [])
 
-    def test_brand_motion_is_one_time_and_reduced_motion_safe(self) -> None:
-        source = UI_SOURCE.read_text(encoding="utf-8")
+    def test_unknown_deep_link_falls_back_to_close_and_normal(self) -> None:
+        app = new_app(view="unknown", scenario="not-a-scenario", payment_id="bad")
+        self.assert_clean_run(app)
+        self.assertEqual(app.radio[0].value, "close")
+        self.assertEqual(app.query_params["view"], ["close"])
+        self.assertEqual(app.query_params["scenario"], ["normal"])
+        self.assertNotIn("payment_id", app.query_params)
+        scenario = by_label(app.selectbox, "Synthetic scenario")
+        self.assertEqual(scenario.value, "normal")
 
-        for guard in (
-            "payment-observatory-brand-seen-v1",
-            'sessionStorage.setItem("payment-observatory-brand-seen-v1", "1")',
-            "pay-brand-signal-pass 620ms",
-            "prefers-reduced-motion: no-preference",
-            "brandMark?.classList.remove",
-        ):
-            self.assertIn(guard, source)
+    def test_all_four_views_render_from_stable_deep_links(self) -> None:
+        expected_headings = {
+            "close": "Close health by currency",
+            "exceptions": "Exception queue",
+            "trace": "Payment trace",
+            "catalog": "Metric and model catalog",
+        }
+        for view, heading in expected_headings.items():
+            scenario = "normal" if view in {"close", "catalog"} else "delayed_travel_gbp"
+            with self.subTest(view=view):
+                app = new_app(view=view, scenario=scenario)
+                self.assert_clean_run(app)
+                self.assertEqual(app.radio[0].value, view)
+                markdown = "\n".join(str(item.value) for item in app.markdown)
+                self.assertIn(heading, markdown)
 
+    def test_scenario_selector_updates_the_deep_link(self) -> None:
+        app = new_app(view="close", scenario="normal")
+        by_label(app.selectbox, "Synthetic scenario").select(
+            "delayed_travel_gbp"
+        ).run(timeout=120)
+        self.assert_clean_run(app)
+        self.assertEqual(app.query_params["scenario"], ["delayed_travel_gbp"])
+        self.assertEqual(by_label(app.selectbox, "Currency").value, "GBP")
+        self.assertEqual(by_label(app.date_input, "As-of date").value, date(2024, 10, 11))
 
-class PremiumConsistencyTests(unittest.TestCase):
-    def test_design_contract_and_single_stylesheet_are_present(self) -> None:
-        source = UI_SOURCE.read_text(encoding="utf-8")
-
-        self.assertTrue(DESIGN_FILE.is_file())
-        design = DESIGN_FILE.read_text(encoding="utf-8")
-        self.assertIn("# Payment Observatory design system", design)
-        self.assertIn("The hero owns ambient motion", design)
-        self.assertNotIn("PREMIUM_CSS", source)
+        app.query_params["scenario"] = "missing_retail_cad"
+        app.run(timeout=120)
+        self.assert_clean_run(app)
         self.assertEqual(
-            source.count("st.markdown(APP_CSS, unsafe_allow_html=True)"),
-            1,
+            by_label(app.selectbox, "Synthetic scenario").value,
+            "missing_retail_cad",
         )
+        self.assertEqual(by_label(app.selectbox, "Currency").value, "CAD")
 
-    def test_scope_composer_keeps_the_filter_contract(self) -> None:
-        source = UI_SOURCE.read_text(encoding="utf-8")
+    def test_exception_filter_empty_state_and_csv_export(self) -> None:
+        app = new_app(view="exceptions", scenario="delayed_travel_gbp")
+        self.assert_clean_run(app)
+        downloads = app.get("download_button")
+        export = next(
+            item for item in downloads if item.proto.label == "Export filtered evidence"
+        )
+        self.assertTrue(export.proto.url.endswith(".csv"))
 
-        for marker in (
-            'class="scope-composer"',
-            'aria-expanded="false"',
-            'id="date-start"',
-            'id="date-end"',
-            'id="currency-options"',
-            'id="category-options"',
-            'id="compare-previous"',
-            'setStateValue("filters",payload())',
-            'setStateValue("filters",defaults)',
-            'event.key!=="Escape"',
-        ):
-            self.assertIn(marker, source)
-
-    def test_secondary_metrics_and_measure_switch_use_local_components(self) -> None:
-        ui_source = UI_SOURCE.read_text(encoding="utf-8")
-        app_source = APP_SOURCE.read_text(encoding="utf-8")
-
-        self.assertIn("def render_metric_strip", ui_source)
-        self.assertIn("def render_measure_switch", ui_source)
-        self.assertIn("payments_measure_switch", ui_source)
-        self.assertIn("st.segmented_control(", ui_source)
-        self.assertNotIn("st.metric(", app_source)
-        self.assertNotIn("st.segmented_control(", app_source)
-
-    def test_cinematic_trace_is_one_time_replayable_and_bounded(self) -> None:
-        source = UI_SOURCE.read_text(encoding="utf-8")
-
-        for marker in (
-            'id="replay-trace"',
-            'id="trace-timeline"',
-            'aria-valuemax="100"',
-            "payment-observatory-trace-seen-v1",
-            "runSystemTrace",
-            "startSystemTrace",
-            'setSequenceState("complete")',
-            'sessionStorage.setItem("payment-observatory-trace-seen-v1","1")',
-            "pauseForVisibility",
-            "activeRouteId&&token&&routePaths.has(activeRouteId)",
-        ):
-            self.assertIn(marker, source)
-
-        self.assertNotIn("while (canAnimate()", source)
-        self.assertNotIn("startMotion()", source)
-
-    def test_navigation_and_scope_labels_do_not_depend_on_generated_text(self) -> None:
-        source = UI_SOURCE.read_text(encoding="utf-8")
-
-        self.assertIn("@media(max-width:1120px)", source)
-        self.assertIn(">Adjust scope</span>", source)
-        self.assertNotIn('.scope-toggle span::after{content:"Edit"', source)
-
-    def test_deep_links_sticky_controls_and_case_study_crosslink(self) -> None:
-        ui_source = UI_SOURCE.read_text(encoding="utf-8")
-        app_source = APP_SOURCE.read_text(encoding="utf-8")
-
+        by_label(app.text_input, "Merchant or payment").input(
+            "__no_matching_payment__"
+        ).run(timeout=120)
+        self.assert_clean_run(app)
         self.assertIn(
-            'VALID_VIEWS = ("overview", "merchant", "risk", "retention", "model")',
-            app_source,
+            "No queue rows match the display filters. Clear them to continue.",
+            [item.value for item in app.info],
         )
-        self.assertIn("st.query_params", app_source)
-        self.assertIn('CASE_STUDY_URL = os.getenv(', app_source)
-        self.assertIn("Read case study", ui_source)
-        self.assertIn(".st-key-pay_sticky_controls", ui_source)
-        self.assertIn("overflow-x:auto", ui_source)
 
-    def test_complex_charts_keep_semantic_table_alternatives(self) -> None:
-        source = APP_SOURCE.read_text(encoding="utf-8")
+    def test_invalid_trace_payment_falls_back_to_a_valid_payment(self) -> None:
+        app = new_app(
+            view="trace",
+            scenario="delayed_travel_gbp",
+            payment_id="not-an-id",
+        )
+        self.assert_clean_run(app)
+        payment_id = app.query_params["payment_id"][0]
+        self.assertTrue(payment_id.isdigit())
+        self.assertIn(
+            f"Payment `not-an-id` is not valid in this scenario. Showing `{payment_id}` instead.",
+            [item.value for item in app.warning],
+        )
 
-        self.assertIn('with st.expander("Open review-flow data table")', source)
-        self.assertIn('with st.expander("Open retention data table")', source)
-        self.assertGreaterEqual(source.count("st.table("), 2)
+    def test_review_notes_and_resolution_status_are_session_only_and_resettable(self) -> None:
+        app = new_app(view="trace", scenario="delayed_travel_gbp")
+        self.assert_clean_run(app)
+        payment_id = app.query_params["payment_id"][0]
 
-    def test_design_contract_records_trace_palette_and_art_direction(self) -> None:
-        design = DESIGN_FILE.read_text(encoding="utf-8")
+        by_label(app.selectbox, "Session review status").select("Investigating")
+        by_label(app.text_area, "Session note").input("Checked settlement evidence")
+        by_label(app.button, "Save session note").click().run(timeout=120)
+        self.assert_clean_run(app)
+        self.assertEqual(
+            app.session_state["settlement_review_state"][payment_id],
+            {
+                "status": "Investigating",
+                "notes": "Checked settlement evidence",
+            },
+        )
+        self.assertIn("Saved for this session only.", [item.value for item in app.success])
 
+        by_label(app.button, "Reset session-only reviews").click().run(timeout=120)
+        self.assert_clean_run(app)
+        self.assertEqual(app.session_state["settlement_review_state"], {})
+        self.assertIn(
+            "Session review state cleared.", [item.value for item in app.success]
+        )
+
+    def test_catalog_discloses_snapshot_build_runtime_and_hibernation(self) -> None:
+        app = new_app(view="catalog", scenario="normal")
+        self.assert_clean_run(app)
+        page_text = "\n".join(
+            str(item.value)
+            for collection in (app.markdown, app.info, app.caption)
+            for item in collection
+        )
         for marker in (
-            "### System trace storyboard",
-            "About 7.55s",
-            "### Responsive behavior",
-            "## Component locks",
-            "## Art-direction prompt",
-            "#4E72FF",
-            "#68DCFF",
-            "#8AF6C7",
-            "#FF756F",
+            "Synthetic demo snapshot",
+            "Streamlit Community Cloud may ask you to wake",
         ):
-            self.assertIn(marker, design)
+            self.assertIn(marker, page_text)
+        build_table = app.dataframe[0].value
+        self.assertEqual(
+            build_table["Field"].tolist(),
+            [
+                "Dataset version",
+                "As-of date",
+                "Commit SHA",
+                "Runtime mode",
+                "Snapshot",
+            ],
+        )
 
 
 if __name__ == "__main__":

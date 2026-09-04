@@ -1,10 +1,16 @@
 import { defineConfig } from "@playwright/test";
 
-const caseStudyBaseURL =
-  process.env.CASE_STUDY_BASE_URL ?? "http://127.0.0.1:3000";
-const labBaseURL = process.env.LAB_BASE_URL ?? "http://127.0.0.1:8501";
+const caseStudyBaseURL = `${
+  process.env.CASE_STUDY_BASE_URL ??
+  "http://127.0.0.1:3000/payments-analytics"
+}`.replace(/\/$/, "");
+const caseStudyPageURL = `${caseStudyBaseURL}/`;
+const workbenchBaseURL = process.env.WORKBENCH_BASE_URL ?? "http://127.0.0.1:8501";
 const pythonExecutable = process.env.PYTHON_EXECUTABLE ?? "python";
 const reuseExistingServer = process.env.CI !== "true";
+const skipLocalServers =
+  process.env.PUBLIC_DEPLOYMENT === "1" ||
+  process.env.PLAYWRIGHT_SKIP_LOCAL_SERVERS === "1";
 
 const viewports = [
   { name: "desktop-1440", width: 1440, height: 900 },
@@ -28,7 +34,7 @@ export default defineConfig({
     : [["list"], ["html", { open: "never" }]],
   outputDir: "test-results",
   use: {
-    baseURL: caseStudyBaseURL,
+    baseURL: caseStudyPageURL,
     browserName: "chromium",
     colorScheme: "light",
     trace: "retain-on-failure",
@@ -39,10 +45,10 @@ export default defineConfig({
     name,
     use: { viewport: { width, height } },
   })),
-  webServer: [
+  webServer: skipLocalServers ? undefined : [
     {
-      command: "npm run start -- --hostname 127.0.0.1 --port 3000",
-      url: caseStudyBaseURL,
+      command: "npm run serve:static",
+      url: caseStudyPageURL,
       timeout: 180_000,
       reuseExistingServer,
       stdout: "pipe",
@@ -51,7 +57,7 @@ export default defineConfig({
     {
       command:
         `"${pythonExecutable}" -m streamlit run ../dashboard/app.py --server.address 127.0.0.1 --server.port 8501 --server.headless true --server.fileWatcherType none`,
-      url: `${labBaseURL}/?view=overview`,
+      url: `${workbenchBaseURL}/?view=close&scenario=normal`,
       timeout: 180_000,
       reuseExistingServer,
       stdout: "pipe",

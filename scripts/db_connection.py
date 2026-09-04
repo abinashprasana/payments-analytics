@@ -1,4 +1,8 @@
-"""Database connection factories for application reads and bulk loading."""
+"""PostgreSQL connection factories for loading, parity, and local exploration.
+
+The public workbench never calls this module; it runs the committed snapshot in
+an in-memory DuckDB database.
+"""
 
 from __future__ import annotations
 
@@ -28,15 +32,14 @@ def _database_settings() -> dict[str, Any]:
 def get_connection():
     """Return a raw psycopg2 connection for COPY-based bulk loading.
 
-    Callers own the returned connection and must close it. Dashboard and
-    Pandas reads should use :func:`get_read_engine` instead.
+    Callers own the returned connection and must close it.
     """
 
     return psycopg2.connect(**_database_settings())
 
 
 def get_read_engine() -> Engine:
-    """Return a caller-owned SQLAlchemy engine for Pandas/database reads."""
+    """Return a caller-owned SQLAlchemy engine for optional local SQL reads."""
 
     settings = _database_settings()
     url = URL.create(
