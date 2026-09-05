@@ -59,9 +59,9 @@
     }
   ],
   "question": {
-    "stakeholder": "Why did completed Travel purchases stop reconciling to recorded GBP settlement value?",
-    "conciseAnswer": "At the 2024-10-11 checkpoint, only 48 of 96 eligible GBP purchases from the 2024-10-08 close had matching settlement evidence. The 48-payment synthetic Travel batch later arrived three days beyond each applicable SLA; coverage recovered to 100% and those payments became late exceptions.",
-    "operationalDecision": "Reconcile the late batch as one operational event, then route any residual payment-level exceptions using the stable queue precedence."
+    "stakeholder": "Why do completed Electronics purchases in EUR still carry a fee-mismatch exception after the close?",
+    "conciseAnswer": "At the 2024-11-15 checkpoint, 190 of 190 eligible EUR purchases from the 2024-11-12 close reconciled cleanly. Recorded fees use the prior schedule after new effective-dated merchant terms begin. The 48 affected payments settled on time and on gross amount, but their recorded processing fee no longer matches the effective merchant term, so they are flagged as fee-mismatch exceptions.",
+    "operationalDecision": "Reconcile the injected batch as one operational event, then route any residual payment-level exceptions using the stable queue precedence."
   },
   "metricDefinitions": [
     {
@@ -232,7 +232,7 @@
       "disclosure": "Deterministic synthetic scenario from data/scenarios.json; it is not a real payment incident."
     }
   ],
-  "selectedScenarioId": "delayed_travel_gbp",
+  "selectedScenarioId": "stale_electronics_eur_fee",
   "investigationSteps": [
     {
       "id": "baseline",
@@ -241,16 +241,16 @@
       "queryId": "close_summary",
       "model": "mart_daily_close",
       "sql": "-- analytics_context.as_of_date = :investigation_as_of_date\nSELECT\n  close_date, currency, eligible_count, matched_count,\n  coverage_rate, overdue_minor_units, fee_delta_minor_units\nFROM mart_daily_close\nWHERE close_date = :scenario_date\n  AND currency = :currency\nORDER BY close_date, currency;",
-      "reading": "At the 2024-10-11 observation cut, the selected close was 48/96 matched. The final snapshot recovers the evidence and preserves the SLA breach."
+      "reading": "At the 2024-11-15 observation cut, the selected close was 190/190 matched. The final snapshot preserves the injected exception rather than resolving it."
     },
     {
       "id": "isolation",
       "label": "Segment isolation",
-      "question": "Which merchant segment explains the GBP gap?",
+      "question": "Which merchant segment explains the EUR gap?",
       "queryId": "segment_isolation",
       "model": "mart_category_health",
       "sql": "SELECT\n  merchant_category, currency, eligible_count,\n  exception_count, exception_rate, primary_reason,\n  overdue_minor_units, fee_delta_minor_units\nFROM mart_category_health\nWHERE close_date = :scenario_date\n  AND currency = :currency\nORDER BY exception_count DESC, eligible_count DESC, merchant_category;",
-      "reading": "Travel contains 48 of 48 final exceptions for this GBP close; every one is late."
+      "reading": "Electronics contains 48 of 48 final exceptions for this EUR close; every one of them carries a fee mismatch."
     },
     {
       "id": "classification",
@@ -264,164 +264,164 @@
   ],
   "dailyClose": [
     {
-      "closeDate": "2024-10-08",
-      "analysisAsOfDate": "2024-10-08",
-      "currency": "GBP",
-      "eligibleCount": 96,
+      "closeDate": "2024-11-12",
+      "analysisAsOfDate": "2024-11-12",
+      "currency": "EUR",
+      "eligibleCount": 190,
       "matchedCount": 0,
       "coverageBps": 0,
       "overdueValue": {
-        "currency": "GBP",
+        "currency": "EUR",
         "minorUnits": 0
       },
       "feeDelta": {
-        "currency": "GBP",
+        "currency": "EUR",
         "minorUnits": 0
       }
     },
     {
-      "closeDate": "2024-10-08",
-      "analysisAsOfDate": "2024-10-11",
-      "currency": "GBP",
-      "eligibleCount": 96,
-      "matchedCount": 48,
-      "coverageBps": 5000,
-      "overdueValue": {
-        "currency": "GBP",
-        "minorUnits": 7590915
-      },
-      "feeDelta": {
-        "currency": "GBP",
-        "minorUnits": 0
-      }
-    },
-    {
-      "closeDate": "2024-10-08",
-      "analysisAsOfDate": "2024-10-14",
-      "currency": "GBP",
-      "eligibleCount": 96,
-      "matchedCount": 94,
-      "coverageBps": 9792,
-      "overdueValue": {
-        "currency": "GBP",
-        "minorUnits": 11847772
-      },
-      "feeDelta": {
-        "currency": "GBP",
-        "minorUnits": 0
-      }
-    },
-    {
-      "closeDate": "2024-10-08",
-      "analysisAsOfDate": "2025-01-10",
-      "currency": "GBP",
-      "eligibleCount": 96,
-      "matchedCount": 96,
+      "closeDate": "2024-11-12",
+      "analysisAsOfDate": "2024-11-15",
+      "currency": "EUR",
+      "eligibleCount": 190,
+      "matchedCount": 190,
       "coverageBps": 10000,
       "overdueValue": {
-        "currency": "GBP",
-        "minorUnits": 11847772
+        "currency": "EUR",
+        "minorUnits": 0
       },
       "feeDelta": {
-        "currency": "GBP",
+        "currency": "EUR",
+        "minorUnits": 46256
+      }
+    },
+    {
+      "closeDate": "2024-11-12",
+      "analysisAsOfDate": "2024-11-18",
+      "currency": "EUR",
+      "eligibleCount": 190,
+      "matchedCount": 190,
+      "coverageBps": 10000,
+      "overdueValue": {
+        "currency": "EUR",
         "minorUnits": 0
+      },
+      "feeDelta": {
+        "currency": "EUR",
+        "minorUnits": 46256
+      }
+    },
+    {
+      "closeDate": "2024-11-12",
+      "analysisAsOfDate": "2025-01-10",
+      "currency": "EUR",
+      "eligibleCount": 190,
+      "matchedCount": 190,
+      "coverageBps": 10000,
+      "overdueValue": {
+        "currency": "EUR",
+        "minorUnits": 0
+      },
+      "feeDelta": {
+        "currency": "EUR",
+        "minorUnits": 46256
       }
     }
   ],
   "segmentFindings": [
     {
-      "merchantCategory": "Travel",
-      "currency": "GBP",
-      "eligibleCount": 54,
-      "exceptionCount": 48,
-      "exceptionRateBps": 8889,
-      "primaryReason": "late",
-      "overdueValue": {
-        "currency": "GBP",
-        "minorUnits": 11847772
-      }
-    },
-    {
       "merchantCategory": "Electronics",
-      "currency": "GBP",
-      "eligibleCount": 8,
-      "exceptionCount": 0,
-      "exceptionRateBps": 0,
-      "primaryReason": "matched",
+      "currency": "EUR",
+      "eligibleCount": 64,
+      "exceptionCount": 48,
+      "exceptionRateBps": 7500,
+      "primaryReason": "fee_mismatch",
       "overdueValue": {
-        "currency": "GBP",
-        "minorUnits": 0
-      }
-    },
-    {
-      "merchantCategory": "Retail",
-      "currency": "GBP",
-      "eligibleCount": 8,
-      "exceptionCount": 0,
-      "exceptionRateBps": 0,
-      "primaryReason": "matched",
-      "overdueValue": {
-        "currency": "GBP",
-        "minorUnits": 0
-      }
-    },
-    {
-      "merchantCategory": "Services",
-      "currency": "GBP",
-      "eligibleCount": 8,
-      "exceptionCount": 0,
-      "exceptionRateBps": 0,
-      "primaryReason": "matched",
-      "overdueValue": {
-        "currency": "GBP",
-        "minorUnits": 0
-      }
-    },
-    {
-      "merchantCategory": "Entertainment",
-      "currency": "GBP",
-      "eligibleCount": 7,
-      "exceptionCount": 0,
-      "exceptionRateBps": 0,
-      "primaryReason": "matched",
-      "overdueValue": {
-        "currency": "GBP",
-        "minorUnits": 0
-      }
-    },
-    {
-      "merchantCategory": "Food & Beverage",
-      "currency": "GBP",
-      "eligibleCount": 4,
-      "exceptionCount": 0,
-      "exceptionRateBps": 0,
-      "primaryReason": "matched",
-      "overdueValue": {
-        "currency": "GBP",
-        "minorUnits": 0
-      }
-    },
-    {
-      "merchantCategory": "Healthcare",
-      "currency": "GBP",
-      "eligibleCount": 4,
-      "exceptionCount": 0,
-      "exceptionRateBps": 0,
-      "primaryReason": "matched",
-      "overdueValue": {
-        "currency": "GBP",
+        "currency": "EUR",
         "minorUnits": 0
       }
     },
     {
       "merchantCategory": "Utilities",
-      "currency": "GBP",
-      "eligibleCount": 3,
+      "currency": "EUR",
+      "eligibleCount": 23,
       "exceptionCount": 0,
       "exceptionRateBps": 0,
       "primaryReason": "matched",
       "overdueValue": {
-        "currency": "GBP",
+        "currency": "EUR",
+        "minorUnits": 0
+      }
+    },
+    {
+      "merchantCategory": "Retail",
+      "currency": "EUR",
+      "eligibleCount": 22,
+      "exceptionCount": 0,
+      "exceptionRateBps": 0,
+      "primaryReason": "matched",
+      "overdueValue": {
+        "currency": "EUR",
+        "minorUnits": 0
+      }
+    },
+    {
+      "merchantCategory": "Entertainment",
+      "currency": "EUR",
+      "eligibleCount": 19,
+      "exceptionCount": 0,
+      "exceptionRateBps": 0,
+      "primaryReason": "matched",
+      "overdueValue": {
+        "currency": "EUR",
+        "minorUnits": 0
+      }
+    },
+    {
+      "merchantCategory": "Healthcare",
+      "currency": "EUR",
+      "eligibleCount": 17,
+      "exceptionCount": 0,
+      "exceptionRateBps": 0,
+      "primaryReason": "matched",
+      "overdueValue": {
+        "currency": "EUR",
+        "minorUnits": 0
+      }
+    },
+    {
+      "merchantCategory": "Services",
+      "currency": "EUR",
+      "eligibleCount": 17,
+      "exceptionCount": 0,
+      "exceptionRateBps": 0,
+      "primaryReason": "matched",
+      "overdueValue": {
+        "currency": "EUR",
+        "minorUnits": 0
+      }
+    },
+    {
+      "merchantCategory": "Food & Beverage",
+      "currency": "EUR",
+      "eligibleCount": 14,
+      "exceptionCount": 0,
+      "exceptionRateBps": 0,
+      "primaryReason": "matched",
+      "overdueValue": {
+        "currency": "EUR",
+        "minorUnits": 0
+      }
+    },
+    {
+      "merchantCategory": "Travel",
+      "currency": "EUR",
+      "eligibleCount": 14,
+      "exceptionCount": 0,
+      "exceptionRateBps": 0,
+      "primaryReason": "matched",
+      "overdueValue": {
+        "currency": "EUR",
         "minorUnits": 0
       }
     }
@@ -432,7 +432,7 @@
       "label": "Missing",
       "count": 0,
       "affectedValue": {
-        "currency": "GBP",
+        "currency": "EUR",
         "minorUnits": 0
       }
     },
@@ -441,7 +441,7 @@
       "label": "Currency mismatch",
       "count": 0,
       "affectedValue": {
-        "currency": "GBP",
+        "currency": "EUR",
         "minorUnits": 0
       }
     },
@@ -450,26 +450,26 @@
       "label": "Amount mismatch",
       "count": 0,
       "affectedValue": {
-        "currency": "GBP",
+        "currency": "EUR",
         "minorUnits": 0
       }
     },
     {
       "id": "fee_mismatch",
       "label": "Fee mismatch",
-      "count": 0,
+      "count": 48,
       "affectedValue": {
-        "currency": "GBP",
-        "minorUnits": 0
+        "currency": "EUR",
+        "minorUnits": 11564339
       }
     },
     {
       "id": "late",
       "label": "Late",
-      "count": 48,
+      "count": 0,
       "affectedValue": {
-        "currency": "GBP",
-        "minorUnits": 11847772
+        "currency": "EUR",
+        "minorUnits": 0
       }
     },
     {
@@ -477,7 +477,7 @@
       "label": "Disputed",
       "count": 0,
       "affectedValue": {
-        "currency": "GBP",
+        "currency": "EUR",
         "minorUnits": 0
       }
     }
@@ -491,50 +491,50 @@
     "disputed"
   ],
   "trace": {
-    "paymentId": "2049",
-    "scenarioId": "delayed_travel_gbp",
-    "transactionDate": "2024-10-08",
-    "merchantCategory": "Travel",
-    "currency": "GBP",
+    "paymentId": "97",
+    "scenarioId": "stale_electronics_eur_fee",
+    "transactionDate": "2024-11-12",
+    "merchantCategory": "Electronics",
+    "currency": "EUR",
     "status": "completed",
     "gross": {
-      "currency": "GBP",
-      "minorUnits": 496850
+      "currency": "EUR",
+      "minorUnits": 477136
     },
     "applicableTerm": {
-      "validFrom": "2022-12-31",
+      "validFrom": "2024-10-01",
       "validTo": null,
-      "feeRateBps": 150,
+      "feeRateBps": 110,
       "settlementSlaDays": 2
     },
     "expectedFee": {
-      "currency": "GBP",
-      "minorUnits": 7453
+      "currency": "EUR",
+      "minorUnits": 5248
     },
     "recordedFee": {
-      "currency": "GBP",
-      "minorUnits": 7453
+      "currency": "EUR",
+      "minorUnits": 7157
     },
-    "expectedSettlementDate": "2024-10-10",
-    "recordedSettlementDate": "2024-10-13",
+    "expectedSettlementDate": "2024-11-14",
+    "recordedSettlementDate": "2024-11-14",
     "flags": [
-      "late"
+      "fee_mismatch"
     ],
-    "primaryLabel": "late",
-    "whyFlagged": "The settlement arrived 3 calendar days after the effective merchant SLA. Currency, amount identity, and the applicable fee still match, so late remains the only flag.",
+    "primaryLabel": "fee_mismatch",
+    "whyFlagged": "The settlement arrived 0 calendar days after the effective merchant SLA. Currency, amount identity, and the applicable fee still match, so late remains the only flag.",
     "queryId": "payment_trace",
     "model": "mart_payment_trace"
   },
   "recommendation": {
-    "finding": "All 48 flagged Travel / GBP payments belong to the injected batch; amount identity, currency, and effective fee terms still agree.",
-    "action": "Reconcile the batch once, preserve the payment-level late flags for SLA reporting, and export only the filtered evidence needed by operations.",
+    "finding": "All 48 flagged Electronics / EUR payments belong to the injected batch; amount identity and currency still agree, but the recorded fee no longer matches the effective merchant term.",
+    "action": "Correct the fee schedule referenced by settlement processing, recompute the expected fee for the affected batch, and export only the filtered evidence needed by operations.",
     "owner": "Settlement operations",
     "successMetricId": "settlement_coverage"
   },
   "validation": {
     "explainModel": "mart_exception_queue",
     "explainQueryId": "exception_queue",
-    "explainSql": "EXPLAIN ANALYZE\nSELECT\n  payment_id, primary_reason, exception_reasons, currency,\n  gross_minor_units, expected_settlement_date, actual_settlement_date\nFROM mart_exception_queue\nWHERE CAST(transaction_date AS DATE) = DATE '2024-10-08'\n  AND currency = 'GBP'\nORDER BY priority_rank, gross_minor_units DESC, payment_id;",
+    "explainSql": "EXPLAIN ANALYZE\nSELECT\n  payment_id, primary_reason, exception_reasons, currency,\n  gross_minor_units, expected_settlement_date, actual_settlement_date\nFROM mart_exception_queue\nWHERE CAST(transaction_date AS DATE) = DATE '2024-11-12'\n  AND currency = 'EUR'\nORDER BY priority_rank, gross_minor_units DESC, payment_id;",
     "plan": [
       "Filter completed merchant purchases at the expected-settlement grain.",
       "Resolve the one merchant term effective on each purchase date.",

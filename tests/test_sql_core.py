@@ -254,13 +254,13 @@ class SettlementCoreTests(unittest.TestCase):
     def test_generated_payload_uses_sql_evidence_and_money_objects(self) -> None:
         payload = build_payload(build_sha="test-sha")
         self.assertEqual(payload["build"]["commitSha"], "test-sha")
-        self.assertEqual(payload["selectedScenarioId"], "delayed_travel_gbp")
+        self.assertEqual(payload["selectedScenarioId"], "stale_electronics_eur_fee")
         self.assertEqual(
             [row["analysisAsOfDate"] for row in payload["dailyClose"]],
-            ["2024-10-08", "2024-10-11", "2024-10-14", "2025-01-10"],
+            ["2024-11-12", "2024-11-15", "2024-11-18", "2025-01-10"],
         )
         self.assertEqual(payload["dailyClose"][-1]["coverageBps"], 10_000)
-        self.assertEqual(payload["exceptionSummary"][4]["count"], 48)
+        self.assertEqual(payload["exceptionSummary"][3]["count"], 48)
         for row in payload["dailyClose"]:
             self.assertEqual(row["overdueValue"]["currency"], row["currency"])
             self.assertIsInstance(row["overdueValue"]["minorUnits"], int)

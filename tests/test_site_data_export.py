@@ -101,21 +101,21 @@ class CaseStudyArtifactTests(unittest.TestCase):
         rows = self.payload["dailyClose"]
         self.assertEqual(
             [row["analysisAsOfDate"] for row in rows],
-            ["2024-10-08", "2024-10-11", "2024-10-14", "2025-01-10"],
+            ["2024-11-12", "2024-11-15", "2024-11-18", "2025-01-10"],
         )
-        self.assertEqual({row["closeDate"] for row in rows}, {"2024-10-08"})
-        self.assertEqual({row["currency"] for row in rows}, {"GBP"})
+        self.assertEqual({row["closeDate"] for row in rows}, {"2024-11-12"})
+        self.assertEqual({row["currency"] for row in rows}, {"EUR"})
         self.assertEqual(
             [row["matchedCount"] for row in rows],
-            [0, 48, 94, 96],
+            [0, 190, 190, 190],
         )
         self.assertEqual(
             [row["coverageBps"] for row in rows],
-            [0, 5_000, 9_792, 10_000],
+            [0, 10_000, 10_000, 10_000],
         )
-        self.assertIn("48 of 96", self.payload["question"]["conciseAnswer"])
+        self.assertIn("190 of 190", self.payload["question"]["conciseAnswer"])
         self.assertIn(
-            "coverage recovered to 100%",
+            "fee-mismatch exceptions",
             self.payload["question"]["conciseAnswer"],
         )
 

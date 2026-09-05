@@ -27,7 +27,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = PROJECT_ROOT / "site" / "src" / "data" / "project-data.json"
 DEFAULT_MART_DIR = PROJECT_ROOT / "outputs" / "marts"
 
-SELECTED_SCENARIO_ID = "delayed_travel_gbp"
+SELECTED_SCENARIO_ID = "stale_electronics_eur_fee"
 PRIMARY_PRECEDENCE = (
     "missing",
     "currency_mismatch",
@@ -36,6 +36,68 @@ PRIMARY_PRECEDENCE = (
     "late",
     "disputed",
 )
+
+# Narrative fragments that differ by which exception a scenario injects. The
+# earlier version of this payload hardcoded the "late settlement" story
+# regardless of which scenario was selected, so switching scenarios produced
+# copy that named the wrong currency, category and outcome. Keyed by
+# expectedSignal.primaryReason from data/scenarios.json.
+REASON_NARRATIVE = {
+    "late": {
+        "count_field": "late_count",
+        "reason_noun": "late-settlement",
+        "outcome": (
+            "The {count} affected payments settled after their applicable SLA "
+            "and are now flagged as late exceptions."
+        ),
+        "isolation": "every one of them is late",
+        "finding_lede": (
+            "belong to the injected batch; amount identity, currency, and "
+            "effective fee terms still agree"
+        ),
+        "action": (
+            "Reconcile the batch once, preserve the payment-level late flags "
+            "for SLA reporting, and export only the filtered evidence needed by operations."
+        ),
+    },
+    "fee_mismatch": {
+        "count_field": "fee_mismatch_count",
+        "reason_noun": "fee-mismatch",
+        "outcome": (
+            "The {count} affected payments settled on time and on gross amount, "
+            "but their recorded processing fee no longer matches the effective "
+            "merchant term, so they are flagged as fee-mismatch exceptions."
+        ),
+        "isolation": "every one of them carries a fee mismatch",
+        "finding_lede": (
+            "belong to the injected batch; amount identity and currency still "
+            "agree, but the recorded fee no longer matches the effective merchant term"
+        ),
+        "action": (
+            "Correct the fee schedule referenced by settlement processing, "
+            "recompute the expected fee for the affected batch, and export only "
+            "the filtered evidence needed by operations."
+        ),
+    },
+    "missing": {
+        "count_field": "missing_count",
+        "reason_noun": "missing-settlement",
+        "outcome": (
+            "The {count} affected payments never received settlement evidence "
+            "within their applicable SLA and remain flagged as missing exceptions."
+        ),
+        "isolation": "every one of them is missing settlement evidence",
+        "finding_lede": (
+            "belong to the injected batch; the settlement evidence never "
+            "arrived within its applicable SLA"
+        ),
+        "action": (
+            "Escalate the batch to the settlement partner, confirm whether the "
+            "evidence is delayed or lost, and export only the filtered evidence "
+            "needed by operations."
+        ),
+    },
+}
 
 SQL_EXCERPTS = {
     "close_summary": """-- analytics_context.as_of_date = :investigation_as_of_date
@@ -257,9 +319,17 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
         }
         selected = scenarios[SELECTED_SCENARIO_ID]
         selected_date = dt.date.fromisoformat(selected["closeDate"])
+        # Falling back to the close date itself shows a pre-settlement moment
+        # where nothing has arrived yet (0 matched, 0 exceptions) for any
+        # scenario that doesn't define an explicit mid-story checkpoint. Three
+        # days out is where delayed_travel_gbp's own investigationAsOfDate
+        # sits, and it must stay strictly between the close date and
+        # close date + 6 below so the four-point progression stays monotonic.
         investigation_as_of = selected.get(
-            "investigationAsOfDate", selected["closeDate"]
+            "investigationAsOfDate",
+            (selected_date + dt.timedelta(days=3)).isoformat(),
         )
+        narrative = REASON_NARRATIVE[selected["expectedSignal"]["primaryReason"]]
 
         progression_dates = (
             selected_date,
@@ -313,7 +383,7 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
         )
         incident_matched = _integer(investigation_incident["matched_count"])
         incident_eligible = _integer(investigation_incident["eligible_count"])
-        late_count = _integer(close_record["late_count"])
+        exception_count = _integer(close_record[narrative["count_field"]])
 
         metric_definitions = []
         for row in metrics.to_dict("records"):
@@ -367,20 +437,21 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
             ],
             "question": {
                 "stakeholder": (
-                    "Why did completed Travel purchases stop reconciling to "
-                    "recorded GBP settlement value?"
+                    f"Why do completed {selected['focusCategory']} purchases in "
+                    f"{selected['defaultCurrency']} still carry a "
+                    f"{narrative['reason_noun']} exception after the close?"
                 ),
                 "conciseAnswer": (
-                    f"At the {investigation_as_of} checkpoint, only "
-                    f"{incident_matched} of {incident_eligible} eligible GBP "
-                    f"purchases from the {selected['closeDate']} close had matching "
-                    f"settlement evidence. The {late_count}-payment synthetic Travel "
-                    "batch later arrived three days beyond each applicable SLA; "
-                    "coverage recovered to 100% and those payments became late exceptions."
+                    f"At the {investigation_as_of} checkpoint, {incident_matched} of "
+                    f"{incident_eligible} eligible {selected['defaultCurrency']} "
+                    f"purchases from the {selected['closeDate']} close reconciled "
+                    f"cleanly. {selected['description']} "
+                    + narrative["outcome"].format(count=exception_count)
                 ),
                 "operationalDecision": (
-                    "Reconcile the late batch as one operational event, then route "
-                    "any residual payment-level exceptions using the stable queue precedence."
+                    "Reconcile the injected batch as one operational event, then "
+                    "route any residual payment-level exceptions using the stable "
+                    "queue precedence."
                 ),
             },
             "metricDefinitions": metric_definitions,
@@ -416,20 +487,25 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                     "reading": (
                         f"At the {investigation_as_of} observation cut, the selected "
                         f"close was {incident_matched}/{incident_eligible} matched. "
-                        "The final snapshot recovers the evidence and preserves the SLA breach."
+                        "The final snapshot preserves the injected exception rather than resolving it."
                     ),
                 },
                 {
                     "id": "isolation",
                     "label": "Segment isolation",
-                    "question": "Which merchant segment explains the GBP gap?",
+                    "question": (
+                        f"Which merchant segment explains the "
+                        f"{selected['defaultCurrency']} gap?"
+                    ),
                     "queryId": "segment_isolation",
                     "model": "mart_category_health",
                     "sql": SQL_EXCERPTS["segment_isolation"],
                     "reading": (
-                        f"Travel contains {_integer(travel['exception_count'])} of "
+                        f"{selected['focusCategory']} contains "
+                        f"{_integer(travel['exception_count'])} of "
                         f"{_integer(close_record['exception_count'])} final exceptions "
-                        "for this GBP close; every one is late."
+                        f"for this {selected['defaultCurrency']} close; "
+                        + narrative["isolation"] + "."
                     ),
                 },
                 {
@@ -452,14 +528,11 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
             "trace": _trace_payload(trace.iloc[0].to_dict(), SELECTED_SCENARIO_ID),
             "recommendation": {
                 "finding": (
-                    f"All {_integer(travel['exception_count'])} flagged Travel / GBP "
-                    "payments belong to the injected batch; amount identity, currency, "
-                    "and effective fee terms still agree."
+                    f"All {_integer(travel['exception_count'])} flagged "
+                    f"{selected['focusCategory']} / {selected['defaultCurrency']} "
+                    "payments " + narrative["finding_lede"] + "."
                 ),
-                "action": (
-                    "Reconcile the batch once, preserve the payment-level late flags "
-                    "for SLA reporting, and export only the filtered evidence needed by operations."
-                ),
+                "action": narrative["action"],
                 "owner": "Settlement operations",
                 "successMetricId": "settlement_coverage",
             },
@@ -468,8 +541,8 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                 "explainQueryId": "exception_queue",
                 "explainSql": (
                     "EXPLAIN ANALYZE\n" + SQL_EXCERPTS["exception_queue"].replace(
-                        ":scenario_date", "DATE '2024-10-08'"
-                    ).replace(":currency", "'GBP'")
+                        ":scenario_date", f"DATE '{selected['closeDate']}'"
+                    ).replace(":currency", f"'{selected['defaultCurrency']}'")
                 ),
                 "plan": [
                     "Filter completed merchant purchases at the expected-settlement grain.",
