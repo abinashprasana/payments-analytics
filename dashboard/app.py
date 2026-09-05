@@ -43,6 +43,7 @@ from dashboard.workbench_ui import (  # noqa: E402
     render_header,
     render_kpi,
     render_lifecycle,
+    render_lineage_diagram,
     render_section,
     scalar,
     scenario_options,
@@ -800,6 +801,7 @@ def render_trace_view(
 
     st.markdown(f"### `{escape(payment_id)}`")
     st.markdown(reason_tags(reasons or [primary]), unsafe_allow_html=True)
+    render_lineage_diagram(row)
     identity = st.columns(4)
     identity[0].metric(
         "Merchant", str(first_present(row, ("merchant_name",), "Not linked"))

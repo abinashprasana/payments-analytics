@@ -47,13 +47,13 @@ REASON_LABELS = {
 APP_CSS = """
 <style>
   :root {
-    --wb-bg: #091017;
+    --wb-bg: #050607;
     --wb-panel: #101923;
     --wb-panel-2: #15212d;
     --wb-ink: #f2f6f7;
     --wb-muted: #a9b7c2;
     --wb-line: rgba(185, 209, 220, 0.18);
-    --wb-cyan: #73d7f2;
+    --wb-cyan: #68dcff;
     --wb-green: #80dfb4;
     --wb-amber: #f2c670;
     --wb-red: #ff887d;
@@ -62,7 +62,7 @@ APP_CSS = """
   .stApp {
     background:
       radial-gradient(circle at 78% -8%, rgba(69, 140, 166, .16), transparent 31rem),
-      linear-gradient(180deg, #091017 0%, #0b131b 70%, #091017 100%);
+      linear-gradient(180deg, #050607 0%, #0b131b 70%, #050607 100%);
     color: var(--wb-ink);
   }
 
@@ -171,10 +171,46 @@ APP_CSS = """
     border-left: 3px solid var(--wb-amber);
     background: rgba(242, 198, 112, .075);
     color: #e8dcc0;
-    padding: .72rem .85rem;
+    padding: .85rem 1rem;
     border-radius: 0 10px 10px 0;
-    margin: .75rem 0;
+    margin: .85rem 0;
     font-size: .84rem;
+    line-height: 1.6;
+  }
+
+  .wb-lineage {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin: .9rem 0 1.3rem;
+  }
+  .wb-lineage__stage {
+    flex: 1 1 160px;
+    min-width: 140px;
+    border: 1px solid var(--wb-line);
+    border-top: 2px solid var(--wb-cyan);
+    border-radius: 12px;
+    background: rgba(16, 25, 35, .82);
+    padding: .7rem .8rem;
+  }
+  .wb-lineage__stage[data-tone="critical"] { border-top-color: var(--wb-red); }
+  .wb-lineage__stage[data-tone="warning"] { border-top-color: var(--wb-amber); }
+  .wb-lineage__stage[data-tone="good"] { border-top-color: var(--wb-green); }
+  .wb-lineage__label {
+    color: var(--wb-muted);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .wb-lineage__value { color: var(--wb-ink); font-size: .92rem; font-weight: 650; margin-top: .3rem; }
+  .wb-lineage__detail { color: var(--wb-muted); font-size: .76rem; margin-top: .2rem; }
+  .wb-lineage__arrow {
+    display: flex;
+    align-items: center;
+    color: var(--wb-cyan);
+    font-size: 1.1rem;
   }
 
   .wb-query {
@@ -209,6 +245,7 @@ APP_CSS = """
     .wb-lifecycle { align-items: flex-start; }
     .wb-arrow { display: none; }
     .wb-step { flex: 1 0 44%; }
+    .wb-lineage__arrow { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -395,6 +432,63 @@ def render_lifecycle() -> None:
         """,
         unsafe_allow_html=True,
     )
+
+
+def render_lineage_diagram(row: Mapping[str, Any]) -> None:
+    """Show one payment's transaction -> term -> settlement -> exception chain."""
+
+    currency = str(first_present(row, ("transaction_currency", "currency"), ""))
+    settlement_currency = str(first_present(row, ("settlement_currency",), currency))
+    primary = str(first_present(row, ("primary_reason",), "matched"))
+    settled = first_present(row, ("actual_settlement_date", "settlement_date"))
+
+    stages = (
+        (
+            "Transaction",
+            format_minor_units(first_present(row, ("gross_minor_units",)), currency),
+            str(first_present(row, ("transaction_date",), "Unknown date")),
+            "info",
+        ),
+        (
+            "Term",
+            f"{to_decimal(first_present(row, ('fee_rate_bps',), 0)) / 100:.2f}% fee",
+            f"{first_present(row, ('settlement_sla_days',), '—')}-day SLA",
+            "info",
+        ),
+        (
+            "Settlement",
+            (
+                format_minor_units(
+                    first_present(row, ("recorded_settled_minor_units",)),
+                    settlement_currency,
+                )
+                if settled is not None
+                else "Not yet settled"
+            ),
+            str(settled) if settled is not None else "No settlement recorded",
+            "good" if settled is not None else "warning",
+        ),
+        (
+            "Exception",
+            reason_label(primary),
+            "Rule-flagged" if primary != "matched" else "Matched clean",
+            reason_tone(primary) if primary != "matched" else "good",
+        ),
+    )
+
+    parts = ['<div class="wb-lineage" aria-label="Transaction to exception lineage">']
+    for index, (label, value, detail, tone) in enumerate(stages):
+        if index:
+            parts.append('<div class="wb-lineage__arrow" aria-hidden="true">→</div>')
+        parts.append(
+            f'<div class="wb-lineage__stage" data-tone="{escape(tone)}">'
+            f'<div class="wb-lineage__label">{escape(label)}</div>'
+            f'<div class="wb-lineage__value">{escape(value)}</div>'
+            f'<div class="wb-lineage__detail">{escape(detail)}</div>'
+            f"</div>"
+        )
+    parts.append("</div>")
+    st.markdown("".join(parts), unsafe_allow_html=True)
 
 
 def render_section(title: str, description: str, kicker: str) -> None:

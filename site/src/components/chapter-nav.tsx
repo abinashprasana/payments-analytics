@@ -46,10 +46,36 @@ const CHAPTER_NAV_SCRIPT = `
     window.setTimeout(selectFragment, 250);
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindNavigation, { once: true });
-  } else {
+  const REVEAL_SELECTOR = '.case-section, .trace-card, .workbench-preview, .handoff';
+
+  const bindReveal = () => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const targets = [...document.querySelectorAll(REVEAL_SELECTOR)];
+    if (!targets.length) return;
+    const style = document.createElement('style');
+    style.textContent = '[data-reveal]{opacity:0;transform:translateY(16px);' +
+      'transition:opacity .5s ease-out,transform .5s ease-out}';
+    document.head.appendChild(style);
+    targets.forEach((el) => el.setAttribute('data-reveal', ''));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-revealed');
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+    targets.forEach((el) => observer.observe(el));
+  };
+
+  const init = () => {
     bindNavigation();
+    bindReveal();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
   }
 })();
 `;

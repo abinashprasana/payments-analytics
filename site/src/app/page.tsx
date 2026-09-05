@@ -134,7 +134,7 @@ export default function Home() {
         <nav className="site-header__nav" aria-label="Primary navigation">
           <a href="#contract">Metric contract</a>
           <a href="#validation">Reproduce</a>
-          <a className="text-link" href="#workbench">Open the workbench <span aria-hidden="true">↓</span></a>
+          <a className="text-link" href="#workbench">See the workbench preview <span aria-hidden="true">↓</span></a>
         </nav>
       </header>
 
@@ -152,6 +152,7 @@ export default function Home() {
             <div className="hero__actions">
               <a className="button button--primary" href="#baseline">Follow the SQL <span aria-hidden="true">↓</span></a>
               <a className="button button--quiet" href="#contract">Read the contract</a>
+              <a className="button button--link" href="#workbench">See it traced in the workbench <span aria-hidden="true">↓</span></a>
             </div>
           </aside>
 
@@ -426,8 +427,8 @@ export default function Home() {
         </section>
 
         <section className="case-section section-shell" id="workbench" aria-labelledby="workbench-title">
-          <SectionHeading id="workbench-title" eyebrow="Operational handoff" title="Continue the same investigation at payment grain">
-            The case study explains the reasoning once. The Settlement Operations Workbench turns the canonical marts into a repeatable triage path.
+          <SectionHeading id="workbench-title" eyebrow="Operational handoff" title="The workbench, in full">
+            Everything above ran once, on paper. Below is the same reconciliation, live: filter the queue, open a payment, and see the SQL rule that flagged it.
           </SectionHeading>
 
           <div className="workbench-preview">
