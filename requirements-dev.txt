@@ -2,3 +2,10 @@
 
 # Deterministic synthetic-data generation.
 faker==40.19.1
+
+# Anomaly scoring. Deliberately not in requirements.txt: the deployed workbench
+# never scores anything, and shap pulls numba and llvmlite, which is a heavy and
+# fragile resolve on a free-tier deploy. scripts/anomaly_scoring.py imports both
+# inside score_exceptions so the runtime install stays light.
+scikit-learn==1.7.2
+shap==0.48.0
