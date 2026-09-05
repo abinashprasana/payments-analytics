@@ -24,7 +24,7 @@ export function ArchitectureDiagram({
         </div>
         <span className="architecture-map__arrow" aria-hidden="true">→</span>
         <div className="architecture-map__stage architecture-map__stage--final">
-          <strong>Case payload</strong>
+          <strong>Snapshot payload</strong>
           <span>Workbench queries</span>
         </div>
       </div>

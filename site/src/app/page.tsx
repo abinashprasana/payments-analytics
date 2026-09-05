@@ -121,7 +121,7 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
 
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="The Settlement Gap case study home">
+        <a className="brand" href="#top" aria-label="The Settlement Gap — back to the top">
           <Image
             src={assetUrl("/brand/payment-observatory-mark-mono.svg")}
             width={42}
@@ -140,13 +140,14 @@ export default function Home() {
 
       <main id="main-content">
         <section className="hero" id="top" aria-labelledby="hero-title">
+          <div className="hero__field" aria-hidden="true"><i /><i /></div>
           <div className="hero__copy">
-            <p className="eyebrow"><span>SQL case study</span> Settlement reconciliation</p>
+            <p className="eyebrow"><span>Before the workbench</span> Settlement reconciliation</p>
             <h1 id="hero-title">The <em>Settlement Gap</em></h1>
             <p className="hero__question">{projectData.question.stakeholder}</p>
           </div>
 
-          <aside className="hero__brief" aria-label="Investigation answer">
+          <aside className="hero__brief" aria-label="The short answer">
             <p className="kicker">Concise answer</p>
             <p className="hero__lede">{projectData.question.conciseAnswer}</p>
             <div className="hero__actions">
@@ -200,7 +201,8 @@ export default function Home() {
                     <div><dt>Population</dt><dd>{metric.population}</dd></div>
                     <div><dt>Grain</dt><dd>{metric.grain}</dd></div>
                     <div><dt>Currency</dt><dd>{metric.currencyBoundary}</dd></div>
-                    <div><dt>Lineage</dt><dd><code>{metric.model}</code> · <code>{metric.queryId}</code></dd></div>
+                    <div><dt>Model</dt><dd><code>{metric.model}</code></dd></div>
+                    <div><dt>Query</dt><dd><code>{metric.queryId}</code></dd></div>
                     {metric.toleranceMinorUnits === undefined ? null : (
                       <div><dt>Match tolerance</dt><dd>{formatMoney({ currency: selectedScenario.currency, minorUnits: metric.toleranceMinorUnits })}</dd></div>
                     )}
@@ -230,7 +232,7 @@ export default function Home() {
                   <div><span>{scenario.kind}</span><strong>{scenario.label}</strong></div>
                   <dl>
                     <div><dt>Date</dt><dd>{formatDate(scenario.date)}</dd></div>
-                    <div><dt>Scope</dt><dd>{scenario.merchantCategory} · {scenario.currency}</dd></div>
+                    <div><dt>Scope</dt><dd>{scenario.merchantCategory} in {scenario.currency}</dd></div>
                   </dl>
                   <p>{scenario.expectedSignal}</p>
                   <small>{scenario.disclosure}</small>
@@ -250,7 +252,7 @@ export default function Home() {
             <div className="query-layout">
               <SqlBlock sql={baselineStep.sql} label={`${baselineStep.label} SQL`} />
               <figure className="coverage-chart">
-                <figcaption>Coverage recovery after the {formatDate(selectedScenario.date)} close · {selectedScenario.currency}</figcaption>
+                <figcaption>Coverage recovery in {selectedScenario.currency} after the {formatDate(selectedScenario.date)} close</figcaption>
                 <p className="classification-note">The purchase close stays fixed; each row re-evaluates the same batch at a later analysis as-of date.</p>
                 <div className="coverage-chart__plot" role="img" aria-label={`${selectedScenario.currency} settlement coverage by analysis as-of date`}>
                   {projectData.dailyClose.map((row) => (
@@ -344,7 +346,7 @@ export default function Home() {
               <div className="trace-grid">
                 <dl>
                   <div><dt>Completed</dt><dd>{formatDate(projectData.trace.transactionDate)}</dd></div>
-                  <div><dt>Scope</dt><dd>{projectData.trace.merchantCategory} · {projectData.trace.currency}</dd></div>
+                  <div><dt>Scope</dt><dd>{projectData.trace.merchantCategory} in {projectData.trace.currency}</dd></div>
                   <div><dt>Gross</dt><dd>{formatMoney(projectData.trace.gross)}</dd></div>
                   <div><dt>Status</dt><dd>{titleCase(projectData.trace.status)}</dd></div>
                 </dl>
@@ -384,7 +386,7 @@ export default function Home() {
         <section className="case-section case-section--ink" id="validation" aria-labelledby="validation-title">
           <div className="section-shell">
             <SectionHeading id="validation-title" eyebrow="Validation and reproduction" title="The result is inspectable beyond the chart">
-              SQL runs through one model chain on both compatibility engines. Quality checks assert grain, effective-date joins, identities, and currency isolation before the case payload is exported.
+              SQL runs through one model chain on both compatibility engines. Quality checks assert grain, effective-date joins, identities, and currency isolation before the snapshot payload is exported.
             </SectionHeading>
 
             <ArchitectureDiagram engines={projectData.reproduction.compatibilityEngines} models={projectData.models} />
@@ -403,7 +405,7 @@ export default function Home() {
                     <span className={`quality-status quality-status--${result.status}`}>{result.status}</span>
                     <h3>{result.label}</h3>
                     <p>{result.detail}</p>
-                    <small>{numberFormat.format(result.checkedRows)} checked rows · <code>{result.checkId}</code></small>
+                    <small>{numberFormat.format(result.checkedRows)} rows checked by <code>{result.checkId}</code></small>
                   </article>
                 ))}
               </div>
@@ -434,7 +436,9 @@ export default function Home() {
           <div className="workbench-preview">
             <div className="workbench-preview__head">
               <div><span>{projectData.dataset.label}</span><strong>Settlement Operations Workbench</strong></div>
-              <code>{projectData.dataset.version} · {projectData.build.commitSha} · {projectData.build.runtimeLabel}</code>
+              <code>{projectData.dataset.version}</code>
+              <code>Build {projectData.build.commitSha}</code>
+              <code>{projectData.build.runtimeLabel}</code>
             </div>
             <div className="workbench-preview__evidence">
               <dl className="workbench-preview__trace">
@@ -462,14 +466,20 @@ export default function Home() {
         <section className="final-cta section-shell" aria-labelledby="artifacts-title">
           <Image src={assetUrl("/brand/payment-observatory-mark-mono.svg")} width={74} height={74} alt="" />
           <div><p className="kicker">Repository evidence</p><h2 id="artifacts-title">Challenge the SQL, not a screenshot</h2></div>
-          <p>Inspect the canonical models, deterministic scenario manifest, engine parity tests, and generated case payload in the repository.</p>
+          <p>Inspect the canonical models, deterministic scenario manifest, engine parity tests, and generated snapshot payload in the repository.</p>
           <a className="button button--light" href={publicConfig.repositoryUrl} target="_blank" rel="noreferrer">View source on GitHub <span aria-hidden="true">↗</span></a>
         </section>
       </main>
 
       <footer className="site-footer">
         <div><Image src={assetUrl("/brand/payment-observatory-mark-mono.svg")} width={34} height={34} alt="" /><span>The Settlement Gap</span></div>
-        <p>{projectData.dataset.label} · {projectData.dataset.version} · As of {formatDate(projectData.dataset.asOfDate)} · {projectData.build.commitSha} · {projectData.build.runtimeLabel}</p>
+        <p>
+          <span>{projectData.dataset.label}</span>
+          <span>{projectData.dataset.version}</span>
+          <span>As of {formatDate(projectData.dataset.asOfDate)}</span>
+          <span>Build {projectData.build.commitSha}</span>
+          <span>{projectData.build.runtimeLabel}</span>
+        </p>
         <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
       </footer>
     </>

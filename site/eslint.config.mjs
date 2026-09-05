@@ -5,5 +5,15 @@ import nextTypeScript from "eslint-config-next/typescript";
 export default defineConfig([
   ...nextVitals,
   ...nextTypeScript,
-  globalIgnores([".next/**", "node_modules/**", "next-env.d.ts"]),
+  // Generated output. Without these, `npm run lint` passes or fails depending
+  // on whether you happened to build or run the browser suite first.
+  globalIgnores([
+    ".next/**",
+    "node_modules/**",
+    "next-env.d.ts",
+    "out/**",
+    "playwright-report/**",
+    "test-results/**",
+    ".lighthouse/**",
+  ]),
 ]);

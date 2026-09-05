@@ -37,13 +37,13 @@ async function expectNoPageOverflow(page: Page) {
   expect(width.scroll).toBeLessThanOrEqual(width.client + 1);
 }
 
-test.describe("authored settlement case study", () => {
+test.describe("authored settlement walkthrough", () => {
   test("keeps the nine-part investigation readable at the target width", async ({
     page,
   }) => {
     await openCaseStudy(page);
 
-    await expect(page).toHaveTitle(/The Settlement Gap.*SQL reconciliation case study/i);
+    await expect(page).toHaveTitle(/The Settlement Gap.*workbench that finds them/i);
     await expect(page.locator("h1")).toHaveCount(1);
     for (const sectionId of expectedSections) {
       await expect(page.locator("section#" + sectionId)).toBeAttached();
@@ -100,7 +100,7 @@ test.describe("authored settlement case study", () => {
 
     await page.keyboard.press("Home");
     await page.keyboard.press("Tab");
-    const skipLink = page.getByRole("link", { name: "Skip to case study" });
+    const skipLink = page.getByRole("link", { name: "Skip to the walkthrough" });
     await expect(skipLink).toBeFocused();
     await skipLink.press("Enter");
     await expect(page).toHaveURL(/#main-content$/);

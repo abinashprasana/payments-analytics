@@ -85,7 +85,7 @@ export function ChapterNav({ items }: { items: NavigationItem[] }) {
     <>
       <nav className="chapter-nav" aria-label="Investigation chapters" data-case-navigation>
         <div className="chapter-nav__inner">
-          <span className="chapter-nav__label" aria-hidden="true">Investigation</span>
+          <span className="chapter-nav__label" aria-hidden="true">Walkthrough</span>
           <ol className="chapter-nav__list">
             {items.map((item) => (
               <li key={item.id}>

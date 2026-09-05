@@ -937,7 +937,7 @@ def render_trace_view(
         )
     with navigation[1]:
         st.link_button(
-            "Read the investigation case study",
+            "Read the walkthrough",
             CASE_STUDY_URL,
             width="stretch",
         )
@@ -1023,7 +1023,7 @@ def render_catalog_view(engine: Any, metadata: Mapping[str, Any]) -> None:
         "inactivity. Waking restores the same repository snapshot; it is not an incident."
     )
     links = st.columns(2)
-    links[0].link_button("Read the case study", CASE_STUDY_URL, width="stretch")
+    links[0].link_button("Read the walkthrough", CASE_STUDY_URL, width="stretch")
     links[1].link_button(
         "Inspect the SQL repository", REPOSITORY_URL, width="stretch"
     )
@@ -1173,7 +1173,7 @@ with st.sidebar:
         st.caption("Processing-date bounds unavailable")
 
     st.divider()
-    st.link_button("Case study", CASE_STUDY_URL, width="stretch")
+    st.link_button("Read the walkthrough", CASE_STUDY_URL, width="stretch")
     st.button(
         "Reset session-only reviews",
         width="stretch",

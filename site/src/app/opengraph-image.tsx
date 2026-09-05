@@ -2,7 +2,8 @@ import { ImageResponse } from "next/og";
 
 import { projectData } from "@/lib/project-data";
 
-export const alt = "The Settlement Gap — SQL reconciliation case study";
+export const alt =
+  "The Settlement Gap — why completed payments go unreconciled, and the workbench that finds them";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const dynamic = "force-static";
@@ -17,16 +18,16 @@ export default function OpenGraphImage() {
           display: "flex",
           position: "relative",
           overflow: "hidden",
-          background: "#141C22",
-          color: "#F1EEE8",
+          background: "#0B0E12",
+          color: "#F2F5F7",
           padding: "68px 76px",
           fontFamily: "Georgia, serif",
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: 720 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16, fontFamily: "Arial, sans-serif", fontSize: 22, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-            <span style={{ width: 46, height: 2, background: "#E4876D" }} />
-            SQL reconciliation case study
+            <span style={{ width: 46, height: 2, background: "#F0906F" }} />
+            Read this, then open the workbench
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <div style={{ fontSize: 82, lineHeight: 0.98, letterSpacing: "-0.035em" }}>The Settlement Gap</div>

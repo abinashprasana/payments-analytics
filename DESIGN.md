@@ -2,30 +2,37 @@
 
 Payments Analytics v2 has two complementary surfaces with one data contract:
 
-- **The Settlement Gap** is an authored, editorial case study that explains one SQL investigation.
+- **The Settlement Gap** is an authored walkthrough that explains one SQL investigation and hands the reader to the workbench.
 - **Settlement Operations Workbench** is a compact product surface for daily-close triage and payment tracing.
 
 They share metric definitions, scenario IDs, dataset metadata, query IDs, status language, and deep links. They do not repeat each other's navigation or charts.
 
 ## Design read
 
-The audience is data analyst and BI hiring managers. The visual direction is a refinement of the existing mineral-slate identity: technically credible, calm, specific, and evidence-led. The case study uses variance 6/10, motion 3/10, and density 5/10. The repeated-use workbench is denser and more conventional by design.
+The audience is data analyst and BI hiring managers. The visual direction is a refinement of the existing mineral-slate identity: technically credible, calm, specific, and evidence-led. The walkthrough uses variance 7/10, motion 5/10, and density 4/10. The repeated-use workbench is denser and more conventional by design.
+
+Motion is ambient and scroll-linked, never attention-seeking. Every effect has a defined static state under `prefers-reduced-motion`, and no effect may animate a displayed figure through values the data never held.
 
 ## Shared foundations
 
-- Space follows an 8px rhythm, with compact controls allowed at 4px increments.
+- Space comes from the named scale only: `--sp-1` 4px, `--sp-2` 8, `--sp-3` 12, `--sp-4` 16, `--sp-5` 24, `--sp-6` 32, `--sp-7` 48, `--sp-8` 64, `--sp-9` 96, `--sp-10` 128. `--gutter` is the single width for columns separated by a rule. Literal spacing values do not belong in component CSS.
+- Type comes from the named scale only, ten steps from `--fs-50` (11px) to `--fs-800`. Nothing renders below 11px. Weights are 400, 500, 600, 700 — nothing else, and nothing above 700.
 - One cool cobalt/cyan accent system identifies links and selection; mint means reconciled, amber means late or attention, and coral means mismatch or missing evidence.
 - Surfaces use tinted off-black and off-white values rather than pure black or white.
 - Cards exist only when they group a real unit such as a metric contract, close, queue record, or trace stage. Avoid cards nested inside cards.
-- Use one radius system: 8–10px controls, 14–18px panels, pills only for compact status tags.
+- Radius comes from four tokens: `--radius-bar` 2px for chart bars, `--radius-control` 8px for buttons and inputs, `--radius-panel` 16px for cards and panels, `--radius-pill` for status tags. A single shared radius is not a system.
+- Depth is expressed through surface elevation steps (`--surface-sunken` through `--surface-3`), CSS and SVG gradients, blur, and grain. Not through drop shadows on near-black, which are invisible, and not through perspective transforms on content.
 - Text and icons must carry every status meaning; colour is never the sole signal.
 - Local fonts and assets only. No tracking scripts, remote font CDNs, paid assets, WebGL runtime, particles, fake application screenshots, or decorative 3D charts.
+- Scroll-driven CSS animation is permitted where it is wrapped in `@supports (animation-timeline: view())` and the unsupported path is the plain static layout. The universal reveal stays on the existing IntersectionObserver, because scroll-driven CSS is not yet Baseline.
+- The workbench's `:root` block in `dashboard/workbench_ui.py` is a hand-synced mirror of the token block in `site/src/app/globals.css`. Drift is caught by `tests/test_ui_integrity.py::test_token_blocks_match`, not by discipline.
 
 ## Case study
 
 - Treat the page as a long-form investigation, not a dashboard catalogue.
 - Keep the stakeholder answer and primary actions in the initial viewport.
-- Use readable prose measures, asymmetric evidence layouts, flat relational diagrams, real SQL excerpts, and generated result tables.
+- Use readable prose measures, asymmetric evidence layouts, relational diagrams with drawn connectors, and generated result tables.
+- At most one full SQL excerpt, plus one- or two-line inline excerpts where a single predicate carries the point. Deeper SQL is linked to the repository at file and line, which is stronger evidence than a truncated block because it cannot have been trimmed to fit the page.
 - At most one real workbench preview may appear.
 - Every displayed number, chart series, result row, SQL excerpt, query ID, scenario label, dataset version, and limitation comes from `CaseStudyDataV2`.
 - Section motion is limited to purposeful opacity/transform reveal and must become static under `prefers-reduced-motion`.

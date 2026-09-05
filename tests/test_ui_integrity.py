@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import unittest
 import xml.etree.ElementTree as ET
 from datetime import date
@@ -88,12 +89,39 @@ class WorkbenchStaticContractTests(unittest.TestCase):
         for marker in (
             ":focus-visible",
             "min-height: 44px",
-            "@media (max-width: 720px)",
+            "@media (max-width: 820px)",
             "prefers-reduced-motion: reduce",
             'aria-label="Snapshot metadata"',
             'aria-label="Investigation workflow"',
         ):
             self.assertIn(marker, self.ui_source)
+
+    def test_token_blocks_match(self) -> None:
+        """The workbench mirrors the site's tokens by hand, so a test catches drift."""
+
+        site_css = (PROJECT_DIR / "site" / "src" / "app" / "globals.css").read_text(
+            encoding="utf-8"
+        )
+
+        def tokens(source: str, prefix: str) -> dict[str, str]:
+            block = re.search(r":root\s*\{(.*?)\}", source, re.DOTALL)
+            self.assertIsNotNone(block, "no :root token block found")
+            found = re.findall(
+                rf"--{prefix}([a-z0-9-]+)\s*:\s*([^;]+);", block.group(1)
+            )
+            return {name: value.strip() for name, value in found}
+
+        site = tokens(site_css, "")
+        workbench = tokens(self.ui_source, "wb-")
+
+        shared = sorted(set(site) & set(workbench))
+        self.assertGreater(len(shared), 15, "token mirror looks suspiciously small")
+        for name in shared:
+            self.assertEqual(
+                workbench[name],
+                site[name],
+                f"--wb-{name} drifted from the site's --{name}",
+            )
 
     def test_brand_assets_are_safe_local_vectors(self) -> None:
         assets = (

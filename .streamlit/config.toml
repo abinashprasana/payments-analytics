@@ -1,11 +1,37 @@
+# Design tokens live here rather than in injected CSS wherever Streamlit exposes
+# them natively. Native theming reaches widget chrome that CSS cannot, and it
+# removes the !important overrides that used to fight the framework.
+# Values mirror site/src/app/globals.css :root.
+
 [theme]
 base = "dark"
-primaryColor = "#68DCFF"
-backgroundColor = "#050607"
-secondaryBackgroundColor = "#0C0F13"
-textColor = "#F1F3EF"
+primaryColor = "#72D5EE"
+backgroundColor = "#0B0E12"
+secondaryBackgroundColor = "#161C24"
+textColor = "#F2F5F7"
+linkColor = "#72D5EE"
+linkUnderline = false
+borderColor = "#3A4045"
+dataframeBorderColor = "#3A4045"
+dataframeHeaderBackgroundColor = "#11161C"
+codeBackgroundColor = "#070A0D"
+codeTextColor = "#E5E5DD"
+baseRadius = "medium"
+buttonRadius = "small"
+baseFontSize = 16
+showWidgetBorder = true
 font = "sans-serif"
 headingFont = "space-grotesk"
+
+# Status colours, matched to the site: mint reconciled, amber attention,
+# coral mismatch, cyan informational.
+greenColor = "#86D9AE"
+yellowColor = "#E9BE72"
+redColor = "#F0817B"
+blueColor = "#72D5EE"
+
+# One chart series palette, so a metric keeps its colour across every view.
+chartCategoricalColors = ["#72D5EE", "#86D9AE", "#E9BE72", "#F0817B", "#A7E6F6", "#8C9BA5"]
 
 [[theme.fontFaces]]
 family = "space-grotesk"

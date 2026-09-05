@@ -46,135 +46,173 @@ REASON_LABELS = {
 
 APP_CSS = """
 <style>
+  /* Mirror of the token block in site/src/app/globals.css :root, so both
+     surfaces read as one product. Drift is caught by
+     tests/test_ui_integrity.py::test_token_blocks_match, not by discipline.
+     Colours, radii, link colour, dataframe chrome and widget borders are set
+     natively in .streamlit/config.toml, which reaches widget internals that
+     CSS cannot. Only what config cannot express lives here. */
   :root {
-    --wb-bg: #050607;
-    --wb-panel: #101923;
-    --wb-panel-2: #15212d;
-    --wb-ink: #f2f6f7;
-    --wb-muted: #a9b7c2;
-    --wb-line: rgba(185, 209, 220, 0.18);
-    --wb-cyan: #68dcff;
-    --wb-green: #80dfb4;
-    --wb-amber: #f2c670;
-    --wb-red: #ff887d;
+    --wb-sp-1: 4px;
+    --wb-sp-2: 8px;
+    --wb-sp-3: 12px;
+    --wb-sp-4: 16px;
+    --wb-sp-5: 24px;
+    --wb-sp-6: 32px;
+    --wb-sp-7: 48px;
+    --wb-sp-8: 64px;
+
+    --wb-fs-50: 0.6875rem;
+    --wb-fs-75: 0.8125rem;
+    --wb-fs-100: 0.9375rem;
+    --wb-fs-200: 1rem;
+    --wb-fs-300: 1.125rem;
+    --wb-fs-400: 1.375rem;
+    --wb-fs-500: 1.75rem;
+    --wb-fs-600: 2.25rem;
+
+    --wb-radius-control: 8px;
+    --wb-radius-panel: 16px;
+    --wb-radius-pill: 999px;
+
+    --wb-surface-sunken: #070a0d;
+    --wb-surface-0: #0b0e12;
+    --wb-surface-1: #11161c;
+    --wb-surface-2: #161c24;
+    --wb-surface-3: #1c242d;
+
+    --wb-ink: #f2f5f7;
+    --wb-ink-soft: #c4cfd6;
+    --wb-muted: #8c9ba5;
+    --wb-line: rgba(190, 205, 214, 0.12);
+    --wb-line-strong: rgba(190, 205, 214, 0.26);
+
+    --wb-accent: #f0906f;
+    --wb-cyan: #72d5ee;
+    --wb-green: #86d9ae;
+    --wb-amber: #e9be72;
+    --wb-red: #f0817b;
   }
 
   .stApp {
     background:
-      radial-gradient(circle at 78% -8%, rgba(69, 140, 166, .16), transparent 31rem),
-      linear-gradient(180deg, #050607 0%, #0b131b 70%, #050607 100%);
+      radial-gradient(ellipse 90% 60% at 78% -10%, rgba(114, 213, 238, .07), transparent 60%),
+      var(--wb-surface-0);
     color: var(--wb-ink);
   }
 
+  /* Streamlit re-specifies padding-inline responsively, so the shorthand alone
+     leaves the column narrower than the site's. Centred rather than computed
+     from 100vw, because the viewport includes the sidebar and the main area
+     does not. */
   .block-container {
     max-width: 1240px;
-    padding-top: 1.2rem;
-    padding-bottom: 4rem;
+    margin-inline: auto;
+    padding-top: var(--wb-sp-5);
+    padding-bottom: var(--wb-sp-8);
+    padding-left: var(--wb-sp-5);
+    padding-right: var(--wb-sp-5);
   }
 
   h1, h2, h3 { letter-spacing: -0.025em; }
   p, li, label { line-height: 1.55; }
 
-  a { color: var(--wb-cyan); }
+  /* Outline only. Streamlit draws its own focus box-shadow, which would
+     otherwise double-draw alongside this ring. */
   a:focus-visible, button:focus-visible, [role="button"]:focus-visible,
   input:focus-visible, textarea:focus-visible {
     outline: 3px solid var(--wb-cyan) !important;
-    outline-offset: 2px !important;
-  }
-
-  [data-testid="stMain"] [data-testid="stWidgetLabel"] p,
-  [data-testid="stMain"] div[role="radiogroup"] label p {
-    color: #c7d4da !important;
-  }
-
-  [data-testid="stSidebar"] .wb-disclosure {
-    color: #674b16;
-    background: #fff7e3;
-    border-left-color: #b77a0c;
+    outline-offset: 2px;
+    box-shadow: none;
   }
 
   .wb-kicker {
     color: var(--wb-cyan);
-    font-size: .74rem;
-    font-weight: 750;
+    font-size: var(--wb-fs-75);
+    font-weight: 700;
     letter-spacing: .14em;
     text-transform: uppercase;
-    margin-bottom: .55rem;
+    margin-bottom: var(--wb-sp-2);
   }
 
   .wb-hero {
-    border: 1px solid var(--wb-line);
-    border-radius: 18px;
-    background: linear-gradient(145deg, rgba(19, 31, 42, .96), rgba(10, 17, 24, .94));
-    padding: 1.35rem 1.45rem 1.15rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, .18);
+    border: 1px solid var(--wb-line-strong);
+    border-radius: var(--wb-radius-panel);
+    background: var(--wb-surface-2);
+    padding: var(--wb-sp-5);
+    margin-bottom: var(--wb-sp-4);
   }
 
-  .wb-hero h1 { margin: 0; font-size: clamp(1.8rem, 4vw, 3.15rem); }
-  .wb-hero p { color: var(--wb-muted); max-width: 72ch; margin: .7rem 0 0; }
+  .wb-hero h1 { margin: 0; font-size: clamp(var(--wb-fs-500), 4vw, var(--wb-fs-600)); }
+  .wb-hero p { color: var(--wb-muted); max-width: 72ch; margin: var(--wb-sp-3) 0 0; }
 
   .wb-meta-row, .wb-tag-row, .wb-lifecycle {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: .45rem;
+    gap: var(--wb-sp-2);
   }
 
-  .wb-meta-row { margin-top: 1rem; }
+  .wb-meta-row { margin-top: var(--wb-sp-4); }
   .wb-pill, .wb-reason {
     display: inline-flex;
     align-items: center;
-    min-height: 1.75rem;
-    padding: .22rem .58rem;
+    min-height: 28px;
+    padding: var(--wb-sp-1) var(--wb-sp-3);
     border: 1px solid var(--wb-line);
-    border-radius: 999px;
-    color: #d9e5ea;
-    background: rgba(117, 151, 166, .08);
-    font-size: .74rem;
-    font-weight: 650;
+    border-radius: var(--wb-radius-pill);
+    color: var(--wb-ink-soft);
+    background: var(--wb-surface-3);
+    font-size: var(--wb-fs-75);
+    font-weight: 600;
   }
 
-  .wb-reason[data-tone="critical"] { color: #ffd4cf; border-color: rgba(255, 136, 125, .5); }
-  .wb-reason[data-tone="warning"] { color: #ffe7b1; border-color: rgba(242, 198, 112, .48); }
-  .wb-reason[data-tone="info"] { color: #cdeefa; border-color: rgba(115, 215, 242, .44); }
+  .wb-reason[data-tone="critical"] { color: var(--wb-red); border-color: var(--wb-red); }
+  .wb-reason[data-tone="warning"] { color: var(--wb-amber); border-color: var(--wb-amber); }
+  .wb-reason[data-tone="info"] { color: var(--wb-cyan); border-color: var(--wb-cyan); }
 
   .wb-lifecycle {
-    padding: .72rem .85rem;
+    padding: var(--wb-sp-3) 0;
     border-block: 1px solid var(--wb-line);
-    margin: .45rem 0 1.1rem;
+    margin: var(--wb-sp-2) 0 var(--wb-sp-5);
   }
-  .wb-step { color: var(--wb-muted); font-size: .82rem; font-weight: 650; }
+  .wb-step { color: var(--wb-muted); font-size: var(--wb-fs-100); font-weight: 600; }
   .wb-step strong { color: var(--wb-ink); }
-  .wb-arrow { color: #627785; }
+  .wb-arrow { color: var(--wb-cyan); }
 
-  .wb-section-intro { margin-bottom: .8rem; }
-  .wb-section-intro p { color: var(--wb-muted); max-width: 76ch; margin-top: -.35rem; }
+  /* Streamlit's heading margin is controlled directly rather than clawed back
+     with a negative margin, which broke whenever its spacing changed. */
+  .wb-section-intro { margin-bottom: var(--wb-sp-4); }
+  .wb-section-intro h2, .wb-section-intro h3 { margin-block: 0 var(--wb-sp-2); }
+  .wb-section-intro p { color: var(--wb-muted); max-width: 76ch; margin: 0; }
 
   .wb-card {
     height: 100%;
     min-height: 126px;
     border: 1px solid var(--wb-line);
-    border-radius: 14px;
-    background: rgba(16, 25, 35, .88);
-    padding: .9rem 1rem;
+    border-radius: var(--wb-radius-panel);
+    background: var(--wb-surface-2);
+    padding: var(--wb-sp-4);
   }
-  .wb-card-label { color: var(--wb-muted); font-size: .76rem; font-weight: 650; }
-  .wb-card-value { color: var(--wb-ink); font-size: clamp(1.35rem, 2.6vw, 2rem); font-weight: 760; margin: .18rem 0; }
-  .wb-card-note { color: var(--wb-muted); font-size: .74rem; }
-  .wb-card[data-tone="good"] { border-top: 2px solid var(--wb-green); }
-  .wb-card[data-tone="warning"] { border-top: 2px solid var(--wb-amber); }
-  .wb-card[data-tone="critical"] { border-top: 2px solid var(--wb-red); }
-  .wb-card[data-tone="info"] { border-top: 2px solid var(--wb-cyan); }
+  .wb-card-label { color: var(--wb-muted); font-size: var(--wb-fs-75); font-weight: 600; }
+  .wb-card-value { color: var(--wb-ink); font-size: clamp(var(--wb-fs-400), 2.6vw, var(--wb-fs-500)); font-weight: 700; margin: var(--wb-sp-1) 0; }
+  .wb-card-note { color: var(--wb-muted); font-size: var(--wb-fs-75); }
+
+  /* One status idiom across both surfaces: an inset rule, which tints without
+     changing geometry the way a border would. */
+  .wb-card[data-tone="good"] { box-shadow: inset 0 2px 0 var(--wb-green); }
+  .wb-card[data-tone="warning"] { box-shadow: inset 0 2px 0 var(--wb-amber); }
+  .wb-card[data-tone="critical"] { box-shadow: inset 0 2px 0 var(--wb-red); }
+  .wb-card[data-tone="info"] { box-shadow: inset 0 2px 0 var(--wb-cyan); }
 
   .wb-disclosure {
-    border-left: 3px solid var(--wb-amber);
-    background: rgba(242, 198, 112, .075);
-    color: #e8dcc0;
-    padding: .85rem 1rem;
-    border-radius: 0 10px 10px 0;
-    margin: .85rem 0;
-    font-size: .84rem;
+    box-shadow: inset 3px 0 0 var(--wb-amber);
+    background: var(--wb-surface-2);
+    color: var(--wb-ink-soft);
+    padding: var(--wb-sp-3) var(--wb-sp-4);
+    border-radius: var(--wb-radius-control);
+    margin: var(--wb-sp-3) 0;
+    font-size: var(--wb-fs-100);
     line-height: 1.6;
   }
 
@@ -182,66 +220,65 @@ APP_CSS = """
     display: flex;
     align-items: stretch;
     flex-wrap: wrap;
-    gap: .6rem;
-    margin: .9rem 0 1.3rem;
+    gap: var(--wb-sp-2);
+    margin: var(--wb-sp-4) 0 var(--wb-sp-5);
   }
   .wb-lineage__stage {
     flex: 1 1 160px;
     min-width: 140px;
     border: 1px solid var(--wb-line);
-    border-top: 2px solid var(--wb-cyan);
-    border-radius: 12px;
-    background: rgba(16, 25, 35, .82);
-    padding: .7rem .8rem;
+    border-radius: var(--wb-radius-panel);
+    background: var(--wb-surface-2);
+    box-shadow: inset 0 2px 0 var(--wb-cyan);
+    padding: var(--wb-sp-3) var(--wb-sp-4);
   }
-  .wb-lineage__stage[data-tone="critical"] { border-top-color: var(--wb-red); }
-  .wb-lineage__stage[data-tone="warning"] { border-top-color: var(--wb-amber); }
-  .wb-lineage__stage[data-tone="good"] { border-top-color: var(--wb-green); }
+  .wb-lineage__stage[data-tone="critical"] { box-shadow: inset 0 2px 0 var(--wb-red); }
+  .wb-lineage__stage[data-tone="warning"] { box-shadow: inset 0 2px 0 var(--wb-amber); }
+  .wb-lineage__stage[data-tone="good"] { box-shadow: inset 0 2px 0 var(--wb-green); }
   .wb-lineage__label {
     color: var(--wb-muted);
-    font-size: .68rem;
+    font-size: var(--wb-fs-50);
     font-weight: 700;
     letter-spacing: .08em;
     text-transform: uppercase;
   }
-  .wb-lineage__value { color: var(--wb-ink); font-size: .92rem; font-weight: 650; margin-top: .3rem; }
-  .wb-lineage__detail { color: var(--wb-muted); font-size: .76rem; margin-top: .2rem; }
+  .wb-lineage__value { color: var(--wb-ink); font-size: var(--wb-fs-100); font-weight: 600; margin-top: var(--wb-sp-1); }
+  .wb-lineage__detail { color: var(--wb-muted); font-size: var(--wb-fs-75); margin-top: var(--wb-sp-1); }
   .wb-lineage__arrow {
     display: flex;
     align-items: center;
     color: var(--wb-cyan);
-    font-size: 1.1rem;
+    font-size: var(--wb-fs-300);
   }
 
   .wb-query {
     border: 1px solid var(--wb-line);
-    background: #0c141c;
-    border-radius: 12px;
-    padding: .85rem .95rem;
+    background: var(--wb-surface-sunken);
+    border-radius: var(--wb-radius-control);
+    padding: var(--wb-sp-3) var(--wb-sp-4);
     color: var(--wb-muted);
-    font-size: .82rem;
+    font-size: var(--wb-fs-75);
   }
 
-  div[data-testid="stDataFrame"] {
-    border: 1px solid var(--wb-line);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
+  /* No overflow:hidden: the dataframe is a canvas grid that renders its own
+     resize handles and cell overlays outside its box. Its border and radius
+     come from theme.dataframeBorderColor and theme.baseRadius. */
   div[data-testid="stMetric"] {
     border: 1px solid var(--wb-line);
-    border-radius: 12px;
-    background: rgba(16, 25, 35, .82);
-    padding: .7rem .8rem;
+    border-radius: var(--wb-radius-panel);
+    background: var(--wb-surface-2);
+    padding: var(--wb-sp-3) var(--wb-sp-4);
   }
 
   .stButton > button, .stDownloadButton > button, .stLinkButton > a {
     min-height: 44px;
+    font-weight: 600;
   }
 
-  @media (max-width: 720px) {
-    .block-container { padding-inline: .8rem; padding-top: .7rem; }
-    .wb-hero { padding: 1rem; border-radius: 14px; }
+  /* Same breakpoint as the site, so the two surfaces reflow together. */
+  @media (max-width: 820px) {
+    .block-container { padding-inline: var(--wb-sp-4); padding-top: var(--wb-sp-3); }
+    .wb-hero { padding: var(--wb-sp-4); }
     .wb-lifecycle { align-items: flex-start; }
     .wb-arrow { display: none; }
     .wb-step { flex: 1 0 44%; }
@@ -403,7 +440,7 @@ def render_header(metadata: Mapping[str, Any]) -> None:
           <div class="wb-kicker">Settlement operations workbench</div>
           <h1>Find the close that did not close.</h1>
           <p>Trace completed merchant purchases from gross value to settlement evidence,
-          using the same tested SQL models shown in the case study.</p>
+          using the same tested SQL models shown in the walkthrough.</p>
           <div class="wb-meta-row" aria-label="Snapshot metadata">
             <span class="wb-pill">Synthetic demo snapshot</span>
             <span class="wb-pill">{escape(str(dataset_version))}</span>

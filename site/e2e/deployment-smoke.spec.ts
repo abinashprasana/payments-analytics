@@ -21,7 +21,7 @@ test.describe("public free-tier deployment", () => {
       waitUntil: "networkidle",
       timeout: 120_000,
     });
-    await expect(page).toHaveTitle(/The Settlement Gap.*SQL reconciliation case study/i);
+    await expect(page).toHaveTitle(/The Settlement Gap.*workbench that finds them/i);
     await expect(
       page.getByRole("heading", { name: "The Settlement Gap", level: 1 }),
     ).toBeVisible();

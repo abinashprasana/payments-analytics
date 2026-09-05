@@ -7,9 +7,10 @@ import "./globals.css";
 
 import { publicConfig } from "@/lib/config";
 
-const title = "The Settlement Gap — SQL reconciliation case study";
+const title =
+  "The Settlement Gap — why completed payments go unreconciled, and the workbench that finds them";
 const description =
-  "A reproducible SQL investigation into completed purchases that do not reconcile to recorded settlement value.";
+  "I traced why completed merchant purchases stop matching recorded settlement value, then built the workbench that does it live. Read the trace, then open the tool.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(publicConfig.siteUrl),
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     siteName: "The Settlement Gap",
     title,
     description,
-    images: [{ url: `${publicConfig.siteUrl}/opengraph-image`, width: 1200, height: 630, alt: "The Settlement Gap SQL reconciliation case study" }],
+    images: [{ url: `${publicConfig.siteUrl}/opengraph-image`, width: 1200, height: 630, alt: title }],
   },
   twitter: {
     card: "summary_large_image",
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: "dark",
-  themeColor: "#141C22",
+  themeColor: "#0B0E12",
   width: "device-width",
   initialScale: 1,
 };
@@ -63,7 +64,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
-        <a className="skip-link" href="#main-content">Skip to case study</a>
+        <a className="skip-link" href="#main-content">Skip to the walkthrough</a>
         {children}
       </body>
     </html>
