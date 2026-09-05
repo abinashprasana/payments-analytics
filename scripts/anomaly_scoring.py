@@ -18,8 +18,6 @@ import json
 
 import duckdb
 import pandas as pd
-import shap
-from sklearn.ensemble import IsolationForest
 
 FEATURE_COLUMNS: tuple[str, ...] = (
     "settlement_delay_days",
@@ -35,6 +33,14 @@ def score_exceptions(
     connection: duckdb.DuckDBPyConnection, *, as_of: dt.date
 ) -> pd.DataFrame:
     """Fit an isolation forest over ``int_anomaly_features`` and attribute each score with SHAP."""
+
+    # Imported here, not at module scope: AnalyticsEngine imports this module, and
+    # the Streamlit workbench imports AnalyticsEngine without ever scoring anything.
+    # At module scope, shap pulls numba and llvmlite (~40MB) and sklearn pulls scipy
+    # (~36MB) into every cold start on a 1GB free tier, for a feature that surface
+    # does not use.
+    import shap
+    from sklearn.ensemble import IsolationForest
 
     frame = connection.execute(
         "SELECT * FROM int_anomaly_features WHERE analysis_as_of_date <= ? "
