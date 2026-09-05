@@ -154,6 +154,59 @@ code, pre { font-family: var(--font-mono); }
 .answer-ledger > div + div,
 .recommendation-grid > * + * { padding-left: var(--gutter); border-left: 1px solid var(--line); }
 
+/* Reports scroll position, not decoration, so it stays outside the reduced-
+   motion animation freeze below and is driven by native scroll-linked CSS
+   rather than a scroll listener. Invisible with no visual cost where
+   animation-timeline: scroll() isn't supported. */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  width: 100%;
+  height: 2px;
+  background: var(--link);
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: 0;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    opacity: 1;
+    animation: scroll-progress-fill linear;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes scroll-progress-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Scroll-driven CSS is ~84% supported in 2026 but not yet Baseline (Firefox
+   stable keeps it behind a flag), so this stays additive: a plain static
+   hero everywhere else, a subtle exit parallax only where the browser
+   actually supports scroll-linked animation and the visitor hasn't asked
+   for less motion. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__copy {
+      animation: hero-parallax-copy linear;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+    .hero__brief {
+      animation: hero-parallax-brief linear;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+  }
+}
+
+@keyframes hero-parallax-copy { to { transform: translateY(-40px); } }
+@keyframes hero-parallax-brief { to { transform: translateY(-16px); } }
+
 .site-header {
   position: sticky;
   top: 0;
@@ -986,7 +1039,39 @@ tbody th { font-weight: 600; }
   text-align: center;
 }
 
-.architecture-map__arrow { color: var(--link); font-size: var(--fs-400); text-align: center; }
+/* Shared connector styling for both diagrams: architecture-map__arrow and
+   .relationship-list keep their own layout classes for grid placement and
+   responsive show/hide/rotate; the visual line itself is one system. */
+.diagram-arrow {
+  width: 100%;
+  height: 22px;
+  align-self: center;
+  stroke: var(--link);
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.relationship-list .diagram-arrow { height: 14px; }
+
+.diagram-arrow__pulse {
+  stroke: var(--accent);
+  stroke-dasharray: .12 .2;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .diagram-arrow--pulse .diagram-arrow__pulse {
+    opacity: .7;
+    animation: diagram-pulse 2.4s linear infinite;
+  }
+}
+
+@keyframes diagram-pulse { to { stroke-dashoffset: -.64; } }
+
+.architecture-map__arrow { text-align: center; }
 .architecture-map__models { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-2); }
 
 .architecture-map__models > div {

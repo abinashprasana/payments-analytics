@@ -28,7 +28,15 @@ export function ErDiagram({
         {relationships.map((relationship) => (
           <p key={`${relationship.from}-${relationship.to}`}>
             <code>{relationship.from}</code>
-            <span aria-hidden="true">→</span>
+            <svg
+              className="diagram-arrow"
+              viewBox="0 0 24 24"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M3 12h16m-6-7l7 7-7 7" pathLength="1" />
+            </svg>
             <code>{relationship.to}</code>
             <strong>{relationship.cardinality}</strong>
             <span>{relationship.note}</span>

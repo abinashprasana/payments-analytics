@@ -46,15 +46,34 @@ const CHAPTER_NAV_SCRIPT = `
     window.setTimeout(selectFragment, 250);
   };
 
-  const REVEAL_SELECTOR = '.case-section, .trace-card, .workbench-preview, .handoff';
+  const REVEAL_SELECTOR = '.case-section, .trace-card, .workbench-preview, .handoff, ' +
+    '.er-figure, .architecture-figure, .metric-ledger, .quality-ledger, .final-cta';
 
   const bindReveal = () => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const targets = [...document.querySelectorAll(REVEAL_SELECTOR)];
     if (!targets.length) return;
     const style = document.createElement('style');
-    style.textContent = '[data-reveal]{opacity:0;transform:translateY(16px);' +
-      'transition:opacity .5s ease-out,transform .5s ease-out}';
+    style.textContent =
+      '[data-reveal]{opacity:0;transform:translateY(16px);' +
+      'transition:opacity .5s ease-out,transform .5s ease-out}' +
+      // Bars grow from zero on reveal. The target width already sits in the
+      // inline width style; this only layers a scaleX grow on top, so a
+      // no-JS or reduced-motion visitor still sees the correct bar at full
+      // size immediately -- nothing here can leave a bar stuck invisible.
+      '.coverage-chart__track i,.exception-bars__track i{' +
+      'transform:scaleX(0);transform-origin:left;' +
+      'transition:transform .7s cubic-bezier(.2,.6,.2,1)}' +
+      '[data-reveal].is-revealed .coverage-chart__track i,' +
+      '[data-reveal].is-revealed .exception-bars__track i{transform:scaleX(1)}' +
+      // Connector paths draw on reveal. Default state (before this rule
+      // exists) is a plain solid stroke with zero dashoffset, i.e. fully
+      // drawn -- so this can only ever animate a reveal, never hide a
+      // connector permanently.
+      '[data-reveal]:not(.is-revealed) .diagram-arrow > path:first-child{' +
+      'stroke-dasharray:1;stroke-dashoffset:1}' +
+      '[data-reveal].is-revealed .diagram-arrow > path:first-child{' +
+      'stroke-dashoffset:0;transition:stroke-dashoffset .9s cubic-bezier(.4,0,.2,1)}';
     document.head.appendChild(style);
     targets.forEach((el) => el.setAttribute('data-reveal', ''));
     const observer = new IntersectionObserver((entries) => {

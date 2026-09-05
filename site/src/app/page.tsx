@@ -120,6 +120,8 @@ export default function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
 
+      <div className="scroll-progress" aria-hidden="true" />
+
       <header className="site-header">
         <a className="brand" href="#top" aria-label="The Settlement Gap — back to the top">
           <Image
