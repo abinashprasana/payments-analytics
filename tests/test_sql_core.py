@@ -9,8 +9,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import pandas as pd
+
 import data.generate_data as generator
 from scripts.analytics_engine import AnalyticsEngine, QUERY_REQUIRED
+from scripts.anomaly_scoring import FEATURE_COLUMNS
 from scripts.generate_artifacts import build_payload, export_marts
 
 
@@ -42,6 +45,11 @@ class SettlementCoreTests(unittest.TestCase):
             self.engine.query("select_anything")
         with self.assertRaisesRegex(ValueError, "Unsupported currency"):
             self.engine.query("close_summary", {"scenario": "normal", "currency": "USD"})
+        self.assertEqual(QUERY_REQUIRED["exception_scoring"], frozenset())
+        self.assertEqual(QUERY_REQUIRED["exception_rate_screen"], frozenset())
+        self.assertEqual(QUERY_REQUIRED["benford_conformity"], frozenset())
+        with self.assertRaisesRegex(ValueError, "Unsupported parameters"):
+            self.engine.query("exception_scoring", {"currency": "EUR"})
 
     def test_guided_scenarios_have_exact_final_signals(self) -> None:
         expected = {
@@ -157,6 +165,69 @@ class SettlementCoreTests(unittest.TestCase):
         self.assertFalse(quality.empty)
         self.assertEqual(set(quality["status"]), {"pass"})
         self.assertEqual(int(quality["failing_rows"].sum()), 0)
+        self.assertIn("anomaly_features_complete", set(quality["check_id"]))
+        self.assertIn("quality_screens_populated", set(quality["check_id"]))
+        self.assertIn("benford_digit_coverage", set(quality["check_id"]))
+
+    def test_exception_scoring_returns_one_row_per_eligible_payment_with_bounded_scores(
+        self,
+    ) -> None:
+        scored = self.engine.query("exception_scoring")
+        eligible = self.engine.connection.execute(
+            "SELECT COUNT(*) FROM int_settlement_reconciliation"
+        ).fetchone()[0]
+        self.assertEqual(len(scored), eligible)
+        self.assertEqual(
+            set(scored.columns),
+            {
+                "payment_id", "merchant_id", "merchant_category", "transaction_date",
+                "anomaly_score", "top_feature", "top_feature_contribution",
+                "shap_values_json", "primary_reason", "is_match",
+            },
+        )
+        self.assertTrue((scored["anomaly_score"] >= 0).all())
+        self.assertTrue((scored["anomaly_score"] <= 1).all())
+        self.assertTrue(set(scored["top_feature"]) <= set(FEATURE_COLUMNS))
+        for blob in scored["shap_values_json"]:
+            self.assertEqual(set(json.loads(blob)), set(FEATURE_COLUMNS))
+
+    def test_exception_scoring_is_deterministic_across_repeated_calls(self) -> None:
+        first = self.engine.query("exception_scoring")
+        second = self.engine.query("exception_scoring")
+        first_sorted = first.sort_values("payment_id").reset_index(drop=True)
+        second_sorted = second.sort_values("payment_id").reset_index(drop=True)
+        self.assertTrue(
+            (first_sorted["anomaly_score"] == second_sorted["anomaly_score"]).all()
+        )
+
+    def test_benford_conformity_returns_nine_digits_per_currency(self) -> None:
+        benford = self.engine.query("benford_conformity")
+        self.assertFalse(benford.empty)
+        for _, group in benford.groupby("currency"):
+            self.assertEqual(sorted(group["leading_digit"]), list(range(1, 10)))
+            self.assertAlmostEqual(float(group["observed_pct"].sum()), 100.0, places=3)
+        first_digit_expected = {
+            1: 30.103, 2: 17.609, 3: 12.494, 4: 9.691, 5: 7.918,
+            6: 6.695, 7: 5.799, 8: 5.115, 9: 4.576,
+        }
+        one_currency = benford[benford["currency"] == benford["currency"].iloc[0]]
+        for _, row in one_currency.iterrows():
+            self.assertAlmostEqual(
+                float(row["expected_pct"]),
+                first_digit_expected[int(row["leading_digit"])],
+                places=2,
+            )
+
+    def test_exception_rate_screen_has_null_zscore_during_warmup_then_populates(
+        self,
+    ) -> None:
+        screen = self.engine.query("exception_rate_screen")
+        self.assertFalse(screen.empty)
+        for _, group in screen.sort_values("close_date").groupby("currency"):
+            values = group["z_score"].tolist()
+            self.assertTrue(all(pd.isna(value) for value in values[:6]))
+            if len(values) > 6:
+                self.assertTrue(any(not pd.isna(value) for value in values[6:]))
 
     def test_generator_reproduces_checked_snapshot(self) -> None:
         checked_raw = PROJECT_ROOT / "data" / "raw"

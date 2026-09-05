@@ -41,6 +41,9 @@ The precedence does not suppress secondary reasons.
 | `mart_merchant_health` | merchant × transaction date × currency | Merchant-level close and exception health without cross-currency totals. |
 | `mart_payment_trace` | one eligible payment | Auditable transaction, applicable term, settlement evidence, derived values, flags, and SQL lineage fields. |
 | `mart_category_health` | merchant category × transaction date × currency | Supporting authored-investigation mart for segment isolation. |
+| `int_anomaly_features` | one eligible purchase | Settlement-delay, fee, and amount deltas beside each merchant's rolling prior average, so a payment can be read against its own history instead of a fixed threshold. |
+| `mart_quality_screens` | close date × currency | Daily exception rate with its trailing six-day mean, standard deviation, z-score, and three-sigma upper control limit. |
+| `mart_benford_conformity` | currency × leading digit | Observed first-digit frequencies against Newcomb-Benford expectations, with a chi-square statistic and mean absolute deviation for each currency. |
 
 Staging models validate and type source columns before the intermediate models run.
 
@@ -57,12 +60,17 @@ Staging models validate and type source columns before the intermediate models r
 | `payment_trace` | `scenario`, `payment_id`; optional `as_of_date` | One payment's transaction, term, settlement, expected-versus-recorded money, and rule lineage. |
 | `catalog_metrics` | none | These metric definitions and model grains in machine-readable form. |
 | `quality_results` | none | Source and mart checks with pass/fail status and observed values at the manifest as-of date. |
+| `exception_scoring` | none; optional `as_of_date` | Isolation-forest anomaly score and SHAP attribution for every eligible payment. |
+| `exception_rate_screen` | none | Each daily close read against its own trailing control limit. |
+| `benford_conformity` | none | First-digit conformity for each payment currency. |
 
 Dates use ISO `YYYY-MM-DD`, currencies are restricted to `EUR`, `GBP`, `AUD`, and `CAD`, and malformed parameters or unknown scenarios are rejected by the engine. A valid but absent payment ID returns an empty trace. The Streamlit navigation layer recovers from invalid or absent public deep links by returning to a valid payment or to the normal scenario and `close` view.
 
 ## Interpretation guardrails
 
 - Scenario incidents are injected demonstrations, not observed business events.
+- Anomaly scores rank how unusual a payment looks against the rest of this synthetic snapshot. They are not fraud findings, and no detection rate is claimed or measured.
+- Control limits and Benford conformity are screens that narrow where to look. Neither is evidence of error or manipulation.
 - Settlement exceptions are operational reconciliation signals, not fraud predictions.
 - Review actions in the workbench are session-only annotations and never update the committed snapshot.
 - No FX conversion, real-time feed, payment credential, personal production data, or business-impact estimate is included.

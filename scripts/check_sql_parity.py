@@ -31,12 +31,36 @@ MANIFEST_PATH = PROJECT_ROOT / "data" / "scenarios.json"
 MODEL_NAMES = (
     "int_expected_settlements",
     "int_settlement_reconciliation",
+    "int_anomaly_features",
     "mart_daily_close",
     "mart_exception_queue",
     "mart_merchant_health",
     "mart_payment_trace",
     "mart_category_health",
+    "mart_quality_screens",
+    "mart_benford_conformity",
 )
+
+ANOMALY_FEATURES_SQL = """
+SELECT
+    payment_id, transaction_dow, merchant_rolling_avg_delay_days,
+    amount_delta_vs_merchant_avg
+FROM int_anomaly_features
+ORDER BY payment_id
+"""
+
+QUALITY_SCREENS_SQL = """
+SELECT close_date, currency, exception_rate, z_score, control_limit_upper, breached
+FROM mart_quality_screens
+ORDER BY currency, close_date
+"""
+
+BENFORD_SQL = """
+SELECT currency, leading_digit, observed_count, observed_pct, expected_pct,
+    chi_square_stat, mad_stat
+FROM mart_benford_conformity
+ORDER BY currency, leading_digit
+"""
 
 CLASSIFICATION_SQL = """
 SELECT
@@ -150,6 +174,7 @@ def run_parity_check() -> dict[str, int]:
             "classification_rows": 0,
             "daily_rows": 0,
             "category_rows": 0,
+            "screen_rows": 0,
             "public_query_rows": 0,
         }
         with AnalyticsEngine(build_sha="parity-check") as engine, conn.cursor() as cursor:
@@ -187,6 +212,34 @@ def run_parity_check() -> dict[str, int]:
                     postgres_categories,
                 )
                 compared["category_rows"] += len(duck_categories)
+
+                duck_anomaly_features = _duck_rows(engine, ANOMALY_FEATURES_SQL)
+                postgres_anomaly_features = _postgres_rows(cursor, ANOMALY_FEATURES_SQL)
+                _assert_equal(
+                    f"anomaly features as of {as_of}",
+                    duck_anomaly_features,
+                    postgres_anomaly_features,
+                )
+
+                duck_screens = _duck_rows(engine, QUALITY_SCREENS_SQL)
+                postgres_screens = _postgres_rows(cursor, QUALITY_SCREENS_SQL)
+                _assert_equal(
+                    f"quality screens as of {as_of}",
+                    duck_screens,
+                    postgres_screens,
+                )
+
+                duck_benford = _duck_rows(engine, BENFORD_SQL)
+                postgres_benford = _postgres_rows(cursor, BENFORD_SQL)
+                _assert_equal(
+                    f"Benford conformity as of {as_of}",
+                    duck_benford,
+                    postgres_benford,
+                )
+
+                compared["screen_rows"] += (
+                    len(duck_anomaly_features) + len(duck_screens) + len(duck_benford)
+                )
                 compared["as_of_dates"] += 1
 
             _set_context(engine, cursor, default_as_of)
@@ -270,7 +323,8 @@ def main() -> None:
         f"{compared['model_counts']} model counts, "
         f"{compared['classification_rows']:,} exception rows, "
         f"{compared['daily_rows']:,} daily aggregates, "
-        f"{compared['category_rows']:,} category aggregates, and "
+        f"{compared['category_rows']:,} category aggregates, "
+        f"{compared['screen_rows']:,} feature and screen rows, and "
         f"{compared['public_query_rows']:,} public query rows."
     )
 

@@ -18,6 +18,11 @@ from typing import Any, Mapping, Sequence
 import duckdb
 import pandas as pd
 
+try:
+    from scripts.anomaly_scoring import score_exceptions
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from anomaly_scoring import score_exceptions
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RAW_DATA_DIR = PROJECT_ROOT / "data" / "raw"
@@ -58,6 +63,9 @@ QUERY_PARAMETERS: dict[str, frozenset[str]] = {
     ),
     "catalog_metrics": frozenset(),
     "quality_results": frozenset(),
+    "exception_scoring": frozenset({"as_of_date"}),
+    "exception_rate_screen": frozenset(),
+    "benford_conformity": frozenset(),
 }
 
 QUERY_REQUIRED: dict[str, frozenset[str]] = {
@@ -68,6 +76,9 @@ QUERY_REQUIRED: dict[str, frozenset[str]] = {
     "payment_trace": frozenset({"scenario", "payment_id"}),
     "catalog_metrics": frozenset(),
     "quality_results": frozenset(),
+    "exception_scoring": frozenset(),
+    "exception_rate_screen": frozenset(),
+    "benford_conformity": frozenset(),
 }
 
 
@@ -365,6 +376,22 @@ ORDER BY metric_id
 """
         ).df()
 
+    def _exception_scoring(self, params: Mapping[str, Any]) -> pd.DataFrame:
+        """The one query id that wraps a fitted model instead of pure SQL."""
+
+        as_of = self._as_of(params)
+        return score_exceptions(self.connection, as_of=as_of)
+
+    def _exception_rate_screen(self) -> pd.DataFrame:
+        return self.connection.execute(
+            "SELECT * FROM mart_quality_screens ORDER BY currency, close_date"
+        ).df()
+
+    def _benford_conformity(self) -> pd.DataFrame:
+        return self.connection.execute(
+            "SELECT * FROM mart_benford_conformity ORDER BY currency, leading_digit"
+        ).df()
+
     def _quality_results(self) -> pd.DataFrame:
         return self.connection.execute(
             """
@@ -423,6 +450,22 @@ WITH checks AS (
         'Daily-close rows remain unique inside one currency partition',
         COUNT(*), COUNT(*) - COUNT(DISTINCT CAST(close_date AS VARCHAR) || '|' || currency)
     FROM mart_daily_close
+    UNION ALL
+    SELECT 'anomaly_features_complete',
+        'Every reconciled payment has scoring features',
+        COUNT(*), COUNT(*) - (SELECT COUNT(*) FROM int_anomaly_features)
+    FROM int_settlement_reconciliation
+    UNION ALL
+    SELECT 'quality_screens_populated',
+        'Every daily close has a control-limit screen',
+        COUNT(*), COUNT(*) - (SELECT COUNT(*) FROM mart_quality_screens)
+    FROM mart_daily_close
+    UNION ALL
+    SELECT 'benford_digit_coverage',
+        'Every currency screens all nine leading digits',
+        COUNT(*),
+        COUNT(*) - (SELECT COUNT(DISTINCT currency) * 9 FROM mart_benford_conformity)
+    FROM mart_benford_conformity
 )
 SELECT
     check_id,
@@ -452,6 +495,9 @@ ORDER BY check_id
             "payment_trace": self._payment_trace,
             "catalog_metrics": lambda _: self._catalog_metrics(),
             "quality_results": lambda _: self._quality_results(),
+            "exception_scoring": self._exception_scoring,
+            "exception_rate_screen": lambda _: self._exception_rate_screen(),
+            "benford_conformity": lambda _: self._benford_conformity(),
         }
         with self._query_lock:
             if query_id in {
@@ -459,6 +505,7 @@ ORDER BY check_id
                 "segment_isolation",
                 "exception_queue",
                 "payment_trace",
+                "exception_scoring",
             }:
                 self._set_as_of(self._as_of(clean))
             elif query_id == "quality_results":

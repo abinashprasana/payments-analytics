@@ -550,6 +550,20 @@
         "detail": "No failing rows."
       },
       {
+        "checkId": "anomaly_features_complete",
+        "label": "Every reconciled payment has scoring features",
+        "status": "pass",
+        "checkedRows": 57629,
+        "detail": "No failing rows."
+      },
+      {
+        "checkId": "benford_digit_coverage",
+        "label": "Every currency screens all nine leading digits",
+        "status": "pass",
+        "checkedRows": 36,
+        "detail": "No failing rows."
+      },
+      {
         "checkId": "daily_close_unique",
         "label": "Daily close is unique by date and currency",
         "status": "pass",
@@ -589,6 +603,13 @@
         "label": "Only transfers are merchantless",
         "status": "pass",
         "checkedRows": 80000,
+        "detail": "No failing rows."
+      },
+      {
+        "checkId": "quality_screens_populated",
+        "label": "Every daily close has a control-limit screen",
+        "status": "pass",
+        "checkedRows": 2661,
         "detail": "No failing rows."
       },
       {

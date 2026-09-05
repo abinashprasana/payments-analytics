@@ -211,6 +211,14 @@ class AnalyticsEngineContractTests(unittest.TestCase):
             ),
         )
 
+    def test_scored_exceptions_are_flagged_more_anomalous_on_average_than_matches(
+        self,
+    ) -> None:
+        scored = self.engine.query("exception_scoring")
+        exceptions_mean = scored.loc[~scored["is_match"], "anomaly_score"].mean()
+        matches_mean = scored.loc[scored["is_match"], "anomaly_score"].mean()
+        self.assertGreater(exceptions_mean, matches_mean)
+
     def test_queue_keeps_all_flags_and_sql_primary_precedence(self) -> None:
         queue = self.engine.query(
             "exception_queue", self.scenario_params("delayed_travel_gbp")
