@@ -115,6 +115,7 @@ function SectionHeading({
 
 export default function Home() {
   const exceptionMax = Math.max(...projectData.exceptionSummary.map(({ count }) => count), 1);
+  const activeReasons = projectData.exceptionSummary.filter(({ count }) => count > 0);
 
   return (
     <>
@@ -333,6 +334,13 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+                {activeReasons.length > 0 && activeReasons.length < projectData.exceptionSummary.length ? (
+                  <p className="classification-note">
+                    {activeReasons.length === 1
+                      ? `This batch fails for one reason: ${activeReasons[0].label.toLowerCase()}. The rest of the queue carries no exceptions of any other kind.`
+                      : `This batch fails for ${activeReasons.length} of the ${projectData.exceptionSummary.length} tracked reasons. The zero rows are not missing data; the query found no matching payments.`}
+                  </p>
+                ) : null}
               </div>
               <div>
                 <SqlBlock sql={classificationStep.sql} label={`${classificationStep.label} SQL`} />
