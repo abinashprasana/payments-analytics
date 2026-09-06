@@ -1,0 +1,5 @@
+# Generated snapshot fixtures are compared byte-for-byte against a freshly
+# regenerated copy in tests/test_sql_core.py::test_generator_reproduces_checked_snapshot.
+# Force LF so that comparison is identical on every platform, regardless of
+# a contributor's core.autocrlf setting.
+data/raw/*.csv text eol=lf

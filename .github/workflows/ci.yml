@@ -34,23 +34,6 @@ jobs:
       - name: Install Python dependencies
         run: python -m pip install -r requirements-dev.txt
 
-      - name: TEMP diagnose generator platform drift
-        run: |
-          python - <<'EOF'
-          import sys, platform, hashlib, locale
-          import data.generate_data as g
-          g.reset_seed()
-          rows = g.generate_customers()
-          print("platform:", platform.platform())
-          print("python:", sys.version)
-          print("locale:", locale.getlocale())
-          import faker
-          print("faker version:", faker.VERSION)
-          for r in rows[:5]:
-              print(r)
-          print("first20hash:", hashlib.sha256(repr(rows[:20]).encode()).hexdigest())
-          EOF
-
       - name: Run Python tests
         run: python -m unittest discover -s tests -p "test_*.py" -v
 
