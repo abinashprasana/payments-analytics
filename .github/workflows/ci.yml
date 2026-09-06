@@ -77,7 +77,7 @@ jobs:
           cache-dependency-path: requirements.txt
 
       - name: Install runtime dependencies
-        run: python -m pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt -r requirements-postgres.txt
 
       - name: Compare canonical models on both engines
         run: python scripts/check_sql_parity.py

@@ -1,0 +1,8 @@
+# Cross-engine parity check only (scripts/check_sql_parity.py, scripts/load_data.py).
+# Neither the deployed Streamlit workbench nor the main test suite imports
+# scripts/db_connection.py, so this stays out of requirements.txt: the live
+# workbench never needs a Postgres driver, and psycopg2-binary is one of the
+# slowest packages to ship a wheel for a brand-new CPython release, which has
+# previously stalled the Streamlit Community Cloud build entirely.
+psycopg2-binary==2.9.12
+sqlalchemy==2.0.50
