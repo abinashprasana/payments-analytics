@@ -12,15 +12,10 @@
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Live-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://abinashprasana-payments-analytics-dashboardapp-mrsz1m.streamlit.app/)
 [![Status](https://img.shields.io/badge/Status-Live-22C55E?style=for-the-badge)](.)
-
 [![Case Study](https://img.shields.io/badge/Case%20Study-Live%20on%20Vercel-071827?style=for-the-badge&logo=vercel&logoColor=white)](https://payments-analytics-kappa.vercel.app/)
 [![Workbench](https://img.shields.io/badge/Workbench-Live%20on%20Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://abinashprasana-payments-analytics-dashboardapp-mrsz1m.streamlit.app/?view=close&scenario=normal)
 
 <br/>
-
-### Read the trace, then open the tool
-
-[**The Settlement Gap** — the walkthrough](https://abinashprasana.github.io/payments-analytics/) · [**Settlement Operations Workbench** — the live tool](https://abinashprasana-payments-analytics-dashboardapp-mrsz1m.streamlit.app/?view=close&scenario=normal)
 
 *Both are free to open. The workbench sleeps after inactivity on Streamlit's free tier — give it a few seconds to wake.*
 
