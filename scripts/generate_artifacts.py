@@ -444,8 +444,8 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                 "conciseAnswer": (
                     f"At the {investigation_as_of} checkpoint, {incident_matched} of "
                     f"{incident_eligible} eligible {selected['defaultCurrency']} "
-                    f"purchases from the {selected['closeDate']} close reconciled "
-                    f"cleanly. {selected['description']} "
+                    f"purchases from the {selected['closeDate']} close had a "
+                    f"settlement that balanced on amount. {selected['description']} "
                     + narrative["outcome"].format(count=exception_count)
                 ),
                 "operationalDecision": (

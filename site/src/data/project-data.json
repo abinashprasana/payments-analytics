@@ -60,7 +60,7 @@
   ],
   "question": {
     "stakeholder": "Why do completed Electronics purchases in EUR still carry a fee-mismatch exception after the close?",
-    "conciseAnswer": "At the 2024-11-15 checkpoint, 190 of 190 eligible EUR purchases from the 2024-11-12 close reconciled cleanly. Recorded fees use the prior schedule after new effective-dated merchant terms begin. The 48 affected payments settled on time and on gross amount, but their recorded processing fee no longer matches the effective merchant term, so they are flagged as fee-mismatch exceptions.",
+    "conciseAnswer": "At the 2024-11-15 checkpoint, 190 of 190 eligible EUR purchases from the 2024-11-12 close had a settlement that balanced on amount. Recorded fees use the prior schedule after new effective-dated merchant terms begin. The 48 affected payments settled on time and on gross amount, but their recorded processing fee no longer matches the effective merchant term, so they are flagged as fee-mismatch exceptions.",
     "operationalDecision": "Reconcile the injected batch as one operational event, then route any residual payment-level exceptions using the stable queue precedence."
   },
   "metricDefinitions": [

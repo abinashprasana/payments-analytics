@@ -25,6 +25,11 @@
 
 ## What this is
 
+- **The problem:** a purchase marked complete can still fail the daily close, because the settlement money is late, missing, or carries the wrong fee.
+- **Who it's for:** the settlement operations analyst who has to sign off that close.
+- **What status reports miss:** they stop at "the customer paid." Reconciliation has to compare two separate kinds of evidence, the merchant's contract terms and the money that actually arrived.
+- **What I built:** one portable SQL model chain that defines "reconciled", a written walkthrough of one case where it breaks, and a live workbench for triaging the same exceptions.
+
 Completed purchases don't always reconcile to the settlement money that eventually shows up for them. Sometimes the settlement is late. Sometimes it never arrives. Sometimes it arrives on time and for the right amount, but the fee charged against it no longer matches what the merchant's contract says it should be. This project is one investigation into that gap, built end to end on a synthetic payments snapshot: a Postgres/DuckDB-portable SQL model chain that defines what "reconciled" actually means, an authored write-up that walks through one real case of it breaking, and a Streamlit workbench that lets you triage the same exceptions the way an operations analyst would.
 
 The rule is that SQL is the source of truth everywhere. Every join, every exception flag, every KPI is defined once in the model chain under [`sql/models`](sql/models) and executed identically on DuckDB (what the two live surfaces run) and PostgreSQL (what CI checks it against on every push, so the "portable SQL" claim is verified, not just claimed). Python and the two front ends only format rows that SQL already computed — nothing gets recalculated in a dashboard.

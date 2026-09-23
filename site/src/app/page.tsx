@@ -171,8 +171,8 @@ export default function Home() {
         <ChapterNav items={projectData.navigation} />
 
         <section className="case-section section-shell" id="question" aria-labelledby="question-title">
-          <SectionHeading id="question-title" eyebrow="Stakeholder question" title="A completed purchase can still fail the close">
-            Purchase status answers whether the customer event completed. Reconciliation asks whether the later settlement evidence agrees with the expected money, currency, fee term, and SLA.
+          <SectionHeading id="question-title" eyebrow="The problem" title="A completed purchase can still fail the close">
+            A status report counts this purchase as done once the customer pays. Settlement operations can&apos;t close the day until the money that later arrives agrees with the expected amount, currency, fee term, and SLA.
           </SectionHeading>
           <div className="answer-ledger">
             <div>
@@ -217,8 +217,8 @@ export default function Home() {
         </section>
 
         <section className="case-section section-shell" id="model" aria-labelledby="model-title">
-          <SectionHeading id="model-title" eyebrow="Relational model" title="Expected terms and recorded money are different evidence">
-            Effective dates decide which merchant fee and settlement SLA applied when a purchase completed. A left join keeps missing settlement evidence visible instead of dropping it.
+          <SectionHeading id="model-title" eyebrow="The insight" title="Expected terms and recorded money are different evidence">
+            The contract says what a payment should cost; the settlement record says what it did cost. Effective dates pick the term that applied on the purchase day, and a left join keeps missing settlements visible instead of dropping them.
           </SectionHeading>
 
           <ErDiagram entities={projectData.sourceModel.entities} relationships={projectData.sourceModel.relationships} />
