@@ -39,7 +39,7 @@ const CHAPTER_NAV_SCRIPT = `
         .filter((entry) => entry.isIntersecting)
         .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
       if (visible?.target?.id) select(visible.target.id);
-    }, { rootMargin: '-18% 0px -66%', threshold: [0.1, 0.35, 0.65] });
+    }, { rootMargin: '-18% 0px -66%', threshold: [0, 0.1, 0.35, 0.65] });
     sections.forEach((section) => observer.observe(section));
     window.addEventListener('hashchange', selectFragment);
     requestAnimationFrame(selectFragment);
@@ -47,7 +47,8 @@ const CHAPTER_NAV_SCRIPT = `
   };
 
   const REVEAL_SELECTOR = '.case-section, .trace-card, .workbench-preview, .handoff, ' +
-    '.er-figure, .architecture-figure, .metric-ledger, .quality-ledger, .final-cta';
+    '.er-figure, .architecture-figure, .metric-ledger, .quality-ledger, .final-cta, ' +
+    '.mcp-session, .mcp-flow';
 
   const bindReveal = () => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -86,9 +87,35 @@ const CHAPTER_NAV_SCRIPT = `
     targets.forEach((el) => observer.observe(el));
   };
 
+  // Copy buttons ship hidden: without script or clipboard access the endpoint
+  // stays a select-all field and no dead control is shown.
+  const bindCopy = () => {
+    if (!navigator.clipboard) return;
+    const status = document.querySelector('[data-copy-status]');
+    document.querySelectorAll('[data-copy]').forEach((button) => {
+      const source = document.getElementById(button.dataset.copy);
+      if (!source) return;
+      button.hidden = false;
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(source.textContent.trim());
+          button.textContent = 'Copied';
+          if (status) status.textContent = 'Endpoint copied to the clipboard.';
+        } catch {
+          if (status) status.textContent = 'Copy failed; select the address instead.';
+        }
+        window.setTimeout(() => {
+          button.textContent = 'Copy';
+          if (status) status.textContent = '';
+        }, 1800);
+      });
+    });
+  };
+
   const init = () => {
     bindNavigation();
     bindReveal();
+    bindCopy();
   };
 
   if (document.readyState === 'loading') {

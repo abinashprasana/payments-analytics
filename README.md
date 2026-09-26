@@ -12,33 +12,34 @@
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Live-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://abinashprasana-payments-analytics-dashboardapp-mrsz1m.streamlit.app/)
 [![Status](https://img.shields.io/badge/Status-Live-22C55E?style=for-the-badge)](.)
-[![Case Study](https://img.shields.io/badge/Case%20Study-Live%20on%20Vercel-071827?style=for-the-badge&logo=vercel&logoColor=white)](https://payments-analytics-kappa.vercel.app/)
+[![Deployed](https://img.shields.io/badge/Deployed-Live%20on%20Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://payments-analytics-kappa.vercel.app/)
 [![Workbench](https://img.shields.io/badge/Workbench-Live%20on%20Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://abinashprasana-payments-analytics-dashboardapp-mrsz1m.streamlit.app/?view=close&scenario=normal)
+![Ask Claude](https://img.shields.io/badge/Ask%20Claude-MCP%20endpoint-D97757?style=for-the-badge&logo=claude&logoColor=white)
 
 <br/>
 
-*Both are free to open. The workbench sleeps after inactivity on Streamlit's free tier — give it a few seconds to wake.*
+*All three are free. The workbench and the MCP endpoint sleep when idle on their free tiers, so give them a few seconds to wake.*
 
 </div>
 
 ---
 
-## What this is
+## 🧾 What this is
 
-- **The problem:** a purchase marked complete can still fail the daily close, because the settlement money is late, missing, or carries the wrong fee.
-- **Who it's for:** the settlement operations analyst who has to sign off that close.
-- **What status reports miss:** they stop at "the customer paid." Reconciliation has to compare two separate kinds of evidence, the merchant's contract terms and the money that actually arrived.
-- **What I built:** one portable SQL model chain that defines "reconciled", a written walkthrough of one case where it breaks, and a live workbench for triaging the same exceptions.
+- 💸 **The problem:** a purchase marked complete can still fail the daily close, because the settlement money is late, missing, or carries the wrong fee.
+- 🎯 **Who it's for:** the settlement operations analyst who has to sign off that close.
+- 👀 **What status reports miss:** they stop at "the customer paid." Reconciliation has to compare two separate kinds of evidence, the merchant's contract terms and the money that actually arrived.
+- 🏗️ **What I built:** one portable SQL model chain that defines "reconciled", a written walkthrough of one case where it breaks, a live workbench for triaging the same exceptions, and a read-only MCP server so Claude can ask the same questions in plain English.
 
 Completed purchases don't always reconcile to the settlement money that eventually shows up for them. Sometimes the settlement is late. Sometimes it never arrives. Sometimes it arrives on time and for the right amount, but the fee charged against it no longer matches what the merchant's contract says it should be. This project is one investigation into that gap, built end to end on a synthetic payments snapshot: a Postgres/DuckDB-portable SQL model chain that defines what "reconciled" actually means, an authored write-up that walks through one real case of it breaking, and a Streamlit workbench that lets you triage the same exceptions the way an operations analyst would.
 
-The rule is that SQL is the source of truth everywhere. Every join, every exception flag, every KPI is defined once in the model chain under [`sql/models`](sql/models) and executed identically on DuckDB (what the two live surfaces run) and PostgreSQL (what CI checks it against on every push, so the "portable SQL" claim is verified, not just claimed). Python and the two front ends only format rows that SQL already computed — nothing gets recalculated in a dashboard.
+The rule is that SQL is the source of truth everywhere. Every join, every exception flag, every KPI is defined once in the model chain under [`sql/models`](sql/models) and executed identically on DuckDB (what the two live surfaces run) and PostgreSQL (what CI checks it against on every push, so the "portable SQL" claim is verified, not just claimed). Python, the two front ends, and the MCP server only format rows that SQL already computed — nothing gets recalculated in a dashboard.
 
 The dataset is entirely synthetic, generated with Python and Faker, and none of the four scenarios in it represents a real incident, a real merchant, or a real business outcome.
 
 ---
 
-## Dataset snapshot
+## 📊 Dataset snapshot
 
 | Metric | Value |
 |---|---:|
@@ -56,20 +57,21 @@ Four scenarios are injected deterministically into the snapshot and recorded in 
 
 ---
 
-## What runs where
+## 🗺️ What runs where
 
 | Surface | Role | Runtime |
 |---|---|---|
-| The walkthrough | Authored investigation with generated SQL evidence | Static Next.js export on GitHub Pages |
-| The workbench | Daily-close triage, exception filtering, payment trace, CSV evidence export | Streamlit Community Cloud, cached in-memory DuckDB |
-| Compatibility check | Proves the SQL chain returns identical results on both engines | Ephemeral PostgreSQL, run in GitHub Actions on every push |
-| Power BI v1 | Historical appendix — an earlier report retired because its DAX measures don't satisfy the v2 metric contract | [`archive/power-bi-v1`](archive/power-bi-v1/README.md) |
+| 📖 The walkthrough | Authored investigation with generated SQL evidence | Static Next.js export on Vercel |
+| 🧭 The workbench | Daily-close triage, exception filtering, payment trace, CSV evidence export | Streamlit Community Cloud, cached in-memory DuckDB |
+| 🤖 Ask Claude (MCP) | Plain-English questions from Claude, answered through the same query registry | Read-only Streamable HTTP on Render's free tier ([`render.yaml`](render.yaml)), or local stdio; in-memory DuckDB |
+| ✅ Compatibility check | Proves the SQL chain returns identical results on both engines | Ephemeral PostgreSQL, run in GitHub Actions on every push |
+| 🗄️ Power BI v1 | Historical appendix — an earlier report retired because its DAX measures don't satisfy the v2 metric contract | [`archive/power-bi-v1`](archive/power-bi-v1/README.md) |
 
-Both live surfaces show the same dataset version, as-of date, and build SHA, so you can confirm they're looking at the same release. Everything runs on a free tier; no hosted database is required to view either one.
+The walkthrough and the workbench show the same dataset version, as-of date, and build SHA, so you can confirm they're looking at the same release. Everything runs on a free tier, and none of it needs a hosted database.
 
 ---
 
-## The reconciliation rule, and what it flags
+## 🔍 The reconciliation rule, and what it flags
 
 A payment is considered matched when a settlement record exists, its currency matches the payment's, and `ABS(gross - settled_amount - processing_fee) <= 0.01`. Everything that isn't matched gets classified into one or more independent flags — missing, late, currency mismatch, amount mismatch, fee mismatch, disputed — and a payment can carry several of these at once. The exception queue uses a fixed precedence only to choose which one gets shown as the primary label; it doesn't hide the others.
 
@@ -88,11 +90,11 @@ The full definitions — population, grain, currency boundaries, and query IDs �
 
 Two more layers sit on top of the deterministic rules, built as SQL marts rather than a separate pipeline: an isolation-forest anomaly score with SHAP attribution that flags payments unusual relative to their own merchant's history rather than a fixed threshold, and a pair of statistical screens — trailing control limits on the daily exception rate, and a Benford's-law conformity check on transaction amounts. Both are explicitly framed as proof-of-concept screens on synthetic data, not fraud findings, and neither is wired into either front end yet.
 
-Read access to all of this goes through one gate: `AnalyticsEngine.query(query_id, params)` in [`scripts/analytics_engine.py`](scripts/analytics_engine.py), which validates every query ID and parameter against a fixed registry. There is no arbitrary-SQL endpoint anywhere in the public surfaces.
+Read access to all of this goes through one gate: `AnalyticsEngine.query(query_id, params)` in [`scripts/analytics_engine.py`](scripts/analytics_engine.py), which validates every query ID and parameter against a fixed registry. The MCP server goes through the same gate. There is no arbitrary-SQL endpoint anywhere in the public surfaces.
 
 ---
 
-## The workbench
+## 🧭 The workbench
 
 Four views, reachable as a 90-second path or directly via URL:
 
@@ -107,7 +109,71 @@ Every view is deep-linkable (`?view=&scenario=&payment_id=`), which is how the w
 
 ---
 
-## Schema
+## 🤖 Ask Claude (MCP)
+
+The query registry is also published as a [Model Context Protocol](https://modelcontextprotocol.io) server, so you can ask Claude about the snapshot in plain English and get answers built from the same validated queries the workbench runs. It's read-only, and it has no way to run SQL you write. The walkthrough's last chapter replays one real call.
+
+```text
+https://settlement-gap-mcp.onrender.com/mcp
+```
+
+In Claude.ai or Claude Desktop, add that under Settings → Connectors → Add custom connector. In Claude Code:
+
+```bash
+claude mcp add --transport http settlement-gap https://settlement-gap-mcp.onrender.com/mcp
+```
+
+| Tool | What it does |
+|---|---|
+| `list_queries` | Lists the registered queries with their allowed and required parameters |
+| `run_query` | Runs one registered query with validated parameters and returns at most 200 rows |
+| `trace_payment` | Explains one payment: its expected terms, its settlement if there is one, and every reconciliation rule with whether it fired |
+
+Ask *"why was payment 240 flagged?"* and Claude calls `trace_payment(payment_id=240)`, then answers from the fields that come back, along these lines:
+
+> Payment 240 is a CAD 438.80 Retail purchase from the 2024-12-03 close (scenario `missing_retail_cad`). Under the merchant's terms (250 bps, 3-day SLA) it should have settled by 2024-12-06, net of a CAD 10.97 fee. No settlement exists. At the 2025-01-10 as-of date the `missing` rule fired, 35 days past the SLA. None of the other five rules applies, because there's no settlement to compare against.
+
+How it stays safe:
+
+- 🚪 Every tool goes through `AnalyticsEngine.query`. Unknown query IDs, unsupported parameters and extra arguments are refused before anything runs.
+- 🧊 The data is the in-memory DuckDB snapshot, rebuilt on each start, so there's nothing on disk for a call to change.
+- 📝 Each call, allowed or refused, leaves one JSON audit line: in `mcp_server/logs/audit.jsonl` locally, or in the service log when hosted, with a salted hash instead of the caller's address.
+- 🌐 The hosted endpoint checks Host and Origin headers against DNS rebinding, caps requests at 16 KB, and allows 30 calls a minute per caller.
+- 📌 One test pins every tool's name, description and schema in `mcp_server/tests/tool_manifest.json`, since that's what the model reads and what tool-poisoning attacks tamper with. Another fails if the real `trace_payment` stops matching the replay on the site.
+
+It's a demo on synthetic data. There are no accounts, because there's nothing private behind it and nothing it can change. The free instance sleeps when idle, so the first call can take 30 to 60 seconds. It covers the same payments as the workbench's trace view (the four scenario closes) and leaves out `exception_scoring`, which needs the dev-only scikit-learn/SHAP stack.
+
+<details>
+<summary>Running it locally, over stdio or HTTP</summary>
+
+<br/>
+
+The stdio server needs no network at all. Register it with Claude Code from the repository root:
+
+```bash
+claude mcp add settlement-gap -- uv --directory ./mcp_server run settlement-gap-mcp
+```
+
+For Claude Desktop, add it to `claude_desktop_config.json` with an absolute path (on Windows, escape the backslashes, as in `D:\\path\\to\\payments-analytics\\mcp_server`):
+
+```json
+{
+  "mcpServers": {
+    "settlement-gap": {
+      "command": "uv",
+      "args": ["--directory", "/absolute/path/to/payments-analytics/mcp_server", "run", "settlement-gap-mcp"]
+    }
+  }
+}
+```
+
+`uv run settlement-gap-mcp-http` serves the same tools over HTTP on `http://127.0.0.1:8000/mcp`, the way the hosted copy runs. The hosted copy is a free Render web service defined in [`render.yaml`](render.yaml); [`docs/deployment.md`](docs/deployment.md) covers creating it.
+
+</details>
+
+---
+
+## 🗂️ Schema
 
 ```mermaid
 erDiagram
@@ -204,7 +270,7 @@ erDiagram
 
 ---
 
-## Project structure
+## 📁 Project structure
 
 ```text
 payments-analytics/
@@ -233,6 +299,12 @@ payments-analytics/
 │
 ├── site/                         # the Next.js walkthrough, static export
 │
+├── mcp_server/                   # read-only MCP server, managed with uv
+│   ├── settlement_gap_mcp/       # the three tools, audit log, HTTP transport
+│   └── tests/                    # tool refusals, HTTP hardening, pinned tool definitions
+│
+├── render.yaml                   # free Render service for the public MCP endpoint
+│
 ├── tests/                        # generator, SQL, parity, engine, and UI contracts
 │
 ├── docs/
@@ -245,7 +317,7 @@ payments-analytics/
 
 ---
 
-## Run locally
+## 🚀 Run locally
 
 **Prerequisites:** Python 3.12, Node.js 24. PostgreSQL 15+ only if you're running the parity check.
 
@@ -267,6 +339,14 @@ Run the Python test suite:
 
 ```bash
 python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+The MCP server has its own environment and tests (needs [uv](https://docs.astral.sh/uv/)):
+
+```bash
+cd mcp_server
+uv sync
+uv run pytest
 ```
 
 With local PostgreSQL credentials in `.env`, check that both engines agree:
@@ -291,17 +371,18 @@ See [`docs/acceptance.md`](docs/acceptance.md) for the full release checklist. P
 
 ---
 
-## Guardrails
+## 🛡️ Guardrails
 
 - The four scenarios demonstrate reconciliation technique. They are not real incidents and don't support a causal business claim.
 - Exception flags are operational evidence, not a fraud or compliance determination.
 - Anomaly scores and statistical screens rank how unusual something looks against this synthetic snapshot — they carry no detection-rate claim and no fraud finding.
 - Workbench notes and review status live only in the browser session and never write back to the snapshot.
+- The MCP server can only run queries that already exist in the registry. Its answers explain the synthetic snapshot; they aren't a production integration.
 - Every public money value carries its own currency; nothing is ever summed across EUR, GBP, AUD, and CAD.
 - The v1 Power BI report is archived, not deleted — it's kept as a historical appendix because its own DAX measures predate and don't satisfy the current metric contract.
 
 ---
 
-## Author
+## 👋 Author
 
 **Abinash Prasana Selvanathan**

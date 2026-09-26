@@ -48,6 +48,7 @@ class CaseStudyArtifactTests(unittest.TestCase):
                 "exceptionSummary",
                 "primaryLabelPrecedence",
                 "trace",
+                "ask",
                 "recommendation",
                 "validation",
                 "models",

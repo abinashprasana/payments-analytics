@@ -40,6 +40,29 @@ jobs:
       - name: Verify generated case-study data
         run: python scripts/generate_artifacts.py --check
 
+  mcp-server:
+    name: MCP server (read-only query tools)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: mcp_server
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+          cache-dependency-glob: mcp_server/uv.lock
+
+      - name: Install locked dependencies
+        run: uv sync --locked
+
+      - name: Run MCP server tests
+        run: uv run pytest -v
+
   postgres-parity:
     name: DuckDB and PostgreSQL model parity
     runs-on: ubuntu-latest

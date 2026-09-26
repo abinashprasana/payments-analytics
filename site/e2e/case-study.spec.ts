@@ -17,6 +17,7 @@ const expectedSections = [
   "recommendation",
   "validation",
   "workbench",
+  "ask",
 ] as const;
 
 async function openCaseStudy(page: Page) {
@@ -38,7 +39,7 @@ async function expectNoPageOverflow(page: Page) {
 }
 
 test.describe("authored settlement walkthrough", () => {
-  test("keeps the nine-part investigation readable at the target width", async ({
+  test("keeps the ten-part investigation readable at the target width", async ({
     page,
   }) => {
     await openCaseStudy(page);
@@ -89,6 +90,27 @@ test.describe("authored settlement walkthrough", () => {
     await expect(page.getByText(projectData.trace.paymentId, { exact: true }).first()).toBeVisible();
     await expect(page.getByText(/session-only/i).first()).toBeVisible();
     await expect(page.getByText(/wake after inactivity/i)).toBeVisible();
+  });
+
+  test("replays one real MCP call and publishes the endpoint", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await openCaseStudy(page);
+
+    const ask = page.locator("section#ask");
+    await ask.scrollIntoViewIfNeeded();
+    await expect(ask.getByRole("heading", { level: 2 })).toHaveText(/Ask why a payment failed/);
+    await expect(ask.getByText(projectData.ask.question, { exact: true })).toBeVisible();
+    await expect(ask.getByText(projectData.ask.answer, { exact: true })).toBeVisible();
+    await expect(ask.locator(".mcp-step")).toHaveCount(4);
+    for (const step of await ask.locator(".mcp-step").all()) {
+      await expect(step).toHaveCSS("opacity", "1");
+    }
+    await expect(ask.locator("#mcp-endpoint-url")).toHaveText(/^https:\/\/.+\/mcp$/);
+    for (const tool of projectData.ask.tools) {
+      await expect(ask.locator("code", { hasText: tool.name }).first()).toBeVisible();
+    }
+    await expect(ask.getByText(/Refused here/)).toBeVisible();
+    await expectNoPageOverflow(page);
   });
 
   test("preserves keyboard navigation and reduced-motion behaviour", async ({

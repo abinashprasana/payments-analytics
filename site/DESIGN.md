@@ -10,7 +10,7 @@ It is not a tour of application views. It explains the metric contract, follows 
 
 ## Narrative order
 
-The route has nine anchored chapters:
+The route has ten anchored chapters:
 
 1. Stakeholder question and concise answer.
 2. Metric contract: population, grain, currency boundary, and tolerance.
@@ -21,6 +21,7 @@ The route has nine anchored chapters:
 7. Finding and operational recommendation.
 8. Validation, `EXPLAIN ANALYZE` inspection target, limitations, and reproduction.
 9. One workbench preview and one payment-trace deep link.
+10. Ask Claude: one replayed `trace_payment` call, the public read-only MCP endpoint, and the request path. The replay is a typographic call log in the ledger language, never mock application chrome, and its result fields are checked against the live tool by `mcp_server/tests/test_payload_parity.py`.
 
 Chapter navigation follows that argument. Do not add the workbench’s four views as parallel case-study chapters.
 

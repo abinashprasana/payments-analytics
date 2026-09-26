@@ -1,0 +1,28 @@
+[project]
+name = "settlement-gap-mcp"
+version = "0.1.0"
+description = "Read-only MCP server that answers reconciliation questions through The Settlement Gap's validated query registry."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "mcp>=2.2,<3",
+    # Pinned to match the workbench runtime in ../requirements.txt.
+    "duckdb==1.4.1",
+    "pandas==3.0.3",
+]
+
+[project.scripts]
+settlement-gap-mcp = "settlement_gap_mcp.server:main"
+settlement-gap-mcp-http = "settlement_gap_mcp.http:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["settlement_gap_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

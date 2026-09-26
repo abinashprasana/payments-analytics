@@ -1,6 +1,6 @@
 import type { ModelDefinition } from "@/lib/project-data";
 
-function Arrow({ pulse = false }: { pulse?: boolean }) {
+export function Arrow({ pulse = false }: { pulse?: boolean }) {
   return (
     <svg
       className={`architecture-map__arrow diagram-arrow${pulse ? " diagram-arrow--pulse" : ""}`}

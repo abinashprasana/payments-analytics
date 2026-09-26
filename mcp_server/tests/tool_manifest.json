@@ -1,0 +1,117 @@
+[
+  {
+    "name": "list_queries",
+    "description": "List the registered queries: id, title, description, and allowed/required parameters.",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "title": "list_queriesArguments"
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "run_query",
+    "description": "Run one registered query by id with validated parameters (see list_queries).\n\n    Parameters are checked by the engine: scenario must exist, currency is one of\n    EUR/GBP/AUD/CAD, dates are ISO YYYY-MM-DD, payment_id is a positive integer.\n    At most `limit` rows (max 200) are returned; `total_rows` gives the full count.\n    ",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "query_id": {
+          "title": "Query Id",
+          "type": "string"
+        },
+        "params": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Params"
+        },
+        "limit": {
+          "default": 200,
+          "maximum": 200,
+          "minimum": 1,
+          "title": "Limit",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "query_id"
+      ],
+      "title": "run_queryArguments"
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "trace_payment",
+    "description": "Explain one payment: its expected terms, its settlement (if any), and every\n    reconciliation rule with whether it fired.\n\n    Without `scenario`, each scenario close is searched. `as_of_date` defaults to the\n    scenario's investigation date, matching the workbench.\n    ",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "payment_id": {
+          "exclusiveMinimum": 0,
+          "title": "Payment Id",
+          "type": "integer"
+        },
+        "scenario": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scenario"
+        },
+        "as_of_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "As Of Date"
+        }
+      },
+      "required": [
+        "payment_id"
+      ],
+      "title": "trace_paymentArguments"
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  }
+]

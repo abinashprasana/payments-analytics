@@ -1,0 +1,29 @@
+# Render Blueprint for the public, read-only MCP endpoint (free plan).
+# Create it once from the Render dashboard: New > Blueprint > this repository.
+# Python comes from .python-version (3.12); the server reads the committed
+# snapshot in data/ and sql/, so the whole repository is the build context.
+services:
+  - type: web
+    name: settlement-gap-mcp
+    runtime: python
+    plan: free
+    buildCommand: pip install uv==0.12.19 && uv sync --project mcp_server --locked --no-dev
+    startCommand: uv run --project mcp_server --no-dev --no-sync settlement-gap-mcp-http
+    healthCheckPath: /healthz
+    autoDeployTrigger: checksPass
+    buildFilter:
+      paths:
+        - mcp_server/**
+        - scripts/analytics_engine.py
+        - scripts/anomaly_scoring.py
+        - sql/models/**
+        - data/raw/**
+        - data/scenarios.json
+        - render.yaml
+    envVars:
+      - key: SETTLEMENT_GAP_AUDIT_SINK
+        value: stdout
+      - key: SETTLEMENT_GAP_AUDIT_SALT
+        generateValue: true
+      - key: SETTLEMENT_GAP_RATE_PER_MINUTE
+        value: "30"

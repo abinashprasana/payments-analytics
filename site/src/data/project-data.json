@@ -56,6 +56,10 @@
     {
       "id": "workbench",
       "label": "Workbench"
+    },
+    {
+      "id": "ask",
+      "label": "Ask Claude"
     }
   ],
   "question": {
@@ -524,6 +528,41 @@
     "whyFlagged": "The settlement arrived 0 calendar days after the effective merchant SLA. Currency, amount identity, and the applicable fee still match, so late remains the only flag.",
     "queryId": "payment_trace",
     "model": "mart_payment_trace"
+  },
+  "ask": {
+    "question": "Why was payment 97 flagged?",
+    "call": {
+      "tool": "trace_payment",
+      "arguments": {
+        "payment_id": 97
+      }
+    },
+    "result": {
+      "scenario": "stale_electronics_eur_fee",
+      "as_of_date": "2025-01-10",
+      "primary_reason": "fee_mismatch",
+      "exception_reasons": [
+        "fee_mismatch"
+      ],
+      "days_overdue": 0,
+      "settlement_status": "settled",
+      "fee_delta_minor_units": 1909
+    },
+    "answer": "Payment 97 is a EUR 4,771.36 Electronics purchase from the 2024-11-12 close. The settlement arrived on 2024-11-14, but the recorded fee was EUR 71.57 against EUR 52.48 under the 110 bps term, a EUR 19.09 difference, so fee_mismatch fired. No other rule applies.",
+    "tools": [
+      {
+        "name": "list_queries",
+        "purpose": "Lists the registered queries and the parameters each accepts."
+      },
+      {
+        "name": "run_query",
+        "purpose": "Runs one registered query with validated parameters, at most 200 rows."
+      },
+      {
+        "name": "trace_payment",
+        "purpose": "Explains one payment: terms, settlement, and every rule with whether it fired."
+      }
+    ]
   },
   "recommendation": {
     "finding": "All 48 flagged Electronics / EUR payments belong to the injected batch; amount identity and currency still agree, but the recorded fee no longer matches the effective merchant term.",

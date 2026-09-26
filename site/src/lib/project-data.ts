@@ -146,6 +146,24 @@ export interface WorkbenchView {
   purpose: string;
 }
 
+/** One real trace_payment call, replayed by the "Ask Claude" chapter. The MCP
+ *  server's parity test asserts `result` equals the live tool output. */
+export interface AskEvidence {
+  question: string;
+  call: { tool: "trace_payment"; arguments: { payment_id: number } };
+  result: {
+    scenario: string;
+    as_of_date: string;
+    primary_reason: string;
+    exception_reasons: string[];
+    days_overdue: number;
+    settlement_status: string | null;
+    fee_delta_minor_units: number | null;
+  };
+  answer: string;
+  tools: { name: string; purpose: string }[];
+}
+
 export interface CaseStudyDataV2 {
   schemaVersion: 2;
   dataset: DatasetMetadata;
@@ -173,6 +191,7 @@ export interface CaseStudyDataV2 {
   exceptionSummary: ExceptionReason[];
   primaryLabelPrecedence: string[];
   trace: TraceEvidence;
+  ask: AskEvidence;
   recommendation: {
     finding: string;
     action: string;

@@ -273,6 +273,69 @@ def _exception_summary(close_record: dict[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
+ASK_RULE_SENTENCES = {
+    "missing": "No settlement exists {days} days after the expected settlement date, so missing fired.",
+    "currency_mismatch": "The settlement was recorded in a different currency from the purchase, so currency_mismatch fired.",
+    "amount_mismatch": "Gross does not equal the settled amount plus the recorded fee, so amount_mismatch fired.",
+    "fee_mismatch": (
+        "The settlement arrived on {settled}, but the recorded fee was {recorded} against "
+        "{expected} under the {bps} bps term, a {delta} difference, so fee_mismatch fired."
+    ),
+    "late": "The settlement arrived on {settled}, {days} days after the SLA date of {expected_date}, so late fired.",
+    "disputed": "The settlement carries a disputed status, so disputed fired.",
+}
+
+
+def _display_money(currency: str, minor_units: Any) -> str:
+    return f"{currency} {abs(_integer(minor_units)) / 100:,.2f}"
+
+
+def _ask_payload(record: dict[str, Any], scenario_id: str) -> dict[str, Any]:
+    """The MCP chapter's replay: the fields trace_payment returns for the traced payment.
+
+    mcp_server/tests/test_payload_parity.py calls the real tool and asserts equality,
+    so the site never shows a tool result the server would not produce.
+    """
+    currency = str(record["transaction_currency"])
+    payment_id = _integer(record["payment_id"])
+    reasons = [r for r in str(record.get("exception_reasons") or "").split(",") if r]
+    primary = str(record["primary_reason"])
+    detail = ASK_RULE_SENTENCES.get(primary, "{primary} fired.").format(
+        primary=primary,
+        days=_integer(record["days_overdue"]),
+        settled=_date(record["actual_settlement_date"]),
+        expected_date=_date(record["expected_settlement_date"]),
+        recorded=_display_money(currency, record["recorded_fee_minor_units"]),
+        expected=_display_money(currency, record["expected_fee_minor_units"]),
+        bps=_integer(record["fee_rate_bps"]),
+        delta=_display_money(currency, record["fee_delta_minor_units"]),
+    )
+    others = "No other rule applies." if len(reasons) == 1 else f"It also carries {', '.join(r for r in reasons if r != primary)}."
+    return {
+        "question": f"Why was payment {payment_id} flagged?",
+        "call": {"tool": "trace_payment", "arguments": {"payment_id": payment_id}},
+        "result": {
+            "scenario": scenario_id,
+            "as_of_date": _date(record["as_of_date"]),
+            "primary_reason": primary,
+            "exception_reasons": reasons,
+            "days_overdue": _integer(record["days_overdue"]),
+            "settlement_status": None if _missing(record["settlement_status"]) else str(record["settlement_status"]),
+            "fee_delta_minor_units": None if _missing(record["fee_delta_minor_units"]) else _integer(record["fee_delta_minor_units"]),
+        },
+        "answer": (
+            f"Payment {payment_id} is a {_display_money(currency, record['gross_minor_units'])} "
+            f"{record['merchant_category']} purchase from the {_date(record['close_date'])} close. "
+            f"{detail} {others}"
+        ),
+        "tools": [
+            {"name": "list_queries", "purpose": "Lists the registered queries and the parameters each accepts."},
+            {"name": "run_query", "purpose": "Runs one registered query with validated parameters, at most 200 rows."},
+            {"name": "trace_payment", "purpose": "Explains one payment: terms, settlement, and every rule with whether it fired."},
+        ],
+    }
+
+
 def _trace_payload(record: dict[str, Any], scenario_id: str) -> dict[str, Any]:
     currency = str(record["transaction_currency"])
     flags = [
@@ -434,6 +497,7 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                 {"id": "recommendation", "label": "Decision"},
                 {"id": "validation", "label": "Validation"},
                 {"id": "workbench", "label": "Workbench"},
+                {"id": "ask", "label": "Ask Claude"},
             ],
             "question": {
                 "stakeholder": (
@@ -526,6 +590,7 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
             "exceptionSummary": _exception_summary(close_record),
             "primaryLabelPrecedence": list(PRIMARY_PRECEDENCE),
             "trace": _trace_payload(trace.iloc[0].to_dict(), SELECTED_SCENARIO_ID),
+            "ask": _ask_payload(trace.iloc[0].to_dict(), SELECTED_SCENARIO_ID),
             "recommendation": {
                 "finding": (
                     f"All {_integer(travel['exception_count'])} flagged "

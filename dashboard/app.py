@@ -74,6 +74,11 @@ REPOSITORY_URL = os.getenv(
     "REPOSITORY_URL",
     "https://github.com/abinashprasana/payments-analytics",
 ).strip()
+# Read-only MCP endpoint (render.yaml). Empty string hides the catalog panel.
+MCP_PUBLIC_URL = os.getenv(
+    "MCP_PUBLIC_URL",
+    "https://settlement-gap-mcp.onrender.com/mcp",
+).strip()
 
 st.set_page_config(
     page_title="Settlement Operations Workbench",
@@ -1017,6 +1022,19 @@ def render_catalog_view(engine: Any, metadata: Mapping[str, Any]) -> None:
         st.info("Data-quality result rows are unavailable.")
     else:
         st.dataframe(quality, width="stretch", hide_index=True)
+
+    if MCP_PUBLIC_URL:
+        with st.expander("Ask Claude about this snapshot (MCP)"):
+            st.markdown(
+                "This query registry is also published as a read-only MCP server, "
+                "so Claude can list the registered queries, run one, or trace a "
+                "payment. It can't write SQL, and every call is logged."
+            )
+            st.code(MCP_PUBLIC_URL, language=None)
+            st.caption(
+                "In Claude, add it under Settings → Connectors → Add custom connector. "
+                "In Claude Code: `claude mcp add --transport http settlement-gap <endpoint>`."
+            )
 
     st.info(
         "Streamlit Community Cloud may ask you to wake this free application after "

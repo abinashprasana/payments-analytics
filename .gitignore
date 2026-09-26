@@ -31,3 +31,7 @@ streamlit_*.log
 # OS
 .DS_Store
 Thumbs.db
+
+# MCP server (local runtime state)
+mcp_server/.venv/
+mcp_server/logs/

@@ -3,6 +3,8 @@ import Image from "next/image";
 import { ArchitectureDiagram } from "@/components/architecture-diagram";
 import { ChapterNav } from "@/components/chapter-nav";
 import { ErDiagram } from "@/components/er-diagram";
+import { McpFlow } from "@/components/mcp-flow";
+import { McpSession } from "@/components/mcp-session";
 import { assetUrl, publicConfig } from "@/lib/config";
 import { projectData, type Money } from "@/lib/project-data";
 
@@ -470,6 +472,63 @@ export default function Home() {
               <small>{projectData.workbench.sleepDisclosure}</small>
             </div>
             <a className="button button--primary" href={workbenchUrl} target="_blank" rel="noreferrer">Trace this payment <span aria-hidden="true">↗</span></a>
+          </div>
+        </section>
+
+        <section className="case-section case-section--ink" id="ask" aria-labelledby="ask-title">
+          <div className="section-shell">
+            <SectionHeading id="ask-title" eyebrow="Ask Claude" title="Ask why a payment failed, in plain English">
+              The query registry behind the workbench is also published as a read-only MCP server, so Claude can answer questions about this snapshot directly. It can list the registered queries, run one, or trace a single payment. It can&apos;t write SQL.
+            </SectionHeading>
+
+            <div className="ask-layout">
+              <McpSession ask={projectData.ask} />
+
+              <div className="mcp-connect">
+                <div className="mcp-endpoint">
+                  <p className="kicker">Public endpoint</p>
+                  <div className="mcp-endpoint__field">
+                    <code id="mcp-endpoint-url">{publicConfig.mcpUrl}</code>
+                    <button type="button" className="mcp-copy" data-copy="mcp-endpoint-url" hidden>Copy</button>
+                  </div>
+                  <p className="mcp-endpoint__status" aria-live="polite" data-copy-status />
+                </div>
+
+                <dl className="mcp-clients">
+                  <div>
+                    <dt>Claude.ai and Claude Desktop</dt>
+                    <dd>Settings, Connectors, Add custom connector. Paste the endpoint above.</dd>
+                  </div>
+                  <div>
+                    <dt>Claude Code</dt>
+                    <dd><code>claude mcp add --transport http settlement-gap {publicConfig.mcpUrl}</code></dd>
+                  </div>
+                  <div>
+                    <dt>Local, no network</dt>
+                    <dd><code>cd mcp_server &amp;&amp; uv run settlement-gap-mcp</code></dd>
+                  </div>
+                </dl>
+
+                <table className="mcp-tools">
+                  <caption className="visually-hidden">Tools the server exposes</caption>
+                  <thead><tr><th scope="col">Tool</th><th scope="col">What it returns</th></tr></thead>
+                  <tbody>
+                    {projectData.ask.tools.map((tool) => (
+                      <tr key={tool.name}><th scope="row"><code>{tool.name}</code></th><td>{tool.purpose}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                <ul className="mcp-guarantees">
+                  <li>Every tool goes through the same validated query gate as the workbench.</li>
+                  <li>Raw SQL, unknown query IDs and extra arguments are refused before anything runs.</li>
+                  <li>Each call, allowed or refused, leaves one audit line with its parameters and row count.</li>
+                </ul>
+                <p className="mcp-scope">It runs on a free tier and sleeps when nobody is using it, so the first call can take 30 to 60 seconds.</p>
+              </div>
+            </div>
+
+            <McpFlow />
           </div>
         </section>
 

@@ -19,6 +19,11 @@ export const publicConfig = {
     process.env.NEXT_PUBLIC_WORKBENCH_URL ??
       "https://abinashprasana-payments-analytics-dashboardapp-mrsz1m.streamlit.app/",
   ),
+  // The Render service from render.yaml. Streamable HTTP endpoint, read-only.
+  mcpUrl: stripTrailingSlash(
+    process.env.NEXT_PUBLIC_MCP_URL ??
+      "https://settlement-gap-mcp.onrender.com/mcp",
+  ),
   repositoryUrl: stripTrailingSlash(
     process.env.NEXT_PUBLIC_REPOSITORY_URL ??
       "https://github.com/abinashprasana/payments-analytics",
