@@ -102,7 +102,7 @@ def test_unknown_tool_is_refused_and_audited(audit_log):
 
 
 def test_trace_payment_that_never_settles(audit_log):
-    result = call("trace_payment", {"payment_id": 240})
+    result = call("trace_payment", {"payment_id": 76330})
     data = result.structured_content
     assert not result.is_error
     assert data["scenario"] == "missing_retail_cad"
@@ -115,15 +115,15 @@ def test_trace_payment_that_never_settles(audit_log):
 
 
 def test_trace_payment_other_scenarios():
-    fee = call("trace_payment", {"payment_id": 2}).structured_content
+    fee = call("trace_payment", {"payment_id": 73927}).structured_content
     assert fee["primary_reason"] == "fee_mismatch" and fee["settlement"]["fee_delta_minor_units"] != 0
-    late = call("trace_payment", {"payment_id": 12, "as_of_date": "2025-01-10"}).structured_content
+    late = call("trace_payment", {"payment_id": 70652, "as_of_date": "2025-01-10"}).structured_content
     assert late["scenario"] == "delayed_travel_gbp" and late["primary_reason"] == "late"
 
 
 @pytest.mark.parametrize(
     "arguments",
-    [{"payment_id": 99999999}, {"payment_id": 0}, {"payment_id": 240, "scenario": "nope"}, {"payment_id": 240, "as_of_date": "soon"}],
+    [{"payment_id": 99999999}, {"payment_id": 0}, {"payment_id": 76330, "scenario": "nope"}, {"payment_id": 76330, "as_of_date": "soon"}],
 )
 def test_trace_payment_refusals(audit_log, arguments):
     assert call("trace_payment", arguments).is_error
@@ -133,7 +133,7 @@ def test_trace_payment_refusals(audit_log, arguments):
 def test_every_call_writes_exactly_one_audit_line(audit_log):
     call("list_queries")
     call("run_query", {"query_id": "nope"})
-    call("trace_payment", {"payment_id": 240})
+    call("trace_payment", {"payment_id": 76330})
     assert [e["outcome"] for e in lines(audit_log)] == ["allowed", "refused", "allowed"]
 
 

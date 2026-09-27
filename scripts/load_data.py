@@ -41,6 +41,7 @@ TABLE_COLUMNS: dict[str, tuple[str, ...]] = {
     "transactions": (
         "transaction_id", "account_id", "merchant_id", "amount", "currency",
         "transaction_date", "transaction_type", "status",
+        "parent_transaction_id",
     ),
     "settlements": (
         "settlement_id", "transaction_id", "settlement_date", "currency",
@@ -90,6 +91,18 @@ def _post_load_checks(cursor: Any) -> None:
                 (transaction_type = 'transfer' AND merchant_id IS NULL)
                 OR (transaction_type IN ('purchase', 'refund') AND merchant_id IS NOT NULL)
             )
+        """,
+        "refund lineage": """
+            SELECT COUNT(*) FROM transactions AS r
+            LEFT JOIN transactions AS p
+                ON p.transaction_id = r.parent_transaction_id
+            WHERE r.transaction_type = 'refund'
+              AND NOT (
+                  p.transaction_type = 'purchase' AND p.status = 'completed'
+                  AND p.account_id = r.account_id
+                  AND p.merchant_id = r.merchant_id
+                  AND p.transaction_date < r.transaction_date
+              )
         """,
         "resolved-date consistency": """
             SELECT COUNT(*) FROM fraud_flags

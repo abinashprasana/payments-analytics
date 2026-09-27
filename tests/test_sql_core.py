@@ -73,10 +73,10 @@ class SettlementCoreTests(unittest.TestCase):
 
     def test_delayed_batch_progresses_from_gap_to_late_recovery(self) -> None:
         checkpoints = {
-            "2024-10-08": (0, 0, 0),
-            "2024-10-11": (48, 32, 0),
-            "2024-10-14": (94, 2, 46),
-            "2025-01-10": (96, 0, 48),
+            "2024-10-10": (0, 0, 0),
+            "2024-10-14": (16, 48, 0),
+            "2024-10-16": (64, 0, 48),
+            "2025-01-10": (64, 0, 48),
         }
         for as_of, (matched, missing, late) in checkpoints.items():
             with self.subTest(as_of=as_of):
@@ -84,7 +84,7 @@ class SettlementCoreTests(unittest.TestCase):
                     "close_summary",
                     {"scenario": "delayed_travel_gbp", "as_of_date": as_of},
                 ).iloc[0]
-                self.assertEqual(int(row["eligible_count"]), 96)
+                self.assertEqual(int(row["eligible_count"]), 64)
                 self.assertEqual(int(row["matched_count"]), matched)
                 self.assertEqual(int(row["missing_count"]), missing)
                 self.assertEqual(int(row["late_count"]), late)
@@ -113,7 +113,12 @@ class SettlementCoreTests(unittest.TestCase):
             WHERE is_currency_mismatch OR is_amount_mismatch OR is_disputed
             """
         ).fetchall()
-        self.assertEqual(len(rows), 18)
+        # Six currency and six amount controls plus the risk-weighted disputes.
+        disputed = self.engine.connection.execute(
+            "SELECT COUNT(*) FROM settlements WHERE status = 'disputed'"
+        ).fetchone()[0]
+        self.assertEqual(len(rows), 12 + disputed)
+        self.assertEqual(len(rows), 281)
         self.assertTrue(all(str(row[0]) not in guided_dates for row in rows))
 
     def test_flags_are_independent_and_precedence_is_stable(self) -> None:

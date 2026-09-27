@@ -2,17 +2,17 @@
   "schemaVersion": 2,
   "dataset": {
     "label": "Synthetic demo snapshot",
-    "version": "settlement-gap-v2.0.0",
+    "version": "settlement-gap-v3.0.0",
     "asOfDate": "2025-01-10",
     "window": {
-      "firstTransactionDate": "2022-02-07",
+      "firstTransactionDate": "2022-01-01",
       "lastTransactionDate": "2024-12-31"
     },
     "recordCounts": {
       "sourceTables": 7,
       "transactions": 80000,
-      "eligiblePurchases": 57629,
-      "settlements": 61124
+      "eligiblePurchases": 60272,
+      "settlements": 63185
     }
   },
   "build": {
@@ -64,7 +64,7 @@
   ],
   "question": {
     "stakeholder": "Why do completed Electronics purchases in EUR still carry a fee-mismatch exception after the close?",
-    "conciseAnswer": "At the 2024-11-15 checkpoint, 190 of 190 eligible EUR purchases from the 2024-11-12 close had a settlement that balanced on amount. Recorded fees use the prior schedule after new effective-dated merchant terms begin. The 48 affected payments settled on time and on gross amount, but their recorded processing fee no longer matches the effective merchant term, so they are flagged as fee-mismatch exceptions.",
+    "conciseAnswer": "At the 2024-11-15 checkpoint, 80 of 80 eligible EUR purchases from the 2024-11-12 close had a settlement that balanced on amount. Recorded fees use the prior schedule after new effective-dated merchant terms begin. The 48 affected payments settled on time and on gross amount, but their recorded processing fee no longer matches the effective merchant term, so they are flagged as fee-mismatch exceptions.",
     "operationalDecision": "Reconcile the injected batch as one operational event, then route any residual payment-level exceptions using the stable queue precedence."
   },
   "metricDefinitions": [
@@ -209,7 +209,7 @@
       "id": "delayed_travel_gbp",
       "label": "Delayed Travel / GBP batch",
       "kind": "late settlement",
-      "date": "2024-10-08",
+      "date": "2024-10-10",
       "currency": "GBP",
       "merchantCategory": "Travel",
       "expectedSignal": "Exactly 48 guided payments classify as late in Travel / GBP.",
@@ -245,7 +245,7 @@
       "queryId": "close_summary",
       "model": "mart_daily_close",
       "sql": "-- analytics_context.as_of_date = :investigation_as_of_date\nSELECT\n  close_date, currency, eligible_count, matched_count,\n  coverage_rate, overdue_minor_units, fee_delta_minor_units\nFROM mart_daily_close\nWHERE close_date = :scenario_date\n  AND currency = :currency\nORDER BY close_date, currency;",
-      "reading": "At the 2024-11-15 observation cut, the selected close was 190/190 matched. The final snapshot preserves the injected exception rather than resolving it."
+      "reading": "At the 2024-11-15 observation cut, the selected close was 80/80 matched. The final snapshot preserves the injected exception rather than resolving it."
     },
     {
       "id": "isolation",
@@ -271,7 +271,7 @@
       "closeDate": "2024-11-12",
       "analysisAsOfDate": "2024-11-12",
       "currency": "EUR",
-      "eligibleCount": 190,
+      "eligibleCount": 80,
       "matchedCount": 0,
       "coverageBps": 0,
       "overdueValue": {
@@ -287,8 +287,8 @@
       "closeDate": "2024-11-12",
       "analysisAsOfDate": "2024-11-15",
       "currency": "EUR",
-      "eligibleCount": 190,
-      "matchedCount": 190,
+      "eligibleCount": 80,
+      "matchedCount": 80,
       "coverageBps": 10000,
       "overdueValue": {
         "currency": "EUR",
@@ -296,15 +296,15 @@
       },
       "feeDelta": {
         "currency": "EUR",
-        "minorUnits": 46256
+        "minorUnits": 12098
       }
     },
     {
       "closeDate": "2024-11-12",
       "analysisAsOfDate": "2024-11-18",
       "currency": "EUR",
-      "eligibleCount": 190,
-      "matchedCount": 190,
+      "eligibleCount": 80,
+      "matchedCount": 80,
       "coverageBps": 10000,
       "overdueValue": {
         "currency": "EUR",
@@ -312,15 +312,15 @@
       },
       "feeDelta": {
         "currency": "EUR",
-        "minorUnits": 46256
+        "minorUnits": 12098
       }
     },
     {
       "closeDate": "2024-11-12",
       "analysisAsOfDate": "2025-01-10",
       "currency": "EUR",
-      "eligibleCount": 190,
-      "matchedCount": 190,
+      "eligibleCount": 80,
+      "matchedCount": 80,
       "coverageBps": 10000,
       "overdueValue": {
         "currency": "EUR",
@@ -328,7 +328,7 @@
       },
       "feeDelta": {
         "currency": "EUR",
-        "minorUnits": 46256
+        "minorUnits": 12098
       }
     }
   ],
@@ -336,9 +336,9 @@
     {
       "merchantCategory": "Electronics",
       "currency": "EUR",
-      "eligibleCount": 64,
+      "eligibleCount": 55,
       "exceptionCount": 48,
-      "exceptionRateBps": 7500,
+      "exceptionRateBps": 8727,
       "primaryReason": "fee_mismatch",
       "overdueValue": {
         "currency": "EUR",
@@ -346,9 +346,9 @@
       }
     },
     {
-      "merchantCategory": "Utilities",
+      "merchantCategory": "Food & Beverage",
       "currency": "EUR",
-      "eligibleCount": 23,
+      "eligibleCount": 9,
       "exceptionCount": 0,
       "exceptionRateBps": 0,
       "primaryReason": "matched",
@@ -360,31 +360,7 @@
     {
       "merchantCategory": "Retail",
       "currency": "EUR",
-      "eligibleCount": 22,
-      "exceptionCount": 0,
-      "exceptionRateBps": 0,
-      "primaryReason": "matched",
-      "overdueValue": {
-        "currency": "EUR",
-        "minorUnits": 0
-      }
-    },
-    {
-      "merchantCategory": "Entertainment",
-      "currency": "EUR",
-      "eligibleCount": 19,
-      "exceptionCount": 0,
-      "exceptionRateBps": 0,
-      "primaryReason": "matched",
-      "overdueValue": {
-        "currency": "EUR",
-        "minorUnits": 0
-      }
-    },
-    {
-      "merchantCategory": "Healthcare",
-      "currency": "EUR",
-      "eligibleCount": 17,
+      "eligibleCount": 6,
       "exceptionCount": 0,
       "exceptionRateBps": 0,
       "primaryReason": "matched",
@@ -396,7 +372,7 @@
     {
       "merchantCategory": "Services",
       "currency": "EUR",
-      "eligibleCount": 17,
+      "eligibleCount": 6,
       "exceptionCount": 0,
       "exceptionRateBps": 0,
       "primaryReason": "matched",
@@ -406,9 +382,21 @@
       }
     },
     {
-      "merchantCategory": "Food & Beverage",
+      "merchantCategory": "Entertainment",
       "currency": "EUR",
-      "eligibleCount": 14,
+      "eligibleCount": 1,
+      "exceptionCount": 0,
+      "exceptionRateBps": 0,
+      "primaryReason": "matched",
+      "overdueValue": {
+        "currency": "EUR",
+        "minorUnits": 0
+      }
+    },
+    {
+      "merchantCategory": "Healthcare",
+      "currency": "EUR",
+      "eligibleCount": 1,
       "exceptionCount": 0,
       "exceptionRateBps": 0,
       "primaryReason": "matched",
@@ -420,7 +408,19 @@
     {
       "merchantCategory": "Travel",
       "currency": "EUR",
-      "eligibleCount": 14,
+      "eligibleCount": 1,
+      "exceptionCount": 0,
+      "exceptionRateBps": 0,
+      "primaryReason": "matched",
+      "overdueValue": {
+        "currency": "EUR",
+        "minorUnits": 0
+      }
+    },
+    {
+      "merchantCategory": "Utilities",
+      "currency": "EUR",
+      "eligibleCount": 1,
       "exceptionCount": 0,
       "exceptionRateBps": 0,
       "primaryReason": "matched",
@@ -464,7 +464,7 @@
       "count": 48,
       "affectedValue": {
         "currency": "EUR",
-        "minorUnits": 11564339
+        "minorUnits": 3024011
       }
     },
     {
@@ -495,7 +495,7 @@
     "disputed"
   ],
   "trace": {
-    "paymentId": "97",
+    "paymentId": "73964",
     "scenarioId": "stale_electronics_eur_fee",
     "transactionDate": "2024-11-12",
     "merchantCategory": "Electronics",
@@ -503,24 +503,24 @@
     "status": "completed",
     "gross": {
       "currency": "EUR",
-      "minorUnits": 477136
+      "minorUnits": 512550
     },
     "applicableTerm": {
       "validFrom": "2024-10-01",
       "validTo": null,
       "feeRateBps": 110,
-      "settlementSlaDays": 2
+      "settlementSlaDays": 3
     },
     "expectedFee": {
       "currency": "EUR",
-      "minorUnits": 5248
+      "minorUnits": 5638
     },
     "recordedFee": {
       "currency": "EUR",
-      "minorUnits": 7157
+      "minorUnits": 7688
     },
-    "expectedSettlementDate": "2024-11-14",
-    "recordedSettlementDate": "2024-11-14",
+    "expectedSettlementDate": "2024-11-15",
+    "recordedSettlementDate": "2024-11-13",
     "flags": [
       "fee_mismatch"
     ],
@@ -530,11 +530,11 @@
     "model": "mart_payment_trace"
   },
   "ask": {
-    "question": "Why was payment 97 flagged?",
+    "question": "Why was payment 73964 flagged?",
     "call": {
       "tool": "trace_payment",
       "arguments": {
-        "payment_id": 97
+        "payment_id": 73964
       }
     },
     "result": {
@@ -546,9 +546,9 @@
       ],
       "days_overdue": 0,
       "settlement_status": "settled",
-      "fee_delta_minor_units": 1909
+      "fee_delta_minor_units": 2050
     },
-    "answer": "Payment 97 is a EUR 4,771.36 Electronics purchase from the 2024-11-12 close. The settlement arrived on 2024-11-14, but the recorded fee was EUR 71.57 against EUR 52.48 under the 110 bps term, a EUR 19.09 difference, so fee_mismatch fired. No other rule applies.",
+    "answer": "Payment 73964 is a EUR 5,125.50 Electronics purchase from the 2024-11-12 close. The settlement arrived on 2024-11-13, but the recorded fee was EUR 76.88 against EUR 56.38 under the 110 bps term, a EUR 20.50 difference, so fee_mismatch fired. No other rule applies.",
     "tools": [
       {
         "name": "list_queries",
@@ -592,7 +592,7 @@
         "checkId": "anomaly_features_complete",
         "label": "Every reconciled payment has scoring features",
         "status": "pass",
-        "checkedRows": 57629,
+        "checkedRows": 60272,
         "detail": "No failing rows."
       },
       {
@@ -606,35 +606,35 @@
         "checkId": "daily_close_unique",
         "label": "Daily close is unique by date and currency",
         "status": "pass",
-        "checkedRows": 2661,
+        "checkedRows": 4382,
         "detail": "No failing rows."
       },
       {
         "checkId": "daily_currency_grain",
         "label": "Daily-close rows remain unique inside one currency partition",
         "status": "pass",
-        "checkedRows": 2661,
+        "checkedRows": 4382,
         "detail": "No failing rows."
       },
       {
         "checkId": "effective_term_join",
         "label": "Every eligible purchase selects exactly one term",
         "status": "pass",
-        "checkedRows": 57629,
+        "checkedRows": 60272,
         "detail": "No failing rows."
       },
       {
         "checkId": "eligible_purchase_unique",
         "label": "Eligible purchases are unique at payment grain",
         "status": "pass",
-        "checkedRows": 57629,
+        "checkedRows": 60272,
         "detail": "No failing rows."
       },
       {
         "checkId": "matched_monetary_identity",
         "label": "Matched payments satisfy currency and gross identity",
         "status": "pass",
-        "checkedRows": 57569,
+        "checkedRows": 60212,
         "detail": "No failing rows."
       },
       {
@@ -648,14 +648,14 @@
         "checkId": "quality_screens_populated",
         "label": "Every daily close has a control-limit screen",
         "status": "pass",
-        "checkedRows": 2661,
+        "checkedRows": 4382,
         "detail": "No failing rows."
       },
       {
         "checkId": "reconciliation_unique",
         "label": "Reconciliation remains unique at payment grain",
         "status": "pass",
-        "checkedRows": 57629,
+        "checkedRows": 60272,
         "detail": "No failing rows."
       },
       {

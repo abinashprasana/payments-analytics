@@ -47,13 +47,15 @@ The dataset is entirely synthetic, generated with Python and Faker, and none of 
 | Accounts | 6,000 |
 | Merchants | 800, across 8 categories |
 | Transactions | 80,000 |
-| Eligible purchases (completed, merchant-attributed) | 57,629 |
-| Settlement records | 61,124 |
+| Eligible purchases (completed, merchant-attributed) | 60,272 |
+| Settlement records | 63,185 |
 | Currencies | EUR, GBP, AUD, CAD — never summed across each other |
-| Transaction date range | 2022-02-07 to 2024-12-31 |
-| Dataset build | `settlement-gap-v2.0.0`, generated with a fixed seed |
+| Transaction date range | 2022-01-01 to 2024-12-31 |
+| Dataset build | `settlement-gap-v3.0.0`, generated with a fixed seed |
 
 Four scenarios are injected deterministically into the snapshot and recorded in [`data/scenarios.json`](data/scenarios.json): a clean daily close with nothing wrong, a Travel/GBP batch that settles late, a Retail/CAD batch that never settles, and an Electronics/EUR batch where the recorded fee falls out of step with the merchant's current contract. The site currently walks through the fee-mismatch one; the workbench can reproduce all four.
+
+Outside those scenarios the data is shaped to behave like a card ledger rather than a uniform random table. Purchase amounts are lognormal per merchant category, so first digits follow Benford's law (mean absolute deviation under 0.006 in every currency). Volume follows hour of day, weekday, and a November and December peak, and the top tenth of merchants carry about 54% of purchases. Every refund points to an earlier completed purchase through `parent_transaction_id` and settles as a negative amount with no fee. Settlements land in a 02:00 business-day batch, so a payment made just before Christmas or New Year can breach a calendar-day SLA, as it would in practice. About 0.45% of purchases are disputed, weighted toward riskier merchants and categories. `python data/generate_data.py` prints these measurements and refuses to write a snapshot that misses them.
 
 ---
 
@@ -129,9 +131,9 @@ claude mcp add --transport http settlement-gap https://settlement-gap-mcp.onrend
 | `run_query` | Runs one registered query with validated parameters and returns at most 200 rows |
 | `trace_payment` | Explains one payment: its expected terms, its settlement if there is one, and every reconciliation rule with whether it fired |
 
-Ask *"why was payment 240 flagged?"* and Claude calls `trace_payment(payment_id=240)`, then answers from the fields that come back, along these lines:
+Ask *"why was payment 76330 flagged?"* and Claude calls `trace_payment(payment_id=76330)`, then answers from the fields that come back, along these lines:
 
-> Payment 240 is a CAD 438.80 Retail purchase from the 2024-12-03 close (scenario `missing_retail_cad`). Under the merchant's terms (250 bps, 3-day SLA) it should have settled by 2024-12-06, net of a CAD 10.97 fee. No settlement exists. At the 2025-01-10 as-of date the `missing` rule fired, 35 days past the SLA. None of the other five rules applies, because there's no settlement to compare against.
+> Payment 76330 is a CAD 130.37 Retail purchase from the 2024-12-03 close (scenario `missing_retail_cad`). Under the merchant's terms (150 bps, 3-day SLA) it should have settled by 2024-12-06, net of a CAD 1.96 fee. No settlement exists. At the 2025-01-10 as-of date the `missing` rule fired, 35 days past the SLA. None of the other five rules applies, because there's no settlement to compare against.
 
 How it stays safe:
 
@@ -229,6 +231,7 @@ erDiagram
         timestamp transaction_date
         varchar transaction_type
         varchar status
+        int parent_transaction_id FK
     }
 
     settlements {
@@ -258,11 +261,11 @@ erDiagram
 
 <br/>
 
-**`transactions`** — `amount` must be positive. `transaction_type` is `purchase`, `refund`, or `transfer`; a `transfer` is never merchant-attributed, and a `purchase`/`refund` always is. `status` is `completed`, `pending`, or `failed`; only completed, merchant-attributed purchases enter the reconciliation population.
+**`transactions`** — `amount` must be positive. `transaction_type` is `purchase`, `refund`, or `transfer`; a `transfer` is never merchant-attributed, and a `purchase`/`refund` always is. `status` is `completed`, `pending`, or `failed`; only completed, merchant-attributed purchases enter the reconciliation population. `parent_transaction_id` is set exactly when the row is a refund, and points to the earlier completed purchase it reverses.
 
 **`merchant_terms`** — primary key is `(merchant_id, valid_from)`. `valid_to` is nullable, meaning the term is still open-ended.
 
-**`settlements`** — `transaction_id` is unique, so a completed purchase has at most one settlement record. `settled_amount` and `processing_fee` are both non-negative.
+**`settlements`** — `transaction_id` is unique, so a completed purchase or refund has at most one settlement record. `processing_fee` is non-negative. `settled_amount` is negative for a refund, which is debited from the merchant's payout.
 
 **`fraud_flags`** — `resolved_date` must be null unless `is_resolved` is true, and set to a date on or after `flagged_date` when it is.
 

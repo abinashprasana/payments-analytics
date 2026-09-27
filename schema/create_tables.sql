@@ -56,10 +56,12 @@ CREATE TABLE transactions (
     transaction_date TIMESTAMP NOT NULL,
     transaction_type VARCHAR(20) NOT NULL CHECK (transaction_type IN ('purchase', 'refund', 'transfer')),
     status VARCHAR(20) NOT NULL CHECK (status IN ('completed', 'pending', 'failed')),
+    parent_transaction_id INT REFERENCES transactions (transaction_id) ON DELETE RESTRICT,
     CHECK (
         (transaction_type = 'transfer' AND merchant_id IS NULL)
         OR (transaction_type IN ('purchase', 'refund') AND merchant_id IS NOT NULL)
-    )
+    ),
+    CHECK ((transaction_type = 'refund') = (parent_transaction_id IS NOT NULL))
 );
 
 CREATE TABLE settlements (
@@ -67,7 +69,7 @@ CREATE TABLE settlements (
     transaction_id INT UNIQUE NOT NULL REFERENCES transactions (transaction_id) ON DELETE CASCADE,
     settlement_date TIMESTAMP NOT NULL,
     currency VARCHAR(3) NOT NULL CHECK (currency IN ('EUR', 'GBP', 'AUD', 'CAD')),
-    settled_amount NUMERIC(15, 2) NOT NULL CHECK (settled_amount >= 0),
+    settled_amount NUMERIC(15, 2) NOT NULL,
     processing_fee NUMERIC(15, 2) NOT NULL CHECK (processing_fee >= 0),
     status VARCHAR(20) NOT NULL CHECK (status IN ('settled', 'delayed', 'disputed'))
 );

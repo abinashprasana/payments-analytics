@@ -182,7 +182,7 @@ class WorkbenchAppTests(unittest.TestCase):
         self.assert_clean_run(app)
         self.assertEqual(app.query_params["scenario"], ["delayed_travel_gbp"])
         self.assertEqual(by_label(app.selectbox, "Currency").value, "GBP")
-        self.assertEqual(by_label(app.date_input, "As-of date").value, date(2024, 10, 11))
+        self.assertEqual(by_label(app.date_input, "As-of date").value, date(2024, 10, 14))
 
         app.query_params["scenario"] = "missing_retail_cad"
         app.run(timeout=120)

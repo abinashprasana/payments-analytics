@@ -149,7 +149,7 @@ class AnalyticsEngineContractTests(unittest.TestCase):
         delayed = registry.loc[
             registry["scenario_id"] == "delayed_travel_gbp"
         ].iloc[0]
-        self.assertEqual(str(delayed["as_of_date"]), "2024-10-11")
+        self.assertEqual(str(delayed["as_of_date"]), "2024-10-14")
 
     def test_query_registry_rejects_arbitrary_sql_and_invalid_parameters(self) -> None:
         invalid_calls = (

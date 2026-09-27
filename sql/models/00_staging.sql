@@ -47,7 +47,8 @@ SELECT
     CAST(currency AS VARCHAR) AS currency,
     CAST(transaction_date AS TIMESTAMP) AS transaction_date,
     CAST(transaction_type AS VARCHAR) AS transaction_type,
-    CAST(status AS VARCHAR) AS status
+    CAST(status AS VARCHAR) AS status,
+    CAST(parent_transaction_id AS BIGINT) AS parent_transaction_id
 FROM transactions;
 
 CREATE OR REPLACE VIEW stg_settlements AS

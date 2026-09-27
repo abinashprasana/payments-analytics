@@ -1,6 +1,6 @@
 # Relational schema and model notes
 
-Payments Analytics v2 keeps the original six synthetic source entities and adds an effective-dated merchant-terms table. Source constraints protect the transactional snapshot; SQL models derive the settlement investigation without changing source rows.
+Payments Analytics v3 keeps the original six synthetic source entities and adds an effective-dated merchant-terms table. Source constraints protect the transactional snapshot; SQL models derive the settlement investigation without changing source rows.
 
 ## Source entities
 
@@ -10,8 +10,8 @@ Payments Analytics v2 keeps the original six synthetic source entities and adds 
 | `accounts` | one account | required customer; accepted account type, currency, and status |
 | `merchants` | one merchant | accepted category and risk tier |
 | `merchant_terms` | one merchant-term validity interval | required merchant; non-overlapping effective dates; non-negative fee bps; positive SLA days |
-| `transactions` | one payment event | required account; positive amount; accepted type/status/currency; merchant required for purchases/refunds and absent for transfers |
-| `settlements` | at most one settlement per transaction | transaction uniqueness; accepted status/currency; non-negative net amount and fee |
+| `transactions` | one payment event | required account; positive amount; accepted type/status/currency; merchant required for purchases/refunds and absent for transfers; `parent_transaction_id` set exactly for refunds and pointing to an earlier completed purchase on the same account and merchant |
+| `settlements` | at most one settlement per transaction | transaction uniqueness; accepted status/currency; non-negative fee; net amount negative only for refunds |
 | `fraud_flags` | at most one review record per transaction | non-null review reason; resolved date required exactly when resolved |
 
 Deleting a parent in a local scratch database cascades where it avoids orphans. Merchants referenced by purchase or refund history are restricted from deletion so the transaction-type nullability contract remains valid.

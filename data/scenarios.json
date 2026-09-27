@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "datasetVersion": "settlement-gap-v2.0.0",
+  "datasetVersion": "settlement-gap-v3.0.0",
   "snapshotLabel": "Synthetic demo snapshot",
   "asOfDate": "2025-01-10",
   "generatedWithSeed": 42,
@@ -20,8 +20,8 @@
       "scenarioId": "delayed_travel_gbp",
       "name": "Delayed Travel / GBP batch",
       "description": "A Travel batch settles three calendar days beyond each merchant's applicable SLA.",
-      "closeDate": "2024-10-08",
-      "investigationAsOfDate": "2024-10-11",
+      "closeDate": "2024-10-10",
+      "investigationAsOfDate": "2024-10-14",
       "defaultCurrency": "GBP",
       "focusCategory": "Travel",
       "isDefault": false,

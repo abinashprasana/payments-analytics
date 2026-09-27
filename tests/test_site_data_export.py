@@ -60,7 +60,7 @@ class CaseStudyArtifactTests(unittest.TestCase):
         self.assertEqual(
             self.payload["dataset"]["window"],
             {
-                "firstTransactionDate": "2022-02-07",
+                "firstTransactionDate": "2022-01-01",
                 "lastTransactionDate": "2024-12-31",
             },
         )
@@ -69,8 +69,8 @@ class CaseStudyArtifactTests(unittest.TestCase):
             {
                 "sourceTables": 7,
                 "transactions": 80_000,
-                "eligiblePurchases": 57_629,
-                "settlements": 61_124,
+                "eligiblePurchases": 60_272,
+                "settlements": 63_185,
             },
         )
 
@@ -108,13 +108,13 @@ class CaseStudyArtifactTests(unittest.TestCase):
         self.assertEqual({row["currency"] for row in rows}, {"EUR"})
         self.assertEqual(
             [row["matchedCount"] for row in rows],
-            [0, 190, 190, 190],
+            [0, 80, 80, 80],
         )
         self.assertEqual(
             [row["coverageBps"] for row in rows],
             [0, 10_000, 10_000, 10_000],
         )
-        self.assertIn("190 of 190", self.payload["question"]["conciseAnswer"])
+        self.assertIn("80 of 80", self.payload["question"]["conciseAnswer"])
         self.assertIn(
             "fee-mismatch exceptions",
             self.payload["question"]["conciseAnswer"],
