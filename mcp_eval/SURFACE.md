@@ -100,4 +100,10 @@ Parameter match rule: every required key must be present with an equal value aft
 
 Groq through its OpenAI compatible endpoint, reading `GROQ_API_KEY` from the environment only. The default model is `llama-3.3-70b-versatile`, which supports tool calls on Groq, with `openai/gpt-oss-120b` selectable by `--model`. Groq's free tier allows roughly 30 requests a minute and 1,000 a day (confirm in the Groq console), so the runner paces at one request every 2.1 seconds.
 
-One question usually needs two or three model requests (tool choice, then the answer after the tool result). About 45 questions repeated 3 times is therefore around 300 to 400 requests. With the brief's default `--max-requests 60`, a full run needs the cap raised explicitly, for example `--max-requests 400`, which fits inside one day's free quota.
+One question usually needs two or three model requests (tool choice, then the answer after the tool result). About 45 questions repeated 3 times is therefore around 300 to 400 requests. Confirmed on 2026-09-28: the runner defaults to `--max-requests 400`, which fits inside one day's free quota.
+
+## Golden set (phase 2)
+
+`mcp_eval/golden.py` holds the question wording and expected calls. `python -m mcp_eval.golden build` derives every expected answer from the snapshot and writes `golden/questions.jsonl`. `python -m mcp_eval.golden check` replays each answer source and fails on any drift. A rebuild keeps `reviewed: true` only on questions whose wording did not change. Multi call records use `expected_calls` with `expected_params` set to null.
+
+Note for review: `trace_payment` reads the delayed scenario at 2024-10-14, while `run_query` defaults to 2025-01-10. Payment 70652 is therefore `missing` through the first path (q003) and `late` through the second unless `as_of_date` is passed (q004). Scoring compares tools and parameters, so this does not change a score, but a model's prose answer can differ by path.
