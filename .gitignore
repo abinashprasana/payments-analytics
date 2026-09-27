@@ -35,3 +35,7 @@ Thumbs.db
 # MCP server (local runtime state)
 mcp_server/.venv/
 mcp_server/logs/
+
+# MCP eval: raw transcripts, audit logs, and dry runs are never results.
+mcp_eval/results/raw/
+mcp_eval/results/dryrun_*

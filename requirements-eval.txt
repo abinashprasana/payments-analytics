@@ -1,0 +1,4 @@
+# Extras for mcp_eval live runs, layered on the MCP server's own environment:
+#   uv run --project mcp_server --with-requirements requirements-eval.txt python -m mcp_eval.run_eval ...
+openai==2.8.1
+sqlglot==27.29.0

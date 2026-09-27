@@ -84,7 +84,7 @@ def _trace(qid: str, question: str, payment_id: int, scenario: str, fields: list
         "expected_query_id": None,
         "expected_params": params,
         "alternatives": [_run("payment_trace", run_params)],
-        "acceptable_extra": {"scenario": scenario},
+        "acceptable_extra": {"scenario": scenario, **({} if as_of else {"as_of_date": TRACE_AS_OF[scenario]})},
         "answer_source": _source(
             "payment_trace",
             {**run_params, "as_of_date": as_of or TRACE_AS_OF[scenario]},
