@@ -31,6 +31,21 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "mcp_server"):
         sys.path.insert(0, str(path))
 
 
+def groq_api_key() -> str | None:
+    """GROQ_API_KEY from the environment, else from the untracked repository .env.
+
+    Only that one line is read; the value is never printed or logged.
+    """
+    key = os.environ.get("GROQ_API_KEY", "").strip()
+    env_file = PROJECT_ROOT / ".env"
+    if not key and env_file.is_file():
+        for line in env_file.read_text(encoding="utf-8").splitlines():
+            name, _, value = line.partition("=")
+            if name.strip() == "GROQ_API_KEY":
+                key = value.strip().strip("'\"")
+    return key or None
+
+
 class BudgetExhausted(RuntimeError):
     """Raised before a model request that would exceed --max-requests."""
 
@@ -84,9 +99,9 @@ class GroqModel:
     def __init__(self, model: str = DEFAULT_MODEL, temperature: float = 0.0) -> None:
         from openai import OpenAI
 
-        key = os.environ.get("GROQ_API_KEY")
+        key = groq_api_key()
         if not key:
-            raise RuntimeError("GROQ_API_KEY is not set in the environment")
+            raise RuntimeError("GROQ_API_KEY is not set in the environment or .env")
         self.model = model
         self.temperature = temperature
         self._client = OpenAI(api_key=key, base_url=GROQ_BASE_URL, max_retries=5)

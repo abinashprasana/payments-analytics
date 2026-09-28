@@ -108,6 +108,29 @@ class ScoringTests(unittest.TestCase):
         self.assertFalse(drifted["behavior_ok"])
 
 
+class KeyLookupTests(unittest.TestCase):
+    def test_key_comes_from_environment_then_dotenv(self) -> None:
+        import os
+        import tempfile
+        from pathlib import Path
+        from unittest import mock
+
+        from mcp_eval import agent_stub
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with mock.patch.object(agent_stub, "PROJECT_ROOT", root), \
+                    mock.patch.dict(os.environ, {}, clear=False):
+                os.environ.pop("GROQ_API_KEY", None)
+                self.assertIsNone(agent_stub.groq_api_key())
+                (root / ".env").write_text("DB_HOST=localhost\nGROQ_API_KEY=\n", encoding="utf-8")
+                self.assertIsNone(agent_stub.groq_api_key())
+                (root / ".env").write_text('GROQ_API_KEY="from-file"\n', encoding="utf-8")
+                self.assertEqual(agent_stub.groq_api_key(), "from-file")
+                os.environ["GROQ_API_KEY"] = "from-env"
+                self.assertEqual(agent_stub.groq_api_key(), "from-env")
+
+
 class MetricsTests(unittest.TestCase):
     def test_wilson_matches_known_values(self) -> None:
         low, high = metrics.wilson(8, 10)

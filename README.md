@@ -211,7 +211,7 @@ The comparison path in [`mcp_eval/freeform_sql.py`](mcp_eval/freeform_sql.py) gi
 uv run --project mcp_server --with-requirements requirements-eval.txt python -m mcp_eval.run_eval --suite questions --dry-run
 ```
 
-The dry run replaces the model with a scripted oracle that makes the expected calls through the real server, so it needs no key and should score 100%. CI runs it on every push. Live runs read `GROQ_API_KEY` from the environment only, pace requests at one every 2.1 seconds, and stop cleanly at `--max-requests` (400 by default, inside one day of Groq's free tier). They are left out of CI because they need a key and are not deterministic.
+The dry run replaces the model with a scripted oracle that makes the expected calls through the real server, so it needs no key and should score 100%. CI runs it on every push. Live runs read `GROQ_API_KEY` from the environment, or from the `GROQ_API_KEY=` line in the untracked `.env` file, and never print it. They pace requests at one every 2.1 seconds, and stop cleanly at `--max-requests` (400 by default, inside one day of Groq's free tier). They are left out of CI because they need a key and are not deterministic.
 
 ```bash
 uv run --project mcp_server --with-requirements requirements-eval.txt python -m mcp_eval.run_eval --suite questions

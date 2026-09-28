@@ -81,9 +81,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
 
-    if not args.dry_run and not os.environ.get("GROQ_API_KEY"):
-        print("GROQ_API_KEY is not set. Set it in your environment (never in a file) "
-              "and rerun. No results were written; README figures stay TODO.")
+    if not args.dry_run and not agent_stub.groq_api_key():
+        print("GROQ_API_KEY is not set. Paste it after GROQ_API_KEY= in the repository .env "
+              "(untracked) or export it, then rerun. No results were written; README figures stay TODO.")
         return 2
 
     records = golden.load() if args.suite == "questions" else refusals.load(refusals.REFUSALS_PATH)
