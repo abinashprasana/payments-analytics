@@ -31,41 +31,25 @@
     },
     {
       "id": "model",
-      "label": "Model"
+      "label": "Data"
     },
     {
       "id": "baseline",
-      "label": "Baseline"
-    },
-    {
-      "id": "isolation",
-      "label": "Root cause"
-    },
-    {
-      "id": "classification",
-      "label": "Queue"
-    },
-    {
-      "id": "recommendation",
-      "label": "Decision"
+      "label": "Investigation"
     },
     {
       "id": "validation",
-      "label": "Validation"
-    },
-    {
-      "id": "workbench",
-      "label": "Workbench"
+      "label": "Proof"
     },
     {
       "id": "ask",
-      "label": "Ask Claude"
+      "label": "Use it"
     }
   ],
   "question": {
     "stakeholder": "Why do completed Electronics purchases in EUR still carry a fee-mismatch exception after the close?",
-    "conciseAnswer": "At the 2024-11-15 checkpoint, 80 of 80 eligible EUR purchases from the 2024-11-12 close had a settlement that balanced on amount. Recorded fees use the prior schedule after new effective-dated merchant terms begin. The 48 affected payments settled on time and on gross amount, but their recorded processing fee no longer matches the effective merchant term, so they are flagged as fee-mismatch exceptions.",
-    "operationalDecision": "Reconcile the injected batch as one operational event, then route any residual payment-level exceptions using the stable queue precedence."
+    "conciseAnswer": "By 2024-11-15, 80 of 80 EUR purchases from the 2024-11-12 close had settled for the right gross amount. 48 of them still carry fee-mismatch exceptions: the recorded fee kept the old schedule after the merchant's new contract began.",
+    "operationalDecision": "Fix the batch once, as one event. Anything left over goes through the exception queue in its usual order."
   },
   "metricDefinitions": [
     {
@@ -241,11 +225,11 @@
     {
       "id": "baseline",
       "label": "Baseline daily close",
-      "question": "Did settlement coverage break inside one currency close?",
+      "question": "Did the close balance inside its own currency?",
       "queryId": "close_summary",
       "model": "mart_daily_close",
       "sql": "-- analytics_context.as_of_date = :investigation_as_of_date\nSELECT\n  close_date, currency, eligible_count, matched_count,\n  coverage_rate, overdue_minor_units, fee_delta_minor_units\nFROM mart_daily_close\nWHERE close_date = :scenario_date\n  AND currency = :currency\nORDER BY close_date, currency;",
-      "reading": "At the 2024-11-15 observation cut, the selected close was 80/80 matched. The final snapshot preserves the injected exception rather than resolving it."
+      "reading": "At the 2024-11-15 observation cut, the selected close was 80/80 matched. Coverage recovers, yet the exceptions stay in the final snapshot."
     },
     {
       "id": "isolation",
@@ -259,11 +243,11 @@
     {
       "id": "classification",
       "label": "Exception classification",
-      "question": "What should operations inspect first without losing secondary reasons?",
+      "question": "What does operations look at first?",
       "queryId": "exception_queue",
       "model": "mart_exception_queue",
       "sql": "SELECT\n  payment_id, primary_reason, exception_reasons, currency,\n  gross_minor_units, expected_settlement_date, actual_settlement_date\nFROM mart_exception_queue\nWHERE CAST(transaction_date AS DATE) = :scenario_date\n  AND currency = :currency\nORDER BY priority_rank, gross_minor_units DESC, payment_id;",
-      "reading": "Independent Boolean flags retain every true reason. The primary label exists only to make queue ordering stable."
+      "reading": "Each payment keeps every flag that fired. The primary label only decides where it sits in the queue."
     }
   ],
   "dailyClose": [
@@ -525,7 +509,7 @@
       "fee_mismatch"
     ],
     "primaryLabel": "fee_mismatch",
-    "whyFlagged": "The settlement arrived 0 calendar days after the effective merchant SLA. Currency, amount identity, and the applicable fee still match, so late remains the only flag.",
+    "whyFlagged": "The recorded fee was EUR 76.88. The contract in force that day sets 110 bps, an expected fee of EUR 56.38. Amount and currency still match. Fee mismatch is the only flag.",
     "queryId": "payment_trace",
     "model": "mart_payment_trace"
   },
@@ -734,10 +718,10 @@
       }
     ],
     "journey": [
-      "Identify the GBP close where evidence is incomplete.",
-      "Filter the exception queue to the delayed Travel batch.",
-      "Trace one payment and inspect the effective SQL rule.",
-      "Export the filtered evidence without changing the snapshot."
+      "Open the EUR close on 2024-11-12.",
+      "Filter the exception queue to the Electronics batch.",
+      "Trace one payment and read the SQL rule that flagged it.",
+      "Export the filtered evidence. The snapshot never changes."
     ],
     "sleepDisclosure": "The free Streamlit Community Cloud app may need to wake after inactivity; that pause is normal for the public demo tier."
   },

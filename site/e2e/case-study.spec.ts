@@ -12,13 +12,12 @@ const expectedSections = [
   "contract",
   "model",
   "baseline",
-  "isolation",
-  "classification",
-  "recommendation",
   "validation",
-  "workbench",
   "ask",
 ] as const;
+
+// Anchors from the ten-chapter layout that older links may still use.
+const legacyAnchors = ["isolation", "classification", "workbench"] as const;
 
 async function openCaseStudy(page: Page) {
   await page.goto(caseStudyURL + "/", {
@@ -39,7 +38,7 @@ async function expectNoPageOverflow(page: Page) {
 }
 
 test.describe("authored settlement walkthrough", () => {
-  test("keeps the ten-part investigation readable at the target width", async ({
+  test("keeps the six-chapter investigation readable at the target width", async ({
     page,
   }) => {
     await openCaseStudy(page);
@@ -48,6 +47,9 @@ test.describe("authored settlement walkthrough", () => {
     await expect(page.locator("h1")).toHaveCount(1);
     for (const sectionId of expectedSections) {
       await expect(page.locator("section#" + sectionId)).toBeAttached();
+    }
+    for (const anchor of legacyAnchors) {
+      await expect(page.locator("#" + anchor)).toBeAttached();
     }
 
     const navLabels = projectData.navigation.map(({ label }) => label);
@@ -98,7 +100,7 @@ test.describe("authored settlement walkthrough", () => {
 
     const ask = page.locator("section#ask");
     await ask.scrollIntoViewIfNeeded();
-    await expect(ask.getByRole("heading", { level: 2 })).toHaveText(/Ask why a payment failed/);
+    await expect(ask.getByRole("heading", { level: 2 })).toHaveText(/Trace it yourself, or ask Claude/);
     await expect(ask.getByText(projectData.ask.question, { exact: true })).toBeVisible();
     await expect(ask.getByText(projectData.ask.answer, { exact: true })).toBeVisible();
     await expect(ask.locator(".mcp-step")).toHaveCount(4);
@@ -141,11 +143,11 @@ test.describe("authored settlement walkthrough", () => {
 
     const finalChapter = page
       .getByRole("navigation", { name: "Investigation chapters" })
-      .getByRole("link", { name: "Workbench" });
+      .getByRole("link", { name: "Use it" });
     await finalChapter.click();
-    await expect(page).toHaveURL(/#workbench$/);
+    await expect(page).toHaveURL(/#ask$/);
     await expect(finalChapter).toHaveAttribute("aria-current", "location");
-    const targetTop = await page.locator("section#workbench").evaluate(
+    const targetTop = await page.locator("section#ask").evaluate(
       (section) => section.getBoundingClientRect().top,
     );
     expect(targetTop).toBeGreaterThanOrEqual(120);
@@ -155,7 +157,7 @@ test.describe("authored settlement walkthrough", () => {
     await expect(
       page
         .getByRole("navigation", { name: "Investigation chapters" })
-        .getByRole("link", { name: "Baseline" }),
+        .getByRole("link", { name: "Investigation" }),
     ).toHaveAttribute("aria-current", "location");
   });
 

@@ -5,6 +5,7 @@ import { ChapterNav } from "@/components/chapter-nav";
 import { ErDiagram } from "@/components/er-diagram";
 import { McpFlow } from "@/components/mcp-flow";
 import { McpSession } from "@/components/mcp-session";
+import { ScenarioTimeline } from "@/components/scenario-timeline";
 import { assetUrl, publicConfig } from "@/lib/config";
 import { projectData, type Money } from "@/lib/project-data";
 
@@ -41,6 +42,9 @@ const classificationStep = projectData.investigationSteps.find(
 const successMetric = projectData.metricDefinitions.find(
   ({ id }) => id === projectData.recommendation.successMetricId,
 )!;
+const qualityPassed = projectData.validation.qualityResults.filter(
+  ({ status }) => status === "pass",
+).length;
 const workbenchUrl = (() => {
   const params = new URLSearchParams({
     view: "trace",
@@ -79,34 +83,37 @@ const structuredData = JSON.stringify({
 function QueryHeader({ queryId, model }: { queryId: string; model: string }) {
   return (
     <div className="query-header">
-      <span>Query ID <code>{queryId}</code></span>
+      <span>Query <code>{queryId}</code></span>
       <span>Model <code>{model}</code></span>
     </div>
   );
 }
 
-function SqlBlock({ sql, label }: { sql: string; label: string }) {
+function SqlDetails({ sql, label }: { sql: string; label: string }) {
   return (
-    <pre className="sql-block" aria-label={label} tabIndex={0}>
-      <code>{sql}</code>
-    </pre>
+    <details className="reveal-details">
+      <summary>Show the SQL</summary>
+      <pre className="sql-block" aria-label={label} tabIndex={0}>
+        <code>{sql}</code>
+      </pre>
+    </details>
   );
 }
 
 function SectionHeading({
   id,
-  eyebrow,
+  index,
   title,
   children,
 }: {
   id: string;
-  eyebrow: string;
+  index: string;
   title: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="section-heading">
-      <p className="kicker">{eyebrow}</p>
+      <p className="kicker" aria-hidden="true">{index}</p>
       <div>
         <h2 id={id}>{title}</h2>
         <p>{children}</p>
@@ -115,9 +122,36 @@ function SectionHeading({
   );
 }
 
+function Step({
+  id,
+  number,
+  step,
+  children,
+}: {
+  id?: string;
+  number: string;
+  step: typeof baselineStep;
+  children: React.ReactNode;
+}) {
+  return (
+    <article className="step" id={id} aria-labelledby={`${step.id}-title`}>
+      <div className="step__text">
+        <span className="step__number" aria-hidden="true">{number}</span>
+        <p className="step__label">{step.label}</p>
+        <h3 id={`${step.id}-title`}>{step.question}</h3>
+        <p className="step__reading">{step.reading}</p>
+        <QueryHeader queryId={step.queryId} model={step.model} />
+        <SqlDetails sql={step.sql} label={`${step.label} SQL`} />
+      </div>
+      <div className="step__figure">{children}</div>
+    </article>
+  );
+}
+
 export default function Home() {
   const exceptionMax = Math.max(...projectData.exceptionSummary.map(({ count }) => count), 1);
   const activeReasons = projectData.exceptionSummary.filter(({ count }) => count > 0);
+  const flagTotal = activeReasons.reduce((sum, { count }) => sum + count, 0);
 
   return (
     <>
@@ -126,7 +160,7 @@ export default function Home() {
       <div className="scroll-progress" aria-hidden="true" />
 
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="The Settlement Gap — back to the top">
+        <a className="brand" href="#question" aria-label="The Settlement Gap, back to the top">
           <Image
             src={assetUrl("/brand/payment-observatory-mark-mono.svg")}
             width={42}
@@ -137,222 +171,177 @@ export default function Home() {
           <span><strong>The Settlement Gap</strong><small>SQL investigation</small></span>
         </a>
         <nav className="site-header__nav" aria-label="Primary navigation">
-          <a href="#contract">Metric contract</a>
-          <a href="#validation">Reproduce</a>
-          <a className="text-link" href="#workbench">See the workbench preview <span aria-hidden="true">↓</span></a>
+          <a className="text-link" href={publicConfig.repositoryUrl} target="_blank" rel="noreferrer">
+            Source <span aria-hidden="true">↗</span>
+          </a>
         </nav>
       </header>
 
       <main id="main-content">
-        <section className="hero" id="top" aria-labelledby="hero-title">
+        <section className="hero" id="question" aria-labelledby="hero-title">
           <div className="hero__field" aria-hidden="true"><i /><i /></div>
           <div className="hero__copy">
-            <p className="eyebrow"><span>Before the workbench</span> Settlement reconciliation</p>
+            <p className="eyebrow"><span>Settlement reconciliation</span> SQL, DuckDB and PostgreSQL</p>
             <h1 id="hero-title">The <em>Settlement Gap</em></h1>
             <p className="hero__question">{projectData.question.stakeholder}</p>
           </div>
 
           <aside className="hero__brief" aria-label="The short answer">
-            <p className="kicker">Concise answer</p>
+            <p className="kicker">Short answer</p>
             <p className="hero__lede">{projectData.question.conciseAnswer}</p>
             <div className="hero__actions">
-              <a className="button button--primary" href="#baseline">Follow the SQL <span aria-hidden="true">↓</span></a>
-              <a className="button button--quiet" href="#contract">Read the contract</a>
-              <a className="button button--link" href="#workbench">See it traced in the workbench <span aria-hidden="true">↓</span></a>
+              <a className="button button--primary" href="#baseline">Follow the evidence <span aria-hidden="true">↓</span></a>
+              <a className="button button--quiet" href="#ask">Try it live</a>
             </div>
           </aside>
 
           <dl className="evidence-strip" aria-label="Dataset identity">
             <div><dt>Snapshot</dt><dd>{projectData.dataset.label}<span>{projectData.dataset.version}</span></dd></div>
-            <div><dt>As of</dt><dd>{formatDate(projectData.dataset.asOfDate)}<span>{projectData.build.commitSha}</span></dd></div>
+            <div><dt>As of</dt><dd>{formatDate(projectData.dataset.asOfDate)}<span>{formatDate(projectData.dataset.window.firstTransactionDate)} to {formatDate(projectData.dataset.window.lastTransactionDate)}</span></dd></div>
             <div><dt>Population</dt><dd>{numberFormat.format(projectData.dataset.recordCounts.eligiblePurchases)}<span>eligible purchases</span></dd></div>
-            <div><dt>Source model</dt><dd>{numberFormat.format(projectData.dataset.recordCounts.sourceTables)}<span>source tables</span></dd></div>
           </dl>
         </section>
 
         <ChapterNav items={projectData.navigation} />
 
-        <section className="case-section section-shell" id="question" aria-labelledby="question-title">
-          <SectionHeading id="question-title" eyebrow="The problem" title="A completed purchase can still fail the close">
-            A status report counts this purchase as done once the customer pays. Settlement operations can&apos;t close the day until the money that later arrives agrees with the expected amount, currency, fee term, and SLA.
-          </SectionHeading>
-          <div className="answer-ledger">
-            <div>
-              <span>Observed</span>
-              <p>{projectData.question.conciseAnswer}</p>
-            </div>
-            <div>
-              <span>Decision</span>
-              <p>{projectData.question.operationalDecision}</p>
-            </div>
-          </div>
-        </section>
-
         <section className="case-section case-section--paper" id="contract" aria-labelledby="contract-title">
           <div className="section-shell">
-            <SectionHeading id="contract-title" eyebrow="Metric contract" title="Define the close before measuring it">
-              The flagship population has one explicit grain and one currency boundary. Refunds and transfers remain valid source events, but do not enter this settlement ratio.
+            <SectionHeading id="contract-title" index="01" title="Agree on what a clean close means">
+              A status report calls a purchase done once the customer pays. Operations can only close the day when the money that arrives later matches the expected amount, currency, fee and deadline. These four metrics define that check. Refunds and transfers stay in the data but sit outside it.
             </SectionHeading>
 
             <div className="metric-ledger">
               {projectData.metricDefinitions.map((metric) => (
-                <article id={`metric-${metric.id}`} key={metric.id}>
-                  <div className="metric-ledger__title">
-                    <h3>{metric.label}</h3>
-                    <code>{metric.id}</code>
-                  </div>
-                  <p>{metric.definition}</p>
+                <details id={`metric-${metric.id}`} key={metric.id}>
+                  <summary>
+                    <span className="metric-ledger__name">
+                      <strong>{metric.label}</strong>
+                      <code>{metric.queryId}</code>
+                    </span>
+                    <span className="metric-ledger__definition">{metric.definition}</span>
+                    <span className="metric-ledger__grain">{metric.grain}</span>
+                  </summary>
                   <dl>
                     <div><dt>Population</dt><dd>{metric.population}</dd></div>
-                    <div><dt>Grain</dt><dd>{metric.grain}</dd></div>
                     <div><dt>Currency</dt><dd>{metric.currencyBoundary}</dd></div>
                     <div><dt>Model</dt><dd><code>{metric.model}</code></dd></div>
-                    <div><dt>Query</dt><dd><code>{metric.queryId}</code></dd></div>
                     {metric.toleranceMinorUnits === undefined ? null : (
                       <div><dt>Match tolerance</dt><dd>{formatMoney({ currency: selectedScenario.currency, minorUnits: metric.toleranceMinorUnits })}</dd></div>
                     )}
                   </dl>
-                </article>
+                </details>
               ))}
             </div>
           </div>
         </section>
 
         <section className="case-section section-shell" id="model" aria-labelledby="model-title">
-          <SectionHeading id="model-title" eyebrow="The insight" title="Expected terms and recorded money are different evidence">
-            The contract says what a payment should cost; the settlement record says what it did cost. Effective dates pick the term that applied on the purchase day, and a left join keeps missing settlements visible instead of dropping them.
+          <SectionHeading id="model-title" index="02" title="Two kinds of evidence, kept apart until the join">
+            The merchant contract says what a payment should cost. The settlement record says what it did cost. Effective dates pick the contract that applied on the purchase day, and a left join keeps a missing settlement visible instead of dropping the payment.
           </SectionHeading>
 
           <ErDiagram entities={projectData.sourceModel.entities} relationships={projectData.sourceModel.relationships} />
 
-          <div className="scenario-block">
-            <div className="scenario-block__intro">
-              <p className="kicker">Synthetic scenario manifest</p>
-              <h3>Known signals, versioned with the data</h3>
-              <p>{selectedScenario.disclosure}</p>
-            </div>
-            <div className="scenario-list">
-              {projectData.scenarios.map((scenario) => (
-                <article className={scenario.id === selectedScenario.id ? "is-selected" : ""} key={scenario.id}>
-                  <div><span>{scenario.kind}</span><strong>{scenario.label}</strong></div>
-                  <dl>
-                    <div><dt>Date</dt><dd>{formatDate(scenario.date)}</dd></div>
-                    <div><dt>Scope</dt><dd>{scenario.merchantCategory} in {scenario.currency}</dd></div>
-                  </dl>
-                  <p>{scenario.expectedSignal}</p>
-                  <small>{scenario.disclosure}</small>
-                </article>
-              ))}
-            </div>
+          <div className="scenario-heading">
+            <h3>Four scripted closes, versioned with the data</h3>
+            <p>One clean control and three planted problems. The walkthrough follows the {selectedScenario.kind} batch.</p>
           </div>
+          <ScenarioTimeline
+            scenarios={projectData.scenarios}
+            selectedId={selectedScenario.id}
+            disclosure={selectedScenario.disclosure}
+          />
         </section>
 
-        <section className="case-section case-section--ink" id="baseline" aria-labelledby="baseline-title">
+        <section className="case-section case-section--ink" id="baseline" aria-labelledby="baseline-chapter-title">
           <div className="section-shell">
-            <SectionHeading id="baseline-title" eyebrow={baselineStep.label} title={baselineStep.question}>
-              {baselineStep.reading}
+            <SectionHeading id="baseline-chapter-title" index="03" title="Follow one close from symptom to payment">
+              Three queries, each answering the question the last one raised. The chart stays beside its explanation while you read.
             </SectionHeading>
-            <QueryHeader queryId={baselineStep.queryId} model={baselineStep.model} />
 
-            <div className="query-layout">
-              <SqlBlock sql={baselineStep.sql} label={`${baselineStep.label} SQL`} />
-              <figure className="coverage-chart">
-                <figcaption>Coverage recovery in {selectedScenario.currency} after the {formatDate(selectedScenario.date)} close</figcaption>
-                <p className="classification-note">The purchase close stays fixed; each row re-evaluates the same batch at a later analysis as-of date.</p>
-                <div className="coverage-chart__plot" role="img" aria-label={`${selectedScenario.currency} settlement coverage by analysis as-of date`}>
-                  {projectData.dailyClose.map((row) => (
-                    <div className={row.analysisAsOfDate === row.closeDate ? "is-incident" : ""} key={`${row.closeDate}-${row.analysisAsOfDate}`}>
-                      <time dateTime={row.analysisAsOfDate}>{formatDate(row.analysisAsOfDate)}</time>
-                      <span className="coverage-chart__track" aria-hidden="true">
-                        <i style={{ width: formatPercent(row.coverageBps) }} />
-                      </span>
-                      <strong>{formatPercent(row.coverageBps)}</strong>
+            <div className="steps">
+              <Step number="1" step={baselineStep}>
+                <figure className="coverage-chart">
+                  <figcaption>Coverage for the {formatDate(selectedScenario.date)} close in {selectedScenario.currency}</figcaption>
+                  <div className="coverage-chart__plot" role="img" aria-label={`${selectedScenario.currency} settlement coverage by analysis date`}>
+                    {projectData.dailyClose.map((row) => (
+                      <div className={row.analysisAsOfDate === row.closeDate ? "is-incident" : ""} key={`${row.closeDate}-${row.analysisAsOfDate}`}>
+                        <time dateTime={row.analysisAsOfDate}>{formatDate(row.analysisAsOfDate)}</time>
+                        <span className="coverage-chart__track" aria-hidden="true">
+                          <i style={{ width: formatPercent(row.coverageBps) }} />
+                        </span>
+                        <strong>{formatPercent(row.coverageBps)}</strong>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="figure-note">Same purchases, read again at later dates as settlements arrive.</p>
+                  <details className="reveal-details">
+                    <summary>Show the result table</summary>
+                    <div className="table-scroll" tabIndex={0} aria-label="Scrollable daily close result table">
+                      <table>
+                        <thead><tr><th>Purchase close</th><th>Read on</th><th>Currency</th><th>Eligible</th><th>Matched</th><th>Coverage</th><th>Overdue value</th><th>Fee delta</th></tr></thead>
+                        <tbody>
+                          {projectData.dailyClose.map((row) => (
+                            <tr key={`${row.closeDate}-${row.analysisAsOfDate}`}>
+                              <td>{formatDate(row.closeDate)}</td><td>{formatDate(row.analysisAsOfDate)}</td><td>{row.currency}</td>
+                              <td>{numberFormat.format(row.eligibleCount)}</td><td>{numberFormat.format(row.matchedCount)}</td>
+                              <td>{formatPercent(row.coverageBps)}</td><td>{formatMoney(row.overdueValue)}</td><td>{formatMoney(row.feeDelta)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  ))}
-                </div>
-                <div className="table-scroll" tabIndex={0} aria-label="Scrollable daily close result table">
-                  <table>
-                    <thead><tr><th>Purchase close</th><th>Analysis as of</th><th>Currency</th><th>Eligible</th><th>Matched</th><th>Coverage</th><th>Overdue value</th><th>Fee delta</th></tr></thead>
-                    <tbody>
-                      {projectData.dailyClose.map((row) => (
-                        <tr key={`${row.closeDate}-${row.analysisAsOfDate}`}>
-                          <td>{formatDate(row.closeDate)}</td><td>{formatDate(row.analysisAsOfDate)}</td><td>{row.currency}</td>
-                          <td>{numberFormat.format(row.eligibleCount)}</td><td>{numberFormat.format(row.matchedCount)}</td>
-                          <td>{formatPercent(row.coverageBps)}</td><td>{formatMoney(row.overdueValue)}</td><td>{formatMoney(row.feeDelta)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </figure>
-            </div>
-          </div>
-        </section>
+                  </details>
+                </figure>
+              </Step>
 
-        <section className="case-section section-shell" id="isolation" aria-labelledby="isolation-title">
-          <SectionHeading id="isolation-title" eyebrow={isolationStep.label} title={isolationStep.question}>
-            {isolationStep.reading}
-          </SectionHeading>
-          <QueryHeader queryId={isolationStep.queryId} model={isolationStep.model} />
+              <Step id="isolation" number="2" step={isolationStep}>
+                <figure className="segment-chart">
+                  <figcaption>Exceptions by merchant category, {selectedScenario.currency}</figcaption>
+                  <div className="segment-chart__plot">
+                    {projectData.segmentFindings.map((row) => (
+                      <div className={row.exceptionCount ? "has-exceptions" : ""} key={row.merchantCategory}>
+                        <span>{row.merchantCategory}</span>
+                        <span className="segment-chart__track" aria-hidden="true">
+                          <i style={{ width: formatPercent(row.exceptionRateBps) }} />
+                        </span>
+                        <strong>{numberFormat.format(row.exceptionCount)} of {numberFormat.format(row.eligibleCount)}</strong>
+                        <small>{row.exceptionCount ? titleCase(row.primaryReason) : "Clean"}</small>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="figure-note">Bar length is the share of that category&apos;s payments with an exception.</p>
+                </figure>
+              </Step>
 
-          <div className="query-layout query-layout--reverse">
-            <div className="table-scroll result-table" tabIndex={0} aria-label="Scrollable segment result table">
-              <table>
-                <thead><tr><th>Category</th><th>Currency</th><th>Eligible</th><th>Exceptions</th><th>Rate</th><th>Primary reason</th><th>Overdue value</th></tr></thead>
-                <tbody>
-                  {projectData.segmentFindings.map((row) => (
-                    <tr key={row.merchantCategory}>
-                      <th scope="row">{row.merchantCategory}</th><td>{row.currency}</td>
-                      <td>{numberFormat.format(row.eligibleCount)}</td><td>{numberFormat.format(row.exceptionCount)}</td>
-                      <td>{formatPercent(row.exceptionRateBps)}</td><td>{titleCase(row.primaryReason)}</td><td>{formatMoney(row.overdueValue)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <SqlBlock sql={isolationStep.sql} label={`${isolationStep.label} SQL`} />
-          </div>
-        </section>
-
-        <section className="case-section case-section--paper" id="classification" aria-labelledby="classification-title">
-          <div className="section-shell">
-            <SectionHeading id="classification-title" eyebrow={classificationStep.label} title={classificationStep.question}>
-              {classificationStep.reading}
-            </SectionHeading>
-            <QueryHeader queryId={classificationStep.queryId} model={classificationStep.model} />
-
-            <div className="classification-layout">
-              <div>
-                <ol className="precedence" aria-label="Primary exception label precedence">
-                  {projectData.primaryLabelPrecedence.map((label) => <li key={label}>{titleCase(label)}</li>)}
-                </ol>
-                <div className="exception-bars" aria-label={`Exception composition in ${selectedScenario.currency}`}>
-                  {projectData.exceptionSummary.map((reason) => (
-                    <div key={reason.id}>
-                      <span>{reason.label}</span>
-                      <span className="exception-bars__track" aria-hidden="true"><i style={{ width: `${Math.max((reason.count / exceptionMax) * 100, reason.count ? 3 : 0)}%` }} /></span>
-                      <strong>{numberFormat.format(reason.count)}</strong>
-                      <small>{formatMoney(reason.affectedValue)}</small>
-                    </div>
-                  ))}
-                </div>
-                {activeReasons.length > 0 && activeReasons.length < projectData.exceptionSummary.length ? (
-                  <p className="classification-note">
+              <Step id="classification" number="3" step={classificationStep}>
+                <figure className="exception-figure">
+                  <figcaption>Reasons behind the {numberFormat.format(flagTotal)} flags</figcaption>
+                  <div className="exception-bars" aria-label={`Exception composition in ${selectedScenario.currency}`}>
+                    {projectData.exceptionSummary.map((reason) => (
+                      <div key={reason.id} className={reason.count ? "" : "is-zero"}>
+                        <span>{reason.label}</span>
+                        <span className="exception-bars__track" aria-hidden="true"><i style={{ width: `${Math.max((reason.count / exceptionMax) * 100, reason.count ? 3 : 0)}%` }} /></span>
+                        <strong>{numberFormat.format(reason.count)}</strong>
+                        <small>{formatMoney(reason.affectedValue)}</small>
+                      </div>
+                    ))}
+                  </div>
+                  <ol className="precedence" aria-label="Queue order for the primary label">
+                    {projectData.primaryLabelPrecedence.map((label) => <li key={label}>{titleCase(label)}</li>)}
+                  </ol>
+                  <p className="figure-note">
                     {activeReasons.length === 1
-                      ? `This batch fails for one reason: ${activeReasons[0].label.toLowerCase()}. The rest of the queue carries no exceptions of any other kind.`
-                      : `This batch fails for ${activeReasons.length} of the ${projectData.exceptionSummary.length} tracked reasons. The zero rows are not missing data; the query found no matching payments.`}
+                      ? `One reason only: ${activeReasons[0].label.toLowerCase()}. The empty rows mean the query found nothing, not that data is missing.`
+                      : "A payment can sit in several rows. The queue order above only sorts; it never drops a flag."}
                   </p>
-                ) : null}
-              </div>
-              <div>
-                <SqlBlock sql={classificationStep.sql} label={`${classificationStep.label} SQL`} />
-                <p className="classification-note">A payment may occupy several bars. Precedence stabilizes sorting; it does not erase evidence.</p>
-              </div>
+                </figure>
+              </Step>
             </div>
 
             <article className="trace-card" aria-labelledby="trace-title">
               <div className="trace-card__heading">
-                <div><p className="kicker">Payment trace</p><h3 id="trace-title"><code>{projectData.trace.paymentId}</code></h3></div>
+                <div><p className="kicker">One payment, end to end</p><h3 id="trace-title"><code>{projectData.trace.paymentId}</code></h3></div>
                 <div className="tag-list">{projectData.trace.flags.map((flag) => <span key={flag}>{titleCase(flag)}</span>)}</div>
               </div>
               <div className="trace-grid">
@@ -363,15 +352,15 @@ export default function Home() {
                   <div><dt>Status</dt><dd>{titleCase(projectData.trace.status)}</dd></div>
                 </dl>
                 <dl>
-                  <div><dt>Effective term</dt><dd>{formatDate(projectData.trace.applicableTerm.validFrom)} to {projectData.trace.applicableTerm.validTo ? formatDate(projectData.trace.applicableTerm.validTo) : "Open ended"}</dd></div>
+                  <div><dt>Contract</dt><dd>{formatDate(projectData.trace.applicableTerm.validFrom)} to {projectData.trace.applicableTerm.validTo ? formatDate(projectData.trace.applicableTerm.validTo) : "open ended"}</dd></div>
                   <div><dt>Fee rate</dt><dd>{formatPercent(projectData.trace.applicableTerm.feeRateBps)}</dd></div>
                   <div><dt>Expected fee</dt><dd>{formatMoney(projectData.trace.expectedFee)}</dd></div>
                   <div><dt>Recorded fee</dt><dd>{formatMoney(projectData.trace.recordedFee)}</dd></div>
                 </dl>
                 <dl>
-                  <div><dt>SLA</dt><dd>{numberFormat.format(projectData.trace.applicableTerm.settlementSlaDays)} days</dd></div>
-                  <div><dt>Expected settlement</dt><dd>{formatDate(projectData.trace.expectedSettlementDate)}</dd></div>
-                  <div><dt>Recorded settlement</dt><dd>{formatOptionalDate(projectData.trace.recordedSettlementDate)}</dd></div>
+                  <div><dt>Deadline</dt><dd>{numberFormat.format(projectData.trace.applicableTerm.settlementSlaDays)} days</dd></div>
+                  <div><dt>Due</dt><dd>{formatDate(projectData.trace.expectedSettlementDate)}</dd></div>
+                  <div><dt>Settled</dt><dd>{formatOptionalDate(projectData.trace.recordedSettlementDate)}</dd></div>
                   <div><dt>Primary label</dt><dd>{titleCase(projectData.trace.primaryLabel)}</dd></div>
                 </dl>
               </div>
@@ -381,162 +370,118 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="case-section section-shell" id="recommendation" aria-labelledby="recommendation-title">
-          <SectionHeading id="recommendation-title" eyebrow="Finding and recommendation" title="Treat the batch first, then its residual payments">
-            The analytical result becomes an operational sequence without claiming that this synthetic incident occurred in a real payments system.
+        <section className="case-section section-shell" id="validation" aria-labelledby="validation-title">
+          <SectionHeading id="validation-title" index="04" title="What to do, and why the number holds">
+            The finding turns into one action with an owner. The same SQL runs on DuckDB and PostgreSQL, and quality checks run before anything is published.
           </SectionHeading>
+
           <div className="recommendation-grid">
             <article><span>Finding</span><p>{projectData.recommendation.finding}</p></article>
             <article><span>Action</span><p>{projectData.recommendation.action}</p></article>
             <dl>
+              <div><dt>Decision</dt><dd>{projectData.question.operationalDecision}</dd></div>
               <div><dt>Owner</dt><dd>{projectData.recommendation.owner}</dd></div>
-              <div><dt>Success metric</dt><dd><a href={`#metric-${successMetric.id}`}>{successMetric.label}</a></dd></div>
+              <div><dt>Watch</dt><dd><a href={`#metric-${successMetric.id}`}>{successMetric.label}</a></dd></div>
             </dl>
           </div>
-        </section>
 
-        <section className="case-section case-section--ink" id="validation" aria-labelledby="validation-title">
-          <div className="section-shell">
-            <SectionHeading id="validation-title" eyebrow="Validation and reproduction" title="The result is inspectable beyond the chart">
-              SQL runs through one model chain on both compatibility engines. Quality checks assert grain, effective-date joins, identities, and currency isolation before the snapshot payload is exported.
-            </SectionHeading>
+          <ArchitectureDiagram engines={projectData.reproduction.compatibilityEngines} models={projectData.models} />
 
-            <ArchitectureDiagram engines={projectData.reproduction.compatibilityEngines} models={projectData.models} />
-
-            <div className="validation-grid">
-              <article className="explain-panel">
-                <QueryHeader queryId={projectData.validation.explainQueryId} model={projectData.validation.explainModel} />
-                <h3>EXPLAIN ANALYZE</h3>
-                <SqlBlock sql={projectData.validation.explainSql} label="EXPLAIN ANALYZE example" />
-                <ol>{projectData.validation.plan.map((step) => <li key={step}>{step}</li>)}</ol>
-                <p>The checked-in payload records the inspection target without presenting one local run as a benchmark.</p>
-              </article>
-              <div className="quality-ledger">
-                {projectData.validation.qualityResults.map((result) => (
-                  <article key={result.checkId}>
-                    <span className={`quality-status quality-status--${result.status}`}>{result.status}</span>
-                    <h3>{result.label}</h3>
-                    <p>{result.detail}</p>
-                    <small>{numberFormat.format(result.checkedRows)} rows checked by <code>{result.checkId}</code></small>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            <div className="reproduction-grid">
-              <div>
-                <p className="kicker">Reproduce</p>
-                <ol className="command-list">
-                  {projectData.reproduction.commands.map((command) => <li key={command}><code>{command}</code></li>)}
-                </ol>
-              </div>
-              <div>
-                <p className="kicker">Limitations</p>
-                <ul className="limitation-list">
-                  {projectData.limitations.map((limitation) => <li key={limitation}>{limitation}</li>)}
+          <div className="proof-grid">
+            <div>
+              <p className="proof-grid__stat">
+                <strong>{qualityPassed} of {projectData.validation.qualityResults.length}</strong>
+                <span>quality checks pass on this snapshot</span>
+              </p>
+              <details className="reveal-details">
+                <summary>Show every check</summary>
+                <ul className="quality-list">
+                  {projectData.validation.qualityResults.map((result) => (
+                    <li key={result.checkId}>
+                      <span className={`quality-status quality-status--${result.status}`}>{result.status}</span>
+                      <span>{result.label}</span>
+                      <code>{result.checkId}</code>
+                    </li>
+                  ))}
                 </ul>
-              </div>
+              </details>
+              <details className="reveal-details">
+                <summary>Show the query plan target</summary>
+                <QueryHeader queryId={projectData.validation.explainQueryId} model={projectData.validation.explainModel} />
+                <pre className="sql-block" aria-label="EXPLAIN ANALYZE example" tabIndex={0}><code>{projectData.validation.explainSql}</code></pre>
+                <ol className="plain-list">{projectData.validation.plan.map((step) => <li key={step}>{step}</li>)}</ol>
+              </details>
             </div>
-          </div>
-        </section>
-
-        <section className="case-section section-shell" id="workbench" aria-labelledby="workbench-title">
-          <SectionHeading id="workbench-title" eyebrow="Operational handoff" title="The workbench, in full">
-            Everything above ran once, on paper. Below is the same reconciliation, live: filter the queue, open a payment, and see the SQL rule that flagged it.
-          </SectionHeading>
-
-          <div className="workbench-preview">
-            <div className="workbench-preview__head">
-              <div><span>{projectData.dataset.label}</span><strong>Settlement Operations Workbench</strong></div>
-              <code>{projectData.dataset.version}</code>
-              <code>Build {projectData.build.commitSha}</code>
-              <code>{projectData.build.runtimeLabel}</code>
-            </div>
-            <div className="workbench-preview__evidence">
-              <dl className="workbench-preview__trace">
-                <div><dt>Scenario</dt><dd>{selectedScenario.label}</dd></div>
-                <div><dt>Payment</dt><dd><code>{projectData.trace.paymentId}</code></dd></div>
-                <div><dt>Primary label</dt><dd>{titleCase(projectData.trace.primaryLabel)}</dd></div>
-                <div><dt>Lineage</dt><dd><code>{projectData.trace.queryId}</code></dd></div>
-              </dl>
-              <ol className="journey-list">
-                {projectData.workbench.journey.map((step) => <li key={step}>{step}</li>)}
+            <div>
+              <p className="kicker">Reproduce</p>
+              <ol className="command-list">
+                {projectData.reproduction.commands.map((command) => <li key={command}><code>{command}</code></li>)}
               </ol>
             </div>
-          </div>
-
-          <div className="handoff">
             <div>
-              <p className="kicker">Deep-linked evidence</p>
-              <p>Open <code>{projectData.trace.paymentId}</code> inside <code>{projectData.trace.scenarioId}</code>. Review notes and resolution actions in the demo are session-only.</p>
-              <small>{projectData.workbench.sleepDisclosure}</small>
+              <p className="kicker">Limits</p>
+              <ul className="plain-list">
+                {projectData.limitations.map((limitation) => <li key={limitation}>{limitation}</li>)}
+              </ul>
             </div>
-            <a className="button button--primary" href={workbenchUrl} target="_blank" rel="noreferrer">Trace this payment <span aria-hidden="true">↗</span></a>
           </div>
         </section>
 
         <section className="case-section case-section--ink" id="ask" aria-labelledby="ask-title">
           <div className="section-shell">
-            <SectionHeading id="ask-title" eyebrow="Ask Claude" title="Ask why a payment failed, in plain English">
-              The query registry behind the workbench is also published as a read-only MCP server, so Claude can answer questions about this snapshot directly. It can list the registered queries, run one, or trace a single payment. It can&apos;t write SQL.
+            <SectionHeading id="ask-title" index="05" title="Trace it yourself, or ask Claude">
+              The analysis above ran once. The same query registry also powers a live workbench and a read-only MCP server, so you can check any payment in the four scripted closes.
             </SectionHeading>
 
-            <div className="ask-layout">
-              <McpSession ask={projectData.ask} />
+            <div className="use-grid">
+              <div className="use-panel" id="workbench">
+                <p className="kicker">Workbench</p>
+                <h3>Open payment <code>{projectData.trace.paymentId}</code> in the workbench</h3>
+                <p>Filter the queue, open a payment and read the rule that flagged it. Review notes are session-only and never change the snapshot.</p>
+                <a className="button button--primary" href={workbenchUrl} target="_blank" rel="noreferrer">Trace this payment <span aria-hidden="true">↗</span></a>
+                <small>{projectData.workbench.sleepDisclosure}</small>
+              </div>
 
-              <div className="mcp-connect">
+              <div className="use-panel use-panel--ask">
+                <p className="kicker">Ask Claude</p>
+                <h3>Plain-English questions, answered through the same queries</h3>
                 <div className="mcp-endpoint">
-                  <p className="kicker">Public endpoint</p>
                   <div className="mcp-endpoint__field">
                     <code id="mcp-endpoint-url">{publicConfig.mcpUrl}</code>
                     <button type="button" className="mcp-copy" data-copy="mcp-endpoint-url" hidden>Copy</button>
                   </div>
                   <p className="mcp-endpoint__status" aria-live="polite" data-copy-status />
                 </div>
-
-                <dl className="mcp-clients">
-                  <div>
-                    <dt>Claude.ai and Claude Desktop</dt>
-                    <dd>Settings, Connectors, Add custom connector. Paste the endpoint above.</dd>
-                  </div>
-                  <div>
-                    <dt>Claude Code</dt>
-                    <dd><code>claude mcp add --transport http settlement-gap {publicConfig.mcpUrl}</code></dd>
-                  </div>
-                  <div>
-                    <dt>Local, no network</dt>
-                    <dd><code>cd mcp_server &amp;&amp; uv run settlement-gap-mcp</code></dd>
-                  </div>
-                </dl>
-
-                <table className="mcp-tools">
-                  <caption className="visually-hidden">Tools the server exposes</caption>
-                  <thead><tr><th scope="col">Tool</th><th scope="col">What it returns</th></tr></thead>
-                  <tbody>
-                    {projectData.ask.tools.map((tool) => (
-                      <tr key={tool.name}><th scope="row"><code>{tool.name}</code></th><td>{tool.purpose}</td></tr>
-                    ))}
-                  </tbody>
-                </table>
-
-                <ul className="mcp-guarantees">
-                  <li>Every tool goes through the same validated query gate as the workbench.</li>
-                  <li>Raw SQL, unknown query IDs and extra arguments are refused before anything runs.</li>
-                  <li>Each call, allowed or refused, leaves one audit line with its parameters and row count.</li>
-                </ul>
-                <p className="mcp-scope">It runs on a free tier and sleeps when nobody is using it, so the first call can take 30 to 60 seconds.</p>
+                <p className="mcp-tool-line">
+                  Three read-only tools:{" "}
+                  {projectData.ask.tools.map((tool, index) => (
+                    <span key={tool.name}>{index ? ", " : ""}<code>{tool.name}</code></span>
+                  ))}. None of them accepts SQL.
+                </p>
+                <details className="reveal-details">
+                  <summary>How to connect</summary>
+                  <dl className="mcp-clients">
+                    <div><dt>Claude.ai and Claude Desktop</dt><dd>Settings, Connectors, Add custom connector, then paste the endpoint.</dd></div>
+                    <div><dt>Claude Code</dt><dd><code>claude mcp add --transport http settlement-gap {publicConfig.mcpUrl}</code></dd></div>
+                    <div><dt>Local, no network</dt><dd><code>cd mcp_server &amp;&amp; uv run settlement-gap-mcp</code></dd></div>
+                  </dl>
+                  <table className="mcp-tools">
+                    <caption className="visually-hidden">Tools the server exposes</caption>
+                    <thead><tr><th scope="col">Tool</th><th scope="col">What it returns</th></tr></thead>
+                    <tbody>
+                      {projectData.ask.tools.map((tool) => (
+                        <tr key={tool.name}><th scope="row"><code>{tool.name}</code></th><td>{tool.purpose}</td></tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </details>
+                <p className="mcp-scope">The free server sleeps when idle, so the first call can take 30 to 60 seconds.</p>
               </div>
             </div>
 
+            <McpSession ask={projectData.ask} />
             <McpFlow />
           </div>
-        </section>
-
-        <section className="final-cta section-shell" aria-labelledby="artifacts-title">
-          <Image src={assetUrl("/brand/payment-observatory-mark-mono.svg")} width={74} height={74} alt="" />
-          <div><p className="kicker">Repository evidence</p><h2 id="artifacts-title">Challenge the SQL, not a screenshot</h2></div>
-          <p>Inspect the canonical models, deterministic scenario manifest, engine parity tests, and generated snapshot payload in the repository.</p>
-          <a className="button button--light" href={publicConfig.repositoryUrl} target="_blank" rel="noreferrer">View source on GitHub <span aria-hidden="true">↗</span></a>
         </section>
       </main>
 
@@ -546,10 +491,12 @@ export default function Home() {
           <span>{projectData.dataset.label}</span>
           <span>{projectData.dataset.version}</span>
           <span>As of {formatDate(projectData.dataset.asOfDate)}</span>
-          <span>Build {projectData.build.commitSha}</span>
-          <span>{projectData.build.runtimeLabel}</span>
+          <span>Build <code>{projectData.build.commitSha}</code></span>
         </p>
-        <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+        <div className="site-footer__links">
+          <a href={publicConfig.repositoryUrl} target="_blank" rel="noreferrer">Source on GitHub <span aria-hidden="true">↗</span></a>
+          <a href="#question">Back to top <span aria-hidden="true">↑</span></a>
+        </div>
       </footer>
     </>
   );

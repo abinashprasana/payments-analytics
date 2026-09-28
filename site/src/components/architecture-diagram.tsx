@@ -44,7 +44,7 @@ export function ArchitectureDiagram({
         </div>
       </div>
       <figcaption>
-        The engines execute the same SQL chain. Presentation code consumes model results instead of redefining business rules.
+        Both engines run the same SQL files. The site, the workbench and the MCP server only format what those models return.
       </figcaption>
     </figure>
   );

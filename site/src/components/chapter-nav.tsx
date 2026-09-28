@@ -34,21 +34,29 @@ const CHAPTER_NAV_SCRIPT = `
         if (link.hash) select(link.hash.slice(1));
       });
     });
+    // Chapters are long, so a ratio favours whichever short neighbour peeks
+    // into the band. Track how many pixels of each chapter sit in the band
+    // instead, remembering sections the latest callback did not report.
+    const inBand = new Map();
     const observer = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible?.target?.id) select(visible.target.id);
-    }, { rootMargin: '-18% 0px -66%', threshold: [0, 0.1, 0.35, 0.65] });
+      entries.forEach((entry) => {
+        inBand.set(entry.target.id, entry.isIntersecting ? entry.intersectionRect.height : 0);
+      });
+      let best = null;
+      inBand.forEach((height, id) => {
+        if (height > 0 && (!best || height > best.height)) best = { id, height };
+      });
+      if (best) select(best.id);
+    }, { rootMargin: '-18% 0px -66%', threshold: [0, 0.01, 0.25, 0.5, 0.75, 1] });
     sections.forEach((section) => observer.observe(section));
     window.addEventListener('hashchange', selectFragment);
     requestAnimationFrame(selectFragment);
     window.setTimeout(selectFragment, 250);
   };
 
-  const REVEAL_SELECTOR = '.case-section, .trace-card, .workbench-preview, .handoff, ' +
-    '.er-figure, .architecture-figure, .metric-ledger, .quality-ledger, .final-cta, ' +
-    '.mcp-session, .mcp-flow';
+  const REVEAL_SELECTOR = '.case-section, .step, .trace-card, .use-panel, ' +
+    '.er-figure, .architecture-figure, .metric-ledger, .scenario-timeline, ' +
+    '.recommendation-grid, .mcp-session, .mcp-flow';
 
   const bindReveal = () => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -62,11 +70,17 @@ const CHAPTER_NAV_SCRIPT = `
       // inline width style; this only layers a scaleX grow on top, so a
       // no-JS or reduced-motion visitor still sees the correct bar at full
       // size immediately -- nothing here can leave a bar stuck invisible.
-      '.coverage-chart__track i,.exception-bars__track i{' +
+      '.coverage-chart__track i,.exception-bars__track i,.segment-chart__track i{' +
       'transform:scaleX(0);transform-origin:left;' +
-      'transition:transform .7s cubic-bezier(.2,.6,.2,1)}' +
+      'transition:transform .7s cubic-bezier(.2,.8,.2,1)}' +
       '[data-reveal].is-revealed .coverage-chart__track i,' +
-      '[data-reveal].is-revealed .exception-bars__track i{transform:scaleX(1)}' +
+      '[data-reveal].is-revealed .exception-bars__track i,' +
+      '[data-reveal].is-revealed .segment-chart__track i{transform:scaleX(1)}' +
+      // Bars inside one chart grow in reading order, 60ms apart.
+      '[data-reveal] :is(.coverage-chart__plot,.segment-chart__plot,.exception-bars)>div:nth-child(2) i{transition-delay:60ms}' +
+      '[data-reveal] :is(.coverage-chart__plot,.segment-chart__plot,.exception-bars)>div:nth-child(3) i{transition-delay:120ms}' +
+      '[data-reveal] :is(.coverage-chart__plot,.segment-chart__plot,.exception-bars)>div:nth-child(4) i{transition-delay:180ms}' +
+      '[data-reveal] :is(.coverage-chart__plot,.segment-chart__plot,.exception-bars)>div:nth-child(n+5) i{transition-delay:240ms}' +
       // Connector paths draw on reveal. Default state (before this rule
       // exists) is a plain solid stroke with zero dashoffset, i.e. fully
       // drawn -- so this can only ever animate a reveal, never hide a

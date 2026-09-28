@@ -44,7 +44,7 @@ export function ErDiagram({
         ))}
       </div>
       <figcaption>
-        The event spine, effective merchant term, and recorded settlement remain separate evidence before the reconciliation models join them.
+        Payments, the contract that applied to them, and the money that arrived stay in separate tables until the reconciliation models join them.
       </figcaption>
     </figure>
   );

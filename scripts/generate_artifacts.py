@@ -47,8 +47,8 @@ REASON_NARRATIVE = {
         "count_field": "late_count",
         "reason_noun": "late-settlement",
         "outcome": (
-            "The {count} affected payments settled after their applicable SLA "
-            "and are now flagged as late exceptions."
+            "{count} of them settled after their deadline and are flagged "
+            "as late exceptions."
         ),
         "isolation": "every one of them is late",
         "finding_lede": (
@@ -64,9 +64,8 @@ REASON_NARRATIVE = {
         "count_field": "fee_mismatch_count",
         "reason_noun": "fee-mismatch",
         "outcome": (
-            "The {count} affected payments settled on time and on gross amount, "
-            "but their recorded processing fee no longer matches the effective "
-            "merchant term, so they are flagged as fee-mismatch exceptions."
+            "{count} of them still carry fee-mismatch exceptions: the recorded "
+            "fee kept the old schedule after the merchant's new contract began."
         ),
         "isolation": "every one of them carries a fee mismatch",
         "finding_lede": (
@@ -83,8 +82,8 @@ REASON_NARRATIVE = {
         "count_field": "missing_count",
         "reason_noun": "missing-settlement",
         "outcome": (
-            "The {count} affected payments never received settlement evidence "
-            "within their applicable SLA and remain flagged as missing exceptions."
+            "{count} of them never settled within their deadline and are "
+            "flagged as missing exceptions."
         ),
         "isolation": "every one of them is missing settlement evidence",
         "finding_lede": (
@@ -343,10 +342,37 @@ def _trace_payload(record: dict[str, Any], scenario_id: str) -> dict[str, Any]:
         if reason
     ]
     days_overdue = _integer(record["days_overdue"])
-    why = (
-        f"The settlement arrived {days_overdue} calendar days after the effective "
-        "merchant SLA. Currency, amount identity, and the applicable fee still "
-        "match, so late remains the only flag."
+
+    def money(minor_units: Any) -> str:
+        return f"{currency} {_integer(minor_units) / 100:,.2f}"
+
+    # Written from the payment's own trace fields, per primary reason, so the
+    # sentence can never describe a different failure than the flags show.
+    primary = str(record["primary_reason"])
+    if primary == "fee_mismatch":
+        why = (
+            f"The recorded fee was {money(record['recorded_fee_minor_units'])}. The "
+            f"contract in force that day sets {_integer(record['fee_rate_bps'])} bps, "
+            f"an expected fee of {money(record['expected_fee_minor_units'])}. Amount "
+            "and currency still match."
+        )
+    elif primary == "late":
+        why = (
+            f"The settlement arrived {days_overdue} calendar days after its "
+            "deadline. Amount, currency and fee still match."
+        )
+    elif primary == "missing":
+        why = (
+            "No settlement has arrived. It was due on "
+            f"{_date(record['expected_settlement_date'])}, {days_overdue} days "
+            "before the as-of date."
+        )
+    else:
+        why = f"The {primary.replace('_', ' ')} rule fired for this payment."
+    others = [flag.replace("_", " ") for flag in flags if flag != primary]
+    why += (
+        f" Other flags: {', '.join(others)}." if others
+        else f" {primary.replace('_', ' ').capitalize()} is the only flag."
     )
     return {
         "paymentId": str(_integer(record["payment_id"])),
@@ -490,14 +516,10 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
             "navigation": [
                 {"id": "question", "label": "Answer"},
                 {"id": "contract", "label": "Contract"},
-                {"id": "model", "label": "Model"},
-                {"id": "baseline", "label": "Baseline"},
-                {"id": "isolation", "label": "Root cause"},
-                {"id": "classification", "label": "Queue"},
-                {"id": "recommendation", "label": "Decision"},
-                {"id": "validation", "label": "Validation"},
-                {"id": "workbench", "label": "Workbench"},
-                {"id": "ask", "label": "Ask Claude"},
+                {"id": "model", "label": "Data"},
+                {"id": "baseline", "label": "Investigation"},
+                {"id": "validation", "label": "Proof"},
+                {"id": "ask", "label": "Use it"},
             ],
             "question": {
                 "stakeholder": (
@@ -506,16 +528,15 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                     f"{narrative['reason_noun']} exception after the close?"
                 ),
                 "conciseAnswer": (
-                    f"At the {investigation_as_of} checkpoint, {incident_matched} of "
-                    f"{incident_eligible} eligible {selected['defaultCurrency']} "
-                    f"purchases from the {selected['closeDate']} close had a "
-                    f"settlement that balanced on amount. {selected['description']} "
+                    f"By {investigation_as_of}, {incident_matched} of "
+                    f"{incident_eligible} {selected['defaultCurrency']} purchases "
+                    f"from the {selected['closeDate']} close had settled for the "
+                    "right gross amount. "
                     + narrative["outcome"].format(count=exception_count)
                 ),
                 "operationalDecision": (
-                    "Reconcile the injected batch as one operational event, then "
-                    "route any residual payment-level exceptions using the stable "
-                    "queue precedence."
+                    "Fix the batch once, as one event. Anything left over goes "
+                    "through the exception queue in its usual order."
                 ),
             },
             "metricDefinitions": metric_definitions,
@@ -544,14 +565,14 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                 {
                     "id": "baseline",
                     "label": "Baseline daily close",
-                    "question": "Did settlement coverage break inside one currency close?",
+                    "question": "Did the close balance inside its own currency?",
                     "queryId": "close_summary",
                     "model": "mart_daily_close",
                     "sql": SQL_EXCERPTS["close_summary"],
                     "reading": (
                         f"At the {investigation_as_of} observation cut, the selected "
                         f"close was {incident_matched}/{incident_eligible} matched. "
-                        "The final snapshot preserves the injected exception rather than resolving it."
+                        "Coverage recovers, yet the exceptions stay in the final snapshot."
                     ),
                 },
                 {
@@ -575,13 +596,13 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                 {
                     "id": "classification",
                     "label": "Exception classification",
-                    "question": "What should operations inspect first without losing secondary reasons?",
+                    "question": "What does operations look at first?",
                     "queryId": "exception_queue",
                     "model": "mart_exception_queue",
                     "sql": SQL_EXCERPTS["exception_queue"],
                     "reading": (
-                        "Independent Boolean flags retain every true reason. The "
-                        "primary label exists only to make queue ordering stable."
+                        "Each payment keeps every flag that fired. The primary "
+                        "label only decides where it sits in the queue."
                     ),
                 },
             ],
@@ -649,10 +670,10 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                     {"id": "catalog", "label": "Catalog", "purpose": "Verify metric contracts, grains, quality, and build identity."},
                 ],
                 "journey": [
-                    "Identify the GBP close where evidence is incomplete.",
-                    "Filter the exception queue to the delayed Travel batch.",
-                    "Trace one payment and inspect the effective SQL rule.",
-                    "Export the filtered evidence without changing the snapshot.",
+                    f"Open the {selected['defaultCurrency']} close on {selected['closeDate']}.",
+                    f"Filter the exception queue to the {selected['focusCategory']} batch.",
+                    "Trace one payment and read the SQL rule that flagged it.",
+                    "Export the filtered evidence. The snapshot never changes.",
                 ],
                 "sleepDisclosure": (
                     "The free Streamlit Community Cloud app may need to wake after "

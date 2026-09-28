@@ -10,20 +10,16 @@ It is not a tour of application views. It explains the metric contract, follows 
 
 ## Narrative order
 
-The route has ten anchored chapters:
+The route has six anchored chapters (reduced from ten on 2026-09-28 because the page read as crowded):
 
-1. Stakeholder question and concise answer.
-2. Metric contract: population, grain, currency boundary, and tolerance.
-3. Relational model and synthetic-scenario disclosure.
-4. Baseline daily-close SQL.
-5. Segment isolation and root-cause SQL.
-6. Exception classification and payment evidence.
-7. Finding and operational recommendation.
-8. Validation, `EXPLAIN ANALYZE` inspection target, limitations, and reproduction.
-9. One workbench preview and one payment-trace deep link.
-10. Ask Claude: one replayed `trace_payment` call, the public read-only MCP endpoint, and the request path. The replay is a typographic call log in the ledger language, never mock application chrome, and its result fields are checked against the live tool by `mcp_server/tests/test_payload_parity.py`.
+1. **Answer** (`#question`): the stakeholder question and the concise answer, shown once, in the hero.
+2. **Contract** (`#contract`): one ledger row per metric; population, currency, model and tolerance open on demand.
+3. **Data** (`#model`): the relational model, then the four scripted closes on one date axis with a single synthetic disclosure.
+4. **Investigation** (`#baseline`): three steps (`close_summary`, `segment_isolation` at `#isolation`, `exception_queue` at `#classification`). Each step pairs its argument with a figure that sticks beside it; SQL and full result tables open on demand. One payment trace closes the chapter.
+5. **Proof** (`#validation`): finding, action, decision and owner; the model chain; the quality-check count with the full list, the `EXPLAIN ANALYZE` target, reproduction commands and limits.
+6. **Use it** (`#ask`): the workbench deep link (`#workbench`) beside the MCP endpoint, then the replayed `trace_payment` call and the request path. The replay is a typographic call log in the ledger language, never mock application chrome, and its result fields are checked against the live tool by `mcp_server/tests/test_payload_parity.py`.
 
-Chapter navigation follows that argument. Do not add the workbench’s four views as parallel case-study chapters.
+Chapter navigation follows that argument. Do not add the workbench’s four views as parallel case-study chapters. Evidence that is useful but not needed to follow the argument (SQL, full tables, check lists, client setup) lives in a `<details>` disclosure, never in a new section.
 
 ## Evidence contract
 
@@ -43,12 +39,12 @@ Chapter navigation follows that argument. Do not add the workbench’s four view
 The page should feel like a restrained analytical dossier: editorial, evidence-led, and materially connected to SQL work.
 
 - Visual variance: 6/10. Use asymmetry, captions, ruled ledgers, and dense evidence blocks to create character.
-- Motion: 3/10. Motion exists only for focus, navigation, or state acknowledgement.
+- Motion: 5/10. Motion shows order, state or the direction of data: sections and ledgers reveal once, bars grow from zero in reading order, diagram connectors draw in, the scenario axis draws before its closes land, step rails fill as the reader scrolls, the MCP call steps through its log, and the refusal branch lights once. It is CSS or the authored inline script only, uses `--ease-out` or `--ease-state` (no bounce), animates only transform and opacity, and every effect has a static final state that `prefers-reduced-motion: reduce` shows immediately.
 - Density: 5/10. Preserve a readable long-form rhythm while allowing result tables and SQL to feel technical.
 - Keep the mineral midnight canvas, pale paper sections, copper emphasis, and sea-glass analytical signals.
 - Avoid generic fintech gradients, glass panels, floating card mosaics, oversized ornamental KPIs, stock banking imagery, coins, fake browser chrome, and decorative dashboards.
 
-The hero leads with the question and answer, not an illustration or a screenshot. The workbench preview is rendered from payload evidence; it is not a second dashboard.
+The hero leads with the question and answer, not an illustration or a screenshot. The workbench appears as one panel with one deep link; there is no rendered preview of it.
 
 ## Canonical tokens
 
@@ -105,7 +101,7 @@ Show every true reason while explaining that primary-label precedence is only a 
 
 ### Workbench handoff
 
-The final preview may reuse only payload evidence and journey text. The single primary action opens a deep link in the form:
+The workbench panel in the last chapter may reuse only payload evidence. Its single primary action opens a deep link in the form:
 
 `?view=trace&scenario=<scenario_id>&payment_id=<id>`
 
