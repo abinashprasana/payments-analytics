@@ -46,13 +46,15 @@ REASON_NARRATIVE = {
     "late": {
         "count_field": "late_count",
         "reason_noun": "late-settlement",
+        "reason_label": "late payments",
         "outcome": (
             "{count} of them settled after their deadline and are flagged "
             "as late exceptions."
         ),
         "finding_lede": (
-            "went through the settlement partner that stopped processing. "
-            "Amounts, currency and fees still agree; only the timing broke"
+            "went through the settlement partner that stopped processing, and "
+            "the rest are everyday holds. Amounts, currency and fees still "
+            "agree; only the timing broke"
         ),
         "action": (
             "Chase the partner for the stalled batch, keep the late flags for "
@@ -62,13 +64,16 @@ REASON_NARRATIVE = {
     "fee_mismatch": {
         "count_field": "fee_mismatch_count",
         "reason_noun": "fee-mismatch",
+        "reason_label": "fee mismatches",
         "outcome": (
-            "{count} of them still carry fee-mismatch exceptions: the recorded "
-            "fee kept the old schedule after the merchant's new contract began."
+            "{count} of them still carry fee-mismatch exceptions, most because "
+            "the recorded fee kept the old schedule after the merchant's new "
+            "contract began."
         ),
         "finding_lede": (
             "belong to merchants repriced on 1 Oct whose new rate never reached "
-            "the processor's fee table. Amounts and currency still agree"
+            "the processor's fee table, and the rest are everyday cross-border "
+            "fee pass-throughs. Amounts and currency still agree"
         ),
         "action": (
             "Update the processor's fee table, recompute the fee on every "
@@ -79,12 +84,14 @@ REASON_NARRATIVE = {
     "missing": {
         "count_field": "missing_count",
         "reason_noun": "missing-settlement",
+        "reason_label": "missing settlements",
         "outcome": (
             "{count} of them never settled within their deadline and are "
             "flagged as missing exceptions."
         ),
         "finding_lede": (
-            "were in one acquirer's settlement file, and that file never arrived"
+            "were in one acquirer's settlement file, and that file never "
+            "arrived; the rest are everyday compliance holds"
         ),
         "action": (
             "Ask the acquirer to resend the file, confirm whether the money is "
@@ -163,13 +170,13 @@ def _scenario_copy(item: dict[str, Any]) -> dict[str, Any]:
     if count:
         expected = (
             f"{count} payments on this {item['defaultCurrency']} close classify "
-            f"as {readable_reason}, spread across categories and led by "
-            f"{item['focusCategory']}."
+            f"as {readable_reason}, most of them from the incident, spread "
+            f"across categories and led by {item['focusCategory']}."
         )
     else:
         expected = (
-            "No incident. Background disputes and data errors can still "
-            "appear at their usual rate."
+            "No incident. The close still carries the everyday mix of "
+            "exceptions any day has."
         )
     return {
         "id": item["scenarioId"],
@@ -446,7 +453,9 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
         )
         if close.empty or queue.empty:
             raise RuntimeError("Selected scenario did not produce its expected evidence")
-        trace_id = _integer(queue.iloc[0]["payment_id"])
+        expected_reason = selected["expectedSignal"]["primaryReason"]
+        incident_rows = queue[queue["primary_reason"] == expected_reason]
+        trace_id = _integer((incident_rows if not incident_rows.empty else queue).iloc[0]["payment_id"])
         trace = engine.query(
             "payment_trace",
             {"scenario": SELECTED_SCENARIO_ID, "payment_id": trace_id},
@@ -458,23 +467,35 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
         metrics = engine.query("catalog_metrics")
         record_counts, first_date, last_date = _record_counts(engine)
         close_record = close.iloc[0].to_dict()
+        count_field = narrative["count_field"]
         hit_segments = sorted(
-            (row for row in segments.to_dict("records") if _integer(row["exception_count"])),
-            key=lambda row: (-_integer(row["exception_count"]), str(row["merchant_category"])),
+            (row for row in segments.to_dict("records") if _integer(row[count_field])),
+            key=lambda row: (-_integer(row[count_field]), str(row["merchant_category"])),
         )
-        close_exceptions = _integer(close_record["exception_count"])
+        with_everyday = sum(
+            1 for row in segments.to_dict("records")
+            if _integer(row["exception_count"]) > _integer(row[count_field])
+        )
         leader, *runners = hit_segments
         spread = (
-            f"{leader['merchant_category']} carries {_integer(leader['exception_count'])} "
-            f"of the {close_exceptions} exceptions"
+            f"{leader['merchant_category']} carries {_integer(leader[count_field])} "
+            f"of the {_integer(close_record[count_field])} {narrative['reason_label']}"
             + (
                 ", then " + ", ".join(
-                    f"{row['merchant_category']} ({_integer(row['exception_count'])})"
+                    f"{row['merchant_category']} ({_integer(row[count_field])})"
                     for row in runners[:3]
                 )
                 if runners else ""
             )
             + "."
+        )
+        everyday = [
+            (reason, _integer(close_record[f"{reason}_count"]))
+            for reason in PRIMARY_PRECEDENCE
+            if reason != expected_reason and _integer(close_record[f"{reason}_count"])
+        ]
+        everyday_text = ", ".join(
+            f"{reason.replace('_', ' ')} ({count})" for reason, count in everyday
         )
         investigation_incident = next(
             row for row in daily.to_dict("records")
@@ -596,8 +617,11 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                     "model": "mart_category_health",
                     "sql": SQL_EXCERPTS["segment_isolation"],
                     "reading": (
-                        f"{spread} {len(hit_segments)} categories are hit, so this is "
-                        "one cause reaching many merchants, and no category is at fault."
+                        f"{spread} The {narrative['reason_label']} reach "
+                        f"{len(hit_segments)} of {len(segments)} categories, so this is "
+                        "one cause reaching many merchants, and no category is at fault. "
+                        f"{with_everyday} of {len(segments)} categories also carry "
+                        "everyday exceptions of other kinds."
                     ),
                 },
                 {
@@ -608,8 +632,11 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                     "model": "mart_exception_queue",
                     "sql": SQL_EXCERPTS["exception_queue"],
                     "reading": (
-                        "Each payment keeps every flag that fired. The primary "
-                        "label only decides where it sits in the queue."
+                        f"{_integer(close_record[count_field])} "
+                        f"{narrative['reason_label']} lead the close. The rest is the "
+                        f"everyday mix any close carries: {everyday_text}. Each payment "
+                        "keeps every flag that fired; the primary label only decides "
+                        "where it sits in the queue."
                     ),
                 },
             ],
@@ -621,9 +648,10 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
             "ask": _ask_payload(trace.iloc[0].to_dict(), SELECTED_SCENARIO_ID),
             "recommendation": {
                 "finding": (
-                    f"{exception_count} of the {selected['defaultCurrency']} payments "
-                    f"on the {selected['closeDate']} close, across {len(hit_segments)} "
-                    "categories, " + narrative["finding_lede"] + "."
+                    f"{exception_count} {selected['defaultCurrency']} payments on the "
+                    f"{selected['closeDate']} close carry {narrative['reason_noun']} "
+                    f"exceptions, across {len(hit_segments)} categories. Most "
+                    + narrative["finding_lede"] + "."
                 ),
                 "action": narrative["action"],
                 "owner": "Settlement operations",

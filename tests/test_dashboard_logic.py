@@ -173,14 +173,14 @@ class AnalyticsEngineContractTests(unittest.TestCase):
 
     def test_normal_close_has_no_incident(self) -> None:
         row = self.close_row("normal")
-        for column in ("missing_count", "late_count", "fee_mismatch_count"):
-            self.assertEqual(int(row[column]), 0, column)
-        self.assertEqual(int(row["overdue_minor_units"]), 0)
-        # Only background errors keep a payment from matching on this close.
-        self.assertEqual(
-            int(row["eligible_count"]) - int(row["matched_count"]),
-            int(row["currency_mismatch_count"]) + int(row["amount_mismatch_count"]),
-        )
+        # No incident, only the everyday mix: a small share of the close, with
+        # no reason making up half of it.
+        self.assertLess(int(row["exception_count"]), 0.1 * int(row["eligible_count"]))
+        for column in (
+            "missing_count", "currency_mismatch_count", "amount_mismatch_count",
+            "fee_mismatch_count", "late_count", "disputed_count",
+        ):
+            self.assertLess(int(row[column]), 0.5 * int(row["exception_count"]), column)
 
     def test_delayed_batch_changes_from_open_gap_to_late_evidence(self) -> None:
         scenario = self.scenarios["delayed_travel_gbp"]
@@ -193,7 +193,13 @@ class AnalyticsEngineContractTests(unittest.TestCase):
         self.assertEqual(int(early["missing_count"]), 0)
         self.assertLess(int(early["matched_count"]), int(final["matched_count"]))
         self.assertEqual(int(final["late_count"]), expected)
-        self.assertEqual(int(final["matched_count"]), int(final["eligible_count"]))
+        # Late payments still settle for the right amount; only everyday
+        # holds, short payments and misrouted payouts stay unmatched.
+        self.assertEqual(
+            int(final["eligible_count"]) - int(final["matched_count"]),
+            int(final["missing_count"]) + int(final["currency_mismatch_count"])
+            + int(final["amount_mismatch_count"]),
+        )
 
     def test_fee_and_missing_scenarios_match_the_manifest_signals(self) -> None:
         fee = self.close_row("stale_electronics_eur_fee")

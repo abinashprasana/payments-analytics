@@ -1,6 +1,6 @@
 # MCP query surface (phase 1)
 
-This file records what a model can actually reach through the three MCP tools, read from the code on branch `mcp-eval`, updated for dataset `settlement-gap-v4.0.0`. The golden questions in phase 2 are written against this list and nothing else.
+This file records what a model can actually reach through the three MCP tools, read from the code on branch `mcp-eval`, updated for dataset `settlement-gap-v5.0.0`. The golden questions in phase 2 are written against this list and nothing else.
 
 ## Sources read
 
@@ -71,8 +71,8 @@ Approved by the owner on 2026-09-28: over MCP, `scenario_options` returns only `
 2. There is no merchant health or category health query ID. The marts exist in SQL, but the registry does not expose them. Category questions map to `segment_isolation`. Merchant questions can only map to `exception_queue`, which lists merchant ID and name per exceptional payment.
 3. Every data query covers one close. A scenario fixes both the close date and the currency, so a "per currency" question has exactly four reachable answers, and AUD has no scenario at all. `start_date` and `end_date` can only narrow that single date.
 4. A conflicting filter used to return an empty result with no error. `close_summary` with `scenario=delayed_travel_gbp, currency=EUR` returned 0 rows, and so did a date range that excluded the close date, which a model could read as "nothing happened". With the owner's approval (2026-09-28) the engine now rejects both with an error that names the scenario's currency or close date. The tool schemas and `tool_manifest.json` did not change.
-5. `trace_payment` covers only payments in the four scenario closes (300 payments on dataset v4). Any other valid payment ID is refused with a message naming the scenario closes.
-6. The README example previously used payment 240. On dataset v4 the equivalent missing CAD payment is 238833, and the README uses it.
+5. `trace_payment` covers only payments in the four scenario closes (1,006 payments on dataset v5). Any other valid payment ID is refused with a message naming the scenario closes.
+6. The README example previously used payment 240. On dataset v5 the equivalent missing CAD payment is 560942, and the README uses it.
 
 ## Golden record schema (proposed for phase 2)
 

@@ -60,7 +60,7 @@ class CaseStudyArtifactTests(unittest.TestCase):
         self.assertEqual(
             self.payload["dataset"]["window"],
             {
-                "firstTransactionDate": "2022-01-01",
+                "firstTransactionDate": "2023-01-01",
                 "lastTransactionDate": "2024-12-31",
             },
         )
@@ -68,9 +68,9 @@ class CaseStudyArtifactTests(unittest.TestCase):
             self.payload["dataset"]["recordCounts"],
             {
                 "sourceTables": 7,
-                "transactions": 250_000,
-                "eligiblePurchases": 191_263,
-                "settlements": 200_490,
+                "transactions": 600_000,
+                "eligiblePurchases": 456_398,
+                "settlements": 475_162,
             },
         )
 
@@ -90,7 +90,7 @@ class CaseStudyArtifactTests(unittest.TestCase):
             list(PRIMARY_PRECEDENCE),
         )
         self.assertIn(
-            "23 payments on this GBP close classify as late",
+            "37 payments on this GBP close classify as late",
             next(
                 item["expectedSignal"]
                 for item in self.payload["scenarios"]
@@ -108,13 +108,13 @@ class CaseStudyArtifactTests(unittest.TestCase):
         self.assertEqual({row["currency"] for row in rows}, {"EUR"})
         self.assertEqual(
             [row["matchedCount"] for row in rows],
-            [0, 96, 96, 96],
+            [0, 310, 311, 318],
         )
         self.assertEqual(
             [row["coverageBps"] for row in rows],
-            [0, 10_000, 10_000, 10_000],
+            [0, 9_509, 9_540, 9_755],
         )
-        self.assertIn("96 of 96", self.payload["question"]["conciseAnswer"])
+        self.assertIn("310 of 326", self.payload["question"]["conciseAnswer"])
         self.assertIn(
             "fee-mismatch exceptions",
             self.payload["question"]["conciseAnswer"],

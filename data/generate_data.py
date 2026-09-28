@@ -1,4 +1,4 @@
-"""Generate the deterministic Payments Analytics v4 synthetic snapshot.
+"""Generate the deterministic Payments Analytics v5 synthetic snapshot.
 
 Traffic is generated first, as it would happen. Each scripted incident in
 data/scenarios.json is then an event with a cause (a settlement partner outage,
@@ -14,6 +14,12 @@ lognormal amounts and per-entity habits (Sparkov, PaySim, IBM's credit card
 generator), heavy-tailed merchant popularity, business-day settlement batches,
 refunds linked to a prior purchase, and incidents as clustered anomalies inside
 realistic background traffic (AMLworld, ADBench).
+
+Ordinary days are not clean either. A small share of payments on every day
+breaks for an everyday reason (a risk-review hold, a scheme fee passed through,
+a partial capture, a payout routed to the wrong currency account, a compliance
+hold, a chargeback), so every close shows the usual mix of exceptions and a
+scripted incident stands out against it rather than against zero.
 """
 
 from __future__ import annotations
@@ -26,6 +32,7 @@ import json
 import math
 import random
 import statistics
+import time
 from collections import Counter, defaultdict
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
@@ -34,23 +41,36 @@ from typing import Any
 from faker import Faker
 
 SEED = 42
-NUM_CUSTOMERS = 15_000
-NUM_ACCOUNTS = 18_000
-NUM_MERCHANTS = 1_500
-NUM_TRANSACTIONS = 250_000
-NUM_REFUNDS = 9_400
-NUM_FRAUD_FLAGS = 7_800
+NUM_CUSTOMERS = 30_000
+NUM_ACCOUNTS = 36_000
+NUM_MERCHANTS = 2_500
+NUM_TRANSACTIONS = 600_000
+NUM_REFUNDS = 22_500
+NUM_FRAUD_FLAGS = 18_700
 HISTORY_START = dt.date(2016, 1, 1)
-START_DATE = dt.date(2022, 1, 1)
+START_DATE = dt.date(2023, 1, 1)
 END_DATE = dt.date(2024, 12, 31)
 
 DATA_DIR = Path(__file__).resolve().parent
 OUTPUT_DIR = DATA_DIR / "raw"
 SCENARIO_MANIFEST = DATA_DIR / "scenarios.json"
 SETTLEMENT_BATCH_HOUR = 2
-DISPUTE_RATE = Decimal("0.0045")
-MISMATCH_CONTROLS = 12
-EXPECTED_SETTLEMENTS = 200_490
+# Everyday exceptions, as a share of completed purchases before weighting.
+# Timing breaks are the most common reconciliation exception, then fee
+# deductions, partial settlements and currency conversion (Optimus, Payrails
+# and ReconcileOS on common discrepancy sources). Chargebacks run from about
+# 0.12% in restaurants to 0.9% in travel (Sift benchmarks via Chargeback.io).
+# The mix is set a little above a well-automated operation's so that a single
+# day's close shows every reason; the incidents still stand well above it.
+BACKGROUND_RATES = {
+    "late": 0.030,              # held for a risk review or bank delay
+    "fee_mismatch": 0.015,      # scheme or cross-border fee passed through
+    "amount_mismatch": 0.014,   # partial capture, tip or incidental adjustment
+    "currency_mismatch": 0.011, # payout routed to the other-currency account
+    "missing": 0.008,           # held for a compliance review, not yet released
+    "disputed": 0.007,          # chargeback raised by the cardholder
+}
+EXPECTED_SETTLEMENTS = 475_162
 
 # Every country settles in one of the four supported currencies.
 COUNTRY_CURRENCY = {
@@ -59,8 +79,8 @@ COUNTRY_CURRENCY = {
     "Spain": "EUR", "Ireland": "EUR", "Italy": "EUR",
 }
 COUNTRY_WEIGHTS = {
-    "United Kingdom": .20, "Canada": .20, "Australia": .20, "Germany": .13,
-    "France": .10, "Netherlands": .06, "Spain": .05, "Ireland": .03, "Italy": .03,
+    "United Kingdom": .22, "Canada": .22, "Australia": .16, "Germany": .14,
+    "France": .10, "Netherlands": .06, "Spain": .05, "Ireland": .025, "Italy": .025,
 }
 # category: (median ticket, lognormal sigma, share of purchases, share of
 # merchants, refund weight, dispute weight). Purchase shares and medians are
@@ -68,20 +88,30 @@ COUNTRY_WEIGHTS = {
 # drink about 38% of card transactions at about GBP 22, entertainment
 # (restaurants and pubs) about 22% at about GBP 18, travel about 8% at about
 # GBP 37, household goods about 2% at about GBP 84. Medians sit near mean / 1.5.
+# The shares describe one acquirer's merchant book rather than national spend:
+# UK Finance sets the order, and a floor keeps the smaller categories visible
+# on a single day's close.
 CATEGORY_PROFILES = {
-    "Food & Beverage": (15.0, 0.75, .36, .26, 0.4, 0.5),
-    "Entertainment": (14.0, 0.80, .20, .17, 1.2, 1.2),
-    "Retail": (30.0, 0.95, .16, .18, 3.0, 1.0),
-    "Travel": (45.0, 1.20, .08, .09, 2.0, 2.2),
-    "Services": (55.0, 0.95, .07, .12, 1.0, 1.0),
-    "Electronics": (90.0, 0.90, .05, .08, 3.0, 2.0),
-    "Healthcare": (35.0, 0.85, .05, .06, 0.6, 0.6),
-    "Utilities": (60.0, 0.60, .03, .04, 0.2, 0.3),
+    "Food & Beverage": (15.0, 0.75, .27, .21, 0.4, 0.5),
+    "Entertainment": (14.0, 0.80, .16, .15, 1.2, 1.2),
+    "Retail": (30.0, 0.95, .15, .16, 3.0, 1.0),
+    "Travel": (45.0, 1.20, .09, .10, 2.0, 2.2),
+    "Services": (55.0, 0.95, .09, .11, 1.0, 1.0),
+    "Electronics": (90.0, 0.90, .08, .10, 3.0, 2.0),
+    "Healthcare": (35.0, 0.85, .08, .09, 0.6, 0.6),
+    "Utilities": (60.0, 0.60, .08, .08, 0.2, 0.3),
 }
 SHARE_BANDS = {
-    "Food & Beverage": (.32, .40), "Entertainment": (.17, .23), "Retail": (.13, .19),
-    "Travel": (.06, .10), "Services": (.05, .09), "Electronics": (.035, .065),
-    "Healthcare": (.03, .065), "Utilities": (.02, .045),
+    "Food & Beverage": (.24, .32), "Entertainment": (.13, .19), "Retail": (.12, .18),
+    "Travel": (.07, .11), "Services": (.07, .11), "Electronics": (.06, .10),
+    "Healthcare": (.06, .10), "Utilities": (.05, .09),
+}
+# How strongly each everyday exception leans towards a kind of payment.
+LATE_CATEGORY = {"Travel": 1.5, "Electronics": 1.3}
+AMOUNT_CATEGORY = {"Travel": 1.6, "Food & Beverage": 1.4, "Retail": 1.2}
+BACKGROUND_RISK = {
+    "late": {"low": 1.0, "medium": 1.6, "high": 2.5},
+    "missing": {"low": 0.6, "medium": 1.8, "high": 4.0},
 }
 MERCHANT_CATEGORIES = list(CATEGORY_PROFILES)
 SEGMENT_AMOUNT = {"retail": 1.0, "business": 2.5, "premium": 1.8}
@@ -133,6 +163,8 @@ _merchant_popularity: dict[int, float] = {}
 _incident_reach: dict[str, set[int]] = {}
 # transaction id -> scenarioId whose incident changed its settlement
 _incident_hits: dict[int, str] = {}
+# transaction id -> everyday exception reason given to it
+_background_hits: dict[int, str] = {}
 
 
 def reset_seed() -> None:
@@ -141,7 +173,10 @@ def reset_seed() -> None:
     random.seed(SEED)
     Faker.seed(SEED)
     _fake = Faker()
-    for state in (_customer_end, _account_window, _merchant_popularity, _incident_reach, _incident_hits):
+    for state in (
+        _customer_end, _account_window, _merchant_popularity,
+        _incident_reach, _incident_hits, _background_hits,
+    ):
         state.clear()
 
 
@@ -176,7 +211,15 @@ def _write_rows(filename: str, rows: list[dict[str, Any]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
-    temporary.replace(destination)
+    # On Windows an editor or virus scanner can hold the old file for a moment.
+    for attempt in range(10):
+        try:
+            temporary.replace(destination)
+            return
+        except PermissionError:
+            if attempt == 9:
+                raise
+            time.sleep(0.5)
 
 
 def _money(value: Decimal | float | str) -> Decimal:
@@ -607,6 +650,73 @@ def _effective_term(
     return matches[0]
 
 
+CURRENCY_ROUTING = {"EUR": "GBP", "GBP": "EUR", "AUD": "CAD", "CAD": "AUD"}
+EXCEPTION_REASONS = ("missing", "currency_mismatch", "amount_mismatch", "fee_mismatch", "late", "disputed")
+INCIDENT_REASON = {
+    "partner_outage": "late", "stale_fee_schedule": "fee_mismatch", "lost_settlement_file": "missing",
+}
+
+
+class _BackgroundExceptions:
+    """Give at most one everyday exception to each completed purchase.
+
+    Each reason averages its BACKGROUND_RATES share, leaning towards the
+    payments where that break really happens: cross-border merchants for fee
+    and currency errors, riskier merchants for holds, tipping and incidental
+    categories for partial settlements, travel for chargebacks.
+
+    Counts are drawn per currency close by systematic sampling: a close gets
+    its expected number of each reason, rounded up or down at random, and the
+    payments are then picked by weight. Independent coin flips would leave
+    many small closes with none of a rare reason, which is not how a steady
+    operation's queue looks from day to day.
+    """
+
+    def __init__(self, transactions: list[dict[str, Any]], merchant_by_id: dict[int, dict[str, Any]]) -> None:
+        self.merchant_by_id = merchant_by_id
+        eligible = [
+            tx for tx in transactions
+            if tx["transaction_type"] == "purchase" and tx["status"] == "completed"
+        ]
+        weights = {tx["transaction_id"]: self._weights(tx) for tx in eligible}
+        totals: Counter[str] = Counter()
+        for values in weights.values():
+            totals.update(values)
+        scale = {reason: rate * len(eligible) / totals[reason] for reason, rate in BACKGROUND_RATES.items()}
+
+        closes: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+        for tx in eligible:
+            if _incident_for(tx, _parse(tx["transaction_date"]).date()) is None:
+                closes[(tx["transaction_date"][:10], tx["currency"])].append(tx)
+        self.assigned: dict[int, str] = {}
+        for key in sorted(closes):
+            open_payments = closes[key]
+            for reason in BACKGROUND_RATES:
+                chances = [scale[reason] * weights[tx["transaction_id"]][reason] for tx in open_payments]
+                expected = sum(chances)
+                count = int(expected) + (random.random() < expected - int(expected))
+                picked = _top_weighted(open_payments, chances)[:count]
+                for tx in picked:
+                    self.assigned[tx["transaction_id"]] = reason
+                taken = {tx["transaction_id"] for tx in picked}
+                open_payments = [tx for tx in open_payments if tx["transaction_id"] not in taken]
+
+    def _weights(self, tx: dict[str, Any]) -> dict[str, float]:
+        merchant = self.merchant_by_id[tx["merchant_id"]]
+        cross_border = COUNTRY_CURRENCY[merchant["country"]] != tx["currency"]
+        return {
+            "late": BACKGROUND_RISK["late"][merchant["risk_tier"]] * LATE_CATEGORY.get(merchant["category"], 1.0),
+            "fee_mismatch": 3.0 if cross_border else 0.6,
+            "amount_mismatch": AMOUNT_CATEGORY.get(merchant["category"], 0.7),
+            "currency_mismatch": 4.0 if cross_border else 0.4,
+            "missing": BACKGROUND_RISK["missing"][merchant["risk_tier"]],
+            "disputed": CATEGORY_PROFILES[merchant["category"]][5] * RISK_DISPUTE[merchant["risk_tier"]],
+        }
+
+    def draw(self, tx: dict[str, Any]) -> str | None:
+        return self.assigned.get(tx["transaction_id"])
+
+
 def generate_settlements(
     transactions: list[dict[str, Any]],
     merchants: list[dict[str, Any]],
@@ -617,6 +727,7 @@ def generate_settlements(
     for term in merchant_terms:
         terms_by_merchant.setdefault(term["merchant_id"], []).append(term)
     tx_by_id = {row["transaction_id"]: row for row in transactions}
+    background = _BackgroundExceptions(transactions, merchant_by_id)
 
     rows: list[dict[str, Any]] = []
     for tx in transactions:
@@ -628,6 +739,7 @@ def generate_settlements(
         sla_days = int(term["settlement_sla_days"])
         gross = _money(tx["amount"])
         status = "settled"
+        reason = None
         if tx["transaction_type"] == "refund":
             # Refunds are debited from the merchant's next payout, with no fee.
             fee, settled = Decimal("0.00"), -gross
@@ -636,55 +748,50 @@ def generate_settlements(
             incident = _incident_for(tx, tx_day)
             if incident:
                 _incident_hits[tx_id] = incident["scenarioId"]
-            if incident and incident["type"] == "lost_settlement_file":
+            reason = None if incident else background.draw(tx)
+            if reason:
+                _background_hits[tx_id] = reason
+            if (incident and incident["type"] == "lost_settlement_file") or reason == "missing":
                 continue
             applied_bps = int(term["fee_rate_bps"])
             if incident and incident["type"] == "stale_fee_schedule":
                 applied_bps += int(incident["feeCutBps"])
             fee = _money(gross * Decimal(applied_bps) / Decimal(10_000))
+            if incident and incident["type"] == "stale_fee_schedule":
+                # On a tiny ticket the old rate rounds to the same cent, so
+                # nothing is visibly wrong and the payment is not a hit.
+                contracted = _money(gross * Decimal(int(term["fee_rate_bps"])) / Decimal(10_000))
+                if abs(fee - contracted) <= Decimal("0.01"):
+                    del _incident_hits[tx_id]
+            if reason == "fee_mismatch":
+                extra = _money(gross * Decimal(random.randint(20, 80)) / Decimal(10_000))
+                fee += max(extra, Decimal("0.03"))
             settled = gross - fee
+            if reason == "amount_mismatch":
+                short = _money(gross * Decimal(str(round(random.uniform(.005, .05), 4))))
+                settled -= max(short, Decimal("0.05"))
             if incident and incident["type"] == "partner_outage":
                 settle_day = tx_day + dt.timedelta(days=sla_days + 3)
                 status = "delayed"
+            elif reason == "late":
+                due = tx_day + dt.timedelta(days=sla_days)
+                settle_day = _add_business_days(due, random.randint(1, 4))
+                status = "delayed"
             else:
                 settle_day = _settlement_day(tx_day, sla_days)
+            if reason == "disputed":
+                status = "disputed"
         rows.append({
             "transaction_id": tx_id,
             "settlement_date": _batch_time(settle_day),
-            "currency": tx["currency"],
+            "currency": (
+                CURRENCY_ROUTING[tx["currency"]] if reason == "currency_mismatch" else tx["currency"]
+            ),
             "settled_amount": f"{settled:.2f}",
             "processing_fee": f"{fee:.2f}",
             "status": status,
             "_type": tx["transaction_type"],
         })
-
-    # Background disputes and data errors land on any day, scenario closes
-    # included, at their usual rate. They skip payments an incident already
-    # changed so each scenario's count stays attributable to its cause.
-    open_purchases = [
-        row for row in rows
-        if row["_type"] == "purchase" and row["transaction_id"] not in _incident_hits
-    ]
-    weights = []
-    for row in open_purchases:
-        tx = tx_by_id[row["transaction_id"]]
-        merchant = merchant_by_id[tx["merchant_id"]]
-        weights.append(
-            CATEGORY_PROFILES[merchant["category"]][5]
-            * RISK_DISPUTE[merchant["risk_tier"]]
-            * math.log1p(float(tx["amount"]))
-        )
-    ranked = _top_weighted(open_purchases, weights)
-    disputes = int((Decimal(len(open_purchases)) * DISPUTE_RATE).to_integral_value(ROUND_HALF_UP))
-    for row in ranked[:disputes]:
-        row["status"] = "disputed"
-
-    controls = ranked[disputes:disputes + MISMATCH_CONTROLS]
-    currency_cycle = {"EUR": "GBP", "GBP": "EUR", "AUD": "CAD", "CAD": "AUD"}
-    for row in controls[: MISMATCH_CONTROLS // 2]:
-        row["currency"] = currency_cycle[row["currency"]]
-    for row in controls[MISMATCH_CONTROLS // 2:]:
-        row["settled_amount"] = f"{_money(row['settled_amount']) - Decimal('0.25'):.2f}"
 
     rows.sort(key=lambda row: (row["settlement_date"], row["transaction_id"]))
     output = [
@@ -769,9 +876,12 @@ def scenario_report(tables: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     """What each scenario close looks like: volume, and how the incident spreads."""
     merchant_category = {row["merchant_id"]: row["category"] for row in tables["merchants"]}
     eligible_by_close: Counter[tuple[str, str]] = Counter()
+    closes: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for tx in tables["transactions"]:
         if tx["transaction_type"] == "purchase" and tx["status"] == "completed":
-            eligible_by_close[(tx["transaction_date"][:10], tx["currency"])] += 1
+            key = (tx["transaction_date"][:10], tx["currency"])
+            eligible_by_close[key] += 1
+            closes[key].append(tx)
     report = {}
     tx_by_id = {row["transaction_id"]: row for row in tables["transactions"]}
     for item in _manifest()["scenarios"]:
@@ -791,7 +901,25 @@ def scenario_report(tables: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
         )
         total = sum(hits.values())
         top = hits.most_common(1)[0] if hits else (None, 0)
+        # Every exception on the close, by reason and by category. Background
+        # reasons are as generated; the SQL tests check what the rules see.
+        reasons: Counter[str] = Counter()
+        payments: Counter[str] = Counter()
+        flagged: Counter[str] = Counter()
+        incident_reason = INCIDENT_REASON.get((item.get("incident") or {}).get("type"))
+        for tx in closes.get((close, currency), []):
+            category = merchant_category[tx["merchant_id"]]
+            payments[category] += 1
+            reason = (
+                incident_reason if tx["transaction_id"] in _incident_hits
+                else _background_hits.get(tx["transaction_id"])
+            )
+            if reason:
+                reasons[reason] += 1
+                flagged[category] += 1
         report[item["scenarioId"]] = {
+            "reasons": {name: reasons[name] for name in EXCEPTION_REASONS},
+            "categories": {name: [flagged[name], payments[name]] for name in MERCHANT_CATEGORIES},
             "eligible_on_close": eligible_by_close[(close, currency)],
             "median_day": statistics.median(days),
             "affected": total,
@@ -880,7 +1008,7 @@ def validate_generated_snapshot(tables: dict[str, list[dict[str, Any]]]) -> dict
 
     report = realism_report(tables)
     problems = []
-    if not all(.25 <= share <= .42 for share in report["year_share"].values()):
+    if not all(.40 <= share <= .60 for share in report["year_share"].values()):
         problems.append("year_share")
     for name, (low, high) in SHARE_BANDS.items():
         if not low <= report["category_share"][name] <= high:
@@ -903,13 +1031,27 @@ def validate_generated_snapshot(tables: dict[str, list[dict[str, Any]]]) -> dict
         found = report["scenarios"][item["scenarioId"]]
         if not .6 <= found["eligible_on_close"] / found["median_day"] <= 1.6:
             problems.append(f"{item['scenarioId']}:volume")
-        if found["affected"] != int(item["expectedSignal"]["affectedPayments"]):
-            problems.append(f"{item['scenarioId']}:affectedPayments={found['affected']}")
+        # The manifest pins what the close shows for the incident's reason at
+        # the snapshot date: the incident's payments plus any everyday ones.
+        signal = item["expectedSignal"]
+        shown = found["reasons"].get(signal["primaryReason"], 0) if item.get("incident") else 0
+        if shown != int(signal["affectedPayments"]):
+            problems.append(f"{item['scenarioId']}:affectedPayments={shown}")
         if item.get("incident"):
             if found["dominant"] != item["focusCategory"]:
                 problems.append(f"{item['scenarioId']}:focusCategory={found['dominant']}")
             if not .3 <= found["dominant_share"] <= .7 or found["categories_hit"] < 3:
                 problems.append(f"{item['scenarioId']}:spread")
+            # The incident must stand out against the everyday mix.
+            reason = INCIDENT_REASON[item["incident"]["type"]]
+            if found["reasons"][reason] < .5 * sum(found["reasons"].values()):
+                problems.append(f"{item['scenarioId']}:incident_share")
+        # Every close shows the everyday mix: each reason, and each category
+        # with enough payments to read and at least one exception.
+        if min(found["reasons"].values()) < 1:
+            problems.append(f"{item['scenarioId']}:reasons")
+        if any(flagged < 1 or count < 8 for flagged, count in found["categories"].values()):
+            problems.append(f"{item['scenarioId']}:categories")
     if problems:
         raise RuntimeError(f"Realism targets missed ({', '.join(problems)}): {json.dumps(report, indent=1)}")
     return report

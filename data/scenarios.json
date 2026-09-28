@@ -1,15 +1,15 @@
 {
   "schemaVersion": 2,
-  "datasetVersion": "settlement-gap-v4.0.0",
+  "datasetVersion": "settlement-gap-v5.0.0",
   "snapshotLabel": "Synthetic demo snapshot",
   "asOfDate": "2025-01-10",
   "generatedWithSeed": 42,
-  "description": "A deterministic, wholly synthetic snapshot designed to demonstrate settlement reconciliation. Each scripted incident is an event with a cause, applied to the merchants it reaches in naturally generated traffic. None of it is a real incident or business claim.",
+  "description": "A deterministic, wholly synthetic snapshot designed to demonstrate settlement reconciliation. Every close carries a small everyday mix of exceptions. Each scripted incident is an event with a cause, applied to the merchants it reaches in naturally generated traffic, and stands out against that mix. None of it is a real incident or business claim.",
   "scenarios": [
     {
       "scenarioId": "normal",
       "name": "Normal daily close",
-      "description": "An ordinary EUR day with no incident. Background disputes and data errors can still appear at their usual rate.",
+      "description": "An ordinary EUR day with no incident. It still carries the everyday mix: a few late, held, short-paid, misrouted, fee and disputed payments spread across categories.",
       "closeDate": "2024-09-17",
       "defaultCurrency": "EUR",
       "focusCategory": "Food & Beverage",
@@ -23,11 +23,11 @@
     {
       "scenarioId": "delayed_travel_gbp",
       "name": "Settlement partner outage / GBP",
-      "description": "A GBP settlement partner stops processing for three days. It carries most travel merchants and a share of every other category, so the late payments follow ordinary traffic: food and drink first, then entertainment, travel and retail.",
+      "description": "A GBP settlement partner stops processing for three days. It carries most travel merchants and a share of every other category, so the late payments follow ordinary traffic: entertainment and food and drink first, then services, travel and retail.",
       "closeDate": "2024-10-10",
       "investigationAsOfDate": "2024-10-14",
       "defaultCurrency": "GBP",
-      "focusCategory": "Food & Beverage",
+      "focusCategory": "Entertainment",
       "isDefault": false,
       "incident": {
         "type": "partner_outage",
@@ -35,19 +35,19 @@
         "start": "2024-10-09",
         "end": "2024-10-11",
         "reach": {
-          "Travel": 0.8,
-          "Entertainment": 0.5,
-          "Services": 0.45,
-          "Retail": 0.2,
-          "Food & Beverage": 0.15,
-          "Electronics": 0.15,
-          "Healthcare": 0.15,
-          "Utilities": 0.15
+          "Travel": 0.45,
+          "Entertainment": 0.3,
+          "Services": 0.25,
+          "Retail": 0.12,
+          "Food & Beverage": 0.08,
+          "Electronics": 0.1,
+          "Healthcare": 0.1,
+          "Utilities": 0.12
         }
       },
       "expectedSignal": {
         "primaryReason": "late",
-        "affectedPayments": 23
+        "affectedPayments": 37
       }
     },
     {
@@ -65,19 +65,19 @@
         "end": "2024-11-19",
         "feeCutBps": 40,
         "reach": {
-          "Electronics": 0.8,
-          "Retail": 0.5,
-          "Services": 0.4,
-          "Travel": 0.4,
-          "Entertainment": 0.15,
-          "Healthcare": 0.15,
-          "Food & Beverage": 0.1,
+          "Electronics": 0.5,
+          "Retail": 0.25,
+          "Services": 0.2,
+          "Travel": 0.2,
+          "Entertainment": 0.08,
+          "Healthcare": 0.1,
+          "Food & Beverage": 0.03,
           "Utilities": 0.1
         }
       },
       "expectedSignal": {
         "primaryReason": "fee_mismatch",
-        "affectedPayments": 24
+        "affectedPayments": 47
       }
     },
     {
@@ -86,7 +86,7 @@
       "description": "One acquirer's CAD settlement file for 3 Dec 2024 never arrives. That acquirer serves merchants in every category, so the missing payments follow the day's traffic.",
       "closeDate": "2024-12-03",
       "defaultCurrency": "CAD",
-      "focusCategory": "Food & Beverage",
+      "focusCategory": "Retail",
       "isDefault": false,
       "incident": {
         "type": "lost_settlement_file",
@@ -94,19 +94,19 @@
         "start": "2024-12-03",
         "end": "2024-12-03",
         "reach": {
-          "Retail": 0.7,
-          "Electronics": 0.5,
-          "Food & Beverage": 0.35,
-          "Entertainment": 0.25,
-          "Services": 0.2,
-          "Travel": 0.2,
-          "Healthcare": 0.2,
-          "Utilities": 0.2
+          "Retail": 0.35,
+          "Electronics": 0.25,
+          "Food & Beverage": 0.15,
+          "Entertainment": 0.12,
+          "Services": 0.12,
+          "Travel": 0.12,
+          "Healthcare": 0.12,
+          "Utilities": 0.15
         }
       },
       "expectedSignal": {
         "primaryReason": "missing",
-        "affectedPayments": 38
+        "affectedPayments": 46
       }
     }
   ]

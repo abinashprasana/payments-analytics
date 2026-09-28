@@ -62,6 +62,8 @@ Recorded local verification for the v2 candidate: 52 Python tests passed; SQL pa
 
 Recorded local verification for the dataset v4 candidate (2026-09-28, branch `data-v4`): 91 Python tests and 34 MCP server tests passed; SQL parity covered 4 as-of dates, 40 model counts, 9,050 exception rows, 16,588 daily aggregates, 119,035 category aggregates, 719,005 feature and screen rows, and 127 public-query rows; the generator reproduced byte-identical CSVs; Playwright passed 14 walkthrough and 7 workbench checks across the four target widths with 15 intentional scope skips; Lighthouse scored 95 performance and 100 accessibility with 2.40 s LCP and 0.0155 CLS; both MCP eval dry runs scored 100%. The live model evaluation is pending.
 
+Recorded local verification for the dataset v5 candidate (2026-09-28, branch `data-v5`): 92 Python tests and 34 MCP server tests passed; SQL parity covered 4 as-of dates, 40 model counts, 143,355 exception rows, 10,748 daily aggregates, 85,940 category aggregates, 1,617,001 feature and screen rows, and 235 public-query rows, with decimals compared to one unit in the 6th place; the generator reproduced byte-identical CSVs and passed its per-close checks (all six reasons on every scenario close, every category with at least 8 payments and one exception); Playwright passed 21 checks across the four target widths with 19 intentional scope skips; Lighthouse scored 95 performance and 100 accessibility with 2.40 s LCP and 0.0052 CLS; both MCP eval dry runs scored 100%; the engine builds in 2.8 s with about 90 MB in DuckDB. The live model evaluation is pending.
+
 ## Phase B — owner-approved publication
 
 - [ ] The repository owner explicitly approves pushing the verified local release commit and tags.

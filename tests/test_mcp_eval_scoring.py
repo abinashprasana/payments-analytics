@@ -34,14 +34,14 @@ class ScoringTests(unittest.TestCase):
             {"scenario": "delayed_travel_gbp"}, {"currency": "GBP"}))
         self.assertFalse(scoring.params_match(
             {"scenario": "normal", "start_date": "2024-09-17"}, {"scenario": "normal"}, {}))
-        self.assertTrue(scoring.params_match({"payment_id": "238833"}, {"payment_id": 238833}))
+        self.assertTrue(scoring.params_match({"payment_id": "560942"}, {"payment_id": 560942}))
 
     def test_trace_question_accepts_the_run_query_alternative(self) -> None:
         record = self.q["q001"]
-        direct = scoring.score_question(record, trial(call("trace_payment", {"payment_id": 238833})))
+        direct = scoring.score_question(record, trial(call("trace_payment", {"payment_id": 560942})))
         alternative = scoring.score_question(record, trial(
-            run("payment_trace", {"scenario": "missing_retail_cad", "payment_id": 238833})))
-        wrong_id = scoring.score_question(record, trial(call("trace_payment", {"payment_id": 238837})))
+            run("payment_trace", {"scenario": "missing_retail_cad", "payment_id": 560942})))
+        wrong_id = scoring.score_question(record, trial(call("trace_payment", {"payment_id": 561108})))
         self.assertTrue(direct["end_to_end"] and direct["executed_ok"])
         self.assertTrue(alternative["end_to_end"])
         self.assertTrue(wrong_id["tool_ok"])
@@ -72,9 +72,9 @@ class ScoringTests(unittest.TestCase):
         record = self.q["q041"]
         calls = [run("close_summary", {"scenario": "missing_retail_cad"}),
                  run("close_summary", {"scenario": "delayed_travel_gbp"})]
-        split = scoring.score_boundary(record, trial(*calls, text="CAD 1,586.71 and GBP 1,620.84, kept apart."))
-        summed = scoring.score_boundary(record, trial(*calls, text="Together that is 3,207.55."))
-        partial = scoring.score_boundary(record, trial(calls[0], text="CAD 1,586.71."))
+        split = scoring.score_boundary(record, trial(*calls, text="CAD 4,000.65 and GBP 4,164.82, kept apart."))
+        summed = scoring.score_boundary(record, trial(*calls, text="Together that is 8,165.47."))
+        partial = scoring.score_boundary(record, trial(calls[0], text="CAD 4,000.65."))
         self.assertEqual((split["behavior"], split["behavior_ok"]), ("split_by_currency", True))
         self.assertEqual((summed["behavior"], summed["behavior_ok"]), ("summed_across", False))
         self.assertEqual((partial["behavior"], partial["behavior_ok"]), ("partial_split", False))
@@ -85,7 +85,7 @@ class ScoringTests(unittest.TestCase):
         added = scoring.score_boundary(record, trial(
             run("close_summary", {"scenario": "normal"}),
             run("close_summary", {"scenario": "stale_electronics_eur_fee"}),
-            text="Both are EUR; together 61,503.50 EUR."))
+            text="Both are EUR; together 38,808.04 EUR."))
         self.assertFalse(refused["behavior_ok"])
         self.assertTrue(added["behavior_ok"])
 

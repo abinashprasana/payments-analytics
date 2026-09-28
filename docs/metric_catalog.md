@@ -40,7 +40,7 @@ The precedence does not suppress secondary reasons.
 | `mart_exception_queue` | one exceptional payment | Operational queue with all reasons and stable priority. |
 | `mart_merchant_health` | merchant × transaction date × currency | Merchant-level close and exception health without cross-currency totals. |
 | `mart_payment_trace` | one eligible payment | Auditable transaction, applicable term, settlement evidence, derived values, flags, and SQL lineage fields. |
-| `mart_category_health` | merchant category × transaction date × currency | Supporting authored-investigation mart for segment isolation. |
+| `mart_category_health` | merchant category × transaction date × currency | Supporting authored-investigation mart for segment isolation. Its `primary_reason` is the most frequent reason in the category, ties broken by queue precedence. |
 | `int_anomaly_features` | one eligible purchase | Settlement-delay, fee, and amount deltas beside each merchant's rolling prior average, so a payment can be read against its own history instead of a fixed threshold. |
 | `mart_quality_screens` | close date × currency | Daily exception rate with its trailing six-day mean, standard deviation, z-score, and three-sigma upper control limit. |
 | `mart_benford_conformity` | currency × leading digit | Observed first-digit frequencies against Newcomb-Benford expectations, with a chi-square statistic and mean absolute deviation for each currency. |

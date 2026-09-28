@@ -16,6 +16,10 @@ Claude audited all 45 questions on 2026-09-28 against the v3 snapshot and the ph
 |---|---|---|
 | q011 | `exception_queue` accepted as an alternative to `close_summary` | q038 asks the same thing and already accepted both; the two records disagreed. Found when gpt-oss-120b answered q011 from the queue. |
 
+## Changed with dataset v5 (2026-09-28)
+
+Every payment and merchant ID moved to a real v5 row: 560942 and 561108 (lost CAD file), 536062 and 535555 (stale fee), 499930 and 500225 (partner outage), 476513 (clean payment on the normal close), merchant 391 in r005. Each was picked from the incident itself, not from the everyday exceptions that now appear on every close: the missing and late payments share a merchant with another hit on the same close, and the fee payments record exactly the old 40 bps rate. q025 and q027 now rank categories by the incident's reason (`late_count`, `fee_mismatch_count`) instead of by all exceptions, because every close now carries an everyday mix and a total would mix the two. q010 and q024 now expect the normal close's 23 everyday exceptions. All expected answers were re-derived from the snapshot.
+
 ## Changed with dataset v4 (2026-09-28)
 
 Every payment and merchant ID moved to a real v4 row: 238833 and 238837 (lost CAD file), 231728 and 231729 (stale fee), 221416 and 221423 (partner outage), 214760 (clean payment on the normal close), merchant 243 in r005. Questions that named a scenario by one category now name it by its cause (for example "the CAD lost-file close"), because each incident now spans several categories. q010 and q024 now expect one exception on the normal close: a background currency mismatch, which the control is allowed to have. All expected answers were re-derived from the snapshot.

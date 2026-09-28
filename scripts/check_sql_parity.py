@@ -122,8 +122,29 @@ def _postgres_rows(cursor: Any, statement: str) -> list[tuple[Any, ...]]:
     return _normal_rows(cursor.fetchall())
 
 
+TOLERANCE = Decimal("0.000001")
+
+
+def _close_enough(duck_row: Sequence[Any], postgres_row: Sequence[Any]) -> bool:
+    """Equal, except decimals may differ by one unit in the 6th place.
+
+    DuckDB averages integers as doubles and PostgreSQL as exact numerics, so
+    an average such as 0.0359375 can land either side of the 6th digit.
+    """
+    return len(duck_row) == len(postgres_row) and all(
+        a == b or (
+            isinstance(a, Decimal) and isinstance(b, Decimal) and abs(a - b) <= TOLERANCE
+        )
+        for a, b in zip(duck_row, postgres_row)
+    )
+
+
 def _assert_equal(label: str, duck_rows: list[Any], postgres_rows: list[Any]) -> None:
     if duck_rows == postgres_rows:
+        return
+    if len(duck_rows) == len(postgres_rows) and all(
+        _close_enough(d, p) for d, p in zip(duck_rows, postgres_rows)
+    ):
         return
     duck_set, postgres_set = set(duck_rows), set(postgres_rows)
     duck_only = list(duck_set - postgres_set)[:3]

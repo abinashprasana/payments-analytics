@@ -18,20 +18,34 @@ WITH category_rollup AS (
         SUM(COALESCE(fee_delta_minor_units, 0)) AS fee_delta_minor_units
     FROM int_settlement_reconciliation
     GROUP BY merchant_category, close_date, transaction_currency
+), with_top AS (
+    SELECT
+        category_rollup.*,
+        GREATEST(
+            missing_count, currency_mismatch_count, amount_mismatch_count,
+            fee_mismatch_count, late_count, disputed_count
+        ) AS top_reason_count
+    FROM category_rollup
 )
+-- A category's label is its most frequent reason, ties broken by the queue's
+-- precedence, so one everyday exception cannot relabel a category an
+-- incident dominates.
 SELECT
-    category_rollup.*,
+    merchant_category, close_date, currency, eligible_count, matched_count,
+    exception_count, missing_count, currency_mismatch_count,
+    amount_mismatch_count, fee_mismatch_count, late_count, disputed_count,
+    overdue_minor_units, fee_delta_minor_units,
     CAST(
         exception_count * 1.0 / NULLIF(eligible_count, 0)
         AS DECIMAL(12, 6)
     ) AS exception_rate,
     CASE
-        WHEN missing_count > 0 THEN 'missing'
-        WHEN currency_mismatch_count > 0 THEN 'currency_mismatch'
-        WHEN amount_mismatch_count > 0 THEN 'amount_mismatch'
-        WHEN fee_mismatch_count > 0 THEN 'fee_mismatch'
-        WHEN late_count > 0 THEN 'late'
-        WHEN disputed_count > 0 THEN 'disputed'
-        ELSE 'matched'
+        WHEN top_reason_count = 0 THEN 'matched'
+        WHEN missing_count = top_reason_count THEN 'missing'
+        WHEN currency_mismatch_count = top_reason_count THEN 'currency_mismatch'
+        WHEN amount_mismatch_count = top_reason_count THEN 'amount_mismatch'
+        WHEN fee_mismatch_count = top_reason_count THEN 'fee_mismatch'
+        WHEN late_count = top_reason_count THEN 'late'
+        ELSE 'disputed'
     END AS primary_reason
-FROM category_rollup;
+FROM with_top;
