@@ -113,6 +113,9 @@ def main(argv: list[str] | None = None) -> int:
                 stopped = str(exc)
                 break
             except Exception as exc:  # provider failure after the client's own retries
+                # The MCP client's task group wraps errors raised inside the session.
+                while isinstance(exc, BaseExceptionGroup) and exc.exceptions:
+                    exc = exc.exceptions[0]
                 errors.append({"id": record["id"], "repeat": repeat, "error": f"{type(exc).__name__}: {exc}"})
                 if "401" in str(exc) or "invalid_api_key" in str(exc):
                     stopped = "authentication failed"
