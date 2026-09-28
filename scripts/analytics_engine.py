@@ -211,6 +211,24 @@ class AnalyticsEngine:
         if clean.get("start_date") and clean.get("end_date"):
             if clean["start_date"] > clean["end_date"]:
                 raise ValueError("start_date cannot be after end_date")
+        # A scenario fixes one close date and currency, so a filter that disagrees
+        # with it could only return an empty result that reads like "no activity".
+        scenario = self._scenarios.get(clean.get("scenario", ""))
+        if scenario:
+            close_date = self._date(scenario["closeDate"], "closeDate")
+            if clean.get("currency", scenario["defaultCurrency"]) != scenario["defaultCurrency"]:
+                raise ValueError(
+                    f"Scenario {clean['scenario']} is a {scenario['defaultCurrency']} close; "
+                    f"currency {clean['currency']} would match no rows"
+                )
+            if (
+                clean.get("start_date", close_date) > close_date
+                or clean.get("end_date", close_date) < close_date
+            ):
+                raise ValueError(
+                    f"Scenario {clean['scenario']} closes on {close_date.isoformat()}; "
+                    "the requested date range excludes it"
+                )
         if "payment_id" in clean:
             text = str(clean["payment_id"]).strip()
             if not text.isdigit() or int(text) <= 0:

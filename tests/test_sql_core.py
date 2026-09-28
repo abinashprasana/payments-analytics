@@ -150,16 +150,24 @@ class SettlementCoreTests(unittest.TestCase):
                 [payment_id],
             )
 
-    def test_empty_filter_and_unknown_payment_return_empty_frames(self) -> None:
-        empty = self.engine.query(
-            "close_summary",
-            {
-                "scenario": "normal",
-                "start_date": "2025-01-01",
-                "end_date": "2025-01-02",
-            },
+    def test_filters_that_exclude_the_scenario_close_are_refused(self) -> None:
+        conflicts = (
+            {"scenario": "normal", "start_date": "2025-01-01", "end_date": "2025-01-02"},
+            {"scenario": "normal", "end_date": "2024-09-16"},
+            {"scenario": "delayed_travel_gbp", "currency": "EUR"},
         )
-        self.assertTrue(empty.empty)
+        for params in conflicts:
+            with self.subTest(params=params):
+                with self.assertRaisesRegex(ValueError, "delayed_travel_gbp|normal"):
+                    self.engine.query("close_summary", params)
+        consistent = self.engine.query(
+            "close_summary",
+            {"scenario": "delayed_travel_gbp", "currency": "gbp",
+             "start_date": "2024-10-01", "end_date": "2024-10-10"},
+        )
+        self.assertEqual(len(consistent), 1)
+
+    def test_unknown_payment_returns_an_empty_trace(self) -> None:
         trace = self.engine.query(
             "payment_trace", {"scenario": "normal", "payment_id": 999_999_999}
         )

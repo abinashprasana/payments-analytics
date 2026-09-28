@@ -64,7 +64,7 @@ Staging models validate and type source columns before the intermediate models r
 | `exception_rate_screen` | none | Each daily close read against its own trailing control limit. |
 | `benford_conformity` | none | First-digit conformity for each payment currency. |
 
-Dates use ISO `YYYY-MM-DD`, currencies are restricted to `EUR`, `GBP`, `AUD`, and `CAD`, and malformed parameters or unknown scenarios are rejected by the engine. A valid but absent payment ID returns an empty trace. The Streamlit navigation layer recovers from invalid or absent public deep links by returning to a valid payment or to the normal scenario and `close` view.
+Dates use ISO `YYYY-MM-DD`, currencies are restricted to `EUR`, `GBP`, `AUD`, and `CAD`, and malformed parameters or unknown scenarios are rejected by the engine. A scenario fixes one close date and one currency, so a `currency` or date range that excludes that close is rejected with an error instead of returning an empty result. A valid but absent payment ID returns an empty trace. The Streamlit navigation layer recovers from invalid or absent public deep links by returning to a valid payment or to the normal scenario and `close` view.
 
 ## Interpretation guardrails
 
