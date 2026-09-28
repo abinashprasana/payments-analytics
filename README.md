@@ -29,11 +29,16 @@
 - 💸 **The problem:** a purchase marked complete can still fail the daily close, because the settlement money is late, missing, or carries the wrong fee.
 - 🎯 **Who it's for:** the settlement operations analyst who has to sign off that close.
 - 👀 **What status reports miss:** they stop at "the customer paid." Reconciliation has to compare two separate kinds of evidence, the merchant's contract terms and the money that actually arrived.
-- 🏗️ **What I built:** one portable SQL model chain that defines "reconciled", a written walkthrough of one case where it breaks, a live workbench for triaging the same exceptions, and a read-only MCP server so Claude can ask the same questions in plain English.
+- 🏗️ **What I built:**
+  - one portable SQL model chain that defines "reconciled", checked on DuckDB and PostgreSQL on every push
+  - a synthetic data generator that models incidents as events with a cause, calibrated to published card payment statistics
+  - a six-chapter walkthrough of one incident, from symptom to a single payment
+  - a live workbench for triaging the same exceptions
+  - a read-only MCP server, so Claude can ask the same questions in plain English, and an evaluation harness that measures whether a model picks the right query
 
 Completed purchases don't always reconcile to the settlement money that eventually shows up for them. Sometimes the settlement is late. Sometimes it never arrives. Sometimes it arrives on time and for the right amount, but the fee charged against it no longer matches what the merchant's contract says it should be. This project is one investigation into that gap, built end to end on a synthetic payments snapshot: a Postgres/DuckDB-portable SQL model chain that defines what "reconciled" actually means, an authored write-up that walks through one real case of it breaking, and a Streamlit workbench that lets you triage the same exceptions the way an operations analyst would.
 
-The rule is that SQL is the source of truth everywhere. Every join, every exception flag, every KPI is defined once in the model chain under [`sql/models`](sql/models) and executed identically on DuckDB (what the two live surfaces run) and PostgreSQL (what CI checks it against on every push, so the "portable SQL" claim is verified, not just claimed). Python, the two front ends, and the MCP server only format rows that SQL already computed — nothing gets recalculated in a dashboard.
+The rule is that SQL is the source of truth everywhere. Every join, every exception flag, every KPI is defined once in the model chain under [`sql/models`](sql/models) and executed identically on DuckDB (what the two live surfaces run) and PostgreSQL (what CI checks it against on every push). Python, the two front ends, and the MCP server only format rows that SQL already computed. No dashboard recalculates anything.
 
 The dataset is entirely synthetic, generated with Python and Faker, and none of the four scenarios in it represents a real incident, a real merchant, or a real business outcome.
 
@@ -49,7 +54,7 @@ The dataset is entirely synthetic, generated with Python and Faker, and none of 
 | Transactions | 250,000 |
 | Eligible purchases (completed, merchant-attributed) | 191,263 |
 | Settlement records | 200,490 |
-| Currencies | EUR, GBP, AUD, CAD — never summed across each other |
+| Currencies | EUR, GBP, AUD, CAD, never summed across each other |
 | Transaction date range | 2022-01-01 to 2024-12-31 |
 | Dataset build | `settlement-gap-v4.0.0`, generated with a fixed seed |
 
@@ -104,7 +109,7 @@ How v4 gets there:
 | 🧭 The workbench | Daily-close triage, exception filtering, payment trace, CSV evidence export | Streamlit Community Cloud, cached in-memory DuckDB |
 | 🤖 Ask Claude (MCP) | Plain-English questions from Claude, answered through the same query registry | Read-only Streamable HTTP on Render's free tier ([`render.yaml`](render.yaml)), or local stdio; in-memory DuckDB |
 | ✅ Compatibility check | Proves the SQL chain returns identical results on both engines | Ephemeral PostgreSQL, run in GitHub Actions on every push |
-| 🗄️ Power BI v1 | Historical appendix — an earlier report retired because its DAX measures don't satisfy the v2 metric contract | [`archive/power-bi-v1`](archive/power-bi-v1/README.md) |
+| 🗄️ Power BI v1 | Historical appendix: an earlier report, retired because its DAX measures don't satisfy the current metric contract | [`archive/power-bi-v1`](archive/power-bi-v1/README.md) |
 
 The walkthrough and the workbench show the same dataset version, as-of date, and build SHA, so you can confirm they're looking at the same release. Everything runs on a free tier, and none of it needs a hosted database.
 
@@ -112,7 +117,7 @@ The walkthrough and the workbench show the same dataset version, as-of date, and
 
 ## 🔍 The reconciliation rule, and what it flags
 
-A payment is considered matched when a settlement record exists, its currency matches the payment's, and `ABS(gross - settled_amount - processing_fee) <= 0.01`. Everything that isn't matched gets classified into one or more independent flags — missing, late, currency mismatch, amount mismatch, fee mismatch, disputed — and a payment can carry several of these at once. The exception queue uses a fixed precedence only to choose which one gets shown as the primary label; it doesn't hide the others.
+A payment is considered matched when a settlement record exists, its currency matches the payment's, and `ABS(gross - settled_amount - processing_fee) <= 0.01`. Everything that isn't matched gets classified into one or more independent flags (missing, late, currency mismatch, amount mismatch, fee mismatch, disputed), and a payment can carry several of these at once. The exception queue uses a fixed precedence only to choose which one gets shown as the primary label; it doesn't hide the others.
 
 ```text
 typed staging models
@@ -125,11 +130,28 @@ typed staging models
      `-> mart_category_health        (segment isolation evidence)
 ```
 
-The full definitions — population, grain, currency boundaries, and query IDs — are documented in [`docs/metric_catalog.md`](docs/metric_catalog.md), which is the actual contract the code is checked against, not just a description of it.
+The full definitions (population, grain, currency boundaries, and query IDs) are documented in [`docs/metric_catalog.md`](docs/metric_catalog.md), and the tests check the code against it.
 
-Two more layers sit on top of the deterministic rules, built as SQL marts rather than a separate pipeline: an isolation-forest anomaly score with SHAP attribution that flags payments unusual relative to their own merchant's history rather than a fixed threshold, and a pair of statistical screens — trailing control limits on the daily exception rate, and a Benford's-law conformity check on transaction amounts. Both are explicitly framed as proof-of-concept screens on synthetic data, not fraud findings, and neither is wired into either front end yet.
+Two more layers sit on top of the deterministic rules, built as SQL marts rather than a separate pipeline: an isolation-forest anomaly score with SHAP attribution that flags payments unusual relative to their own merchant's history rather than a fixed threshold, and a pair of statistical screens: trailing control limits on the daily exception rate, and a Benford's-law conformity check on transaction amounts. Both are explicitly framed as proof-of-concept screens on synthetic data, not fraud findings, and neither is wired into either front end yet.
 
 Read access to all of this goes through one gate: `AnalyticsEngine.query(query_id, params)` in [`scripts/analytics_engine.py`](scripts/analytics_engine.py), which validates every query ID and parameter against a fixed registry. The MCP server goes through the same gate. There is no arbitrary-SQL endpoint anywhere in the public surfaces.
+
+---
+
+## 📖 The walkthrough
+
+Six chapters, each answering the question the last one raised:
+
+| Chapter | What it shows |
+|---|---|
+| **Answer** | The stakeholder's question and the short answer, up front |
+| **Contract** | The four metrics that define a clean close, with their grain, currency rule and query ID |
+| **Data** | The source model, and the four scripted closes on one date axis |
+| **Investigation** | Three queries (coverage, then category, then exception reason), each with its chart pinned beside the explanation, ending in one payment traced end to end |
+| **Proof** | The finding, the action and its owner, the model chain, 12 of 12 quality checks, and how to reproduce it |
+| **Use it** | A deep link into the workbench and the MCP endpoint, with one real `trace_payment` call replayed |
+
+SQL, full result tables and check lists sit behind "Show" toggles, so the page reads as findings first. Every number comes from a payload generated from the SQL marts; nothing on the page is typed by hand. Motion is CSS only, with no animation library, and switches off for visitors who ask for reduced motion. Lighthouse on mobile scores 95 for performance and 100 for accessibility.
 
 ---
 
@@ -140,9 +162,9 @@ Four views, reachable as a 90-second path or directly via URL:
 | View | What it does |
 |---|---|
 | **Close** | KPI cards and charts for one currency's daily close: settlement coverage, exceptions, overdue value, fee delta |
-| **Exceptions** | The filterable triage queue — every flagged payment, every reason it's flagged, sorted by the same precedence the SQL defines |
+| **Exceptions** | The filterable triage queue: every flagged payment, every reason it's flagged, sorted by the same precedence the SQL defines |
 | **Trace** | One payment end to end: its transaction, its effective merchant term, its recorded settlement, and a plain-language explanation of exactly which SQL rule flagged it |
-| **Catalog** | The metric and model reference, plus a live quality-check panel — currently 12 of 12 checks passing against the snapshot |
+| **Catalog** | The metric and model reference, plus a live quality-check panel, currently 12 of 12 checks passing against the snapshot |
 
 Every view is deep-linkable (`?view=&scenario=&payment_id=`), which is how the walkthrough hands a specific payment straight to its trace in the workbench.
 
@@ -179,6 +201,7 @@ How it stays safe:
 - 📝 Each call, allowed or refused, leaves one JSON audit line: in `mcp_server/logs/audit.jsonl` locally, or in the service log when hosted, with a salted hash instead of the caller's address.
 - 🌐 The hosted endpoint checks Host and Origin headers against DNS rebinding, caps requests at 16 KB, and allows 30 calls a minute per caller.
 - 📌 One test pins every tool's name, description and schema in `mcp_server/tests/tool_manifest.json`, since that's what the model reads and what tool-poisoning attacks tamper with. Another fails if the real `trace_payment` stops matching the replay on the site.
+- 🙈 `scenario_options` lists only what identifies a close. The expected outcome of each scripted incident stays out of what the model can read, so it has to query the data to answer.
 
 It's a demo on synthetic data. There are no accounts, because there's nothing private behind it and nothing it can change. The free instance sleeps when idle, so the first call can take 30 to 60 seconds. It covers the same payments as the workbench's trace view (the four scenario closes) and leaves out `exception_scoring`, which needs the dev-only scikit-learn/SHAP stack.
 
@@ -223,7 +246,13 @@ The MCP server already validates every call against the registry, so a request f
 
 Every expected answer is derived from the snapshot by `AnalyticsEngine` and replayed in CI, so the golden files fail the build if the data drifts under them. Payment IDs, dates, and figures are real rows. `benford_conformity` and `exception_rate_screen` are served by `run_query` but were left out of the question set on purpose.
 
-How a trial is scored: the first substantive tool call is compared with the expected tool and query ID, then its arguments are normalised the way the engine normalises them and compared key by key. Discovery calls (`list_queries`, `scenario_options`) before it are allowed. Currency boundary and refusal answers are classified deterministically, and an answer fails outright if it states the sum of amounts from two currencies. Each question runs 3 times; the reported outcome is the modal one, with Wilson 95% intervals.
+How a trial is scored: the first substantive tool call is compared with the expected tool and query ID, then its arguments are normalised the way the engine normalises them and compared key by key. Discovery calls (`list_queries`, `scenario_options`) before it are allowed. Currency boundary and refusal answers are classified deterministically, and an answer fails outright if it states the sum of amounts from two currencies. Each question runs 3 times by default; the reported outcome is the modal one, with Wilson 95% intervals, and pass^k shows how often every repeat was right.
+
+### Status
+
+The harness, the golden set and the refusal set are built and tested, and CI replays both through the real tools on every push. The live model run is scheduled next, on `openai/gpt-oss-120b` through Groq; its free tier allows about 200,000 tokens a day, and the questions suite alone uses about that.
+
+A first live run on an earlier version of the data showed why the eval matters: on four questions the model answered from the scenario list's expected outcomes instead of querying anything. The server no longer serves those fields.
 
 ### Results
 
@@ -352,13 +381,13 @@ erDiagram
 
 <br/>
 
-**`transactions`** — `amount` must be positive. `transaction_type` is `purchase`, `refund`, or `transfer`; a `transfer` is never merchant-attributed, and a `purchase`/`refund` always is. `status` is `completed`, `pending`, or `failed`; only completed, merchant-attributed purchases enter the reconciliation population. `parent_transaction_id` is set exactly when the row is a refund, and points to the earlier completed purchase it reverses.
+**`transactions`**: `amount` must be positive. `transaction_type` is `purchase`, `refund`, or `transfer`; a `transfer` is never merchant-attributed, and a `purchase`/`refund` always is. `status` is `completed`, `pending`, or `failed`; only completed, merchant-attributed purchases enter the reconciliation population. `parent_transaction_id` is set exactly when the row is a refund, and points to the earlier completed purchase it reverses.
 
-**`merchant_terms`** — primary key is `(merchant_id, valid_from)`. `valid_to` is nullable, meaning the term is still open-ended.
+**`merchant_terms`**: primary key is `(merchant_id, valid_from)`. `valid_to` is nullable, meaning the term is still open-ended.
 
-**`settlements`** — `transaction_id` is unique, so a completed purchase or refund has at most one settlement record. `processing_fee` is non-negative. `settled_amount` is negative for a refund, which is debited from the merchant's payout.
+**`settlements`**: `transaction_id` is unique, so a completed purchase or refund has at most one settlement record. `processing_fee` is non-negative. `settled_amount` is negative for a refund, which is debited from the merchant's payout.
 
-**`fraud_flags`** — `resolved_date` must be null unless `is_resolved` is true, and set to a date on or after `flagged_date` when it is.
+**`fraud_flags`**: `resolved_date` must be null unless `is_resolved` is true, and set to a date on or after `flagged_date` when it is.
 
 </details>
 
@@ -370,8 +399,8 @@ erDiagram
 payments-analytics/
 │
 ├── data/
-│   ├── generate_data.py          # deterministic synthetic snapshot + scenario injection
-│   ├── scenarios.json            # the four scenarios: dates, scope, expected signal
+│   ├── generate_data.py          # deterministic snapshot; incidents applied as events
+│   ├── scenarios.json            # the four scenarios and the incident behind each
 │   └── raw/                      # the seven source CSVs
 │
 ├── schema/
@@ -399,6 +428,8 @@ payments-analytics/
 │
 ├── mcp_eval/                     # natural language evaluation of the MCP tools
 │   ├── golden/                   # 45 questions and 18 refusal cases, answers derived from the snapshot
+│   ├── run_eval.py               # drives a model through the real MCP tools and scores it
+│   ├── freeform_sql.py           # the raw text-to-SQL comparison path
 │   └── results/                  # aggregate results from live runs
 │
 ├── render.yaml                   # free Render service for the public MCP endpoint
@@ -463,7 +494,7 @@ npm run typecheck
 npm run build
 ```
 
-To run against the production-shaped PostgreSQL database instead of the CSV snapshot, copy `.env.example` to `.env`, create the schema from [`schema/create_tables.sql`](schema/create_tables.sql), and run `python scripts/load_data.py` — it validates the snapshot and loads all seven tables in one transaction.
+To run against the production-shaped PostgreSQL database instead of the CSV snapshot, copy `.env.example` to `.env`, create the schema from [`schema/create_tables.sql`](schema/create_tables.sql), and run `python scripts/load_data.py`. It validates the snapshot and loads all seven tables in one transaction.
 
 See [`docs/acceptance.md`](docs/acceptance.md) for the full release checklist. Publishing is a deliberate, owner-approved step: moving a local branch never touches either live URL by itself.
 

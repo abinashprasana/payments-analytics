@@ -1,6 +1,6 @@
-# Payments Analytics v2 design contract
+# The Settlement Gap design contract
 
-Payments Analytics v2 has two complementary surfaces with one data contract:
+The Settlement Gap has two complementary surfaces with one data contract:
 
 - **The Settlement Gap** is an authored walkthrough that explains one SQL investigation and hands the reader to the workbench.
 - **Settlement Operations Workbench** is a compact product surface for daily-close triage and payment tracing.

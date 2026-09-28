@@ -156,7 +156,7 @@ def engine_metadata(engine: Any) -> dict[str, Any]:
         if isinstance(attribute, Mapping):
             metadata.update(attribute)
 
-    metadata.setdefault("dataset_version", os.getenv("DATASET_VERSION", "v2"))
+    metadata.setdefault("dataset_version", os.getenv("DATASET_VERSION", "unversioned"))
     metadata.setdefault(
         "build_sha", os.getenv("GITHUB_SHA", os.getenv("BUILD_SHA", "local"))
     )

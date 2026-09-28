@@ -545,8 +545,8 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                     + narrative["outcome"].format(count=exception_count)
                 ),
                 "operationalDecision": (
-                    "Fix the batch once, as one event. Anything left over goes "
-                    "through the exception queue in its usual order."
+                    "Fix the cause once, for every merchant it reached. Anything "
+                    "left over goes through the exception queue in its usual order."
                 ),
             },
             "metricDefinitions": metric_definitions,

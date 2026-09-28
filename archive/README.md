@@ -1,6 +1,6 @@
 # Historical v1 artifacts
 
-Payments Analytics v2 keeps prior work available without presenting it as a competing public deliverable.
+The Settlement Gap keeps prior work available without presenting it as a competing public deliverable.
 
 | Archive | Contents | Why retired |
 | --- | --- | --- |

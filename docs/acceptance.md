@@ -60,6 +60,8 @@ The PostgreSQL parity command requires the local database settings documented in
 
 Recorded local verification for the v2 candidate: 52 Python tests passed; SQL parity covered 4 as-of dates, 28 model counts, 272 exception rows, 9,672 daily aggregates, 42,016 category aggregates, and 183 public-query rows; Playwright passed 17 applicable checks across the four target widths with 19 intentional project/scope skips; Lighthouse scored 98 performance and 100 accessibility with 2.10 s LCP and 0.0021 CLS.
 
+Recorded local verification for the dataset v4 candidate (2026-09-28, branch `data-v4`): 91 Python tests and 34 MCP server tests passed; SQL parity covered 4 as-of dates, 40 model counts, 9,050 exception rows, 16,588 daily aggregates, 119,035 category aggregates, 719,005 feature and screen rows, and 127 public-query rows; the generator reproduced byte-identical CSVs; Playwright passed 14 walkthrough and 7 workbench checks across the four target widths with 15 intentional scope skips; Lighthouse scored 95 performance and 100 accessibility with 2.40 s LCP and 0.0155 CLS; both MCP eval dry runs scored 100%. The live model evaluation is pending.
+
 ## Phase B — owner-approved publication
 
 - [ ] The repository owner explicitly approves pushing the verified local release commit and tags.

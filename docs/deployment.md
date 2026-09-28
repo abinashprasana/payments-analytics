@@ -1,6 +1,6 @@
 # Free deployment and rollback
 
-Payments Analytics v2 uses only free public services.
+The Settlement Gap uses only free public services.
 
 ## Case study: GitHub Pages
 

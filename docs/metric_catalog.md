@@ -1,6 +1,6 @@
 # Settlement reconciliation metric catalogue
 
-This catalogue is the public contract for Payments Analytics v2. The SQL models are authoritative; Python and Streamlit may format their result rows but must not redefine these rules.
+This catalogue is the public contract for The Settlement Gap. The SQL models are authoritative; Python and Streamlit may format their result rows but must not redefine these rules.
 
 ## Population and boundaries
 

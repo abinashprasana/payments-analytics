@@ -49,7 +49,7 @@
   "question": {
     "stakeholder": "Why do so many EUR purchases from the 2024-11-12 close still carry a fee-mismatch exception?",
     "conciseAnswer": "By 2024-11-15, 96 of 96 EUR purchases from the 2024-11-12 close had settled for the right gross amount. 24 of them still carry fee-mismatch exceptions: the recorded fee kept the old schedule after the merchant's new contract began.",
-    "operationalDecision": "Fix the batch once, as one event. Anything left over goes through the exception queue in its usual order."
+    "operationalDecision": "Fix the cause once, for every merchant it reached. Anything left over goes through the exception queue in its usual order."
   },
   "metricDefinitions": [
     {

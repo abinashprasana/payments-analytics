@@ -243,8 +243,8 @@ export default function Home() {
           <ErDiagram entities={projectData.sourceModel.entities} relationships={projectData.sourceModel.relationships} />
 
           <div className="scenario-heading">
-            <h3>Four scripted closes, versioned with the data</h3>
-            <p>One clean control and three planted problems. The walkthrough follows the {selectedScenario.kind} batch.</p>
+            <h3>Four scripted closes, one cause each</h3>
+            <p>One ordinary day and three incidents, each with its own cause and reaching merchants in several categories. The walkthrough follows the {selectedScenario.kind} incident.</p>
           </div>
           <ScenarioTimeline
             scenarios={projectData.scenarios}

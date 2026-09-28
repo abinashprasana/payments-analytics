@@ -1,6 +1,6 @@
 # Relational schema and model notes
 
-Payments Analytics v3 keeps the original six synthetic source entities and adds an effective-dated merchant-terms table. Source constraints protect the transactional snapshot; SQL models derive the settlement investigation without changing source rows.
+The Settlement Gap keeps the original six synthetic source entities and adds an effective-dated merchant-terms table. Source constraints protect the transactional snapshot; SQL models derive the settlement investigation without changing source rows.
 
 ## Source entities
 
