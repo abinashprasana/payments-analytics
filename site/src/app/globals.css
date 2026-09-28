@@ -76,7 +76,7 @@
   --rail-wide: 96px;
   --rail-narrow: 48px;
 
-  --font-display: "Source Serif 4 Variable", "Source Serif 4", Georgia, serif;
+  --font-display: var(--font-source-serif), "Source Serif 4", Georgia, serif;
   --font-body: "IBM Plex Sans Variable", "IBM Plex Sans", "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", Consolas, monospace;
 

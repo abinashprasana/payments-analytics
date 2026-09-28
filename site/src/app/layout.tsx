@@ -1,11 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/source-serif-4";
+import localFont from "next/font/local";
 import "@fontsource-variable/ibm-plex-sans";
 import "@fontsource/ibm-plex-mono/400.css";
 import "@fontsource/ibm-plex-mono/500.css";
 import "./globals.css";
 
 import { publicConfig } from "@/lib/config";
+
+const displayFont = localFont({
+  src: "../../node_modules/@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2",
+  weight: "200 900",
+  display: "swap",
+  variable: "--font-source-serif",
+});
 
 const title =
   "The Settlement Gap — why completed payments go unreconciled, and the workbench that finds them";
@@ -62,7 +69,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={displayFont.variable}>
       <body>
         <a className="skip-link" href="#main-content">Skip to the walkthrough</a>
         {children}
