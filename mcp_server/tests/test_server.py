@@ -151,3 +151,12 @@ def test_tools_are_declared_read_only():
     tools = anyio.run(go)
     assert {t.name for t in tools} == {"list_queries", "run_query", "trace_payment"}
     assert all(t.annotations.read_only_hint for t in tools)
+
+
+def test_scenario_options_does_not_serve_expected_outcomes():
+    data = call("run_query", {"query_id": "scenario_options"}).structured_content
+    assert data["columns"] == server.PUBLIC_SCENARIO_COLUMNS
+    assert data["total_rows"] == 4
+    served = json.dumps(data)
+    for leaked in ("expected_primary_reason", "expected_affected_payments", "focus_category", "description"):
+        assert leaked not in served

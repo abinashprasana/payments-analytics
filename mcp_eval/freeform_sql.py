@@ -61,8 +61,9 @@ def read_only_connection(workdir: Path) -> duckdb.DuckDBPyConnection:
 def prompt_messages(question: str) -> list[dict[str, str]]:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     scenarios = [
+        # The same fields the MCP server serves, so neither path sees an answer key.
         {k: item.get(k) for k in ("scenarioId", "name", "closeDate", "defaultCurrency",
-                                  "focusCategory", "investigationAsOfDate")}
+                                  "investigationAsOfDate")}
         for item in manifest["scenarios"]
     ]
     system = (

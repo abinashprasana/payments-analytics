@@ -61,6 +61,10 @@ The `run_query` path uses the manifest `asOfDate` (2025-01-10) when `as_of_date`
 
 `payment_trace` is reachable two ways. `trace_payment` needs only a payment ID and finds the scenario itself. `run_query("payment_trace", ...)` needs both `scenario` and `payment_id`. For a question that names only a payment, `trace_payment` is the expected tool and `run_query` with the correct scenario is accepted as an alternative. Every other query ID is reachable only through `run_query`.
 
+## Scenario metadata served over MCP
+
+Approved by the owner on 2026-09-28: over MCP, `scenario_options` returns only `scenario_id`, `name`, `close_date`, `as_of_date`, `default_currency` and `is_default`. The expected reason, expected count, leading category and description stay in the manifest and the workbench, but are no longer served to a model, because in the first live run the model answered 4 questions from them without querying data. The free form SQL path gets the same fields.
+
 ## Where the code differs from the brief
 
 1. Benford and control limit screens are already exposed. `benford_conformity` and `exception_rate_screen` are served through `run_query` today. Only `exception_scoring` is withheld. Following your decision, the golden set leaves both out and the README will say they are served and were not evaluated.

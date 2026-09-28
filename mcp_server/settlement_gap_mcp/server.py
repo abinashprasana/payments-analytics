@@ -48,6 +48,12 @@ QUERY_INFO: dict[str, tuple[str, str]] = {
 UNAVAILABLE = {
     "exception_scoring": "needs the optional scikit-learn/SHAP stack, which the server (like the deployed workbench) does not install",
 }
+# The scenario manifest also records what each scripted incident is expected
+# to produce (reason, count, leading category, a description of the spread).
+# The workbench shows that as context, but served to a model it is an answer
+# key: in the first live eval the model answered from it without querying
+# data. Over MCP, scenario_options lists only what identifies a close.
+PUBLIC_SCENARIO_COLUMNS = ["scenario_id", "name", "close_date", "as_of_date", "default_currency", "is_default"]
 
 # Plain-English form of each rule in RULE_SOURCE, keyed by the name the SQL emits.
 RULES: dict[str, tuple[str, str]] = {
@@ -160,6 +166,8 @@ def run_query(
     if query_id not in QUERY_INFO:
         raise ToolError(f"Unknown query_id {query_id!r}. Call list_queries for the registry.")
     frame = _run(query_id, params)
+    if query_id == "scenario_options":
+        frame = frame[PUBLIC_SCENARIO_COLUMNS]
     columns, rows = _records(frame.head(limit))
     return {
         "query_id": query_id,
