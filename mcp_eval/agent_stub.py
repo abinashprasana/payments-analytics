@@ -98,6 +98,12 @@ class GroqModel:
         )
         return response.choices[0].message
 
+    def complete_text(self, messages: list[dict[str, Any]]) -> str:
+        response = self._client.chat.completions.create(
+            model=self.model, messages=messages, temperature=self.temperature,
+        )
+        return response.choices[0].message.content or ""
+
 
 def _tool_call(index: int, name: str, arguments: dict[str, Any]) -> SimpleNamespace:
     return SimpleNamespace(

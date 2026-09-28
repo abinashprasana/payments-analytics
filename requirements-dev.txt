@@ -9,3 +9,6 @@ faker==40.19.1
 # inside score_exceptions so the runtime install stays light.
 scikit-learn==1.7.2
 shap==0.48.0
+
+# MCP eval offline tests parse generated SQL.
+sqlglot==27.29.0
