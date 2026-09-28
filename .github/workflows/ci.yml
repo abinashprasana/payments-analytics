@@ -40,6 +40,11 @@ jobs:
       - name: Verify generated case-study data
         run: python scripts/generate_artifacts.py --check
 
+      - name: Verify MCP eval golden and refusal sets against the snapshot
+        run: |
+          python -m mcp_eval.golden check
+          python -m mcp_eval.refusals check
+
   mcp-server:
     name: MCP server (read-only query tools)
     runs-on: ubuntu-latest
@@ -62,6 +67,14 @@ jobs:
 
       - name: Run MCP server tests
         run: uv run pytest -v
+
+      # Scripted oracle through the real tools: no model, no key, no network.
+      # Live natural language runs need GROQ_API_KEY and are not part of CI.
+      - name: Dry-run the MCP eval through the real tools
+        working-directory: .
+        run: |
+          uv run --project mcp_server --with-requirements requirements-eval.txt python -m mcp_eval.run_eval --suite questions --dry-run --repeats 1
+          uv run --project mcp_server --with-requirements requirements-eval.txt python -m mcp_eval.run_eval --suite refusal --dry-run --repeats 1
 
   postgres-parity:
     name: DuckDB and PostgreSQL model parity

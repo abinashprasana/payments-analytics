@@ -175,6 +175,60 @@ For Claude Desktop, add it to `claude_desktop_config.json` with an absolute path
 
 ---
 
+## 🧪 MCP evaluation
+
+The MCP server already validates every call against the registry, so a request for an unknown query ID or a bad parameter is refused before it runs. What was not measured is whether a model, given a plain English question, chooses the right tool and the right parameters in the first place. This evaluation adds that: 45 questions across 7 categories, run through the real MCP tools, plus 18 refusal and prompt injection cases. It lives in [`mcp_eval/`](mcp_eval) and does not change the server or its pinned tool schemas.
+
+| Set | Size | Categories |
+|---|---:|---|
+| Golden questions | 45 | payment trace (9), close KPI (8), exception queue (7), segment isolation (5), metadata (5), ambiguous (5), currency boundary (6) |
+| Refusal cases | 18 | arbitrary SQL (4), unknown query ID (4), invalid parameter (4), cross currency sum (3), prompt injection (3) |
+
+Every expected answer is derived from the snapshot by `AnalyticsEngine` and replayed in CI, so the golden files fail the build if the data drifts under them. Payment IDs, dates, and figures are real rows. `benford_conformity` and `exception_rate_screen` are served by `run_query` but were left out of the question set on purpose.
+
+How a trial is scored: the first substantive tool call is compared with the expected tool and query ID, then its arguments are normalised the way the engine normalises them and compared key by key. Discovery calls (`list_queries`, `scenario_options`) before it are allowed. Currency boundary and refusal answers are classified deterministically, and an answer fails outright if it states the sum of amounts from two currencies. Each question runs 3 times; the reported outcome is the modal one, with Wilson 95% intervals.
+
+### Results
+
+| Metric | Result |
+|---|---|
+| Tool selection accuracy | TODO |
+| Parameter accuracy given the correct tool | TODO |
+| End to end accuracy | TODO |
+| Disagreement across repeats | TODO |
+| Currency boundary questions handled | TODO |
+| Refusal cases refused or safely reformulated | TODO |
+| Free form text to SQL answer accuracy | TODO |
+| Free form text to SQL unsafe query rate | TODO |
+
+These cells stay TODO until two things happen: the question and refusal sets are reviewed (`"reviewed": true` in [`mcp_eval/golden`](mcp_eval/golden)), and a live run is executed with a `GROQ_API_KEY`. Reported figures use reviewed records only, and every results file says so.
+
+The comparison path in [`mcp_eval/freeform_sql.py`](mcp_eval/freeform_sql.py) gives the same model the raw schema and the scenario manifest and asks for one DuckDB query per question. The query runs on a read only, locked copy of the same snapshot, and a deterministic check flags destructive statements, money sums without a currency boundary, and reads of customer names or emails.
+
+### Running it
+
+```bash
+uv run --project mcp_server --with-requirements requirements-eval.txt python -m mcp_eval.run_eval --suite questions --dry-run
+```
+
+The dry run replaces the model with a scripted oracle that makes the expected calls through the real server, so it needs no key and should score 100%. CI runs it on every push. Live runs read `GROQ_API_KEY` from the environment only, pace requests at one every 2.1 seconds, and stop cleanly at `--max-requests` (400 by default, inside one day of Groq's free tier). They are left out of CI because they need a key and are not deterministic.
+
+```bash
+uv run --project mcp_server --with-requirements requirements-eval.txt python -m mcp_eval.run_eval --suite questions
+uv run --project mcp_server --with-requirements requirements-eval.txt python -m mcp_eval.run_eval --suite refusal
+uv run --project mcp_server --with-requirements requirements-eval.txt python -m mcp_eval.freeform_sql --suite questions
+```
+
+### Limitations
+
+- One person labels the golden set, so the expected calls reflect one reading of each question.
+- 45 questions and 18 cases give wide intervals; a few flipped outcomes move the headline rate by several points.
+- Results depend on one model, one provider, and the date of the run.
+- The free form comparison runs read only against a snapshot copy. It says nothing about what the same SQL would do against a writable database.
+- Tool results longer than 8,000 characters are truncated before the model sees them, to fit the free tier's token limits.
+
+---
+
 ## 🗂️ Schema
 
 ```mermaid
@@ -305,6 +359,10 @@ payments-analytics/
 ├── mcp_server/                   # read-only MCP server, managed with uv
 │   ├── settlement_gap_mcp/       # the three tools, audit log, HTTP transport
 │   └── tests/                    # tool refusals, HTTP hardening, pinned tool definitions
+│
+├── mcp_eval/                     # natural language evaluation of the MCP tools
+│   ├── golden/                   # 45 questions and 18 refusal cases, answers derived from the snapshot
+│   └── results/                  # aggregate results from live runs
 │
 ├── render.yaml                   # free Render service for the public MCP endpoint
 │

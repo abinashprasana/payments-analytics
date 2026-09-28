@@ -163,6 +163,12 @@ def main(argv: list[str] | None = None) -> int:
     (raw_dir / f"{prefix}{args.suite}_{stamp}.jsonl").write_text(
         "".join(json.dumps(t, default=str) + "\n" for t in transcripts), encoding="utf-8")
     print(f"Wrote {base.with_suffix('.json')} and .md" + (f" (stopped: {stopped})" if stopped else ""))
+    if args.dry_run:
+        # The oracle makes the expected calls, so anything short of a full pass is a harness bug.
+        missed = [s["id"] for s in scored if not s.get("end_to_end", s.get("behavior_ok"))]
+        if missed or errors:
+            print(f"Dry run failed for: {sorted(set(missed))} errors={len(errors)}")
+            return 1
     return 1 if stopped == "authentication failed" else 0
 
 
