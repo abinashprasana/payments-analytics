@@ -31,7 +31,7 @@
 - 👀 **What status reports miss:** they stop at "the customer paid." Reconciliation has to compare two separate kinds of evidence, the merchant's contract terms and the money that actually arrived.
 - 🏗️ **What I built:**
   - one portable SQL model chain that defines "reconciled", checked on DuckDB and PostgreSQL on every push
-  - a synthetic data generator that models incidents as events with a cause, calibrated to published card payment statistics
+  - a synthetic data generator that models incidents as events with a cause, on top of an everyday mix of exceptions, calibrated to published card payment statistics
   - a six-chapter walkthrough of one incident, from symptom to a single payment
   - a live workbench for triaging the same exceptions
   - a read-only MCP server, so Claude can ask the same questions in plain English, and an evaluation harness that measures whether a model picks the right query
@@ -90,7 +90,7 @@ The first version drew every value from a flat random range, and it showed. An a
 
 How v5 gets there:
 
-- Purchases pick a category at its real-world share first, then a merchant in that category by popularity. The shares and ticket sizes are calibrated to the [UK Finance card expenditure statistics](https://www.ukfinance.org.uk/system/files/2025-11/Card%20Expenditure%20Statistics%20Dashboard%20-%202025%20Q3.pdf), where food and drink is about 38% of card transactions and entertainment, which includes restaurants and pubs, about 22%.
+- Purchases pick a category first, then a merchant in that category by popularity. The order of the categories and their ticket sizes follow the [UK Finance card expenditure statistics](https://www.ukfinance.org.uk/system/files/2025-11/Card%20Expenditure%20Statistics%20Dashboard%20-%202025%20Q3.pdf), where food and drink is about 38% of card transactions and entertainment, which includes restaurants and pubs, about 22%. The shares describe one acquirer's merchant book rather than national spend, with a floor of 8% so the smaller categories still show up on a single day's close.
 - Amounts are lognormal per category, scaled by customer segment, with some prices snapped to .99 and .00. That spread is what makes first digits follow Benford's law.
 - Volume follows each account's own activity rate, hour of day, weekday and a November and December peak. Merchant popularity follows a Pareto curve, and a customer's country decides their currency.
 - Incidents are clustered anomalies with a cause. Each merchant has a settlement partner, an acquirer and a place in or out of a repricing campaign, drawn once with category weights. An incident hits whatever those merchants sold in its window, so it spreads the way its cause does. This follows how [AMLworld](https://arxiv.org/abs/2306.16424) embeds laundering patterns in a full synthetic economy, and the clustered-anomaly type in [ADBench](https://arxiv.org/abs/2206.09426).
