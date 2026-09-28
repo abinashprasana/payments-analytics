@@ -43,45 +43,56 @@ The dataset is entirely synthetic, generated with Python and Faker, and none of 
 
 | Metric | Value |
 |---|---:|
-| Customers | 5,000 |
-| Accounts | 6,000 |
-| Merchants | 800, across 8 categories |
-| Transactions | 80,000 |
-| Eligible purchases (completed, merchant-attributed) | 60,272 |
-| Settlement records | 63,185 |
+| Customers | 15,000 |
+| Accounts | 18,000 |
+| Merchants | 1,500, across 8 categories |
+| Transactions | 250,000 |
+| Eligible purchases (completed, merchant-attributed) | 191,263 |
+| Settlement records | 200,490 |
 | Currencies | EUR, GBP, AUD, CAD — never summed across each other |
 | Transaction date range | 2022-01-01 to 2024-12-31 |
-| Dataset build | `settlement-gap-v3.0.0`, generated with a fixed seed |
+| Dataset build | `settlement-gap-v4.0.0`, generated with a fixed seed |
 
-Four scenarios are injected deterministically into the snapshot and recorded in [`data/scenarios.json`](data/scenarios.json): a clean daily close with nothing wrong, a Travel/GBP batch that settles late, a Retail/CAD batch that never settles, and an Electronics/EUR batch where the recorded fee falls out of step with the merchant's current contract. The site currently walks through the fee-mismatch one; the workbench can reproduce all four.
+Four scenarios are recorded in [`data/scenarios.json`](data/scenarios.json). Three of them are incidents with a cause, applied to the merchants that cause reaches, in traffic that was generated first:
+
+- **Settlement partner outage / GBP** (close 2024-10-10): a GBP settlement partner stops for three days. Its merchants' payments settle three days late. 23 on the close, across 4 categories.
+- **Stale fee schedule / EUR** (close 2024-11-12): merchants in a 1 Oct repricing keep being charged the old fee until 19 Nov. 24 on the close, across 6 categories, led by Retail.
+- **Lost settlement file / CAD** (close 2024-12-03): one acquirer's settlement file never arrives. 38 on the close, across 6 categories.
+- **Normal daily close / EUR** (2024-09-17): no incident. Background disputes and data errors can still land on it, and one does.
+
+No payment is moved or invented for a scenario, so each close has an ordinary day's volume and category mix. The site walks through the fee incident; the workbench can open all four.
 
 ### How the synthetic data was made realistic
 
-The first version drew every value from a flat random range, and it showed. An audit of v2 found patterns no real ledger has, and v3 rebuilt the generator around how card payments actually behave. The four scenarios above are unchanged; everything around them is new.
+The first version drew every value from a flat random range, and it showed. An audit of v2 found patterns no real ledger has. v3 rebuilt the generator around how card payments behave, and v4 fixed what v3 still got wrong: each planted incident was a batch of one category moved onto a single day, so the investigation always ended in a chart with one category at 100% and the rest at zero.
 
-| What the audit measured | v2 | v3 |
+| What the audit measured | v2 | v4 (current) |
 |---|---|---|
-| Transactions per year, 2022 / 2023 / 2024 | 0.3% / 6% / 94% | 25% / 33% / 42% |
-| Share of all transactions in December 2024 | 36% | 4.9% |
-| Purchase first digits against Benford's law (mean absolute deviation) | digits 1 to 4 at about 22% each, 5 to 9 at about 2%: fails | 0.002 to 0.005 in every currency: close conformity |
-| Median purchase by category | about 2,490 in every category | 22 (Food & Beverage) up to 520 (Travel) |
-| Share of purchases at the top tenth of merchants | 12% | 54% |
-| Refunds with no earlier purchase behind them | 3,891 of 3,919 | 0 of 3,000 |
+| Transactions per year, 2022 / 2023 / 2024 | 0.3% / 6% / 94% | 26% / 32% / 41% |
+| Share of all transactions in December 2024 | 36% | 4.8% |
+| Purchase first digits against Benford's law (mean absolute deviation) | digits 1 to 4 at about 22% each, 5 to 9 at about 2%: fails | 0.004 to 0.006 in every currency: close conformity |
+| Share of purchases by category | set by chance | Food & Beverage 36%, Entertainment 20%, Retail 16%, Travel 8%, Services 7%, Electronics 5%, Healthcare 5%, Utilities 3% |
+| Median purchase by category | about 2,490 in every category | 17 (Entertainment) up to 110 (Electronics) |
+| Share of purchases at the top tenth of merchants | 12% | 63% |
+| Refunds with no earlier purchase behind them | 3,891 of 3,919 | 0 of 9,400 |
 | Settlements dated on a Saturday or Sunday | 16,589 | 0 |
 | Settlements stamped at the payment's own time of day | 61,124 of 61,124 | 0 |
-| Fraud flags | the 2,500 largest transfers | risk scored: 2.2% of low-risk merchant payments, 5.7% of high-risk |
+| Fraud flags | the 2,500 largest transfers | risk scored: 0.5% of low-risk merchant payments, 6.1% of high-risk |
 | Transactions outside the account's open period | 4,238 | 0 |
+| Categories hit by the fee incident on its close | 1 (48 of 48 exceptions in one category) | 6, the largest with 11 of 25 |
 
-How v3 gets there:
+How v4 gets there:
 
-- Amounts are lognormal per merchant category, scaled by customer segment, with some prices snapped to .99 and .00. That spread is what makes first digits follow Benford's law.
+- Purchases pick a category at its real-world share first, then a merchant in that category by popularity. The shares and ticket sizes are calibrated to the [UK Finance card expenditure statistics](https://www.ukfinance.org.uk/system/files/2025-11/Card%20Expenditure%20Statistics%20Dashboard%20-%202025%20Q3.pdf), where food and drink is about 38% of card transactions and entertainment, which includes restaurants and pubs, about 22%.
+- Amounts are lognormal per category, scaled by customer segment, with some prices snapped to .99 and .00. That spread is what makes first digits follow Benford's law.
 - Volume follows each account's own activity rate, hour of day, weekday and a November and December peak. Merchant popularity follows a Pareto curve, and a customer's country decides their currency.
+- Incidents are clustered anomalies with a cause. Each merchant has a settlement partner, an acquirer and a place in or out of a repricing campaign, drawn once with category weights. An incident hits whatever those merchants sold in its window, so it spreads the way its cause does. This follows how [AMLworld](https://arxiv.org/abs/2306.16424) embeds laundering patterns in a full synthetic economy, and the clustered-anomaly type in [ADBench](https://arxiv.org/abs/2206.09426).
 - Every refund points to an earlier completed purchase from the same account and merchant through `parent_transaction_id`, and settles as a negative amount with no fee.
-- Settlements land in a 02:00 batch on business days, inside each merchant's deadline. A payment made just before Christmas or New Year can still miss a calendar-day deadline, which is where the 331 background late settlements come from.
+- Settlements land in a 02:00 batch on business days, inside each merchant's deadline. A payment made just before Christmas or New Year can still miss a calendar-day deadline, which is where the 1,010 background late settlements come from.
 - About 0.45% of purchases are disputed, weighted toward riskier merchants and categories. Visa's dispute monitoring threshold is 0.9%.
 - Closed and suspended accounts stop transacting, and failure rates rise with amount and merchant risk.
 
-`python data/generate_data.py` prints these measurements on every run and refuses to write a snapshot that misses its targets. The choices draw on the [PaySim](https://www.msc-les.org/proceedings/emss/2016/EMSS2016_249.pdf) mobile money simulator, the [Sparkov](https://github.com/namebrandon/Sparkov_Data_Generation) card transaction generator, [Stripe's payout timing](https://support.stripe.com/questions/understanding-daily-automatic-and-manual-payout-schedules), published [card network dispute thresholds](https://solidgate.com/blog/monitoring-programs/), and Nigrini's mean absolute deviation bands for Benford conformity.
+`python data/generate_data.py` prints these measurements on every run, including how each scenario close spreads across categories, and refuses to write a snapshot that misses its targets. The choices also draw on the [PaySim](https://www.msc-les.org/proceedings/emss/2016/EMSS2016_249.pdf) mobile money simulator, the [Sparkov](https://github.com/namebrandon/Sparkov_Data_Generation) card transaction generator, IBM's [synthetic credit card transactions](https://arxiv.org/abs/1910.03033), [Stripe's payout timing](https://support.stripe.com/questions/understanding-daily-automatic-and-manual-payout-schedules), published [card network dispute thresholds](https://solidgate.com/blog/monitoring-programs/), and Nigrini's mean absolute deviation bands for Benford conformity.
 
 ---
 
@@ -157,9 +168,9 @@ claude mcp add --transport http settlement-gap https://settlement-gap-mcp.onrend
 | `run_query` | Runs one registered query with validated parameters and returns at most 200 rows |
 | `trace_payment` | Explains one payment: its expected terms, its settlement if there is one, and every reconciliation rule with whether it fired |
 
-Ask *"why was payment 76330 flagged?"* and Claude calls `trace_payment(payment_id=76330)`, then answers from the fields that come back, along these lines:
+Ask *"why was payment 238833 flagged?"* and Claude calls `trace_payment(payment_id=238833)`, then answers from the fields that come back, along these lines:
 
-> Payment 76330 is a CAD 130.37 Retail purchase from the 2024-12-03 close (scenario `missing_retail_cad`). Under the merchant's terms (150 bps, 3-day SLA) it should have settled by 2024-12-06, net of a CAD 1.96 fee. No settlement exists. At the 2025-01-10 as-of date the `missing` rule fired, 35 days past the SLA. None of the other five rules applies, because there's no settlement to compare against.
+> Payment 238833 is a CAD 10.22 Food & Beverage purchase from the 2024-12-03 close (scenario `missing_retail_cad`). Under the merchant's terms (150 bps, 3-day SLA) it should have settled by 2024-12-06, net of a CAD 0.15 fee. No settlement exists. At the 2025-01-10 as-of date the `missing` rule fired, 35 days past the SLA. None of the other five rules applies, because there's no settlement to compare against.
 
 How it stays safe:
 

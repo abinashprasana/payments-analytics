@@ -57,14 +57,14 @@ class ExecutionTests(unittest.TestCase):
         with self.assertRaises(duckdb.Error):
             self.connection.execute("SET enable_external_access = true")
         count = freeform_sql.execute(self.connection, "SELECT COUNT(*) FROM settlements")
-        self.assertEqual(count["rows"], [(63_185,)])
+        self.assertEqual(count["rows"], [(200_490,)])
 
     def test_answer_matching_handles_units_and_scope(self) -> None:
         sql = ("SELECT COUNT(*) AS eligible, 0 AS exceptions FROM transactions "
                "WHERE transaction_type = 'purchase' AND status = 'completed' "
                "AND CAST(transaction_date AS DATE) = DATE '2024-09-17' AND currency = 'EUR'")
         result = freeform_sql.execute(self.connection, sql)
-        record = {"expected_answer": {"exception_count": 0, "eligible_count": 76}}
+        record = {"expected_answer": {"eligible_count": 81}}
         self.assertTrue(freeform_sql.score(record, sql, result)["answer_found"])
         self.assertTrue(freeform_sql.answer_found(
             {"overdue_minor_units": 391926, "currency": "CAD"}, [("CAD", 3919.26)]))

@@ -1,6 +1,6 @@
 # MCP query surface (phase 1)
 
-This file records what a model can actually reach through the three MCP tools, read from the code on branch `mcp-eval` (dataset `settlement-gap-v3.0.0`). The golden questions in phase 2 are written against this list and nothing else.
+This file records what a model can actually reach through the three MCP tools, read from the code on branch `mcp-eval`, updated for dataset `settlement-gap-v4.0.0`. The golden questions in phase 2 are written against this list and nothing else.
 
 ## Sources read
 
@@ -40,10 +40,10 @@ This file records what a model can actually reach through the three MCP tools, r
 
 | Scenario ID | Close date | Currency | Category | Default as-of | Signal |
 |---|---|---|---|---|---|
-| `normal` | 2024-09-17 | EUR | Services | 2025-01-10 | 0 exceptions, 76 payments |
-| `delayed_travel_gbp` | 2024-10-10 | GBP | Travel | 2024-10-14 | 48 late, 64 payments |
-| `stale_electronics_eur_fee` | 2024-11-12 | EUR | Electronics | 2025-01-10 | 48 fee mismatch, 80 payments |
-| `missing_retail_cad` | 2024-12-03 | CAD | Retail | 2025-01-10 | 48 missing, 66 payments |
+| `normal` | 2024-09-17 | EUR | no incident | 2025-01-10 | 1 background exception, 81 payments |
+| `delayed_travel_gbp` | 2024-10-10 | GBP | partner outage, led by Food & Beverage | 2024-10-14 | 23 late across 4 categories, 47 payments |
+| `stale_electronics_eur_fee` | 2024-11-12 | EUR | stale fee schedule, led by Retail | 2025-01-10 | 24 fee mismatch across 6 categories, 96 payments |
+| `missing_retail_cad` | 2024-12-03 | CAD | lost settlement file, led by Food & Beverage | 2025-01-10 | 38 missing across 6 categories, 76 payments |
 
 The `run_query` path uses the manifest `asOfDate` (2025-01-10) when `as_of_date` is omitted. `trace_payment` uses each scenario's own investigation date instead, so the delayed scenario reads as of 2024-10-14 there.
 
@@ -67,7 +67,7 @@ The `run_query` path uses the manifest `asOfDate` (2025-01-10) when `as_of_date`
 2. There is no merchant health or category health query ID. The marts exist in SQL, but the registry does not expose them. Category questions map to `segment_isolation`. Merchant questions can only map to `exception_queue`, which lists merchant ID and name per exceptional payment.
 3. Every data query covers one close. A scenario fixes both the close date and the currency, so a "per currency" question has exactly four reachable answers, and AUD has no scenario at all. `start_date` and `end_date` can only narrow that single date.
 4. A conflicting filter used to return an empty result with no error. `close_summary` with `scenario=delayed_travel_gbp, currency=EUR` returned 0 rows, and so did a date range that excluded the close date, which a model could read as "nothing happened". With the owner's approval (2026-09-28) the engine now rejects both with an error that names the scenario's currency or close date. The tool schemas and `tool_manifest.json` did not change.
-5. `trace_payment` covers only payments in the four scenario closes (286 payments). Any other valid payment ID is refused with a message naming the scenario closes.
+5. `trace_payment` covers only payments in the four scenario closes (300 payments on dataset v4). Any other valid payment ID is refused with a message naming the scenario closes.
 6. The README example previously used payment 240. On v3 the equivalent missing CAD payment is 76330, and the README was updated in the data commit.
 
 ## Golden record schema (proposed for phase 2)

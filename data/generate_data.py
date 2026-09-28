@@ -1,24 +1,32 @@
-"""Generate the deterministic Payments Analytics v3 synthetic snapshot.
+"""Generate the deterministic Payments Analytics v4 synthetic snapshot.
 
-Settlement outcomes are derived from effective merchant terms. Four guided
-close-day scenarios are placed deterministically; no row represents a real
-customer, merchant, payment, incident, or business result.
+Traffic is generated first, as it would happen. Each scripted incident in
+data/scenarios.json is then an event with a cause (a settlement partner outage,
+a stale fee table, a lost settlement file), applied to the merchants it reaches
+and to the payments those merchants took in the event's window. No payment is
+moved or invented for a scenario, so a scenario close has an ordinary volume and
+category mix, and its exceptions spread across categories the way the cause
+dictates. No row represents a real customer, merchant, payment, or incident.
 
-Distribution choices follow published synthetic-payments practice: per-account
-activity rates and per-category lognormal amounts (Sparkov, PaySim), heavy-tailed
-merchant popularity, business-day settlement batches with weekend and holiday
-roll-forward, refunds linked to a prior purchase, and risk-scored fraud flags.
+Distribution choices follow published practice and data: category shares and
+ticket sizes calibrated to UK Finance card expenditure statistics, per-category
+lognormal amounts and per-entity habits (Sparkov, PaySim, IBM's credit card
+generator), heavy-tailed merchant popularity, business-day settlement batches,
+refunds linked to a prior purchase, and incidents as clustered anomalies inside
+realistic background traffic (AMLworld, ADBench).
 """
 
 from __future__ import annotations
 
+import bisect
 import csv
 import datetime as dt
+import itertools
 import json
 import math
 import random
 import statistics
-from collections import Counter
+from collections import Counter, defaultdict
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 from typing import Any
@@ -26,12 +34,12 @@ from typing import Any
 from faker import Faker
 
 SEED = 42
-NUM_CUSTOMERS = 5_000
-NUM_ACCOUNTS = 6_000
-NUM_MERCHANTS = 800
-NUM_TRANSACTIONS = 80_000
-NUM_REFUNDS = 3_000
-NUM_FRAUD_FLAGS = 2_500
+NUM_CUSTOMERS = 15_000
+NUM_ACCOUNTS = 18_000
+NUM_MERCHANTS = 1_500
+NUM_TRANSACTIONS = 250_000
+NUM_REFUNDS = 9_400
+NUM_FRAUD_FLAGS = 7_800
 HISTORY_START = dt.date(2016, 1, 1)
 START_DATE = dt.date(2022, 1, 1)
 END_DATE = dt.date(2024, 12, 31)
@@ -39,11 +47,10 @@ END_DATE = dt.date(2024, 12, 31)
 DATA_DIR = Path(__file__).resolve().parent
 OUTPUT_DIR = DATA_DIR / "raw"
 SCENARIO_MANIFEST = DATA_DIR / "scenarios.json"
-SCENARIO_BATCH_SIZE = 48
-TERMS_CHANGE_DATE = dt.date(2024, 10, 1)
 SETTLEMENT_BATCH_HOUR = 2
 DISPUTE_RATE = Decimal("0.0045")
-EXPECTED_SETTLEMENTS = 63_185
+MISMATCH_CONTROLS = 12
+EXPECTED_SETTLEMENTS = 200_490
 
 # Every country settles in one of the four supported currencies.
 COUNTRY_CURRENCY = {
@@ -55,16 +62,26 @@ COUNTRY_WEIGHTS = {
     "United Kingdom": .20, "Canada": .20, "Australia": .20, "Germany": .13,
     "France": .10, "Netherlands": .06, "Spain": .05, "Ireland": .03, "Italy": .03,
 }
-# category: (median ticket, lognormal sigma, share of merchants, refund weight, dispute weight)
+# category: (median ticket, lognormal sigma, share of purchases, share of
+# merchants, refund weight, dispute weight). Purchase shares and medians are
+# calibrated to UK Finance card expenditure statistics (Q4 2025): food and
+# drink about 38% of card transactions at about GBP 22, entertainment
+# (restaurants and pubs) about 22% at about GBP 18, travel about 8% at about
+# GBP 37, household goods about 2% at about GBP 84. Medians sit near mean / 1.5.
 CATEGORY_PROFILES = {
-    "Food & Beverage": (18.0, 0.70, .22, 0.4, 0.5),
-    "Retail": (45.0, 0.95, .20, 3.0, 1.0),
-    "Entertainment": (35.0, 0.80, .10, 1.5, 1.2),
-    "Utilities": (90.0, 0.55, .06, 0.2, 0.3),
-    "Healthcare": (120.0, 0.90, .08, 0.6, 0.6),
-    "Services": (150.0, 1.00, .14, 1.0, 1.0),
-    "Electronics": (250.0, 0.90, .10, 3.0, 2.0),
-    "Travel": (420.0, 0.85, .10, 2.0, 2.2),
+    "Food & Beverage": (15.0, 0.75, .36, .26, 0.4, 0.5),
+    "Entertainment": (14.0, 0.80, .20, .17, 1.2, 1.2),
+    "Retail": (30.0, 0.95, .16, .18, 3.0, 1.0),
+    "Travel": (45.0, 1.20, .08, .09, 2.0, 2.2),
+    "Services": (55.0, 0.95, .07, .12, 1.0, 1.0),
+    "Electronics": (90.0, 0.90, .05, .08, 3.0, 2.0),
+    "Healthcare": (35.0, 0.85, .05, .06, 0.6, 0.6),
+    "Utilities": (60.0, 0.60, .03, .04, 0.2, 0.3),
+}
+SHARE_BANDS = {
+    "Food & Beverage": (.32, .40), "Entertainment": (.17, .23), "Retail": (.13, .19),
+    "Travel": (.06, .10), "Services": (.05, .09), "Electronics": (.035, .065),
+    "Healthcare": (.03, .065), "Utilities": (.02, .045),
 }
 MERCHANT_CATEGORIES = list(CATEGORY_PROFILES)
 SEGMENT_AMOUNT = {"retail": 1.0, "business": 2.5, "premium": 1.8}
@@ -81,6 +98,7 @@ HOUR_WEIGHTS = [
     0.6, 0.35, 0.2, 0.15, 0.15, 0.25, 0.6, 1.2, 2.0, 2.6, 3.0, 3.4,
     4.0, 3.8, 3.4, 3.3, 3.5, 4.0, 4.6, 4.8, 4.2, 3.2, 2.2, 1.2,
 ]
+HOUR_CUMULATIVE = list(itertools.accumulate(HOUR_WEIGHTS))
 WEEKDAY_WEIGHTS = [0.95, 0.97, 1.0, 1.02, 1.12, 1.08, 0.86]
 MONTH_WEIGHTS = {
     1: .86, 2: .88, 3: .97, 4: .97, 5: 1.0, 6: 1.0,
@@ -108,10 +126,13 @@ FRAUD_REASONS = {
 TIMESTAMP = "%Y-%m-%d %H:%M:%S"
 
 _fake = Faker()
-_scenario_assignments: dict[str, list[int]] = {}
 _customer_end: dict[int, dt.date] = {}
 _account_window: dict[int, tuple[dt.date, dt.date]] = {}
 _merchant_popularity: dict[int, float] = {}
+# scenarioId -> set of merchant ids the incident reaches
+_incident_reach: dict[str, set[int]] = {}
+# transaction id -> scenarioId whose incident changed its settlement
+_incident_hits: dict[int, str] = {}
 
 
 def reset_seed() -> None:
@@ -120,14 +141,27 @@ def reset_seed() -> None:
     random.seed(SEED)
     Faker.seed(SEED)
     _fake = Faker()
-    for state in (
-        _scenario_assignments, _customer_end, _account_window, _merchant_popularity
-    ):
+    for state in (_customer_end, _account_window, _merchant_popularity, _incident_reach, _incident_hits):
         state.clear()
 
 
 def _manifest() -> dict[str, Any]:
     return json.loads(SCENARIO_MANIFEST.read_text(encoding="utf-8"))
+
+
+def _incidents() -> list[dict[str, Any]]:
+    """Scenarios that carry an incident, with parsed dates."""
+    found = []
+    for item in _manifest()["scenarios"]:
+        incident = item.get("incident")
+        if incident:
+            found.append({
+                **incident,
+                "scenarioId": item["scenarioId"],
+                "start": dt.date.fromisoformat(incident["start"]),
+                "end": dt.date.fromisoformat(incident["end"]),
+            })
+    return found
 
 
 def _write_rows(filename: str, rows: list[dict[str, Any]]) -> None:
@@ -174,7 +208,7 @@ def _seasonal_date(start: dt.date, end: dt.date) -> dt.date:
 
 
 def _timestamp(day: dt.date) -> dt.datetime:
-    hour = random.choices(range(24), weights=HOUR_WEIGHTS, k=1)[0]
+    hour = random.choices(range(24), cum_weights=HOUR_CUMULATIVE, k=1)[0]
     return dt.datetime.combine(
         day, dt.time(hour, random.randint(0, 59), random.randint(0, 59))
     )
@@ -223,6 +257,17 @@ def _top_weighted(items: list[Any], weights: list[float]) -> list[Any]:
     ]
     keyed.sort(reverse=True)
     return [items[index] for _, index in keyed]
+
+
+class _Pool:
+    """Weighted draw over a fixed list, with cumulative weights built once."""
+
+    def __init__(self, items: list[Any], weights: list[float]) -> None:
+        self.items = items
+        self.cumulative = list(itertools.accumulate(weights))
+
+    def draw(self) -> Any:
+        return self.items[bisect.bisect(self.cumulative, random.random() * self.cumulative[-1])]
 
 
 def generate_customers() -> list[dict[str, Any]]:
@@ -310,7 +355,7 @@ def generate_accounts(customers: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def generate_merchants() -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    shares = {name: profile[2] for name, profile in CATEGORY_PROFILES.items()}
+    shares = {name: profile[3] for name, profile in CATEGORY_PROFILES.items()}
     for merchant_id in range(1, NUM_MERCHANTS + 1):
         registered = (
             _uniform_date(HISTORY_START, START_DATE - dt.timedelta(days=1))
@@ -329,6 +374,38 @@ def generate_merchants() -> list[dict[str, Any]]:
         _merchant_popularity[merchant_id] = min(random.paretovariate(0.95), 400.0)
     _write_rows("merchants.csv", rows)
     return rows
+
+
+def _assign_incident_reach(merchants: list[dict[str, Any]]) -> None:
+    """Decide, once per merchant, which incidents reach it.
+
+    Reach is a property of the merchant (its settlement partner, its acquirer,
+    whether it joined the repricing campaign), drawn with category weights from
+    the manifest. The incident then hits whatever those merchants happen to sell
+    in its window, which is what spreads it across categories.
+    """
+    for incident in _incidents():
+        reach = incident["reach"]
+        members = set()
+        for merchant in merchants:
+            registered = dt.date.fromisoformat(merchant["registration_date"])
+            if registered > incident["start"]:
+                continue
+            if random.random() < reach.get(merchant["category"], 0.0):
+                members.add(merchant["merchant_id"])
+        _incident_reach[incident["scenarioId"]] = members
+
+
+def _incident_for(tx: dict[str, Any], day: dt.date) -> dict[str, Any] | None:
+    """The incident, if any, that changes this completed purchase's settlement."""
+    for incident in _incidents():
+        if (
+            tx["currency"] == incident["currency"]
+            and incident["start"] <= day <= incident["end"]
+            and tx["merchant_id"] in _incident_reach[incident["scenarioId"]]
+        ):
+            return incident
+    return None
 
 
 def _purchase_amount(category: str, segment: str) -> Decimal:
@@ -359,69 +436,14 @@ def _status(day: dt.date, failure_probability: float) -> str:
     return "failed" if random.random() < failure_probability else "completed"
 
 
-def _place_scenarios(
-    transactions: list[dict[str, Any]],
-    accounts: list[dict[str, Any]],
-    merchants: list[dict[str, Any]],
-) -> dict[str, list[dict[str, Any]]]:
-    account_by_id = {row["account_id"]: row for row in accounts}
-    merchant_by_id = {row["merchant_id"]: row for row in merchants}
-    placed: dict[str, list[dict[str, Any]]] = {}
-    used: set[int] = set()
-    ordered = sorted(transactions, key=lambda tx: (tx["transaction_date"], tx["_seq"]))
-    for item in _manifest()["scenarios"]:
-        scenario_id = item["scenarioId"]
-        category, currency = item["focusCategory"], item["defaultCurrency"]
-        close_date = dt.date.fromisoformat(item["closeDate"])
-        candidates = []
-        for tx in ordered:
-            if (
-                id(tx) in used
-                or tx["status"] != "completed"
-                or tx["transaction_type"] != "purchase"
-            ):
-                continue
-            account, merchant = account_by_id[tx["account_id"]], merchant_by_id[tx["merchant_id"]]
-            window = _account_window[tx["account_id"]]
-            registered = dt.date.fromisoformat(merchant["registration_date"])
-            if (
-                account["currency"] == currency
-                and merchant["category"] == category
-                and window[0] <= close_date <= window[1]
-                and registered <= close_date
-                and (
-                    scenario_id != "stale_electronics_eur_fee"
-                    or (tx["amount"] >= Decimal("100.00") and registered <= TERMS_CHANGE_DATE)
-                )
-            ):
-                candidates.append(tx)
-        if len(candidates) < SCENARIO_BATCH_SIZE:
-            raise RuntimeError(f"Not enough eligible rows for {scenario_id}")
-        batch = random.sample(candidates, SCENARIO_BATCH_SIZE)
-        for offset, tx in enumerate(batch):
-            tx["transaction_date"] = dt.datetime.combine(
-                close_date,
-                dt.time(9 + offset % 8, offset * 7 % 60, offset * 13 % 60),
-            ).strftime(TIMESTAMP)
-            used.add(id(tx))
-        placed[scenario_id] = batch
-    return placed
-
-
-def _add_refunds(
-    transactions: list[dict[str, Any]],
-    merchants: list[dict[str, Any]],
-    scenario_rows: set[int],
-) -> list[dict[str, Any]]:
+def _add_refunds(transactions: list[dict[str, Any]], merchants: list[dict[str, Any]]) -> list[dict[str, Any]]:
     merchant_by_id = {row["merchant_id"]: row for row in merchants}
     parents = [
         tx for tx in transactions
-        if tx["transaction_type"] == "purchase"
-        and tx["status"] == "completed"
-        and id(tx) not in scenario_rows
+        if tx["transaction_type"] == "purchase" and tx["status"] == "completed"
     ]
     weights = [
-        CATEGORY_PROFILES[merchant_by_id[tx["merchant_id"]]["category"]][3]
+        CATEGORY_PROFILES[merchant_by_id[tx["merchant_id"]]["category"]][4]
         for tx in parents
     ]
     refunds: list[dict[str, Any]] = []
@@ -436,13 +458,12 @@ def _add_refunds(
         )
         if amount <= 0:
             continue
-        status = _status(day, 0.01)
         refunds.append({
             **parent,
             "amount": amount,
             "transaction_date": _timestamp(day).strftime(TIMESTAMP),
             "transaction_type": "refund",
-            "status": status,
+            "status": _status(day, 0.01),
             "_parent": parent,
             "_seq": len(transactions) + len(refunds),
         })
@@ -457,39 +478,39 @@ def generate_transactions(
     merchants: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
     segment_by_customer = {row["customer_id"]: row["segment"] for row in customers}
-    country_currency = {row["merchant_id"]: COUNTRY_CURRENCY[row["country"]] for row in merchants}
-    by_currency: dict[str, list[dict[str, Any]]] = {}
+    # Purchases pick a category at its real-world share first, then a merchant
+    # in that category by popularity, preferring the cardholder's own currency.
+    domestic: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    anywhere: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for merchant in merchants:
-        by_currency.setdefault(country_currency[merchant["merchant_id"]], []).append(merchant)
-    popularity = {
-        code: [_merchant_popularity[m["merchant_id"]] for m in group]
-        for code, group in by_currency.items()
-    }
-    everyone_weights = [_merchant_popularity[m["merchant_id"]] for m in merchants]
+        domestic[(COUNTRY_CURRENCY[merchant["country"]], merchant["category"])].append(merchant)
+        anywhere[merchant["category"]].append(merchant)
+    popularity = lambda group: [_merchant_popularity[m["merchant_id"]] for m in group]  # noqa: E731
+    domestic_pools = {key: _Pool(group, popularity(group)) for key, group in domestic.items()}
+    anywhere_pools = {key: _Pool(group, popularity(group)) for key, group in anywhere.items()}
+    category_pool = _Pool(MERCHANT_CATEGORIES, [CATEGORY_PROFILES[c][2] for c in MERCHANT_CATEGORIES])
 
     activity = []
     for account in accounts:
         start, end = _account_window[account["account_id"]]
         days = max((end - start).days + 1, 0)
-        rate = random.lognormvariate(0, 0.9)
         activity.append(
-            days * rate * ACCOUNT_ACTIVITY[account["account_type"]]
+            days * random.lognormvariate(0, 0.9) * ACCOUNT_ACTIVITY[account["account_type"]]
             * SEGMENT_ACTIVITY[segment_by_customer[account["customer_id"]]]
         )
-    drawn = random.choices(accounts, weights=activity, k=NUM_TRANSACTIONS - NUM_REFUNDS)
+    account_pool = _Pool(accounts, activity)
 
     rows: list[dict[str, Any]] = []
-    for account in drawn:
+    for _ in range(NUM_TRANSACTIONS - NUM_REFUNDS):
+        account = account_pool.draw()
         start, end = _account_window[account["account_id"]]
         segment = segment_by_customer[account["customer_id"]]
         merchant = None
         if random.random() < PURCHASE_SHARE[account["account_type"]]:
-            for _ in range(5):
-                domestic = by_currency.get(account["currency"])
-                if domestic and random.random() < .85:
-                    pick = random.choices(domestic, weights=popularity[account["currency"]], k=1)[0]
-                else:
-                    pick = random.choices(merchants, weights=everyone_weights, k=1)[0]
+            category = category_pool.draw()
+            for _attempt in range(5):
+                pool = domestic_pools.get((account["currency"], category))
+                pick = (pool if pool and random.random() < .85 else anywhere_pools[category]).draw()
                 if dt.date.fromisoformat(pick["registration_date"]) <= end:
                     merchant = pick
                     break
@@ -516,16 +537,12 @@ def generate_transactions(
             "_seq": len(rows),
         })
 
-    placed = _place_scenarios(rows, accounts, merchants)
-    scenario_rows = {id(tx) for batch in placed.values() for tx in batch}
-    rows.extend(_add_refunds(rows, merchants, scenario_rows))
+    rows.extend(_add_refunds(rows, merchants))
 
     # Ledger IDs increase with time, as they would in a real payments system.
     rows.sort(key=lambda tx: (tx["transaction_date"], tx["_seq"]))
     for transaction_id, tx in enumerate(rows, start=1):
         tx["transaction_id"] = transaction_id
-    for scenario_id, batch in placed.items():
-        _scenario_assignments[scenario_id] = sorted(tx["transaction_id"] for tx in batch)
 
     output = [
         {
@@ -545,14 +562,10 @@ def generate_transactions(
     return output
 
 
-def generate_merchant_terms(
-    merchants: list[dict[str, Any]], transactions: list[dict[str, Any]]
-) -> list[dict[str, Any]]:
-    tx_by_id = {row["transaction_id"]: row for row in transactions}
-    stale_merchants = {
-        tx_by_id[tx_id]["merchant_id"]
-        for tx_id in _scenario_assignments["stale_electronics_eur_fee"]
-    }
+def generate_merchant_terms(merchants: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Base terms by risk tier; repriced merchants get a second, cheaper term."""
+    repricing = next((i for i in _incidents() if i["type"] == "stale_fee_schedule"), None)
+    repriced = _incident_reach.get(repricing["scenarioId"], set()) if repricing else set()
     rows: list[dict[str, Any]] = []
     for merchant in merchants:
         fee_bps, sla_days = RISK_TERMS[merchant["risk_tier"]]
@@ -562,16 +575,13 @@ def generate_merchant_terms(
             "fee_rate_bps": fee_bps,
             "settlement_sla_days": sla_days,
         }
-        if merchant["merchant_id"] in stale_merchants:
+        if merchant["merchant_id"] in repriced:
+            rows.append({**common, "valid_to": (repricing["start"] - dt.timedelta(days=1)).isoformat()})
             rows.append({
                 **common,
-                "valid_to": (TERMS_CHANGE_DATE - dt.timedelta(days=1)).isoformat(),
-            })
-            rows.append({
-                **common,
-                "valid_from": TERMS_CHANGE_DATE.isoformat(),
+                "valid_from": repricing["start"].isoformat(),
                 "valid_to": "",
-                "fee_rate_bps": fee_bps - 40,
+                "fee_rate_bps": fee_bps - int(repricing["feeCutBps"]),
             })
         else:
             rows.append({**common, "valid_to": ""})
@@ -606,80 +616,75 @@ def generate_settlements(
     terms_by_merchant: dict[int, list[dict[str, Any]]] = {}
     for term in merchant_terms:
         terms_by_merchant.setdefault(term["merchant_id"], []).append(term)
-    missing_ids = set(_scenario_assignments["missing_retail_cad"])
-    stale_ids = set(_scenario_assignments["stale_electronics_eur_fee"])
-    delayed_ids = set(_scenario_assignments["delayed_travel_gbp"])
-    scenario_ids = set().union(*(
-        set(_scenario_assignments[item["scenarioId"]]) for item in _manifest()["scenarios"]
-    ))
-    guided_dates = {
-        dt.date.fromisoformat(item["closeDate"]) for item in _manifest()["scenarios"]
-    }
+    tx_by_id = {row["transaction_id"]: row for row in transactions}
+
     rows: list[dict[str, Any]] = []
     for tx in transactions:
-        tx_id = tx["transaction_id"]
-        if tx["status"] != "completed" or tx["merchant_id"] == "" or tx_id in missing_ids:
+        if tx["status"] != "completed" or tx["merchant_id"] == "":
             continue
+        tx_id = tx["transaction_id"]
         tx_day = _parse(tx["transaction_date"]).date()
         term = _effective_term(terms_by_merchant, tx["merchant_id"], tx_day)
         sla_days = int(term["settlement_sla_days"])
         gross = _money(tx["amount"])
+        status = "settled"
         if tx["transaction_type"] == "refund":
             # Refunds are debited from the merchant's next payout, with no fee.
             fee, settled = Decimal("0.00"), -gross
             settle_day = _settlement_day(tx_day, sla_days)
         else:
-            applied_bps = int(term["fee_rate_bps"]) + (40 if tx_id in stale_ids else 0)
+            incident = _incident_for(tx, tx_day)
+            if incident:
+                _incident_hits[tx_id] = incident["scenarioId"]
+            if incident and incident["type"] == "lost_settlement_file":
+                continue
+            applied_bps = int(term["fee_rate_bps"])
+            if incident and incident["type"] == "stale_fee_schedule":
+                applied_bps += int(incident["feeCutBps"])
             fee = _money(gross * Decimal(applied_bps) / Decimal(10_000))
             settled = gross - fee
-            settle_day = (
-                tx_day + dt.timedelta(days=sla_days + 3)
-                if tx_id in delayed_ids else _settlement_day(tx_day, sla_days)
-            )
+            if incident and incident["type"] == "partner_outage":
+                settle_day = tx_day + dt.timedelta(days=sla_days + 3)
+                status = "delayed"
+            else:
+                settle_day = _settlement_day(tx_day, sla_days)
         rows.append({
             "transaction_id": tx_id,
             "settlement_date": _batch_time(settle_day),
             "currency": tx["currency"],
             "settled_amount": f"{settled:.2f}",
             "processing_fee": f"{fee:.2f}",
-            "status": "delayed" if tx_id in delayed_ids else "settled",
+            "status": status,
             "_type": tx["transaction_type"],
-            "_day": tx_day,
         })
 
+    # Background disputes and data errors land on any day, scenario closes
+    # included, at their usual rate. They skip payments an incident already
+    # changed so each scenario's count stays attributable to its cause.
     open_purchases = [
         row for row in rows
-        if row["_type"] == "purchase"
-        and row["transaction_id"] not in scenario_ids
-        and row["_day"] not in guided_dates
+        if row["_type"] == "purchase" and row["transaction_id"] not in _incident_hits
     ]
-    tx_by_id = {row["transaction_id"]: row for row in transactions}
     weights = []
     for row in open_purchases:
-        merchant = merchant_by_id[tx_by_id[row["transaction_id"]]["merchant_id"]]
+        tx = tx_by_id[row["transaction_id"]]
+        merchant = merchant_by_id[tx["merchant_id"]]
         weights.append(
-            CATEGORY_PROFILES[merchant["category"]][4]
+            CATEGORY_PROFILES[merchant["category"]][5]
             * RISK_DISPUTE[merchant["risk_tier"]]
-            * math.log1p(float(tx_by_id[row["transaction_id"]]["amount"]))
+            * math.log1p(float(tx["amount"]))
         )
     ranked = _top_weighted(open_purchases, weights)
     disputes = int((Decimal(len(open_purchases)) * DISPUTE_RATE).to_integral_value(ROUND_HALF_UP))
     for row in ranked[:disputes]:
         row["status"] = "disputed"
 
-    # Deterministic controls prove the mismatch rules outside guided dates.
-    controls = ranked[disputes:disputes + 12]
+    controls = ranked[disputes:disputes + MISMATCH_CONTROLS]
     currency_cycle = {"EUR": "GBP", "GBP": "EUR", "AUD": "CAD", "CAD": "AUD"}
-    for row in controls[:6]:
+    for row in controls[: MISMATCH_CONTROLS // 2]:
         row["currency"] = currency_cycle[row["currency"]]
-    for row in controls[6:]:
+    for row in controls[MISMATCH_CONTROLS // 2:]:
         row["settled_amount"] = f"{_money(row['settled_amount']) - Decimal('0.25'):.2f}"
-    _scenario_assignments["currency_mismatch_controls"] = sorted(
-        row["transaction_id"] for row in controls[:6]
-    )
-    _scenario_assignments["amount_mismatch_controls"] = sorted(
-        row["transaction_id"] for row in controls[6:]
-    )
 
     rows.sort(key=lambda row: (row["settlement_date"], row["transaction_id"]))
     output = [
@@ -694,8 +699,6 @@ def generate_settlements(
         }
         for settlement_id, row in enumerate(rows, start=1)
     ]
-    if Counter(row["status"] for row in output)["delayed"] != SCENARIO_BATCH_SIZE:
-        raise RuntimeError("Delayed scenario batch drifted")
     _write_rows("settlements.csv", output)
     return output
 
@@ -762,10 +765,49 @@ def _benford_mad(amounts: list[str]) -> float:
     ) / 9
 
 
+def scenario_report(tables: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
+    """What each scenario close looks like: volume, and how the incident spreads."""
+    merchant_category = {row["merchant_id"]: row["category"] for row in tables["merchants"]}
+    eligible_by_close: Counter[tuple[str, str]] = Counter()
+    for tx in tables["transactions"]:
+        if tx["transaction_type"] == "purchase" and tx["status"] == "completed":
+            eligible_by_close[(tx["transaction_date"][:10], tx["currency"])] += 1
+    report = {}
+    tx_by_id = {row["transaction_id"]: row for row in tables["transactions"]}
+    for item in _manifest()["scenarios"]:
+        close, currency = item["closeDate"], item["defaultCurrency"]
+        # Compared with the same month, so a busy December day is judged
+        # against other December days.
+        days = sorted(
+            count for (day, code), count in eligible_by_close.items()
+            if code == currency and day[:7] == close[:7]
+        )
+        hits = Counter(
+            merchant_category[tx_by_id[tx_id]["merchant_id"]]
+            for tx_id, scenario_id in _incident_hits.items()
+            if scenario_id == item["scenarioId"]
+            and tx_by_id[tx_id]["transaction_date"][:10] == close
+            and tx_by_id[tx_id]["currency"] == currency
+        )
+        total = sum(hits.values())
+        top = hits.most_common(1)[0] if hits else (None, 0)
+        report[item["scenarioId"]] = {
+            "eligible_on_close": eligible_by_close[(close, currency)],
+            "median_day": statistics.median(days),
+            "affected": total,
+            "dominant": top[0],
+            "dominant_share": round(top[1] / total, 3) if total else 0.0,
+            "categories_hit": len(hits),
+            "by_category": dict(hits.most_common()),
+        }
+    return report
+
+
 def realism_report(tables: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     """Measure the targets this generator is designed to hit."""
     transactions = tables["transactions"]
     tx_by_id = {row["transaction_id"]: row for row in transactions}
+    merchant_category = {row["merchant_id"]: row["category"] for row in tables["merchants"]}
     eligible = [
         tx for tx in transactions
         if tx["transaction_type"] == "purchase" and tx["status"] == "completed"
@@ -773,11 +815,15 @@ def realism_report(tables: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     years = Counter(tx["transaction_date"][:4] for tx in transactions)
     by_merchant = Counter(tx["merchant_id"] for tx in eligible)
     top = sorted(by_merchant.values(), reverse=True)[: max(1, len(by_merchant) // 10)]
+    categories = Counter(merchant_category[tx["merchant_id"]] for tx in eligible)
     currencies = sorted({tx["currency"] for tx in eligible})
     refunds = [tx for tx in transactions if tx["transaction_type"] == "refund"]
     return {
         "year_share": {
             year: round(count / len(transactions), 3) for year, count in sorted(years.items())
+        },
+        "category_share": {
+            name: round(categories[name] / len(eligible), 3) for name in MERCHANT_CATEGORIES
         },
         "benford_mad": {
             code: round(_benford_mad([tx["amount"] for tx in eligible if tx["currency"] == code]), 4)
@@ -795,7 +841,7 @@ def realism_report(tables: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
         ),
         "weekend_settlements": sum(
             1 for row in tables["settlements"]
-            if _parse(row["settlement_date"]).weekday() >= 5
+            if row["status"] != "delayed" and _parse(row["settlement_date"]).weekday() >= 5
         ),
         "transactions_outside_account_window": sum(
             1 for tx in transactions
@@ -812,6 +858,7 @@ def realism_report(tables: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
         "dispute_rate": round(
             sum(row["status"] == "disputed" for row in tables["settlements"]) / len(eligible), 4
         ),
+        "scenarios": scenario_report(tables),
     }
 
 
@@ -830,14 +877,14 @@ def validate_generated_snapshot(tables: dict[str, list[dict[str, Any]]]) -> dict
         raise RuntimeError("Settlement references an unknown transaction")
     if any(row["merchant_id"] not in merchant_ids for row in tables["merchant_terms"]):
         raise RuntimeError("Merchant term references an unknown merchant")
-    manifest_ids = {row["scenarioId"] for row in _manifest()["scenarios"]}
-    if not manifest_ids.issubset(_scenario_assignments):
-        raise RuntimeError("Scenario manifest and generated placements are out of sync")
 
     report = realism_report(tables)
     problems = []
     if not all(.25 <= share <= .42 for share in report["year_share"].values()):
         problems.append("year_share")
+    for name, (low, high) in SHARE_BANDS.items():
+        if not low <= report["category_share"][name] <= high:
+            problems.append(f"category_share:{name}")
     if any(mad > 0.012 for mad in report["benford_mad"].values()):
         problems.append("benford_mad")
     if report["top_decile_merchant_share"] < .40:
@@ -850,8 +897,21 @@ def validate_generated_snapshot(tables: dict[str, list[dict[str, Any]]]) -> dict
             problems.append(key)
     if not report["dispute_rate"] < .009:
         problems.append("dispute_rate")
+
+    # Scenario closes must look like ordinary days hit by a cause, not batches.
+    for item in _manifest()["scenarios"]:
+        found = report["scenarios"][item["scenarioId"]]
+        if not .6 <= found["eligible_on_close"] / found["median_day"] <= 1.6:
+            problems.append(f"{item['scenarioId']}:volume")
+        if found["affected"] != int(item["expectedSignal"]["affectedPayments"]):
+            problems.append(f"{item['scenarioId']}:affectedPayments={found['affected']}")
+        if item.get("incident"):
+            if found["dominant"] != item["focusCategory"]:
+                problems.append(f"{item['scenarioId']}:focusCategory={found['dominant']}")
+            if not .3 <= found["dominant_share"] <= .7 or found["categories_hit"] < 3:
+                problems.append(f"{item['scenarioId']}:spread")
     if problems:
-        raise RuntimeError(f"Realism targets missed ({', '.join(problems)}): {report}")
+        raise RuntimeError(f"Realism targets missed ({', '.join(problems)}): {json.dumps(report, indent=1)}")
     return report
 
 
@@ -860,8 +920,9 @@ def main() -> None:
     customers = generate_customers()
     accounts = generate_accounts(customers)
     merchants = generate_merchants()
+    _assign_incident_reach(merchants)
     transactions = generate_transactions(customers, accounts, merchants)
-    merchant_terms = generate_merchant_terms(merchants, transactions)
+    merchant_terms = generate_merchant_terms(merchants)
     settlements = generate_settlements(transactions, merchants, merchant_terms)
     fraud_flags = generate_fraud_flags(transactions, accounts, merchants)
     report = validate_generated_snapshot({

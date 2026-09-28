@@ -50,7 +50,7 @@ def test_healthz(base_url):
 def test_trace_over_http_is_audited_with_hashed_client(base_url, audit_log):
     async def go():
         async with Client(base_url + "/mcp") as client:
-            return await client.call_tool("trace_payment", {"payment_id": 76330})
+            return await client.call_tool("trace_payment", {"payment_id": 238833})
 
     result = anyio.run(go)
     assert result.structured_content["primary_reason"] == "missing"

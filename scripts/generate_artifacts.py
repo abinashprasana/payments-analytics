@@ -50,14 +50,13 @@ REASON_NARRATIVE = {
             "{count} of them settled after their deadline and are flagged "
             "as late exceptions."
         ),
-        "isolation": "every one of them is late",
         "finding_lede": (
-            "belong to the injected batch; amount identity, currency, and "
-            "effective fee terms still agree"
+            "went through the settlement partner that stopped processing. "
+            "Amounts, currency and fees still agree; only the timing broke"
         ),
         "action": (
-            "Reconcile the batch once, preserve the payment-level late flags "
-            "for SLA reporting, and export only the filtered evidence needed by operations."
+            "Chase the partner for the stalled batch, keep the late flags for "
+            "SLA reporting, and export the filtered evidence for operations."
         ),
     },
     "fee_mismatch": {
@@ -67,15 +66,14 @@ REASON_NARRATIVE = {
             "{count} of them still carry fee-mismatch exceptions: the recorded "
             "fee kept the old schedule after the merchant's new contract began."
         ),
-        "isolation": "every one of them carries a fee mismatch",
         "finding_lede": (
-            "belong to the injected batch; amount identity and currency still "
-            "agree, but the recorded fee no longer matches the effective merchant term"
+            "belong to merchants repriced on 1 Oct whose new rate never reached "
+            "the processor's fee table. Amounts and currency still agree"
         ),
         "action": (
-            "Correct the fee schedule referenced by settlement processing, "
-            "recompute the expected fee for the affected batch, and export only "
-            "the filtered evidence needed by operations."
+            "Update the processor's fee table, recompute the fee on every "
+            "repriced merchant's payments since the repricing, and export the "
+            "filtered evidence for operations."
         ),
     },
     "missing": {
@@ -85,15 +83,12 @@ REASON_NARRATIVE = {
             "{count} of them never settled within their deadline and are "
             "flagged as missing exceptions."
         ),
-        "isolation": "every one of them is missing settlement evidence",
         "finding_lede": (
-            "belong to the injected batch; the settlement evidence never "
-            "arrived within its applicable SLA"
+            "were in one acquirer's settlement file, and that file never arrived"
         ),
         "action": (
-            "Escalate the batch to the settlement partner, confirm whether the "
-            "evidence is delayed or lost, and export only the filtered evidence "
-            "needed by operations."
+            "Ask the acquirer to resend the file, confirm whether the money is "
+            "delayed or lost, and export the filtered evidence for operations."
         ),
     },
 }
@@ -167,13 +162,14 @@ def _scenario_copy(item: dict[str, Any]) -> dict[str, Any]:
     readable_reason = reason.replace("_", " ")
     if count:
         expected = (
-            f"Exactly {count} guided payments classify as {readable_reason} in "
-            f"{item['focusCategory']} / {item['defaultCurrency']}."
+            f"{count} payments on this {item['defaultCurrency']} close classify "
+            f"as {readable_reason}, spread across categories and led by "
+            f"{item['focusCategory']}."
         )
     else:
         expected = (
-            "The guided close has no reconciliation exceptions and serves as "
-            "the clean control."
+            "No incident. Background disputes and data errors can still "
+            "appear at their usual rate."
         )
     return {
         "id": item["scenarioId"],
@@ -184,8 +180,8 @@ def _scenario_copy(item: dict[str, Any]) -> dict[str, Any]:
         "merchantCategory": item["focusCategory"],
         "expectedSignal": expected,
         "disclosure": (
-            "Deterministic synthetic scenario from data/scenarios.json; it is "
-            "not a real payment incident."
+            "Scripted incidents from data/scenarios.json, applied to "
+            "generated traffic. None of them is a real incident."
         ),
     }
 
@@ -462,9 +458,23 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
         metrics = engine.query("catalog_metrics")
         record_counts, first_date, last_date = _record_counts(engine)
         close_record = close.iloc[0].to_dict()
-        travel = next(
-            row for row in segments.to_dict("records")
-            if row["merchant_category"] == selected["focusCategory"]
+        hit_segments = sorted(
+            (row for row in segments.to_dict("records") if _integer(row["exception_count"])),
+            key=lambda row: (-_integer(row["exception_count"]), str(row["merchant_category"])),
+        )
+        close_exceptions = _integer(close_record["exception_count"])
+        leader, *runners = hit_segments
+        spread = (
+            f"{leader['merchant_category']} carries {_integer(leader['exception_count'])} "
+            f"of the {close_exceptions} exceptions"
+            + (
+                ", then " + ", ".join(
+                    f"{row['merchant_category']} ({_integer(row['exception_count'])})"
+                    for row in runners[:3]
+                )
+                if runners else ""
+            )
+            + "."
         )
         investigation_incident = next(
             row for row in daily.to_dict("records")
@@ -523,9 +533,9 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
             ],
             "question": {
                 "stakeholder": (
-                    f"Why do completed {selected['focusCategory']} purchases in "
-                    f"{selected['defaultCurrency']} still carry a "
-                    f"{narrative['reason_noun']} exception after the close?"
+                    f"Why do so many {selected['defaultCurrency']} purchases from the "
+                    f"{selected['closeDate']} close still carry a "
+                    f"{narrative['reason_noun']} exception?"
                 ),
                 "conciseAnswer": (
                     f"By {investigation_as_of}, {incident_matched} of "
@@ -586,11 +596,8 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                     "model": "mart_category_health",
                     "sql": SQL_EXCERPTS["segment_isolation"],
                     "reading": (
-                        f"{selected['focusCategory']} contains "
-                        f"{_integer(travel['exception_count'])} of "
-                        f"{_integer(close_record['exception_count'])} final exceptions "
-                        f"for this {selected['defaultCurrency']} close; "
-                        + narrative["isolation"] + "."
+                        f"{spread} {len(hit_segments)} categories are hit, so this is "
+                        "one cause reaching many merchants, and no category is at fault."
                     ),
                 },
                 {
@@ -614,9 +621,9 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
             "ask": _ask_payload(trace.iloc[0].to_dict(), SELECTED_SCENARIO_ID),
             "recommendation": {
                 "finding": (
-                    f"All {_integer(travel['exception_count'])} flagged "
-                    f"{selected['focusCategory']} / {selected['defaultCurrency']} "
-                    "payments " + narrative["finding_lede"] + "."
+                    f"{exception_count} of the {selected['defaultCurrency']} payments "
+                    f"on the {selected['closeDate']} close, across {len(hit_segments)} "
+                    "categories, " + narrative["finding_lede"] + "."
                 ),
                 "action": narrative["action"],
                 "owner": "Settlement operations",
@@ -671,7 +678,7 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
                 ],
                 "journey": [
                     f"Open the {selected['defaultCurrency']} close on {selected['closeDate']}.",
-                    f"Filter the exception queue to the {selected['focusCategory']} batch.",
+                    "Filter the exception queue by reason and category.",
                     "Trace one payment and read the SQL rule that flagged it.",
                     "Export the filtered evidence. The snapshot never changes.",
                 ],

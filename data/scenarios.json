@@ -1,51 +1,113 @@
 {
-  "schemaVersion": 1,
-  "datasetVersion": "settlement-gap-v3.0.0",
+  "schemaVersion": 2,
+  "datasetVersion": "settlement-gap-v4.0.0",
   "snapshotLabel": "Synthetic demo snapshot",
   "asOfDate": "2025-01-10",
   "generatedWithSeed": 42,
-  "description": "A deterministic, wholly synthetic snapshot designed to demonstrate settlement reconciliation. Scenario outcomes are injected test fixtures, not real incidents or business claims.",
+  "description": "A deterministic, wholly synthetic snapshot designed to demonstrate settlement reconciliation. Each scripted incident is an event with a cause, applied to the merchants it reaches in naturally generated traffic. None of it is a real incident or business claim.",
   "scenarios": [
     {
       "scenarioId": "normal",
       "name": "Normal daily close",
-      "description": "A clean Services/EUR close used as the control case.",
+      "description": "An ordinary EUR day with no incident. Background disputes and data errors can still appear at their usual rate.",
       "closeDate": "2024-09-17",
       "defaultCurrency": "EUR",
-      "focusCategory": "Services",
+      "focusCategory": "Food & Beverage",
       "isDefault": true,
-      "expectedSignal": {"primaryReason": "matched", "affectedPayments": 0}
+      "incident": null,
+      "expectedSignal": {
+        "primaryReason": "matched",
+        "affectedPayments": 0
+      }
     },
     {
       "scenarioId": "delayed_travel_gbp",
-      "name": "Delayed Travel / GBP batch",
-      "description": "A Travel batch settles three calendar days beyond each merchant's applicable SLA.",
+      "name": "Settlement partner outage / GBP",
+      "description": "A GBP settlement partner stops processing for three days. It carries most travel merchants and a share of every other category, so the late payments follow ordinary traffic: food and drink first, then entertainment, travel and retail.",
       "closeDate": "2024-10-10",
       "investigationAsOfDate": "2024-10-14",
       "defaultCurrency": "GBP",
-      "focusCategory": "Travel",
+      "focusCategory": "Food & Beverage",
       "isDefault": false,
-      "expectedSignal": {"primaryReason": "late", "affectedPayments": 48}
+      "incident": {
+        "type": "partner_outage",
+        "currency": "GBP",
+        "start": "2024-10-09",
+        "end": "2024-10-11",
+        "reach": {
+          "Travel": 0.8,
+          "Entertainment": 0.5,
+          "Services": 0.45,
+          "Retail": 0.2,
+          "Food & Beverage": 0.15,
+          "Electronics": 0.15,
+          "Healthcare": 0.15,
+          "Utilities": 0.15
+        }
+      },
+      "expectedSignal": {
+        "primaryReason": "late",
+        "affectedPayments": 23
+      }
     },
     {
       "scenarioId": "stale_electronics_eur_fee",
-      "name": "Stale Electronics / EUR fee schedule",
-      "description": "Recorded fees use the prior schedule after new effective-dated merchant terms begin.",
+      "name": "Stale fee schedule / EUR",
+      "description": "A repricing campaign cuts fees for many merchants from 1 Oct 2024, but the processor's EUR fee table keeps the old rates until 19 Nov. Every EUR payment those merchants take in between records the old fee.",
       "closeDate": "2024-11-12",
       "defaultCurrency": "EUR",
-      "focusCategory": "Electronics",
+      "focusCategory": "Retail",
       "isDefault": false,
-      "expectedSignal": {"primaryReason": "fee_mismatch", "affectedPayments": 48}
+      "incident": {
+        "type": "stale_fee_schedule",
+        "currency": "EUR",
+        "start": "2024-10-01",
+        "end": "2024-11-19",
+        "feeCutBps": 40,
+        "reach": {
+          "Electronics": 0.8,
+          "Retail": 0.5,
+          "Services": 0.4,
+          "Travel": 0.4,
+          "Entertainment": 0.15,
+          "Healthcare": 0.15,
+          "Food & Beverage": 0.1,
+          "Utilities": 0.1
+        }
+      },
+      "expectedSignal": {
+        "primaryReason": "fee_mismatch",
+        "affectedPayments": 24
+      }
     },
     {
       "scenarioId": "missing_retail_cad",
-      "name": "Missing Retail / CAD batch",
-      "description": "A completed Retail batch has no settlement evidence after its SLA expires.",
+      "name": "Lost settlement file / CAD",
+      "description": "One acquirer's CAD settlement file for 3 Dec 2024 never arrives. That acquirer serves merchants in every category, so the missing payments follow the day's traffic.",
       "closeDate": "2024-12-03",
       "defaultCurrency": "CAD",
-      "focusCategory": "Retail",
+      "focusCategory": "Food & Beverage",
       "isDefault": false,
-      "expectedSignal": {"primaryReason": "missing", "affectedPayments": 48}
+      "incident": {
+        "type": "lost_settlement_file",
+        "currency": "CAD",
+        "start": "2024-12-03",
+        "end": "2024-12-03",
+        "reach": {
+          "Retail": 0.7,
+          "Electronics": 0.5,
+          "Food & Beverage": 0.35,
+          "Entertainment": 0.25,
+          "Services": 0.2,
+          "Travel": 0.2,
+          "Healthcare": 0.2,
+          "Utilities": 0.2
+        }
+      },
+      "expectedSignal": {
+        "primaryReason": "missing",
+        "affectedPayments": 38
+      }
     }
   ]
 }

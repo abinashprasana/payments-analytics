@@ -171,12 +171,16 @@ class AnalyticsEngineContractTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     self.engine.query(query_id, params)
 
-    def test_normal_close_is_a_clean_control(self) -> None:
+    def test_normal_close_has_no_incident(self) -> None:
         row = self.close_row("normal")
-        self.assertEqual(int(row["exception_count"]), 0)
-        self.assertEqual(int(row["eligible_count"]), int(row["matched_count"]))
-        self.assertEqual(float(row["coverage_rate"]), 1.0)
+        for column in ("missing_count", "late_count", "fee_mismatch_count"):
+            self.assertEqual(int(row[column]), 0, column)
         self.assertEqual(int(row["overdue_minor_units"]), 0)
+        # Only background errors keep a payment from matching on this close.
+        self.assertEqual(
+            int(row["eligible_count"]) - int(row["matched_count"]),
+            int(row["currency_mismatch_count"]) + int(row["amount_mismatch_count"]),
+        )
 
     def test_delayed_batch_changes_from_open_gap_to_late_evidence(self) -> None:
         scenario = self.scenarios["delayed_travel_gbp"]

@@ -16,6 +16,10 @@ Claude audited all 45 questions on 2026-09-28 against the v3 snapshot and the ph
 |---|---|---|
 | q011 | `exception_queue` accepted as an alternative to `close_summary` | q038 asks the same thing and already accepted both; the two records disagreed. Found when gpt-oss-120b answered q011 from the queue. |
 
+## Changed with dataset v4 (2026-09-28)
+
+Every payment and merchant ID moved to a real v4 row: 238833 and 238837 (lost CAD file), 231728 and 231729 (stale fee), 221416 and 221423 (partner outage), 214760 (clean payment on the normal close), merchant 243 in r005. Questions that named a scenario by one category now name it by its cause (for example "the CAD lost-file close"), because each incident now spans several categories. q010 and q024 now expect one exception on the normal close: a background currency mismatch, which the control is allowed to have. All expected answers were re-derived from the snapshot.
+
 ## Worth a second look before flagging
 
 | ID | Point |

@@ -68,9 +68,9 @@ class CaseStudyArtifactTests(unittest.TestCase):
             self.payload["dataset"]["recordCounts"],
             {
                 "sourceTables": 7,
-                "transactions": 80_000,
-                "eligiblePurchases": 60_272,
-                "settlements": 63_185,
+                "transactions": 250_000,
+                "eligiblePurchases": 191_263,
+                "settlements": 200_490,
             },
         )
 
@@ -90,7 +90,7 @@ class CaseStudyArtifactTests(unittest.TestCase):
             list(PRIMARY_PRECEDENCE),
         )
         self.assertIn(
-            "Exactly 48 guided payments classify as late",
+            "23 payments on this GBP close classify as late",
             next(
                 item["expectedSignal"]
                 for item in self.payload["scenarios"]
@@ -108,13 +108,13 @@ class CaseStudyArtifactTests(unittest.TestCase):
         self.assertEqual({row["currency"] for row in rows}, {"EUR"})
         self.assertEqual(
             [row["matchedCount"] for row in rows],
-            [0, 80, 80, 80],
+            [0, 96, 96, 96],
         )
         self.assertEqual(
             [row["coverageBps"] for row in rows],
             [0, 10_000, 10_000, 10_000],
         )
-        self.assertIn("80 of 80", self.payload["question"]["conciseAnswer"])
+        self.assertIn("96 of 96", self.payload["question"]["conciseAnswer"])
         self.assertIn(
             "fee-mismatch exceptions",
             self.payload["question"]["conciseAnswer"],

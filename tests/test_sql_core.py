@@ -52,31 +52,49 @@ class SettlementCoreTests(unittest.TestCase):
             self.engine.query("exception_scoring", {"currency": "EUR"})
 
     def test_guided_scenarios_have_exact_final_signals(self) -> None:
-        expected = {
-            "normal": ("exception_count", 0),
-            "delayed_travel_gbp": ("late_count", 48),
-            "stale_electronics_eur_fee": ("fee_mismatch_count", 48),
-            "missing_retail_cad": ("missing_count", 48),
-        }
-        for scenario_id, (column, count) in expected.items():
-            with self.subTest(scenario=scenario_id):
-                result = self.engine.query("close_summary", {"scenario": scenario_id})
+        column = {"late": "late_count", "fee_mismatch": "fee_mismatch_count",
+                  "missing": "missing_count"}
+        for item in self.manifest["scenarios"]:
+            reason = item["expectedSignal"]["primaryReason"]
+            if reason not in column:
+                continue
+            with self.subTest(scenario=item["scenarioId"]):
+                result = self.engine.query("close_summary", {"scenario": item["scenarioId"]})
                 self.assertEqual(len(result), 1)
-                self.assertEqual(int(result.iloc[0][column]), count)
+                self.assertEqual(
+                    int(result.iloc[0][column[reason]]),
+                    int(item["expectedSignal"]["affectedPayments"]),
+                )
 
+        # The control has no incident. Background disputes and data errors can
+        # still land on it, but nothing an incident produces.
         normal = self.engine.query("close_summary", {"scenario": "normal"}).iloc[0]
-        for column in (
-            "missing_count", "currency_mismatch_count", "amount_mismatch_count",
-            "fee_mismatch_count", "late_count", "disputed_count",
-        ):
-            self.assertEqual(int(normal[column]), 0, column)
+        for incident_column in ("missing_count", "fee_mismatch_count", "late_count"):
+            self.assertEqual(int(normal[incident_column]), 0, incident_column)
+        self.assertEqual(
+            int(normal["exception_count"]),
+            int(normal["currency_mismatch_count"]) + int(normal["amount_mismatch_count"])
+            + int(normal["disputed_count"]),
+        )
+
+    def test_incidents_spread_across_categories(self) -> None:
+        for item in self.manifest["scenarios"]:
+            if not item.get("incident"):
+                continue
+            with self.subTest(scenario=item["scenarioId"]):
+                segments = self.engine.query("segment_isolation", {"scenario": item["scenarioId"]})
+                hit = segments[segments["exception_count"] > 0]
+                self.assertGreaterEqual(len(hit), 3)
+                top = hit.sort_values("exception_count", ascending=False).iloc[0]
+                self.assertEqual(top["merchant_category"], item["focusCategory"])
+                self.assertLess(int(top["exception_count"]), int(hit["exception_count"].sum()))
 
     def test_delayed_batch_progresses_from_gap_to_late_recovery(self) -> None:
         checkpoints = {
             "2024-10-10": (0, 0, 0),
-            "2024-10-14": (16, 48, 0),
-            "2024-10-16": (64, 0, 48),
-            "2025-01-10": (64, 0, 48),
+            "2024-10-14": (24, 23, 0),
+            "2024-10-16": (47, 0, 23),
+            "2025-01-10": (47, 0, 23),
         }
         for as_of, (matched, missing, late) in checkpoints.items():
             with self.subTest(as_of=as_of):
@@ -84,7 +102,7 @@ class SettlementCoreTests(unittest.TestCase):
                     "close_summary",
                     {"scenario": "delayed_travel_gbp", "as_of_date": as_of},
                 ).iloc[0]
-                self.assertEqual(int(row["eligible_count"]), 64)
+                self.assertEqual(int(row["eligible_count"]), 47)
                 self.assertEqual(int(row["matched_count"]), matched)
                 self.assertEqual(int(row["missing_count"]), missing)
                 self.assertEqual(int(row["late_count"]), late)
@@ -102,24 +120,23 @@ class SettlementCoreTests(unittest.TestCase):
         self.assertIn("fee_mismatch", reasons)
         self.assertNotIn("fee", reasons)
 
-    def test_ancillary_controls_do_not_touch_guided_dates(self) -> None:
-        guided_dates = {
-            item["closeDate"] for item in self.manifest["scenarios"]
-        }
+    def test_background_exceptions_spread_over_ordinary_days(self) -> None:
         rows = self.engine.connection.execute(
             """
-            SELECT CAST(transaction_date AS DATE), primary_reason
+            SELECT CAST(transaction_date AS DATE), is_missing, is_fee_mismatch, is_late
             FROM int_settlement_reconciliation
             WHERE is_currency_mismatch OR is_amount_mismatch OR is_disputed
             """
         ).fetchall()
-        # Six currency and six amount controls plus the risk-weighted disputes.
+        # Six currency and six amount controls plus the risk-weighted disputes,
+        # on any day, scenario closes included, and never on a payment an
+        # incident already changed.
         disputed = self.engine.connection.execute(
             "SELECT COUNT(*) FROM settlements WHERE status = 'disputed'"
         ).fetchone()[0]
         self.assertEqual(len(rows), 12 + disputed)
-        self.assertEqual(len(rows), 281)
-        self.assertTrue(all(str(row[0]) not in guided_dates for row in rows))
+        self.assertGreater(len({row[0] for row in rows}), 300)
+        self.assertFalse(any(row[1] or row[2] for row in rows))
 
     def test_flags_are_independent_and_precedence_is_stable(self) -> None:
         payment_id = self.engine.connection.execute(
@@ -273,7 +290,7 @@ class SettlementCoreTests(unittest.TestCase):
             ["2024-11-12", "2024-11-15", "2024-11-18", "2025-01-10"],
         )
         self.assertEqual(payload["dailyClose"][-1]["coverageBps"], 10_000)
-        self.assertEqual(payload["exceptionSummary"][3]["count"], 48)
+        self.assertEqual(payload["exceptionSummary"][3]["count"], 24)
         for row in payload["dailyClose"]:
             self.assertEqual(row["overdueValue"]["currency"], row["currency"])
             self.assertIsInstance(row["overdueValue"]["minorUnits"], int)

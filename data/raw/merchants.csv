@@ -1,801 +1,1501 @@
 merchant_id,merchant_name,category,country,registration_date,risk_tier
-1,"Brown, Valencia and Crawford",Services,Spain,2019-03-03,low
-2,Holmes-Aguirre,Electronics,Australia,2020-07-14,low
-3,Diaz Inc,Retail,Australia,2020-02-16,low
-4,Fernandez-Miller,Travel,Spain,2021-02-26,low
-5,White Ltd,Entertainment,Australia,2019-09-22,low
-6,Murphy-Moore,Electronics,Italy,2021-11-21,high
-7,Shelton-Keller,Healthcare,Canada,2023-08-26,low
-8,Waters PLC,Food & Beverage,Australia,2018-06-11,low
-9,Giles-Mcdaniel,Electronics,Germany,2016-10-07,low
-10,Hudson-Oconnor,Retail,Canada,2016-12-06,low
-11,"Curtis, Giles and Jones",Retail,Netherlands,2021-07-08,low
-12,"Taylor, Bradley and Novak",Services,Australia,2023-07-09,low
-13,"Friedman, Grant and Ferguson",Healthcare,Germany,2019-04-15,low
-14,"Adams, Jordan and Lynch",Retail,France,2020-09-26,low
-15,Logan-Parrish,Retail,United Kingdom,2017-03-03,low
-16,Martinez Inc,Food & Beverage,United Kingdom,2021-02-07,low
-17,Yates-Bean,Food & Beverage,Germany,2016-08-20,low
-18,"Blair, Bates and Daniels",Entertainment,United Kingdom,2023-02-12,low
-19,"George, Holt and Romero",Entertainment,United Kingdom,2017-05-01,low
-20,Wong-Evans,Services,United Kingdom,2017-10-12,low
-21,"Morgan, Moss and Hunt",Travel,Italy,2023-07-18,low
-22,"Jones, Miller and Reed",Food & Beverage,United Kingdom,2020-06-16,medium
-23,"Gardner, Ellis and Patrick",Food & Beverage,Canada,2023-10-12,low
-24,Dominguez Group,Travel,Canada,2022-09-20,low
-25,Kelly and Sons,Electronics,United Kingdom,2016-12-17,low
-26,Woodard Group,Healthcare,Australia,2023-01-08,high
-27,Myers-Gonzalez,Healthcare,Australia,2019-11-30,low
-28,"Lopez, Peck and Hayes",Retail,Canada,2021-09-30,low
-29,Deleon-Stuart,Retail,Canada,2019-04-21,medium
-30,Ball Ltd,Travel,United Kingdom,2016-09-20,low
-31,Simpson-Patel,Healthcare,Germany,2020-05-28,low
-32,Weaver-Vincent,Entertainment,United Kingdom,2021-06-11,low
-33,"Herman, Wagner and Higgins",Food & Beverage,Ireland,2019-11-02,low
-34,Hood and Sons,Services,Canada,2016-09-22,low
-35,Black-Gonzalez,Food & Beverage,Canada,2018-12-23,low
-36,"Johnson, Schneider and Flores",Travel,Australia,2020-03-30,low
-37,"Smith, Schneider and Fleming",Food & Beverage,Spain,2020-01-30,low
-38,Wood Ltd,Healthcare,Australia,2019-05-10,medium
-39,Ware-Alvarado,Services,Italy,2024-07-14,low
-40,Campos-Price,Services,Australia,2016-04-15,low
-41,"Harvey, Jennings and Carroll",Travel,United Kingdom,2016-07-18,low
-42,Nunez and Sons,Healthcare,France,2017-09-12,low
-43,Yoder-Thompson,Food & Beverage,Australia,2018-06-20,low
-44,"Cooper, Brooks and King",Services,Italy,2017-11-22,low
-45,"Long, Watkins and Gonzalez",Food & Beverage,United Kingdom,2018-05-17,low
-46,Serrano-Carr,Food & Beverage,Spain,2021-09-29,low
-47,Little Ltd,Entertainment,United Kingdom,2020-08-24,low
-48,Sutton Ltd,Food & Beverage,Germany,2020-11-23,low
-49,"Bradford, Clarke and Greer",Retail,Ireland,2017-09-03,low
-50,Cline and Sons,Retail,United Kingdom,2018-05-08,low
-51,"Horne, Bradshaw and Michael",Services,Germany,2021-02-28,high
-52,Sullivan-Green,Services,Italy,2019-01-21,low
-53,"Becker, Murphy and Patel",Services,United Kingdom,2021-01-02,low
-54,Bowen-Randolph,Food & Beverage,Germany,2017-12-10,low
-55,Sloan LLC,Retail,Canada,2017-01-31,low
-56,Jackson-Johnston,Healthcare,Germany,2019-03-12,high
-57,Shah-Walker,Food & Beverage,Germany,2018-08-02,low
-58,"Walker, Moreno and Harrington",Electronics,United Kingdom,2017-10-12,high
-59,Garcia-Dalton,Services,United Kingdom,2021-09-29,low
-60,"Rodriguez, Page and Wood",Utilities,Australia,2024-08-14,low
-61,Lynn Group,Retail,Australia,2016-01-31,low
-62,"Baker, Hughes and Horn",Retail,United Kingdom,2019-01-23,low
-63,Smith-Flores,Services,United Kingdom,2020-05-02,low
-64,Mejia-Mitchell,Retail,Netherlands,2017-06-09,low
-65,Walker-Lee,Food & Beverage,Ireland,2020-03-12,low
-66,"Hanson, Rich and English",Entertainment,Spain,2021-01-15,low
-67,"Jones, Collier and Sloan",Services,Germany,2017-05-10,low
-68,"Washington, Williams and Boyd",Food & Beverage,Australia,2016-01-03,low
-69,"Cook, Young and Leon",Entertainment,United Kingdom,2021-01-11,low
-70,Roberson and Sons,Retail,Canada,2022-06-18,medium
-71,Parker-Nguyen,Electronics,Germany,2021-10-26,low
-72,Rodriguez-Carey,Services,Netherlands,2017-06-30,low
-73,Rodriguez Ltd,Healthcare,Netherlands,2021-04-25,low
-74,Diaz and Sons,Healthcare,United Kingdom,2016-05-27,low
-75,Alvarez-Singleton,Services,United Kingdom,2019-01-26,low
-76,"Davis, Lindsey and West",Food & Beverage,United Kingdom,2018-05-16,medium
-77,Williams-Moyer,Food & Beverage,United Kingdom,2016-02-16,low
-78,Cisneros-Hernandez,Healthcare,Spain,2021-05-16,low
-79,"Lang, Campbell and Carrillo",Travel,Canada,2021-09-30,low
-80,Johnson LLC,Travel,United Kingdom,2018-10-23,low
-81,Bryant PLC,Food & Beverage,United Kingdom,2022-11-03,low
-82,"Gould, Martinez and Vargas",Entertainment,Australia,2018-08-12,low
-83,Hoffman-Jacobs,Utilities,United Kingdom,2020-04-04,low
-84,Todd Inc,Services,Canada,2023-07-30,low
-85,Ward-Young,Food & Beverage,Canada,2019-08-30,low
-86,"Rose, Gates and Bailey",Travel,Ireland,2023-03-03,low
-87,Wu LLC,Travel,Canada,2021-02-13,low
-88,"Lamb, Pacheco and Patterson",Retail,Australia,2017-03-26,low
-89,Sosa PLC,Services,Canada,2023-05-28,low
-90,"Perry, Webster and Ryan",Services,United Kingdom,2016-03-28,low
-91,Evans-Jackson,Retail,Canada,2018-04-14,low
-92,Mccarthy-Dixon,Utilities,Germany,2020-12-13,low
-93,"Barry, Ramirez and Chen",Electronics,France,2018-01-24,low
-94,"Chapman, Oconnell and Hogan",Electronics,United Kingdom,2019-08-20,low
-95,Cobb-Skinner,Food & Beverage,Australia,2023-05-24,low
-96,Thompson-Anderson,Retail,United Kingdom,2016-07-11,low
-97,"Lozano, Ponce and Burnett",Food & Beverage,Spain,2017-08-31,low
-98,Duke-Johnson,Healthcare,Canada,2024-02-11,low
-99,Khan Inc,Entertainment,France,2020-11-12,low
-100,Solis LLC,Utilities,United Kingdom,2018-06-25,low
-101,"Hall, Holland and Hall",Food & Beverage,Spain,2017-04-19,low
-102,Anderson Inc,Retail,Germany,2023-09-19,low
-103,Oneill-Jones,Services,Canada,2019-08-25,low
-104,Nguyen Group,Retail,United Kingdom,2020-09-28,low
-105,Boyd Ltd,Food & Beverage,France,2018-12-16,low
-106,"Simmons, Rojas and Fleming",Electronics,United Kingdom,2017-04-24,low
-107,Turner-Rosales,Retail,Canada,2019-01-16,low
-108,"Jensen, Cruz and Harvey",Food & Beverage,Australia,2019-07-11,low
-109,"Henry, Porter and Jefferson",Entertainment,Germany,2021-06-18,medium
-110,Henderson Ltd,Retail,Netherlands,2017-04-06,low
-111,Ball-Carter,Retail,Germany,2018-05-24,low
-112,Hernandez-Smith,Healthcare,United Kingdom,2019-03-07,low
-113,Singleton-Mercer,Retail,Canada,2016-01-24,low
-114,"Jackson, Wood and Clark",Food & Beverage,Italy,2018-06-03,medium
-115,Fox and Sons,Retail,Canada,2017-11-20,low
-116,"Daniels, Velasquez and Mclaughlin",Entertainment,United Kingdom,2016-07-16,low
-117,Huff and Sons,Retail,Australia,2020-10-29,low
-118,Obrien Ltd,Entertainment,Canada,2017-03-04,low
-119,Sims PLC,Food & Beverage,Netherlands,2023-09-12,low
-120,Brown Ltd,Utilities,Canada,2019-03-30,low
-121,Mcclure PLC,Utilities,Netherlands,2016-12-14,low
-122,Perry Group,Electronics,Ireland,2018-11-14,low
-123,Harris PLC,Services,Australia,2017-08-28,low
-124,Cooper-Patel,Travel,Germany,2020-03-19,low
-125,Powell-Mccarthy,Food & Beverage,France,2021-03-16,low
-126,"Bryant, Buchanan and Yoder",Services,United Kingdom,2021-03-16,medium
-127,Marshall-Green,Utilities,United Kingdom,2021-12-15,low
-128,Hart-Baker,Services,Australia,2017-11-08,low
-129,Gray PLC,Entertainment,Australia,2016-04-30,low
-130,Nguyen PLC,Services,France,2020-11-15,low
-131,Dixon Ltd,Electronics,Canada,2017-07-23,low
-132,"Chavez, Yoder and Spencer",Retail,Canada,2018-01-22,low
-133,"Garcia, Brown and Melton",Services,France,2023-08-05,low
-134,"Gonzales, Martinez and Harrison",Travel,United Kingdom,2016-03-14,low
-135,Bryant and Sons,Retail,Spain,2016-03-28,low
-136,Ramos Ltd,Food & Beverage,United Kingdom,2020-03-12,low
-137,"Robinson, Cunningham and Aguilar",Electronics,Ireland,2023-04-13,low
-138,Frye Inc,Travel,United Kingdom,2024-03-23,medium
-139,White-Moore,Services,Netherlands,2019-12-31,low
-140,"Browning, Lewis and Jenkins",Food & Beverage,Italy,2022-09-04,low
-141,Moses Ltd,Travel,Canada,2020-07-14,low
-142,Lloyd-Sandoval,Services,France,2020-02-19,low
-143,"Jones, Turner and Tran",Services,Germany,2016-06-23,low
-144,Young and Sons,Travel,Australia,2017-07-23,low
-145,Valdez-Park,Retail,Spain,2018-07-26,low
-146,Clarke PLC,Food & Beverage,Australia,2021-01-06,low
-147,Flores LLC,Services,Australia,2022-05-11,low
-148,Butler-Burns,Electronics,Spain,2017-07-13,medium
-149,"Ford, Manning and Snyder",Utilities,Canada,2024-05-11,low
-150,Morton LLC,Food & Beverage,Canada,2016-08-23,medium
-151,Mcmahon PLC,Entertainment,Canada,2020-06-22,low
-152,Green-King,Services,Canada,2024-01-06,low
-153,Carr-Hardy,Food & Beverage,Netherlands,2021-09-08,low
-154,Barry PLC,Retail,Germany,2021-03-02,low
-155,"Gonzales, Lopez and Thompson",Retail,Canada,2024-05-18,low
-156,Martin LLC,Retail,Ireland,2020-08-26,low
-157,Estrada PLC,Services,Canada,2018-05-07,low
-158,Wolf-Lozano,Food & Beverage,United Kingdom,2021-10-04,low
-159,"Rodriguez, Henry and Woodard",Retail,Canada,2019-10-01,low
-160,Taylor-Bean,Electronics,Canada,2024-08-28,low
-161,"Sanchez, Hernandez and Burnett",Retail,Netherlands,2018-03-09,low
-162,Taylor LLC,Retail,Germany,2019-05-30,low
-163,Daniel-Barber,Services,Spain,2020-11-24,low
-164,Kelley and Sons,Entertainment,United Kingdom,2020-08-10,low
-165,Ware LLC,Travel,Germany,2019-06-03,low
-166,"Burns, Cochran and Parks",Retail,Canada,2020-12-25,medium
-167,Stone-Hunter,Travel,United Kingdom,2022-08-02,low
-168,"Gonzales, Sutton and Steele",Travel,Australia,2018-08-04,low
-169,"Bush, Watson and Robertson",Services,United Kingdom,2018-06-08,low
-170,Young PLC,Electronics,Germany,2016-12-12,low
-171,Glass-Lindsey,Food & Beverage,United Kingdom,2022-03-09,high
-172,Harris LLC,Electronics,Italy,2016-02-05,medium
-173,Young-Hughes,Electronics,Australia,2020-09-23,low
-174,Briggs PLC,Services,Germany,2023-12-17,low
-175,Rodriguez-Jones,Travel,United Kingdom,2024-06-02,low
-176,Finley Ltd,Retail,United Kingdom,2018-12-10,low
-177,"Roach, Dillon and Johnson",Electronics,Spain,2019-10-26,low
-178,Day and Sons,Food & Beverage,Netherlands,2016-03-26,low
-179,"Mcmahon, Curry and Beck",Entertainment,Germany,2017-07-08,low
-180,Turner Group,Healthcare,United Kingdom,2024-01-26,low
-181,Valdez-Moss,Entertainment,Italy,2016-04-01,low
-182,Brown and Sons,Entertainment,Canada,2021-03-10,low
-183,Ray Group,Utilities,United Kingdom,2022-06-18,low
-184,Clark PLC,Retail,Canada,2019-04-25,low
-185,Davis-Ponce,Travel,Australia,2016-09-26,low
-186,Sanders Ltd,Services,United Kingdom,2023-07-12,low
-187,Dennis Inc,Services,Germany,2018-12-27,low
-188,Moore Ltd,Utilities,Australia,2019-05-22,low
-189,"Choi, Ortiz and Goodwin",Retail,Canada,2019-06-25,low
-190,Brown PLC,Food & Beverage,France,2021-03-13,low
-191,"Nunez, Wilson and Reyes",Food & Beverage,Canada,2021-05-18,low
-192,Anderson and Sons,Entertainment,France,2022-05-13,low
-193,Martinez Ltd,Services,Canada,2018-05-16,low
-194,Griffin Ltd,Food & Beverage,Canada,2024-07-31,low
-195,Stanley-Schaefer,Electronics,United Kingdom,2017-12-08,low
-196,Randolph-Gonzalez,Food & Beverage,Germany,2018-06-10,low
-197,"Francis, Lewis and Carter",Retail,Australia,2018-05-25,low
-198,Reynolds LLC,Utilities,France,2018-05-18,low
-199,Herrera Ltd,Utilities,United Kingdom,2018-02-18,medium
-200,Gibson Ltd,Electronics,Germany,2018-05-13,low
-201,Frank-Garcia,Healthcare,Canada,2021-12-19,low
-202,Thompson-Davis,Food & Beverage,United Kingdom,2019-11-17,low
-203,Clarke Ltd,Services,Germany,2020-06-07,low
-204,Garrett-Taylor,Retail,United Kingdom,2024-02-11,low
-205,Heath-Ray,Electronics,Ireland,2021-09-01,low
-206,Hendrix-Hernandez,Food & Beverage,Netherlands,2019-12-08,low
-207,Bennett-Smith,Food & Beverage,Canada,2016-05-23,low
-208,"Lee, Bradford and Vang",Retail,France,2019-08-21,low
-209,Griffith-Franco,Healthcare,Australia,2021-11-04,low
-210,Cochran Ltd,Travel,Netherlands,2016-08-07,low
-211,"Smith, Galvan and Baldwin",Food & Beverage,Australia,2018-08-17,low
-212,"Carlson, Anderson and Neal",Food & Beverage,Ireland,2016-06-11,low
-213,Colon-Frank,Travel,Australia,2020-07-27,low
-214,Novak Inc,Electronics,Canada,2023-02-18,low
-215,Hill Group,Entertainment,United Kingdom,2020-08-01,medium
-216,Dunn-Fernandez,Entertainment,Canada,2021-05-23,medium
-217,Parker-Bradshaw,Services,Australia,2020-02-05,low
-218,Mathis LLC,Retail,Spain,2018-06-09,low
-219,Beasley and Sons,Entertainment,Canada,2018-03-24,low
-220,Thomas Group,Healthcare,Spain,2021-05-01,low
-221,Henderson LLC,Entertainment,United Kingdom,2019-01-02,low
-222,"Martin, Hall and Simpson",Travel,France,2022-12-05,low
-223,Jackson PLC,Retail,Canada,2023-01-19,low
-224,Ramos Ltd,Healthcare,France,2024-01-25,medium
-225,Reynolds PLC,Retail,United Kingdom,2022-12-27,low
-226,Gutierrez and Sons,Retail,Australia,2016-02-26,low
-227,Heath PLC,Travel,Australia,2017-09-01,low
-228,"Landry, Rodriguez and Flores",Food & Beverage,Germany,2023-08-17,low
-229,Carey Ltd,Electronics,Australia,2020-07-22,low
-230,"May, Walker and Page",Travel,Netherlands,2019-10-26,low
-231,Johnson-Brown,Services,United Kingdom,2019-06-30,low
-232,Jensen Group,Travel,Netherlands,2022-04-16,low
-233,Elliott-Tate,Healthcare,United Kingdom,2018-08-14,low
-234,Richardson-Orozco,Electronics,United Kingdom,2017-07-24,high
-235,Dean-Wood,Food & Beverage,Germany,2019-12-02,low
-236,"Rhodes, Bolton and Watson",Utilities,Italy,2023-03-30,low
-237,Bridges-Bautista,Electronics,United Kingdom,2021-09-30,low
-238,Mendoza-Rodriguez,Services,United Kingdom,2019-11-26,low
-239,Murray-Smith,Utilities,Australia,2022-10-31,low
-240,Peters Inc,Entertainment,United Kingdom,2019-06-12,low
-241,"Martinez, Clark and Shaffer",Entertainment,France,2021-10-23,low
-242,"Sparks, Spencer and Garcia",Healthcare,Netherlands,2020-06-28,low
-243,Hill-Harding,Healthcare,Australia,2021-02-11,low
-244,Martin-Black,Retail,Australia,2016-02-26,low
-245,"Smith, Davis and Acosta",Entertainment,Germany,2019-06-23,low
-246,West-Hernandez,Services,Spain,2018-01-31,low
-247,Oneill Inc,Entertainment,Netherlands,2023-01-25,low
-248,Bush-Ford,Retail,Australia,2020-12-26,low
-249,Romero Group,Food & Beverage,Australia,2020-09-12,low
-250,Garcia-Brown,Food & Beverage,Australia,2017-04-10,low
-251,"Perez, Miller and Williams",Retail,Spain,2017-07-20,low
-252,Ward-Schmidt,Retail,Germany,2017-11-02,low
-253,Vasquez-Gonzalez,Food & Beverage,Netherlands,2016-12-25,low
-254,Thompson-Padilla,Utilities,Germany,2023-07-25,low
-255,Smith Group,Food & Beverage,United Kingdom,2019-01-10,low
-256,Bailey PLC,Electronics,Australia,2021-01-30,low
-257,"Kelly, Simmons and Jordan",Utilities,United Kingdom,2021-04-29,low
-258,Crawford-Harris,Services,United Kingdom,2022-07-13,low
-259,"Smith, Gonzalez and Lambert",Retail,France,2017-09-23,low
-260,Lawson and Sons,Food & Beverage,United Kingdom,2021-08-02,low
-261,Weeks-Massey,Retail,Canada,2018-03-01,low
-262,Kim-Hernandez,Food & Beverage,United Kingdom,2021-03-06,low
-263,Richards-Warren,Retail,Australia,2019-04-11,low
-264,Lyons Group,Utilities,United Kingdom,2017-12-14,low
-265,Johnson LLC,Healthcare,Italy,2021-11-13,low
-266,Perry-Garcia,Electronics,Canada,2018-05-02,low
-267,Sims-Johnson,Electronics,United Kingdom,2020-01-14,low
-268,Pope Inc,Travel,Germany,2018-04-03,low
-269,Chapman-Estrada,Travel,Australia,2016-07-07,low
-270,Sloan Inc,Food & Beverage,Germany,2021-10-20,low
-271,Curry LLC,Retail,Spain,2024-07-18,low
-272,"Young, Tate and Arnold",Travel,Australia,2024-04-07,low
-273,"Hart, Graves and Zimmerman",Electronics,Germany,2018-08-18,low
-274,"Adams, Smith and Wright",Food & Beverage,Australia,2020-11-01,low
-275,"Jones, Mueller and Williams",Food & Beverage,Germany,2017-08-23,low
-276,"Lynch, Johnson and Lawrence",Entertainment,Australia,2016-02-05,low
-277,"Greer, Underwood and Noble",Healthcare,Canada,2019-07-10,low
-278,Logan-Rice,Food & Beverage,Australia,2022-05-04,low
-279,Fowler-Wong,Electronics,France,2019-08-04,low
-280,Ford Group,Retail,Australia,2017-09-04,low
-281,"Martinez, Perry and Morrison",Electronics,Australia,2020-05-24,low
-282,"Carter, Jenkins and Reyes",Services,Australia,2018-11-07,low
-283,Hernandez Group,Food & Beverage,Ireland,2017-11-03,low
-284,Cisneros-Washington,Services,Italy,2020-10-06,low
-285,"Adams, Hall and Thompson",Entertainment,United Kingdom,2016-07-04,low
-286,Kim-Clark,Food & Beverage,Germany,2024-07-17,low
-287,"Rasmussen, Santiago and Larson",Food & Beverage,Canada,2018-01-01,low
-288,"Carroll, Wilson and Bishop",Food & Beverage,United Kingdom,2017-06-21,low
-289,Jones LLC,Electronics,France,2021-07-09,low
-290,Stephenson Ltd,Food & Beverage,Canada,2021-01-27,low
-291,Johnson Group,Utilities,France,2016-08-01,low
-292,Robertson PLC,Services,Netherlands,2016-07-25,high
-293,Garcia Group,Food & Beverage,Ireland,2018-10-06,low
-294,Randall Ltd,Entertainment,Canada,2020-04-12,low
-295,"Hopkins, Mccoy and Guerrero",Travel,Germany,2021-06-15,medium
-296,Davis-Galvan,Retail,Italy,2022-08-20,low
-297,"Acevedo, Lloyd and Young",Food & Beverage,Australia,2022-02-08,medium
-298,"Miles, Gilbert and Palmer",Services,United Kingdom,2022-10-26,low
-299,"Dyer, Deleon and West",Retail,United Kingdom,2021-02-21,low
-300,Merritt Inc,Food & Beverage,France,2021-11-18,medium
-301,Estes-Simon,Retail,United Kingdom,2017-09-25,low
-302,"Gordon, Matthews and Roberts",Healthcare,France,2018-12-09,low
-303,"Romero, Ochoa and York",Electronics,Australia,2018-10-02,low
-304,"Reilly, Shannon and Torres",Food & Beverage,Australia,2016-04-03,low
-305,Martin Inc,Electronics,Australia,2021-02-25,low
-306,Arroyo-Stephenson,Electronics,Canada,2019-05-28,low
-307,"Palmer, Ho and Duncan",Services,Australia,2016-06-22,low
-308,Compton-Brooks,Electronics,France,2021-10-28,low
-309,Ryan Inc,Travel,Australia,2022-10-21,low
-310,Green Inc,Utilities,Canada,2016-02-09,low
-311,Wells-Kennedy,Services,Germany,2022-05-04,low
-312,Poole and Sons,Healthcare,United Kingdom,2023-09-24,low
-313,James Inc,Food & Beverage,Canada,2022-01-11,low
-314,Larson-Davis,Food & Beverage,Spain,2018-06-20,low
-315,"Contreras, Villa and Dixon",Utilities,Australia,2019-01-13,medium
-316,Craig-Garza,Services,Australia,2021-08-04,high
-317,Greene Group,Healthcare,United Kingdom,2017-12-27,low
-318,"Mckee, Hernandez and Barber",Travel,Canada,2017-08-09,low
-319,Lane-Duarte,Food & Beverage,Australia,2023-02-10,low
-320,Beck-Williams,Electronics,Australia,2020-10-22,medium
-321,Chapman and Sons,Electronics,Australia,2016-09-17,medium
-322,"Wilson, Conway and Davis",Food & Beverage,Germany,2021-05-18,low
-323,"Henderson, Gomez and Williams",Retail,Canada,2018-11-16,low
-324,"May, Thompson and Mitchell",Retail,Germany,2017-03-09,low
-325,"Tran, Walker and Sharp",Retail,France,2021-02-24,high
-326,Rodriguez-Galvan,Retail,Canada,2017-07-09,medium
-327,"Yates, Ballard and Santiago",Travel,Spain,2021-05-01,low
-328,White-Bowman,Food & Beverage,Canada,2022-06-12,medium
-329,"Howe, Miles and Campbell",Electronics,United Kingdom,2024-08-13,low
-330,"Bennett, Payne and Le",Food & Beverage,Canada,2019-03-22,medium
-331,"Patterson, Baker and Hunt",Entertainment,Canada,2021-03-07,low
-332,Brown Inc,Healthcare,Australia,2017-03-24,low
-333,Hoffman Inc,Travel,Spain,2019-05-18,low
-334,Thomas-Zavala,Healthcare,France,2016-09-06,low
-335,Carpenter-Sanchez,Services,Australia,2020-11-23,low
-336,"Russell, Daniels and Martinez",Services,Germany,2020-06-28,low
-337,"Ponce, Choi and Osborne",Retail,United Kingdom,2018-03-01,low
-338,Nichols-Patel,Food & Beverage,United Kingdom,2016-09-20,low
-339,"Perez, Williams and Graham",Travel,United Kingdom,2018-08-26,low
-340,Foster-Hernandez,Food & Beverage,Germany,2020-07-31,low
-341,"Wallace, Johnston and Coleman",Food & Beverage,United Kingdom,2016-07-14,low
-342,"Whitaker, Davis and Jones",Retail,Germany,2018-03-25,low
-343,Willis Ltd,Electronics,Canada,2019-04-07,low
-344,Howard PLC,Travel,Ireland,2019-03-05,low
-345,"Briggs, Lutz and Marks",Retail,France,2017-12-16,low
-346,"Russell, Hall and Alvarez",Entertainment,United Kingdom,2016-11-06,medium
-347,Kline-Peterson,Food & Beverage,United Kingdom,2018-12-04,low
-348,Williams LLC,Electronics,United Kingdom,2021-12-18,low
-349,Hawkins-Davis,Travel,Australia,2018-04-16,low
-350,Chan-Graves,Food & Beverage,Italy,2016-10-13,low
-351,Ward LLC,Food & Beverage,France,2020-07-20,medium
-352,Simpson-Baker,Entertainment,United Kingdom,2020-11-14,medium
-353,"Davis, Stewart and Johnson",Services,France,2019-08-22,low
-354,Terry LLC,Electronics,Canada,2021-09-09,low
-355,French Group,Retail,Germany,2021-08-10,low
-356,Bruce-Harrison,Food & Beverage,Canada,2022-05-16,low
-357,"Washington, Buck and Adkins",Entertainment,Germany,2017-10-03,low
-358,"Martinez, Green and Medina",Entertainment,France,2020-09-11,low
-359,"Mccoy, Payne and Huber",Entertainment,Australia,2017-02-03,low
-360,"Smith, Morales and Whitaker",Retail,Canada,2021-05-01,low
-361,Davis Inc,Utilities,Canada,2018-11-22,low
-362,Nelson-Black,Utilities,Netherlands,2021-07-19,high
-363,Cobb LLC,Healthcare,United Kingdom,2022-03-11,low
-364,"Lopez, Foster and Bennett",Retail,France,2020-10-13,low
-365,Gardner-Jensen,Travel,Australia,2020-03-08,low
-366,"Williamson, Herman and Hale",Electronics,Germany,2023-08-19,low
-367,"Foster, Montgomery and Alexander",Retail,United Kingdom,2021-03-06,low
-368,"James, Edwards and Stafford",Food & Beverage,Netherlands,2021-04-24,medium
-369,Murphy PLC,Food & Beverage,Spain,2019-08-07,low
-370,Werner-Lara,Services,Netherlands,2017-04-26,low
-371,Rodriguez PLC,Services,Australia,2019-03-15,low
-372,Bowen Ltd,Entertainment,Canada,2016-02-24,low
-373,Brown Ltd,Food & Beverage,Germany,2020-12-08,low
-374,Vang-Sanchez,Travel,Canada,2016-02-14,low
-375,Small-Williams,Food & Beverage,France,2020-10-11,low
-376,Jones Inc,Entertainment,Australia,2016-06-06,low
-377,Vega-Brown,Retail,Australia,2021-08-08,low
-378,"Medina, Wise and Aguirre",Retail,United Kingdom,2019-12-28,low
-379,Fisher and Sons,Retail,Canada,2023-09-19,low
-380,Daugherty-Holland,Food & Beverage,Germany,2019-05-16,low
-381,Robertson LLC,Services,United Kingdom,2019-09-05,low
-382,Watson-Brown,Travel,United Kingdom,2019-12-31,low
-383,Smith-Johnson,Healthcare,United Kingdom,2023-06-08,low
-384,"Curtis, Turner and Taylor",Utilities,Canada,2019-12-05,low
-385,"Mata, Wright and Williams",Retail,Canada,2024-05-16,low
-386,Lutz-Fleming,Entertainment,Australia,2016-11-25,medium
-387,Floyd-Yang,Retail,Canada,2018-12-12,low
-388,"Austin, Reynolds and Jenkins",Food & Beverage,United Kingdom,2020-06-14,low
-389,Mccormick-Baker,Retail,Canada,2021-06-15,low
-390,Wilkins LLC,Travel,Spain,2021-05-07,low
-391,Henderson-Diaz,Healthcare,Canada,2016-06-25,low
-392,Morgan-Stafford,Utilities,Canada,2021-09-09,low
-393,"Hayes, Benton and Tate",Entertainment,Australia,2016-12-08,low
-394,Lee PLC,Electronics,Spain,2019-03-14,low
-395,"Johnson, Anderson and Vincent",Services,Australia,2019-11-01,low
-396,Scott-Sullivan,Electronics,Canada,2020-03-08,medium
-397,Logan-Dickerson,Services,Canada,2021-03-25,high
-398,Townsend LLC,Retail,Australia,2023-03-13,low
-399,"Roberts, Rodriguez and Chen",Food & Beverage,Australia,2020-04-17,low
-400,"Franklin, Perez and Brown",Electronics,United Kingdom,2016-08-20,high
-401,"Frederick, Coleman and Foley",Retail,Canada,2019-08-27,low
-402,Thompson LLC,Food & Beverage,Italy,2020-08-02,low
-403,Richmond Group,Retail,Canada,2017-10-20,low
-404,Brandt-Mendoza,Services,Canada,2018-04-05,low
-405,"Wells, Morales and Gallagher",Retail,Canada,2017-09-25,low
-406,"Jones, Johnson and Miller",Services,Ireland,2017-12-13,low
-407,Fletcher-Garcia,Entertainment,Australia,2018-11-25,low
-408,Bartlett-Christian,Food & Beverage,Australia,2016-03-28,low
-409,Ferguson-Holmes,Services,Canada,2017-11-18,low
-410,Holder-Smith,Electronics,France,2021-09-25,low
-411,"Smith, Wells and Black",Retail,Italy,2016-10-11,medium
-412,Olson-Simpson,Food & Beverage,Netherlands,2019-11-16,low
-413,"Anderson, Baxter and Thompson",Food & Beverage,United Kingdom,2019-12-22,low
-414,"Khan, Howard and Galvan",Retail,Australia,2018-04-04,high
-415,Galvan LLC,Food & Beverage,Australia,2021-05-24,medium
-416,Taylor-Higgins,Food & Beverage,United Kingdom,2023-01-20,low
-417,Farrell-Little,Electronics,United Kingdom,2017-03-24,low
-418,Jones-Cross,Entertainment,Spain,2020-12-01,low
-419,Brown PLC,Travel,Spain,2019-04-27,low
-420,Perez-Wolf,Entertainment,France,2016-02-09,medium
-421,Peterson-Jordan,Retail,Netherlands,2018-04-19,medium
-422,"Chapman, Cruz and Goodwin",Food & Beverage,Netherlands,2020-03-25,low
-423,Murray LLC,Retail,Canada,2023-10-15,low
-424,"Jackson, Lucero and Gould",Services,Australia,2020-07-30,low
-425,Collins Inc,Services,Germany,2023-09-17,medium
-426,"Grant, Potter and Gordon",Retail,United Kingdom,2021-12-07,low
-427,Cox-Goodwin,Travel,Canada,2024-03-07,low
-428,Williams-Lowe,Food & Beverage,United Kingdom,2016-03-09,low
-429,Scott-Delgado,Travel,Australia,2022-09-26,low
-430,Pearson-Morgan,Utilities,Canada,2019-10-11,low
-431,Kane Inc,Utilities,Australia,2019-01-17,low
-432,Taylor and Sons,Retail,Germany,2022-09-20,low
-433,Michael Group,Food & Beverage,United Kingdom,2016-10-15,low
-434,Carrillo-Mendez,Healthcare,United Kingdom,2016-01-07,low
-435,"Simon, Henry and Bentley",Travel,United Kingdom,2019-03-25,medium
-436,"Ochoa, Miller and Gonzales",Retail,Australia,2022-02-04,low
-437,Duran-Sanchez,Utilities,Australia,2016-09-04,low
-438,Newman-Gregory,Services,Ireland,2019-09-18,low
-439,Burns Inc,Travel,Germany,2016-08-13,low
-440,Dillon PLC,Food & Beverage,Ireland,2016-12-28,low
-441,"Gray, Jackson and Jones",Services,France,2018-06-05,low
-442,Gomez-Smith,Electronics,Canada,2016-02-07,low
-443,"Brown, Bradford and Lawson",Services,Ireland,2019-10-01,high
-444,Rivers-Serrano,Food & Beverage,Netherlands,2019-09-29,low
-445,Murphy-Reid,Food & Beverage,Australia,2016-04-05,low
-446,Hughes and Sons,Entertainment,Canada,2017-06-15,low
-447,Ball-Shaw,Electronics,Canada,2021-02-27,low
-448,Adams and Sons,Services,Netherlands,2024-02-20,low
-449,Abbott-Ibarra,Utilities,Australia,2019-05-30,medium
-450,Johnson Ltd,Electronics,United Kingdom,2018-08-07,medium
-451,"Yang, Robertson and Espinoza",Travel,Ireland,2020-01-28,low
-452,Alexander-Wagner,Services,Spain,2019-08-31,low
-453,"Stein, Kirby and Reed",Healthcare,United Kingdom,2018-05-18,low
-454,Ramirez LLC,Retail,Canada,2016-03-21,low
-455,"Moses, Green and Simmons",Electronics,Australia,2016-08-06,low
-456,"Clark, Nichols and Ward",Services,United Kingdom,2020-08-01,low
-457,Alvarez PLC,Retail,Australia,2023-05-31,low
-458,Cole PLC,Retail,Netherlands,2017-10-28,low
-459,Smith Ltd,Services,Netherlands,2020-02-09,medium
-460,"Campos, Mcbride and Caldwell",Entertainment,Canada,2017-12-19,low
-461,Schneider Inc,Services,France,2022-05-14,low
-462,Herrera PLC,Electronics,United Kingdom,2024-02-21,low
-463,"Guerrero, Sawyer and Moss",Food & Beverage,France,2022-06-28,high
-464,"Bradley, Coleman and Willis",Food & Beverage,United Kingdom,2019-03-24,medium
-465,"Frank, Dyer and Duran",Entertainment,Canada,2021-08-04,low
-466,"Brown, Kaiser and Edwards",Retail,Ireland,2021-10-20,low
-467,"Warner, Monroe and Garcia",Entertainment,Germany,2024-07-30,low
-468,Becker-King,Travel,Italy,2019-05-03,low
-469,Johnson Inc,Travel,Canada,2024-01-05,low
-470,"Downs, Fernandez and Stuart",Travel,Canada,2020-10-31,low
-471,"King, Adams and Conway",Healthcare,Italy,2024-07-19,low
-472,"Wong, Vargas and Martin",Food & Beverage,United Kingdom,2021-06-27,low
-473,Allen Inc,Travel,Spain,2019-08-06,medium
-474,Daugherty Ltd,Healthcare,United Kingdom,2019-07-01,low
-475,"Dunn, Johnson and Mora",Entertainment,United Kingdom,2021-12-19,low
-476,Acevedo PLC,Food & Beverage,Germany,2016-11-17,medium
-477,Lucero PLC,Entertainment,Canada,2022-02-14,low
-478,"Glass, Joseph and Hawkins",Services,Germany,2020-07-02,low
-479,Jackson Inc,Healthcare,United Kingdom,2021-12-01,low
-480,Velasquez Inc,Entertainment,United Kingdom,2023-08-30,low
-481,Hall Inc,Healthcare,Canada,2018-05-25,low
-482,Brown PLC,Retail,Canada,2016-09-03,medium
-483,Murray-Gray,Retail,United Kingdom,2021-05-26,low
-484,Kent PLC,Electronics,France,2020-07-18,low
-485,"Carlson, Parrish and Gillespie",Services,United Kingdom,2019-05-03,low
-486,"Castillo, Hughes and Smith",Entertainment,United Kingdom,2017-12-10,medium
-487,Meyers and Sons,Retail,Australia,2017-05-31,low
-488,Reyes-Davis,Electronics,France,2022-09-03,low
-489,Lowery and Sons,Retail,Germany,2016-09-08,medium
-490,"Roberts, Flores and Sanchez",Entertainment,France,2022-03-25,low
-491,Lawrence Inc,Food & Beverage,France,2020-06-06,low
-492,Hill-Logan,Electronics,Germany,2021-02-06,low
-493,"May, Lee and Parker",Retail,Germany,2022-08-03,low
-494,"Stewart, Rhodes and Davis",Utilities,Canada,2017-03-23,low
-495,Gonzalez Inc,Travel,Australia,2022-01-04,low
-496,Conley-Powell,Healthcare,France,2020-01-05,medium
-497,Smith LLC,Retail,Netherlands,2020-08-13,low
-498,Cisneros-Chapman,Healthcare,Canada,2017-06-16,low
-499,Flowers-Rivera,Electronics,Spain,2019-04-25,medium
-500,"Williams, Reynolds and Prince",Services,Netherlands,2016-02-04,low
-501,Henderson-Davis,Electronics,Germany,2021-12-18,low
-502,Stein Group,Food & Beverage,United Kingdom,2019-05-19,low
-503,Evans-Miller,Food & Beverage,Australia,2016-01-24,low
-504,Padilla and Sons,Retail,Australia,2022-05-10,low
-505,Smith-Griffin,Travel,Canada,2022-09-18,medium
-506,Garcia-Mendez,Entertainment,Canada,2020-07-19,low
-507,"Adams, Montgomery and Williams",Food & Beverage,Canada,2018-02-26,low
-508,"Smith, Mejia and Wolf",Food & Beverage,Germany,2017-02-25,low
-509,Barnes-Harris,Travel,United Kingdom,2022-12-21,low
-510,"Taylor, Ferguson and Bradley",Utilities,Australia,2018-11-23,high
-511,"Sullivan, Price and Stevens",Electronics,Germany,2021-09-18,low
-512,Rice PLC,Electronics,Netherlands,2019-09-23,low
-513,Grant-Meyer,Entertainment,Australia,2022-07-06,low
-514,"Knight, Kennedy and Cooley",Entertainment,Australia,2018-07-31,low
-515,"Davidson, Harrington and Jones",Utilities,Australia,2022-12-14,low
-516,Watson PLC,Food & Beverage,United Kingdom,2017-10-28,low
-517,White-Chavez,Food & Beverage,Canada,2016-07-03,low
-518,Hudson Group,Travel,Italy,2022-05-17,low
-519,Steele and Sons,Utilities,Canada,2018-05-13,low
-520,Johnson Inc,Food & Beverage,United Kingdom,2024-03-23,low
-521,Reynolds Ltd,Retail,Australia,2020-07-08,low
-522,Gibson-Richmond,Retail,Germany,2023-06-04,low
-523,"Ray, Guerra and Lopez",Electronics,United Kingdom,2019-08-08,low
-524,Turner Inc,Services,Canada,2019-07-15,low
-525,"Bond, Juarez and Baird",Electronics,Australia,2021-07-06,medium
-526,"Richardson, Taylor and Jones",Healthcare,Australia,2021-08-24,low
-527,Ward-Dixon,Retail,Canada,2018-07-29,low
-528,Murray Group,Retail,France,2017-02-02,low
-529,Mccarthy-Lambert,Entertainment,France,2021-03-17,low
-530,Freeman Group,Travel,Spain,2016-10-16,low
-531,"Lopez, Jones and Weaver",Healthcare,Italy,2023-01-16,low
-532,"Arnold, Ramirez and Franklin",Entertainment,Germany,2020-10-02,low
-533,"Powell, Taylor and Adams",Entertainment,France,2016-03-12,low
-534,Thomas Group,Retail,France,2020-02-06,low
-535,Hunt-Jones,Electronics,United Kingdom,2020-09-24,low
-536,Shepherd LLC,Electronics,Australia,2018-05-25,high
-537,"Simon, Adams and Anderson",Entertainment,Italy,2020-10-14,low
-538,"Reed, Carter and Tucker",Retail,Spain,2017-11-18,low
-539,Flores PLC,Food & Beverage,Canada,2022-09-22,low
-540,Smith PLC,Entertainment,United Kingdom,2018-04-18,low
-541,Martinez LLC,Healthcare,Canada,2019-03-18,low
-542,Rivas-Page,Healthcare,Australia,2017-10-15,low
-543,Hurley Inc,Services,Australia,2020-05-19,low
-544,Chen and Sons,Electronics,Australia,2024-03-08,low
-545,"Roach, Ortiz and Sampson",Food & Beverage,United Kingdom,2017-06-21,low
-546,Jackson-Wilcox,Electronics,Germany,2018-10-25,high
-547,Abbott-Harrison,Entertainment,France,2016-12-02,low
-548,Gordon PLC,Retail,France,2021-03-08,low
-549,"Murphy, Griffith and Cobb",Services,Germany,2019-05-10,low
-550,Brown Group,Travel,Canada,2017-05-15,low
-551,"Pearson, Gaines and Black",Retail,Canada,2020-12-23,low
-552,Barker Ltd,Electronics,Netherlands,2019-09-09,low
-553,Allen-Taylor,Entertainment,Australia,2023-10-28,low
-554,Jones-David,Retail,United Kingdom,2019-02-04,low
-555,"Glass, Norton and Brooks",Retail,United Kingdom,2018-01-04,low
-556,Jones-Hartman,Healthcare,Canada,2023-07-10,low
-557,"May, Mullins and Brown",Travel,Australia,2021-02-17,medium
-558,Andrews Inc,Food & Beverage,Australia,2021-09-28,low
-559,"Thompson, Marshall and Aguirre",Services,Canada,2017-06-13,low
-560,"Miller, Lopez and Miller",Retail,United Kingdom,2022-11-26,low
-561,Manning and Sons,Food & Beverage,Netherlands,2021-12-03,low
-562,Brown-Hudson,Travel,Canada,2023-05-30,low
-563,Williams Group,Retail,France,2020-09-10,low
-564,Pacheco PLC,Food & Beverage,Canada,2017-12-20,low
-565,Becker-Smith,Services,United Kingdom,2018-04-16,low
-566,Scott-Haynes,Retail,Germany,2017-07-24,low
-567,"Miller, Gordon and Glover",Services,Australia,2021-10-23,low
-568,"Dawson, Lyons and Perez",Food & Beverage,Germany,2020-11-06,low
-569,"Thomas, Bradley and Mcdonald",Entertainment,United Kingdom,2023-05-31,low
-570,"Peters, Lewis and Mathews",Retail,Australia,2017-04-27,low
-571,Anderson-Scott,Electronics,Germany,2023-06-09,low
-572,Miranda-Gutierrez,Entertainment,Australia,2020-09-27,low
-573,"Davis, Weber and Le",Healthcare,Canada,2021-11-27,low
-574,Madden and Sons,Healthcare,United Kingdom,2018-06-01,low
-575,Shepherd-Miller,Utilities,United Kingdom,2023-08-08,low
-576,"Ayala, Johnson and Cook",Travel,Germany,2020-06-14,low
-577,Bell PLC,Travel,Netherlands,2019-03-14,low
-578,"Bishop, Walker and White",Food & Beverage,France,2023-07-02,low
-579,Stafford-Lewis,Utilities,Canada,2016-10-25,medium
-580,"Ward, Scott and Gallagher",Services,Germany,2020-07-09,low
-581,Rogers and Sons,Retail,Australia,2019-08-30,low
-582,Moreno-Sullivan,Food & Beverage,Germany,2020-05-19,low
-583,Werner-Graham,Services,France,2022-05-27,medium
-584,"Patterson, Lee and Kelley",Travel,United Kingdom,2019-03-09,low
-585,"Davies, Macdonald and Galvan",Travel,Canada,2018-01-31,low
-586,"Lee, Torres and Thompson",Entertainment,United Kingdom,2018-05-30,low
-587,Reyes Ltd,Electronics,Australia,2021-01-06,medium
-588,Sullivan-Taylor,Services,Canada,2021-04-13,low
-589,Rivera Inc,Healthcare,Netherlands,2017-06-15,low
-590,Velasquez-Mcintosh,Retail,Australia,2019-03-16,low
-591,"Williams, Ward and Harvey",Food & Beverage,Germany,2019-08-11,low
-592,Miller-Woodward,Travel,Germany,2016-11-27,low
-593,Harris and Sons,Entertainment,Canada,2023-08-17,low
-594,"Summers, Wheeler and Fernandez",Food & Beverage,Australia,2018-07-07,low
-595,Barrera-Nguyen,Utilities,Netherlands,2018-10-19,medium
-596,Snyder Ltd,Travel,Australia,2018-03-24,low
-597,Cross-Wade,Food & Beverage,Canada,2020-08-22,low
-598,"Garcia, Hall and Tapia",Utilities,Australia,2019-08-01,low
-599,Ford PLC,Services,United Kingdom,2019-03-27,medium
-600,Davis-Andersen,Food & Beverage,Germany,2018-08-24,low
-601,Thomas LLC,Services,Australia,2022-12-18,low
-602,"Dunlap, Fleming and Brown",Travel,United Kingdom,2016-09-20,low
-603,"Thompson, Schultz and Sullivan",Travel,Australia,2016-11-03,low
-604,"Watson, Hall and Roth",Retail,France,2021-07-31,low
-605,Hale-Miller,Retail,United Kingdom,2019-06-19,medium
-606,Bolton Inc,Retail,Canada,2019-01-08,low
-607,"Taylor, Kim and Edwards",Food & Beverage,Australia,2019-05-14,low
-608,"Howard, Hayden and Smith",Food & Beverage,Australia,2016-06-26,low
-609,Malone-Lyons,Retail,Spain,2016-09-26,low
-610,Miller Inc,Services,Australia,2018-09-10,low
-611,Lewis-Ball,Travel,Spain,2022-09-03,low
-612,Knox LLC,Food & Beverage,United Kingdom,2019-05-17,low
-613,"Parks, Chapman and Alexander",Services,Australia,2020-03-22,low
-614,"Morgan, Kim and Williams",Services,Australia,2021-04-03,low
-615,Garcia-Ramos,Food & Beverage,Australia,2020-08-26,low
-616,Richard Group,Food & Beverage,Netherlands,2020-09-04,low
-617,"Pierce, Galvan and Erickson",Food & Beverage,United Kingdom,2016-12-26,medium
-618,"Craig, Schneider and Mcintyre",Utilities,Ireland,2016-04-29,low
-619,"Potter, Jones and Smith",Retail,United Kingdom,2016-07-12,low
-620,Roberts-Byrd,Electronics,Canada,2022-11-29,low
-621,Booker Ltd,Travel,Canada,2016-04-17,medium
-622,Harris PLC,Retail,United Kingdom,2022-10-08,low
-623,Smith LLC,Healthcare,United Kingdom,2019-09-30,low
-624,Pace and Sons,Services,Australia,2016-07-22,low
-625,Williams-Carr,Utilities,Australia,2023-07-27,medium
-626,Brown-Daniels,Electronics,Canada,2021-11-08,low
-627,"Austin, Davis and Walker",Electronics,Germany,2016-08-11,low
-628,"Rogers, Gilbert and Mcclain",Food & Beverage,Canada,2016-03-02,low
-629,"Howard, Wolf and Sanchez",Entertainment,Australia,2016-04-06,low
-630,Parks-Peterson,Entertainment,United Kingdom,2023-01-14,low
-631,Ward Inc,Food & Beverage,Italy,2022-07-26,medium
-632,Brown Group,Retail,Netherlands,2019-06-30,low
-633,"Shepard, Smith and Smith",Services,Germany,2017-04-04,low
-634,"Patterson, Sloan and Holloway",Services,Australia,2019-11-18,low
-635,Jones Group,Food & Beverage,Canada,2018-08-10,low
-636,"Gonzales, Baker and Osborne",Services,Netherlands,2022-02-15,low
-637,Ferrell PLC,Retail,Australia,2017-04-29,low
-638,Benson-Martinez,Food & Beverage,United Kingdom,2023-03-17,medium
-639,Bates PLC,Healthcare,Ireland,2019-02-04,low
-640,Parker-Hale,Travel,Canada,2020-12-20,low
-641,Atkins-Smith,Food & Beverage,Australia,2024-06-11,low
-642,Henry-Bennett,Electronics,United Kingdom,2019-10-28,low
-643,Cook Inc,Retail,Australia,2016-03-14,low
-644,Martin LLC,Utilities,Germany,2023-11-23,low
-645,Jones and Sons,Travel,France,2018-01-24,low
-646,Edwards-Anderson,Electronics,Australia,2020-02-23,low
-647,White-Rodriguez,Services,United Kingdom,2017-04-13,low
-648,"Scott, Perkins and Burton",Food & Beverage,Australia,2022-10-09,low
-649,"Valentine, Park and Hernandez",Healthcare,United Kingdom,2020-09-21,low
-650,Parker Inc,Electronics,Australia,2017-03-25,low
-651,Smith Inc,Food & Beverage,United Kingdom,2020-10-28,low
-652,"Williams, Jacobson and Fisher",Electronics,Canada,2021-03-16,low
-653,"Williams, Sanchez and Walsh",Food & Beverage,United Kingdom,2020-03-18,low
-654,"Peters, Gutierrez and King",Food & Beverage,Canada,2016-07-11,low
-655,Hernandez Inc,Utilities,Canada,2016-12-08,low
-656,Cruz Group,Food & Beverage,Germany,2018-12-31,low
-657,Norton PLC,Services,Netherlands,2021-10-17,medium
-658,Campbell Ltd,Services,United Kingdom,2016-06-04,low
-659,Rosario-Mclean,Electronics,Germany,2017-07-25,low
-660,Cook-Walter,Electronics,Australia,2019-02-14,low
-661,"Hawkins, Hendrix and Hayes",Healthcare,Netherlands,2020-08-31,low
-662,"Valencia, Miller and Watkins",Food & Beverage,Canada,2017-09-09,low
-663,"Wise, Collins and Foster",Food & Beverage,Canada,2021-03-20,low
-664,Ashley and Sons,Food & Beverage,Canada,2018-08-04,low
-665,Lambert-Khan,Electronics,Germany,2021-09-26,low
-666,Dyer and Sons,Travel,Canada,2021-07-10,high
-667,Wood-Meyer,Retail,United Kingdom,2016-03-27,low
-668,Scott Group,Healthcare,United Kingdom,2018-06-28,low
-669,Neal and Sons,Utilities,Australia,2021-04-01,low
-670,Solomon Inc,Retail,France,2021-09-03,low
-671,Owen and Sons,Travel,Spain,2019-05-18,low
-672,Reeves PLC,Food & Beverage,Australia,2019-12-23,medium
-673,White Group,Utilities,Spain,2021-12-24,low
-674,"Bernard, Garcia and Pope",Services,Australia,2019-09-01,low
-675,"Keller, Jones and Meadows",Travel,United Kingdom,2017-08-10,low
-676,"Floyd, Boyd and Browning",Retail,France,2021-12-27,low
-677,"Smith, Diaz and Davis",Travel,France,2024-01-02,low
-678,Mejia PLC,Food & Beverage,Canada,2022-06-20,low
-679,Lewis-Watson,Retail,Netherlands,2018-12-07,low
-680,"Pierce, Cross and Gilmore",Retail,Australia,2020-04-04,low
-681,"Brady, Vaughn and Ruiz",Food & Beverage,Germany,2016-07-25,low
-682,"Vazquez, James and Black",Healthcare,Germany,2019-12-22,low
-683,"Williams, Riddle and Morgan",Retail,Germany,2017-01-15,low
-684,Mendoza Ltd,Travel,United Kingdom,2018-12-27,low
-685,"Hodge, Jones and Werner",Utilities,Ireland,2017-01-08,low
-686,"Bender, Romero and Perkins",Food & Beverage,Netherlands,2024-01-10,low
-687,Lara LLC,Services,Ireland,2016-10-20,low
-688,Ali-Collins,Services,Canada,2018-02-13,low
-689,Sandoval PLC,Services,France,2019-11-22,low
-690,Jackson Group,Food & Beverage,Netherlands,2018-12-22,low
-691,Smith and Sons,Services,Spain,2016-08-19,low
-692,"Lewis, Phillips and Anderson",Healthcare,Australia,2018-02-11,low
-693,Taylor and Sons,Healthcare,United Kingdom,2017-03-06,low
-694,King LLC,Travel,Canada,2024-02-25,low
-695,Freeman-Ramirez,Travel,United Kingdom,2017-09-07,low
-696,Simon Ltd,Retail,Netherlands,2018-08-02,low
-697,"Adkins, Jones and Dickson",Food & Beverage,Canada,2017-04-04,low
-698,Ray-Page,Healthcare,Canada,2016-08-25,low
-699,"Smith, Martinez and Burton",Food & Beverage,Canada,2020-05-26,low
-700,Anderson Ltd,Retail,Canada,2021-07-29,low
-701,Irwin LLC,Retail,United Kingdom,2018-07-22,low
-702,"Dominguez, Robinson and Anderson",Travel,Australia,2017-11-14,low
-703,"Gonzales, Howard and Arias",Services,Germany,2018-05-17,low
-704,"Liu, Sanchez and Robbins",Retail,France,2020-05-21,low
-705,Roach and Sons,Electronics,United Kingdom,2019-10-08,low
-706,"Davis, Rogers and Williams",Food & Beverage,Australia,2020-09-03,low
-707,Foster-Smith,Travel,France,2017-10-09,low
-708,Cooper PLC,Retail,Australia,2017-01-12,low
-709,Donovan Group,Healthcare,Spain,2021-02-17,high
-710,Stevens-Sanders,Retail,Australia,2022-11-02,low
-711,"Davis, Medina and Anderson",Travel,Australia,2018-07-05,low
-712,Sutton Ltd,Food & Beverage,Australia,2023-09-05,low
-713,Ewing Inc,Utilities,Germany,2022-09-08,low
-714,Fleming-Hess,Healthcare,Ireland,2021-03-22,low
-715,"Jones, Evans and Grimes",Entertainment,Australia,2016-11-08,low
-716,Valencia and Sons,Healthcare,United Kingdom,2022-08-15,low
-717,"Curry, Schmidt and Wilson",Services,United Kingdom,2022-04-16,low
-718,Baker Ltd,Food & Beverage,France,2020-11-28,low
-719,"Nicholson, Jones and Hughes",Electronics,Germany,2024-03-26,low
-720,Hernandez Inc,Retail,Italy,2023-06-20,low
-721,Mcmillan Group,Entertainment,Germany,2018-12-05,medium
-722,Smith-Brown,Services,Spain,2020-06-20,low
-723,Grant-Richardson,Travel,Germany,2017-09-23,low
-724,Skinner-Solomon,Utilities,Australia,2017-06-27,medium
-725,Finley-Wiley,Services,Australia,2023-03-14,low
-726,Reyes Ltd,Electronics,United Kingdom,2018-08-01,low
-727,Spears-Miller,Retail,United Kingdom,2021-01-28,low
-728,"Brock, Cox and Brown",Travel,Canada,2018-03-12,low
-729,"Mitchell, Hines and Scott",Travel,France,2019-07-23,low
-730,"Johnson, Sanford and Myers",Entertainment,United Kingdom,2023-10-20,low
-731,Cohen PLC,Entertainment,Germany,2023-11-04,low
-732,Love PLC,Retail,United Kingdom,2020-03-10,low
-733,Cooper-Turner,Food & Beverage,Spain,2016-01-16,low
-734,"Bennett, Chavez and Anderson",Retail,Netherlands,2023-11-27,low
-735,Cruz Group,Entertainment,France,2017-01-13,low
-736,Davis and Sons,Retail,Italy,2024-05-19,low
-737,Robinson-Jenkins,Food & Beverage,France,2021-12-10,low
-738,Gillespie Ltd,Retail,Germany,2021-11-08,low
-739,Everett-Peters,Entertainment,France,2016-11-14,low
-740,Adams-Hernandez,Food & Beverage,Canada,2019-04-29,low
-741,"Robertson, Palmer and Mercado",Services,Germany,2016-08-14,medium
-742,Ferguson Group,Retail,United Kingdom,2022-11-26,low
-743,"Clements, Williamson and Singh",Services,France,2020-05-09,low
-744,Hernandez-Allen,Travel,United Kingdom,2018-10-25,low
-745,Solomon-Dawson,Utilities,Australia,2020-08-05,medium
-746,"Burke, Fleming and Baker",Travel,Spain,2022-01-30,low
-747,Castro and Sons,Food & Beverage,United Kingdom,2016-07-09,low
-748,Cortez LLC,Retail,United Kingdom,2020-10-27,low
-749,Dickson-Lopez,Food & Beverage,Germany,2018-01-10,low
-750,Estrada-Diaz,Services,United Kingdom,2023-11-02,low
-751,Walker LLC,Food & Beverage,Canada,2022-01-24,low
-752,Avery Inc,Food & Beverage,United Kingdom,2017-03-09,low
-753,"Allen, Miller and Davenport",Services,United Kingdom,2019-09-10,low
-754,"Rice, Sullivan and Brooks",Entertainment,Netherlands,2018-06-21,medium
-755,"Adams, Boyer and Osborne",Retail,Australia,2017-12-24,low
-756,Hendricks-Elliott,Food & Beverage,Ireland,2021-07-04,low
-757,Porter-Flynn,Services,Netherlands,2022-10-21,low
-758,Matthews-Jacobson,Entertainment,Canada,2023-06-07,low
-759,Griffith-Bender,Retail,Australia,2016-03-28,low
-760,"Rogers, Gonzalez and Rasmussen",Services,Australia,2018-07-02,low
-761,Wood-Kennedy,Healthcare,Canada,2017-01-28,low
-762,Long-Velazquez,Electronics,Canada,2022-02-25,low
-763,"Frank, Reyes and Roman",Food & Beverage,United Kingdom,2016-04-15,low
-764,Clark-Ramirez,Services,Canada,2023-09-25,medium
-765,Thompson LLC,Services,Australia,2016-11-06,low
-766,Johnson-Wolfe,Travel,Italy,2018-10-27,low
-767,Armstrong PLC,Services,France,2021-03-09,low
-768,Romero-Briggs,Retail,United Kingdom,2016-05-05,low
-769,Hodges PLC,Services,Germany,2020-09-07,low
-770,Morris LLC,Electronics,France,2016-02-02,medium
-771,"James, Turner and Griffin",Electronics,Germany,2022-02-04,low
-772,Castaneda and Sons,Food & Beverage,Spain,2020-03-16,low
-773,Chavez LLC,Food & Beverage,Canada,2021-11-15,medium
-774,Allen Ltd,Entertainment,Canada,2019-03-12,low
-775,"Archer, Baker and Cruz",Services,United Kingdom,2017-11-23,low
-776,Williams-Contreras,Entertainment,United Kingdom,2022-03-13,low
-777,Curtis-Silva,Utilities,United Kingdom,2021-02-19,high
-778,Sparks and Sons,Entertainment,United Kingdom,2017-04-12,low
-779,Velasquez-Turner,Services,Spain,2016-06-09,low
-780,Mercado-Lewis,Entertainment,Canada,2022-06-09,low
-781,Chavez Group,Retail,Canada,2019-09-12,low
-782,Barrett Group,Travel,Netherlands,2016-01-23,medium
-783,Garcia Ltd,Food & Beverage,Italy,2024-08-08,medium
-784,Johnson Ltd,Food & Beverage,Australia,2021-08-27,low
-785,"Simon, Simpson and Schmidt",Food & Beverage,Germany,2021-03-18,low
-786,Gillespie-Thomas,Retail,United Kingdom,2021-10-07,low
-787,Miller Ltd,Entertainment,United Kingdom,2017-07-25,low
-788,"Griffin, Hendricks and Hawkins",Healthcare,Germany,2017-04-23,high
-789,Moore-Cox,Entertainment,Germany,2020-04-20,low
-790,"Ramirez, Kemp and Hamilton",Entertainment,Australia,2017-09-24,medium
-791,"Salinas, Green and Richard",Electronics,France,2020-12-11,low
-792,"Zamora, Jimenez and Rodriguez",Food & Beverage,Netherlands,2022-04-08,high
-793,Day and Sons,Travel,France,2019-11-28,low
-794,"Peck, Rhodes and Holt",Food & Beverage,Canada,2019-09-18,low
-795,Hogan-Hutchinson,Healthcare,France,2019-10-14,low
-796,Walker Group,Food & Beverage,United Kingdom,2024-04-29,low
-797,Chavez-Ray,Food & Beverage,Canada,2019-01-11,low
-798,Fleming-Russell,Healthcare,Canada,2021-01-21,low
-799,Mcdonald Inc,Retail,Canada,2021-08-15,low
-800,Bartlett-Brewer,Retail,United Kingdom,2016-06-28,low
+1,Hall-Clark,Entertainment,Germany,2019-01-17,low
+2,Frank Ltd,Food & Beverage,Canada,2016-10-12,low
+3,"Stephens, Parker and Cross",Electronics,Canada,2019-02-15,medium
+4,Cooper-Duncan,Entertainment,United Kingdom,2024-07-08,low
+5,Clark LLC,Entertainment,Ireland,2019-01-23,medium
+6,"Gonzalez, Brown and Taylor",Retail,United Kingdom,2020-01-31,low
+7,Clark Inc,Food & Beverage,Germany,2022-11-29,low
+8,Norton-Sullivan,Entertainment,United Kingdom,2020-06-08,low
+9,Stanley-Stevenson,Retail,United Kingdom,2024-08-14,medium
+10,"Williams, Diaz and Garner",Travel,Netherlands,2021-09-28,low
+11,Baxter LLC,Healthcare,Australia,2020-05-25,low
+12,Sanford Ltd,Travel,France,2019-05-02,medium
+13,Stevenson-Garrett,Electronics,Spain,2016-07-07,low
+14,Harris Ltd,Utilities,United Kingdom,2016-03-05,low
+15,"Curtis, Mcconnell and Erickson",Services,Canada,2018-11-28,low
+16,Krueger Ltd,Electronics,Australia,2021-11-17,low
+17,Rodriguez-Cortez,Services,Spain,2016-10-11,medium
+18,Collier Inc,Food & Beverage,Germany,2018-03-12,low
+19,"Jefferson, Moore and Owen",Food & Beverage,United Kingdom,2019-11-18,medium
+20,"Smith, Hamilton and Lopez",Food & Beverage,Canada,2018-09-30,low
+21,Nixon Inc,Services,United Kingdom,2019-05-23,low
+22,"Mcfarland, Murray and Walters",Food & Beverage,United Kingdom,2021-10-24,low
+23,"Wilson, Miller and Shaffer",Retail,Ireland,2022-02-21,low
+24,Stephens Inc,Food & Beverage,Germany,2017-02-28,low
+25,Schaefer and Sons,Services,Australia,2020-06-30,low
+26,"Hawkins, Clay and Osborn",Food & Beverage,United Kingdom,2019-04-21,high
+27,"Castillo, Smith and Lowe",Electronics,United Kingdom,2021-06-03,low
+28,"Mcguire, Cole and Andrade",Travel,Spain,2018-07-27,low
+29,Patton Group,Healthcare,Canada,2016-01-22,low
+30,Nelson-Brown,Utilities,Germany,2016-12-29,low
+31,Obrien Ltd,Services,United Kingdom,2019-03-30,low
+32,Bailey Group,Entertainment,Australia,2019-10-24,medium
+33,"Lopez, Myers and Vargas",Retail,Canada,2022-04-18,low
+34,"Miles, Martin and Aguirre",Electronics,Australia,2017-06-30,low
+35,"Moore, Shaw and Baker",Retail,Australia,2016-04-25,low
+36,"Thomas, Perez and Wells",Food & Beverage,Australia,2020-10-25,medium
+37,Dean-Green,Entertainment,United Kingdom,2017-10-23,low
+38,Lawson PLC,Food & Beverage,Australia,2017-05-15,low
+39,"Johnson, Lee and Leonard",Retail,Australia,2021-10-14,low
+40,Taylor-Jacobson,Entertainment,Canada,2019-02-05,medium
+41,"Allen, Morgan and Johnston",Healthcare,Spain,2021-12-04,low
+42,"Casey, Rich and Davis",Entertainment,United Kingdom,2023-04-23,low
+43,Horn-Castillo,Retail,United Kingdom,2019-01-25,high
+44,Lewis PLC,Food & Beverage,United Kingdom,2019-02-18,low
+45,Wallace LLC,Food & Beverage,Australia,2019-07-31,low
+46,Gould LLC,Food & Beverage,Netherlands,2021-09-13,low
+47,"Santiago, Trevino and Schwartz",Travel,Australia,2021-11-27,low
+48,"Price, Boyd and Andrews",Entertainment,Canada,2018-10-11,medium
+49,Young PLC,Services,Australia,2016-10-27,low
+50,Kelley-Ramsey,Electronics,Canada,2016-03-15,low
+51,"White, Jones and Frazier",Food & Beverage,Ireland,2021-01-13,low
+52,Hendrix Ltd,Food & Beverage,Australia,2016-03-25,low
+53,"Middleton, Frazier and Gregory",Entertainment,Canada,2024-05-03,low
+54,Ayala-Pierce,Food & Beverage,Netherlands,2017-11-27,low
+55,Henry-Thomas,Services,Germany,2021-11-02,medium
+56,Nelson-Richardson,Healthcare,Canada,2018-03-02,low
+57,"Colon, Dunn and Waller",Services,United Kingdom,2022-02-20,low
+58,Beltran Ltd,Travel,Germany,2019-02-03,low
+59,Jackson Ltd,Retail,France,2017-11-01,medium
+60,"Hayes, Murphy and Salazar",Services,Australia,2021-07-26,low
+61,Cooper LLC,Food & Beverage,United Kingdom,2018-06-22,low
+62,"Prince, Harper and Davies",Food & Beverage,United Kingdom,2016-11-15,low
+63,Andrews Inc,Travel,Australia,2017-09-22,low
+64,Thompson Ltd,Food & Beverage,United Kingdom,2023-03-03,low
+65,Rodriguez-Williams,Entertainment,United Kingdom,2022-10-22,low
+66,"Tucker, Romero and Jones",Healthcare,France,2019-10-18,low
+67,Stout PLC,Healthcare,Australia,2020-02-07,medium
+68,Jackson-Peterson,Retail,Germany,2018-11-17,low
+69,Murphy-Howard,Utilities,Germany,2022-09-02,low
+70,Moore and Sons,Services,United Kingdom,2021-01-16,medium
+71,Brown-Brown,Services,France,2023-12-19,low
+72,"Simmons, Mcintosh and Rios",Entertainment,Netherlands,2020-06-25,low
+73,Clark Inc,Healthcare,Canada,2016-06-30,low
+74,Moore Inc,Entertainment,Italy,2018-08-05,low
+75,Hughes-Kim,Food & Beverage,Germany,2019-08-23,low
+76,"Dean, Thompson and Escobar",Healthcare,Australia,2018-05-20,low
+77,Mitchell-Martin,Food & Beverage,Australia,2021-12-09,low
+78,Lewis LLC,Retail,Canada,2024-07-16,low
+79,"Zamora, Bailey and Thompson",Electronics,Germany,2017-03-31,low
+80,"Arroyo, Hayden and Zuniga",Food & Beverage,United Kingdom,2024-07-26,low
+81,Moore-Carpenter,Food & Beverage,United Kingdom,2018-08-15,medium
+82,Harper Ltd,Entertainment,Germany,2020-01-26,low
+83,Kirk-Johnson,Travel,France,2020-09-16,low
+84,"Knight, Golden and Jones",Food & Beverage,Canada,2018-08-12,low
+85,Jimenez-Sellers,Electronics,France,2016-01-16,low
+86,Patterson-Gonzalez,Entertainment,Canada,2017-07-12,low
+87,Hodges-Meadows,Healthcare,Canada,2024-01-18,low
+88,Bailey Group,Food & Beverage,Canada,2020-10-02,low
+89,Hammond-Gomez,Food & Beverage,Ireland,2019-02-28,low
+90,Browning-Carney,Food & Beverage,Australia,2020-01-24,low
+91,Butler-Howard,Travel,Australia,2016-07-18,medium
+92,"Morris, Crawford and Sharp",Food & Beverage,Italy,2020-10-22,medium
+93,Wilson-Russell,Travel,France,2020-08-27,high
+94,Everett-Williams,Electronics,France,2016-05-14,low
+95,George-Schroeder,Entertainment,United Kingdom,2020-02-14,low
+96,Mclean-Lin,Healthcare,United Kingdom,2017-05-21,low
+97,Garcia PLC,Food & Beverage,Ireland,2019-08-19,low
+98,"Smith, Jensen and Russo",Food & Beverage,United Kingdom,2017-01-13,low
+99,Gutierrez-Bryant,Electronics,Netherlands,2018-02-07,low
+100,Brennan-Coleman,Entertainment,Canada,2019-11-28,low
+101,Bernard-Porter,Entertainment,Canada,2016-10-09,high
+102,Williams-Blair,Food & Beverage,France,2020-01-25,low
+103,Glover LLC,Food & Beverage,Canada,2020-04-18,low
+104,"Sanders, Combs and Schwartz",Travel,Germany,2019-03-30,low
+105,"Price, Hunter and Casey",Food & Beverage,United Kingdom,2019-01-29,low
+106,Wagner Inc,Entertainment,Canada,2020-05-26,low
+107,"Phillips, Butler and Hines",Food & Beverage,Australia,2017-03-09,low
+108,Smith-Lindsey,Travel,Australia,2017-11-14,low
+109,"Martin, Fowler and Moore",Food & Beverage,France,2023-07-22,low
+110,Thompson-Lopez,Healthcare,Australia,2020-02-11,low
+111,Hoffman and Sons,Entertainment,Canada,2022-12-27,low
+112,"Montoya, Griffith and Baker",Electronics,United Kingdom,2016-03-19,low
+113,Werner-Koch,Electronics,Australia,2016-07-17,low
+114,Villanueva Group,Electronics,Germany,2019-02-02,low
+115,Nguyen Ltd,Entertainment,United Kingdom,2016-10-07,medium
+116,Eaton LLC,Electronics,Spain,2019-07-23,low
+117,"Marshall, Lawrence and Ruiz",Entertainment,Netherlands,2020-10-20,low
+118,Edwards Inc,Entertainment,Canada,2021-08-21,medium
+119,Chambers LLC,Travel,Australia,2022-02-28,low
+120,Wood-Trujillo,Food & Beverage,United Kingdom,2016-06-29,low
+121,"Allen, Mercer and Edwards",Travel,United Kingdom,2019-01-27,low
+122,"Fritz, Perez and Mason",Retail,France,2020-04-17,low
+123,"Carter, Lynch and Huff",Food & Beverage,Spain,2016-11-19,low
+124,"Mendez, Goodwin and Hamilton",Food & Beverage,Germany,2023-12-12,low
+125,Walker-Bailey,Retail,Canada,2020-12-21,low
+126,"Holland, Joseph and Thomas",Food & Beverage,United Kingdom,2023-07-22,low
+127,"Baldwin, Pearson and Morris",Food & Beverage,Germany,2017-11-20,low
+128,Esparza PLC,Retail,Ireland,2021-01-06,low
+129,"Williams, Kelley and Crawford",Travel,Germany,2017-12-18,medium
+130,Webster-Ellis,Food & Beverage,Ireland,2022-12-12,low
+131,Martinez LLC,Food & Beverage,United Kingdom,2022-10-22,low
+132,"Henderson, Clark and Jefferson",Travel,France,2023-11-21,medium
+133,"Daniels, Robbins and Noble",Services,Italy,2018-10-30,low
+134,Edwards Inc,Food & Beverage,France,2019-10-08,medium
+135,Chambers-Potter,Electronics,Canada,2016-05-26,low
+136,"Walton, Reid and Garcia",Entertainment,Canada,2021-06-29,low
+137,"Chavez, Banks and Adams",Services,Australia,2018-02-23,low
+138,Bradford LLC,Electronics,Australia,2017-05-17,low
+139,"Henry, Frank and Clark",Food & Beverage,Netherlands,2022-07-08,low
+140,"Gay, Howard and Moss",Travel,Australia,2018-05-06,low
+141,Davis Ltd,Electronics,Australia,2016-11-18,low
+142,Martin-Lowe,Electronics,Canada,2022-06-29,low
+143,Cervantes-Walter,Retail,Australia,2019-11-16,low
+144,Gardner Group,Food & Beverage,Canada,2020-03-26,low
+145,Nelson-Johnson,Retail,Australia,2018-09-25,low
+146,Payne-Thompson,Retail,United Kingdom,2017-08-25,low
+147,Johnson-Brooks,Healthcare,Australia,2017-06-17,medium
+148,Cook Inc,Travel,Netherlands,2021-12-10,low
+149,"Williams, Harris and Wood",Retail,Spain,2017-01-07,low
+150,Malone-Jarvis,Entertainment,France,2023-07-31,low
+151,Clayton-Riley,Services,Canada,2018-01-31,medium
+152,Sandoval-Johnson,Food & Beverage,United Kingdom,2022-01-19,low
+153,"Morales, Odonnell and Coleman",Services,Germany,2018-12-22,medium
+154,Rodriguez-Hodges,Food & Beverage,Australia,2021-01-19,low
+155,Jackson PLC,Services,Canada,2022-04-13,low
+156,French-Hawkins,Entertainment,Ireland,2021-10-07,low
+157,Abbott-Edwards,Healthcare,Spain,2023-07-19,low
+158,Chapman-Diaz,Food & Beverage,Canada,2018-01-17,low
+159,Washington Ltd,Entertainment,United Kingdom,2016-05-09,low
+160,Steele PLC,Food & Beverage,United Kingdom,2017-10-06,low
+161,"Bradford, Mercado and Perry",Entertainment,United Kingdom,2021-05-03,low
+162,"Rodriguez, Brooks and Elliott",Food & Beverage,United Kingdom,2022-06-11,medium
+163,"Vance, Harper and Graham",Retail,Germany,2017-01-19,low
+164,Rosales Ltd,Electronics,Netherlands,2016-01-18,low
+165,Crawford Inc,Electronics,Australia,2021-06-17,low
+166,Smith Ltd,Food & Beverage,France,2017-10-22,low
+167,Gomez Inc,Food & Beverage,Spain,2022-01-18,low
+168,"Taylor, Livingston and Farmer",Services,Canada,2020-01-21,medium
+169,Diaz-Willis,Travel,Ireland,2023-11-11,low
+170,Silva-Cook,Utilities,Australia,2016-09-22,low
+171,Harris-Green,Entertainment,United Kingdom,2017-04-05,low
+172,Gilmore-Hart,Retail,United Kingdom,2016-12-02,low
+173,"Guerrero, Gonzalez and Woods",Food & Beverage,Australia,2021-11-13,low
+174,"Delacruz, Neal and Adams",Utilities,United Kingdom,2021-03-30,low
+175,"Miller, Oconnor and Moss",Entertainment,United Kingdom,2016-02-07,low
+176,"Rice, Harrell and Rodriguez",Retail,Canada,2018-04-28,low
+177,"Davis, Logan and Barker",Entertainment,France,2019-09-23,low
+178,"Becker, Wilson and Hall",Services,Canada,2024-04-24,medium
+179,Bishop-Rich,Food & Beverage,Canada,2020-11-22,medium
+180,Clark Inc,Food & Beverage,France,2018-02-28,medium
+181,Young-Hill,Food & Beverage,Netherlands,2019-09-08,low
+182,"Whitehead, Smith and Marshall",Retail,Canada,2020-07-08,low
+183,Thomas PLC,Food & Beverage,Netherlands,2018-12-22,low
+184,Ingram-Butler,Services,Australia,2018-08-11,low
+185,Reese Group,Utilities,United Kingdom,2024-08-12,low
+186,"Brewer, Skinner and Hardy",Retail,Germany,2017-11-27,low
+187,Leonard and Sons,Services,United Kingdom,2019-12-21,medium
+188,Doyle PLC,Services,Canada,2023-08-19,low
+189,White Inc,Electronics,Germany,2019-11-28,low
+190,Campbell-Carter,Healthcare,United Kingdom,2017-01-31,low
+191,"Allen, Stewart and Munoz",Utilities,Netherlands,2019-03-17,low
+192,"Parsons, Osborne and Garcia",Entertainment,Canada,2023-08-26,low
+193,Willis-Alvarez,Entertainment,United Kingdom,2020-06-28,medium
+194,Solis and Sons,Retail,Australia,2017-01-07,low
+195,"Berg, Frey and Garza",Healthcare,Australia,2020-09-23,medium
+196,Warner Ltd,Food & Beverage,France,2016-05-16,low
+197,Dixon and Sons,Food & Beverage,Canada,2021-11-25,low
+198,Hill Inc,Services,United Kingdom,2016-11-16,low
+199,Williams-Martinez,Entertainment,United Kingdom,2021-01-21,low
+200,"Calderon, Rollins and Christian",Retail,France,2016-05-29,medium
+201,Allen Group,Food & Beverage,Canada,2016-05-10,low
+202,"Hill, Scott and Walker",Electronics,Canada,2017-02-11,low
+203,Franco Ltd,Food & Beverage,France,2018-07-25,low
+204,"Kennedy, Jackson and Mann",Food & Beverage,Canada,2019-08-26,medium
+205,"Davis, Walker and Sanchez",Retail,Canada,2020-10-11,low
+206,Meyer-Hall,Food & Beverage,United Kingdom,2020-01-30,low
+207,"Martin, Martin and Miller",Retail,United Kingdom,2023-02-15,low
+208,Gates-Austin,Food & Beverage,Germany,2018-09-04,low
+209,"Tucker, Barnes and Richardson",Electronics,Australia,2017-09-22,medium
+210,Powell-Miller,Food & Beverage,Spain,2017-06-20,low
+211,Benton-Smith,Services,Australia,2019-05-23,low
+212,Butler Inc,Utilities,United Kingdom,2017-05-17,low
+213,"Taylor, Rodriguez and Anderson",Food & Beverage,United Kingdom,2020-10-25,low
+214,Bryant Ltd,Entertainment,Australia,2019-01-26,low
+215,Reynolds-Ball,Services,United Kingdom,2020-03-03,low
+216,"Morgan, Montoya and Price",Food & Beverage,Australia,2019-09-14,low
+217,"Anderson, Avila and Sanchez",Electronics,Australia,2019-10-22,low
+218,"Cook, Schultz and Garcia",Food & Beverage,Ireland,2021-04-07,low
+219,Nelson PLC,Travel,United Kingdom,2022-02-12,medium
+220,Weaver-Barker,Utilities,Australia,2022-11-24,low
+221,"Nguyen, Lawrence and Wilkins",Entertainment,Germany,2016-04-06,low
+222,Wilkinson PLC,Food & Beverage,Australia,2020-09-09,medium
+223,Hicks-Richards,Services,Australia,2021-12-31,low
+224,"Scott, Nelson and Pruitt",Food & Beverage,Australia,2023-02-21,low
+225,"Ramirez, Wheeler and Taylor",Food & Beverage,Australia,2018-12-24,medium
+226,Owens-Thomas,Services,United Kingdom,2019-07-03,low
+227,Roberts LLC,Entertainment,Canada,2022-06-01,low
+228,Frey-Shelton,Electronics,Spain,2019-05-15,low
+229,Copeland-Jenkins,Food & Beverage,Australia,2020-07-01,low
+230,"Scott, Smith and Baker",Retail,United Kingdom,2018-06-05,low
+231,Nguyen-Salas,Retail,Canada,2018-07-08,low
+232,Green-Fisher,Food & Beverage,Italy,2020-06-30,low
+233,Washington-Black,Retail,United Kingdom,2023-04-29,low
+234,Stevenson-Moore,Food & Beverage,Germany,2017-08-02,low
+235,Warner PLC,Electronics,United Kingdom,2017-10-02,low
+236,"Ferguson, Robles and Evans",Retail,France,2019-11-27,low
+237,Hancock-Dyer,Food & Beverage,Canada,2017-02-26,medium
+238,"Perez, Johnson and Allen",Services,United Kingdom,2024-08-23,low
+239,Alvarez PLC,Entertainment,Canada,2024-03-26,low
+240,Moore-Young,Food & Beverage,Australia,2019-04-20,high
+241,"Garcia, Frank and Warner",Food & Beverage,United Kingdom,2017-01-21,low
+242,"Fry, Peterson and Rose",Food & Beverage,Germany,2016-09-28,low
+243,"Lewis, Washington and Woodard",Food & Beverage,Canada,2020-08-15,low
+244,Goodman Group,Entertainment,France,2019-12-09,low
+245,"Martinez, Cox and Houston",Food & Beverage,Australia,2018-12-22,low
+246,Scott and Sons,Food & Beverage,France,2018-01-15,low
+247,Arellano-Mcneil,Entertainment,Australia,2024-08-10,low
+248,Moran PLC,Travel,Germany,2017-08-21,low
+249,"Clark, Todd and Lopez",Electronics,Canada,2018-11-30,medium
+250,Taylor-Hall,Retail,United Kingdom,2021-03-13,low
+251,Mcintyre-Williams,Travel,Germany,2020-04-01,low
+252,Sloan-Greene,Electronics,Australia,2017-04-05,low
+253,Robinson-Woods,Entertainment,Netherlands,2020-04-10,low
+254,"Williams, Jordan and Martin",Electronics,Canada,2022-12-05,low
+255,"Stark, Munoz and Beck",Entertainment,Canada,2017-11-12,low
+256,"Orr, Hurley and Clark",Travel,Spain,2021-08-12,medium
+257,Moore-Gay,Entertainment,Australia,2022-08-01,low
+258,"Peterson, Moreno and Ponce",Retail,France,2023-08-22,low
+259,Diaz-Fleming,Entertainment,Australia,2022-05-27,low
+260,"Stafford, Floyd and Montes",Retail,Canada,2021-08-14,low
+261,Moore Inc,Entertainment,Spain,2019-05-10,low
+262,"Munoz, Mcbride and Wise",Entertainment,France,2019-01-15,low
+263,Koch-Acosta,Utilities,Canada,2024-03-24,low
+264,"Mills, Hubbard and Elliott",Retail,Canada,2021-05-03,low
+265,"Lane, Mcpherson and Barnett",Electronics,Spain,2021-02-16,low
+266,"Martinez, Garcia and Best",Entertainment,United Kingdom,2021-12-30,low
+267,"Nelson, Hoffman and Crawford",Retail,Australia,2018-08-14,low
+268,"Castro, Mitchell and Deleon",Food & Beverage,Canada,2021-05-10,low
+269,Jenkins and Sons,Healthcare,Italy,2017-08-03,low
+270,Barrett PLC,Food & Beverage,Spain,2019-04-02,low
+271,"Rios, Hendrix and Morgan",Entertainment,France,2020-06-18,low
+272,Gonzalez-Campbell,Services,Germany,2018-02-09,low
+273,"Chavez, Garcia and Larson",Travel,United Kingdom,2018-09-02,low
+274,Garrett LLC,Retail,Canada,2023-02-10,low
+275,Poole PLC,Food & Beverage,Australia,2018-02-09,low
+276,"Harding, Lopez and Hernandez",Healthcare,Canada,2019-09-08,low
+277,Clayton Inc,Utilities,United Kingdom,2019-02-10,low
+278,Salazar Inc,Electronics,United Kingdom,2019-01-31,low
+279,"Yang, Hines and Walker",Travel,United Kingdom,2017-11-15,low
+280,Lee-Anderson,Retail,United Kingdom,2020-04-12,medium
+281,"Perez, Sandoval and Rios",Travel,Spain,2020-07-18,low
+282,"Jimenez, Yu and Torres",Entertainment,Germany,2018-02-17,low
+283,Shaw-Combs,Retail,Canada,2017-04-10,low
+284,"Johnson, Tucker and Huang",Retail,France,2016-01-05,low
+285,Bartlett and Sons,Retail,France,2017-09-28,low
+286,Simpson-Shepherd,Healthcare,Netherlands,2019-10-09,low
+287,"Reynolds, Greene and Miller",Food & Beverage,Australia,2020-03-22,low
+288,Turner Inc,Services,Canada,2021-10-09,low
+289,"Hays, Huff and Hopkins",Food & Beverage,Canada,2020-11-06,low
+290,Hubbard-Davies,Retail,Australia,2021-07-03,low
+291,Curtis-Ward,Retail,Australia,2016-06-02,low
+292,Alexander PLC,Services,Australia,2016-04-16,low
+293,"Fuller, Jones and Thomas",Food & Beverage,Netherlands,2021-05-12,low
+294,"Clark, Davis and Schroeder",Food & Beverage,Germany,2020-05-31,low
+295,Snyder-Johnston,Food & Beverage,Australia,2016-06-04,low
+296,Simmons LLC,Services,Ireland,2017-03-23,low
+297,Velazquez PLC,Retail,Australia,2024-03-13,low
+298,Williams LLC,Electronics,Australia,2017-11-18,low
+299,Beltran-Walton,Entertainment,Canada,2018-01-14,low
+300,Kim-Brown,Retail,Australia,2021-02-19,medium
+301,"Grimes, Walker and Price",Services,Australia,2021-08-13,low
+302,Bridges-Richardson,Travel,Netherlands,2021-11-08,low
+303,Bird Inc,Retail,Ireland,2017-09-04,low
+304,Cruz Group,Entertainment,United Kingdom,2019-08-27,low
+305,"Bailey, Callahan and Allen",Retail,Germany,2020-10-29,low
+306,Chaney-Young,Food & Beverage,United Kingdom,2016-04-19,low
+307,Mathews-Hayes,Food & Beverage,Netherlands,2016-09-08,low
+308,"Montoya, Davis and Steele",Food & Beverage,Netherlands,2016-05-18,low
+309,Pham-Diaz,Services,Netherlands,2024-08-21,low
+310,Glenn and Sons,Entertainment,United Kingdom,2018-01-27,medium
+311,Frost Inc,Utilities,Australia,2019-07-18,low
+312,Vargas Inc,Food & Beverage,Netherlands,2016-10-27,high
+313,"Moore, Russell and Haas",Entertainment,Netherlands,2020-01-06,low
+314,Stanton-Rivera,Electronics,United Kingdom,2020-12-27,low
+315,Davis PLC,Retail,Canada,2018-05-12,low
+316,"Boyd, Johnson and Harrell",Food & Beverage,Australia,2019-11-17,medium
+317,"Miller, Moore and Hernandez",Food & Beverage,Canada,2016-02-03,low
+318,Johnson-Johnson,Retail,Canada,2021-12-22,medium
+319,Nunez-Hawkins,Travel,Canada,2024-04-07,low
+320,Rhodes and Sons,Services,Australia,2016-01-29,low
+321,Johnston LLC,Services,France,2016-07-29,low
+322,Sweeney-Solis,Food & Beverage,Australia,2020-09-13,low
+323,Mckay-Campos,Healthcare,Spain,2023-04-01,low
+324,"Ramirez, Bennett and Cain",Food & Beverage,Australia,2018-12-22,low
+325,Guzman-Phillips,Travel,Canada,2020-03-30,low
+326,Lam-Farley,Services,Australia,2017-11-30,low
+327,Clark LLC,Electronics,Australia,2018-01-14,medium
+328,Kelly Ltd,Services,Spain,2024-06-28,medium
+329,Moore-Velazquez,Travel,France,2017-04-12,low
+330,Moore-Madden,Food & Beverage,Ireland,2021-05-17,low
+331,Coleman-Camacho,Travel,Germany,2018-07-19,low
+332,"Kirk, Jackson and Buck",Retail,Canada,2021-04-06,medium
+333,Price-Snyder,Retail,United Kingdom,2020-01-15,low
+334,"Alexander, Smith and Ballard",Electronics,Australia,2019-11-18,medium
+335,Case-Avila,Entertainment,Germany,2020-08-04,low
+336,Ramsey-Jackson,Utilities,Germany,2017-08-21,low
+337,Ward Group,Utilities,Australia,2020-02-15,low
+338,Cordova-Thomas,Food & Beverage,Ireland,2021-02-06,medium
+339,Munoz-Patel,Food & Beverage,Netherlands,2020-11-17,low
+340,Nelson-Olson,Retail,United Kingdom,2020-01-07,low
+341,"Wilkinson, Moyer and Mcintosh",Retail,United Kingdom,2016-02-25,low
+342,Neal and Sons,Retail,United Kingdom,2018-08-02,medium
+343,Jefferson-Lara,Retail,France,2016-01-09,low
+344,"Tucker, Dougherty and Jones",Retail,United Kingdom,2019-01-05,low
+345,Williams-Bailey,Food & Beverage,Germany,2016-12-17,low
+346,Young-Henson,Retail,Australia,2021-02-17,low
+347,"Wood, Mcintosh and Davis",Services,France,2022-06-29,low
+348,"Fowler, Vaughan and Stewart",Food & Beverage,Australia,2024-03-15,low
+349,Scott Inc,Retail,Germany,2020-07-25,medium
+350,Johnson-Figueroa,Food & Beverage,Australia,2019-08-07,low
+351,Pittman Group,Retail,Australia,2020-07-21,medium
+352,"Daugherty, Brown and Warren",Retail,United Kingdom,2021-06-15,low
+353,"Johnson, Ballard and Allen",Utilities,Netherlands,2017-02-24,medium
+354,"Higgins, Wood and Bell",Entertainment,Canada,2017-04-10,low
+355,"Newman, Herring and Simmons",Food & Beverage,United Kingdom,2016-02-29,low
+356,Baker-Hoffman,Food & Beverage,France,2020-02-01,medium
+357,Cannon-Cole,Food & Beverage,Germany,2016-12-15,low
+358,"Ingram, Dawson and Green",Retail,Germany,2022-08-14,low
+359,Gross-Weeks,Electronics,United Kingdom,2017-05-01,low
+360,"Carpenter, Lucero and Simon",Food & Beverage,Germany,2017-05-09,low
+361,Lewis-Moreno,Food & Beverage,Australia,2017-09-18,low
+362,Nguyen-Robertson,Services,Australia,2016-07-11,high
+363,"Petty, Mercado and Rice",Utilities,Germany,2022-11-12,low
+364,Roman Group,Food & Beverage,United Kingdom,2021-09-27,low
+365,"Atkins, Sawyer and Solomon",Food & Beverage,France,2017-01-05,low
+366,House-Hines,Food & Beverage,France,2018-09-08,high
+367,Brown PLC,Food & Beverage,Australia,2021-04-12,low
+368,Cook Inc,Services,Germany,2021-11-21,low
+369,"Garrison, Richmond and Boyd",Food & Beverage,United Kingdom,2023-02-19,low
+370,"Green, Rodriguez and Mathis",Healthcare,United Kingdom,2016-02-18,low
+371,"Leach, Shelton and Gates",Electronics,Spain,2018-05-14,low
+372,Gutierrez-Jones,Retail,France,2023-04-14,low
+373,"Day, Jensen and Moore",Food & Beverage,United Kingdom,2016-06-29,low
+374,Jackson-Gonzales,Food & Beverage,Australia,2020-01-27,low
+375,Smith Inc,Travel,Canada,2019-02-23,low
+376,"Thomas, Robles and Ali",Services,United Kingdom,2017-07-21,low
+377,Oneill-Davidson,Travel,Canada,2017-12-22,low
+378,Flores PLC,Healthcare,Australia,2024-03-18,low
+379,Bell-Brown,Retail,France,2020-10-26,low
+380,Briggs Inc,Food & Beverage,Australia,2021-03-25,medium
+381,"Higgins, Bennett and Walker",Entertainment,United Kingdom,2018-10-24,high
+382,"Smith, Roberts and Roman",Food & Beverage,France,2021-09-16,low
+383,Tyler-Rodriguez,Utilities,United Kingdom,2017-04-27,low
+384,Moore-Elliott,Services,Canada,2019-02-26,low
+385,"Roberts, Barrett and Lewis",Travel,United Kingdom,2018-10-29,low
+386,Murphy-Benton,Entertainment,United Kingdom,2016-12-11,low
+387,Carroll-Cortez,Entertainment,Germany,2020-08-17,medium
+388,Fletcher Ltd,Retail,Canada,2017-03-12,medium
+389,"Stafford, Adams and Jones",Food & Beverage,Australia,2020-04-30,medium
+390,Bryant and Sons,Entertainment,United Kingdom,2021-11-29,medium
+391,Christensen Ltd,Travel,United Kingdom,2020-12-03,low
+392,Johnson-Stevens,Food & Beverage,Canada,2021-07-24,low
+393,"Baker, Bass and Garza",Food & Beverage,Spain,2017-04-18,low
+394,"Marshall, Marsh and Young",Entertainment,Canada,2021-12-11,high
+395,Maddox Inc,Utilities,United Kingdom,2020-06-30,low
+396,Pham-Norton,Retail,Canada,2016-06-21,low
+397,Reed-Jackson,Retail,Canada,2017-02-27,medium
+398,Gutierrez-Williams,Services,Germany,2016-10-10,low
+399,Smith Group,Retail,United Kingdom,2024-03-12,low
+400,"Lynch, Pearson and Ramos",Entertainment,Canada,2017-01-22,medium
+401,Williams-Wheeler,Food & Beverage,Canada,2023-01-01,low
+402,Brown-Palmer,Retail,Canada,2022-05-31,low
+403,Wood Ltd,Electronics,Netherlands,2017-11-25,low
+404,"Patton, James and Delacruz",Food & Beverage,Canada,2021-07-12,low
+405,"Smith, Davis and Rose",Utilities,United Kingdom,2021-02-28,low
+406,Hartman-Cochran,Travel,Netherlands,2023-09-04,medium
+407,Smith Inc,Electronics,Australia,2019-08-03,medium
+408,Garcia and Sons,Entertainment,France,2022-07-20,medium
+409,Anderson Inc,Electronics,Germany,2018-05-05,low
+410,Park PLC,Food & Beverage,United Kingdom,2022-05-29,low
+411,Sawyer PLC,Retail,France,2020-03-28,low
+412,Flores Ltd,Entertainment,Australia,2021-09-17,low
+413,Martinez Inc,Food & Beverage,United Kingdom,2021-03-03,low
+414,"Kerr, Gross and Knight",Retail,United Kingdom,2017-07-25,low
+415,Barber-Rodriguez,Food & Beverage,Netherlands,2019-06-06,low
+416,Moon-Graham,Healthcare,Canada,2018-01-07,low
+417,"Santana, Cameron and Williams",Food & Beverage,United Kingdom,2017-07-02,low
+418,Campbell LLC,Food & Beverage,Germany,2022-04-14,low
+419,Miller Group,Entertainment,Australia,2022-05-01,low
+420,Huff PLC,Food & Beverage,United Kingdom,2019-01-09,low
+421,Manning LLC,Retail,Canada,2018-03-23,medium
+422,Bradley LLC,Retail,France,2016-03-14,low
+423,Barr PLC,Services,Germany,2018-11-30,low
+424,Hunter-Hughes,Food & Beverage,Canada,2016-02-09,low
+425,Griffin-Rodriguez,Utilities,Australia,2016-04-30,low
+426,Smith-Patton,Travel,Germany,2018-05-31,low
+427,King-Turner,Retail,United Kingdom,2020-08-29,low
+428,"Myers, Murphy and Stanton",Food & Beverage,United Kingdom,2019-08-14,low
+429,"Hill, Rodgers and Santana",Food & Beverage,Germany,2018-09-02,medium
+430,Richard Ltd,Food & Beverage,Australia,2024-07-04,low
+431,Moon LLC,Electronics,Australia,2023-01-04,low
+432,"Warren, Rivera and Owens",Retail,Canada,2018-11-01,low
+433,Williamson-Arellano,Retail,Netherlands,2023-09-16,low
+434,Mcgrath and Sons,Entertainment,Ireland,2020-07-14,low
+435,Thomas-King,Entertainment,Canada,2017-10-27,low
+436,Barnes and Sons,Food & Beverage,Italy,2023-03-07,low
+437,White-Wilson,Retail,Australia,2016-02-27,low
+438,Soto-Roberts,Healthcare,Australia,2018-02-24,low
+439,Jimenez-Martinez,Retail,France,2019-11-21,high
+440,"Nixon, Hernandez and Moore",Entertainment,Australia,2020-03-13,low
+441,Davis-Clark,Entertainment,France,2022-09-12,low
+442,"Anderson, Young and Osborne",Retail,Australia,2022-04-20,low
+443,Cole-Decker,Retail,Canada,2023-04-30,medium
+444,Ramirez-Holmes,Electronics,Australia,2020-11-26,low
+445,Thompson Ltd,Retail,Ireland,2018-04-12,high
+446,Spencer-Porter,Retail,Canada,2017-12-09,low
+447,Mendez Inc,Healthcare,Canada,2017-05-12,low
+448,Salazar-Hall,Healthcare,Canada,2019-08-31,low
+449,"Lane, Hughes and Myers",Entertainment,Australia,2016-10-01,low
+450,Todd-Kim,Services,United Kingdom,2017-05-05,low
+451,"Gray, Chen and Valentine",Travel,Australia,2016-06-05,low
+452,"Franklin, Hamilton and Curtis",Retail,Canada,2024-03-01,medium
+453,"George, Meadows and Walsh",Retail,United Kingdom,2016-01-14,low
+454,Conner-Vasquez,Food & Beverage,Canada,2016-12-02,low
+455,Evans-Cuevas,Entertainment,France,2019-09-12,low
+456,Hancock-Archer,Entertainment,Australia,2018-03-24,low
+457,Little-Allison,Services,Netherlands,2017-01-16,low
+458,"Torres, Russell and Mcdonald",Food & Beverage,Australia,2017-01-18,low
+459,"Potts, Sanchez and Ochoa",Healthcare,France,2023-02-08,low
+460,"Cole, Cooper and Scott",Electronics,France,2018-08-13,low
+461,Shaw-Perkins,Healthcare,Canada,2019-02-17,medium
+462,"Kirby, Boyd and Sweeney",Services,United Kingdom,2019-08-04,low
+463,Thomas and Sons,Services,United Kingdom,2016-04-16,low
+464,Saunders-Simmons,Electronics,France,2019-01-02,low
+465,Scott-Gross,Retail,United Kingdom,2021-05-26,low
+466,"Roberts, Porter and Torres",Travel,Germany,2023-10-23,low
+467,"Townsend, Roberts and Patterson",Food & Beverage,United Kingdom,2017-08-16,low
+468,Cooper-Hill,Entertainment,Germany,2021-11-03,low
+469,Lopez Ltd,Food & Beverage,Germany,2020-05-28,low
+470,Cortez and Sons,Food & Beverage,United Kingdom,2022-04-29,medium
+471,"Garcia, Evans and Cruz",Food & Beverage,Australia,2021-07-17,low
+472,Sherman-Stafford,Services,Germany,2019-11-07,low
+473,"Carter, Nolan and Harris",Retail,Netherlands,2016-05-01,low
+474,"Jackson, Good and Taylor",Retail,Italy,2021-11-15,low
+475,Torres LLC,Entertainment,Australia,2017-11-06,low
+476,"Sanchez, Bailey and Butler",Retail,United Kingdom,2020-06-13,low
+477,Odom PLC,Entertainment,United Kingdom,2020-07-20,low
+478,"Richmond, Hubbard and Cabrera",Retail,United Kingdom,2016-10-24,low
+479,Lambert-Turner,Entertainment,Netherlands,2019-09-04,medium
+480,"Hernandez, Smith and Cobb",Food & Beverage,United Kingdom,2021-08-30,medium
+481,Skinner PLC,Food & Beverage,Canada,2018-03-03,low
+482,"Smith, Harris and Pacheco",Entertainment,France,2020-08-11,low
+483,Fowler-Jones,Retail,United Kingdom,2020-01-05,low
+484,"Miller, Diaz and Bryant",Food & Beverage,Germany,2017-05-26,low
+485,Garcia LLC,Utilities,Australia,2021-01-14,low
+486,Wilson Inc,Retail,United Kingdom,2016-10-05,low
+487,Goodman-Rice,Entertainment,France,2016-01-28,low
+488,"James, Hernandez and Jones",Healthcare,Australia,2021-10-18,low
+489,Lynch and Sons,Food & Beverage,France,2024-07-12,low
+490,"Jones, Howard and Ford",Healthcare,Spain,2021-02-09,high
+491,"Calhoun, Morgan and Ray",Food & Beverage,United Kingdom,2017-06-08,medium
+492,Bennett PLC,Retail,United Kingdom,2020-04-08,high
+493,Gilmore-Diaz,Retail,United Kingdom,2021-02-26,low
+494,Eaton-Wilkins,Travel,Canada,2016-01-27,low
+495,"Mullins, Wolf and Martinez",Food & Beverage,Germany,2016-05-12,low
+496,Brown-Rios,Entertainment,France,2017-12-22,low
+497,"Hawkins, Davis and Johnson",Electronics,United Kingdom,2021-02-02,low
+498,"Wyatt, Phillips and Smith",Entertainment,Germany,2019-01-08,low
+499,Stevens and Sons,Entertainment,Australia,2023-01-10,low
+500,Brady Ltd,Travel,Germany,2023-05-31,low
+501,Rogers-Knight,Services,Australia,2016-03-23,low
+502,Griffin Group,Food & Beverage,Spain,2020-05-23,low
+503,"Lopez, Smith and Chen",Healthcare,Australia,2019-01-16,low
+504,Reyes and Sons,Food & Beverage,Australia,2022-07-25,medium
+505,Savage Group,Electronics,Spain,2019-04-27,low
+506,Doyle-Neal,Healthcare,Italy,2016-11-08,low
+507,Miller and Sons,Services,Canada,2024-06-12,low
+508,Francis Group,Food & Beverage,Germany,2022-05-22,medium
+509,Perez-Carlson,Retail,United Kingdom,2017-07-25,medium
+510,Riddle-Hill,Entertainment,Australia,2018-09-11,low
+511,Jefferson-Oconnell,Travel,Australia,2024-04-18,low
+512,Griffith-Carter,Services,United Kingdom,2024-02-07,low
+513,"Walker, Bauer and Santiago",Travel,Germany,2023-09-12,low
+514,Cross-Oneal,Retail,United Kingdom,2018-03-30,low
+515,Shepard-Hunter,Entertainment,Canada,2020-08-07,medium
+516,Bass Ltd,Retail,Netherlands,2016-02-23,low
+517,"Wiggins, Brown and Crawford",Entertainment,Canada,2021-08-16,medium
+518,"Ramsey, Vaughn and Barber",Travel,Spain,2019-06-12,low
+519,Odonnell-Wiggins,Entertainment,Australia,2016-12-01,low
+520,Patel-Douglas,Services,Germany,2022-09-17,low
+521,Sanchez-Gibbs,Retail,France,2016-09-26,low
+522,Freeman-Rogers,Healthcare,Germany,2017-07-13,low
+523,"Fry, Washington and Colon",Travel,Canada,2018-01-23,low
+524,"Torres, Montoya and Ellis",Entertainment,United Kingdom,2020-01-04,low
+525,"Peters, Lawrence and White",Services,Germany,2022-05-05,medium
+526,Morgan-Holt,Food & Beverage,Netherlands,2019-01-14,low
+527,Chandler LLC,Retail,Australia,2019-08-26,low
+528,Martinez Inc,Food & Beverage,United Kingdom,2023-01-10,low
+529,Evans PLC,Travel,Canada,2017-09-30,low
+530,"Ross, Rodriguez and Gallegos",Entertainment,France,2016-03-02,low
+531,Griffin-Morris,Food & Beverage,France,2020-04-20,low
+532,Watson-Knight,Food & Beverage,France,2021-06-14,low
+533,"Johnson, Reed and Warner",Food & Beverage,Spain,2020-05-08,low
+534,"James, Mahoney and Bray",Travel,United Kingdom,2019-01-14,low
+535,Wheeler-Atkinson,Food & Beverage,United Kingdom,2018-09-05,low
+536,Young LLC,Food & Beverage,Netherlands,2017-04-19,low
+537,House Ltd,Retail,France,2020-09-28,low
+538,Johnson Ltd,Entertainment,France,2016-03-28,low
+539,"Jacobson, Pena and Rojas",Food & Beverage,France,2022-05-08,low
+540,Larson Ltd,Healthcare,United Kingdom,2016-09-07,medium
+541,Cline LLC,Food & Beverage,Canada,2016-02-01,medium
+542,Steele-Gibson,Entertainment,Spain,2021-10-19,low
+543,Barnett-Robinson,Electronics,United Kingdom,2021-12-04,low
+544,Montoya and Sons,Food & Beverage,France,2024-05-27,low
+545,Cox-Ball,Food & Beverage,France,2021-10-14,low
+546,Roman-Martinez,Food & Beverage,Canada,2020-08-21,low
+547,Rojas Inc,Entertainment,Spain,2016-03-25,low
+548,Wallace Inc,Entertainment,Canada,2017-03-01,low
+549,Young-Clark,Retail,United Kingdom,2018-11-25,medium
+550,"Gonzalez, Thomas and Carter",Entertainment,France,2022-06-22,low
+551,"Chen, Martinez and Miller",Food & Beverage,Germany,2022-05-30,low
+552,Riley-Collins,Food & Beverage,United Kingdom,2024-03-03,low
+553,"Simpson, Kelley and Jones",Electronics,Australia,2023-12-31,low
+554,Hall Ltd,Entertainment,Germany,2017-09-11,medium
+555,"Lewis, Kemp and Caldwell",Food & Beverage,Australia,2018-03-03,low
+556,"Silva, Durham and Sloan",Healthcare,Germany,2016-10-03,medium
+557,Ryan-Wise,Food & Beverage,Canada,2018-07-31,low
+558,Rivera and Sons,Food & Beverage,Australia,2016-10-10,low
+559,"Kerr, Lewis and Coleman",Food & Beverage,Canada,2020-02-01,high
+560,Gonzalez-Osborne,Services,Canada,2017-03-29,low
+561,Jordan and Sons,Food & Beverage,France,2016-05-31,low
+562,Schneider PLC,Food & Beverage,France,2021-04-20,low
+563,Mahoney Group,Electronics,United Kingdom,2017-06-16,low
+564,"Ferguson, Bowen and Alvarez",Retail,Spain,2024-07-09,medium
+565,Hernandez-Neal,Food & Beverage,Netherlands,2016-07-06,low
+566,Rivera-Edwards,Services,Australia,2020-08-13,low
+567,Sandoval-Tyler,Food & Beverage,Germany,2021-11-01,low
+568,Steele Group,Entertainment,Canada,2018-11-10,high
+569,"Duffy, Johnson and Reyes",Services,Germany,2020-09-03,low
+570,"Watkins, Sutton and May",Services,Australia,2024-01-19,low
+571,"Payne, Church and Rojas",Travel,Canada,2020-03-27,low
+572,"Rivera, Callahan and Carter",Food & Beverage,United Kingdom,2019-05-12,low
+573,Mitchell-Armstrong,Retail,United Kingdom,2019-04-22,low
+574,Garcia Inc,Travel,United Kingdom,2023-09-30,low
+575,Flores Ltd,Food & Beverage,Australia,2020-06-17,low
+576,"Weaver, Collins and Johnson",Services,Canada,2021-08-05,low
+577,Goodman-Martinez,Retail,Canada,2022-07-04,low
+578,"Williams, Moran and Douglas",Entertainment,Germany,2018-10-09,low
+579,Baldwin Group,Services,Canada,2024-02-06,low
+580,Jackson Ltd,Electronics,United Kingdom,2020-07-27,medium
+581,Singh-Pierce,Food & Beverage,Canada,2018-01-15,medium
+582,Thomas Ltd,Food & Beverage,Canada,2020-01-24,low
+583,Patterson LLC,Entertainment,Germany,2019-07-03,low
+584,Davis-Dominguez,Entertainment,Canada,2019-08-04,low
+585,Copeland Ltd,Entertainment,Australia,2021-01-01,low
+586,Lloyd PLC,Entertainment,Canada,2022-12-17,low
+587,Miller-Santiago,Food & Beverage,France,2021-09-08,low
+588,"Roberts, Morris and Nelson",Healthcare,United Kingdom,2023-01-08,low
+589,Johnson Group,Retail,Italy,2019-08-25,low
+590,"Carter, Rogers and Lowe",Services,Germany,2021-12-13,medium
+591,Rojas-Harrison,Food & Beverage,Canada,2021-11-16,low
+592,Martinez-Oneal,Healthcare,Germany,2023-09-11,low
+593,Underwood-Goodman,Food & Beverage,United Kingdom,2017-08-24,low
+594,Parrish-Mason,Electronics,Australia,2019-10-06,low
+595,Morales and Sons,Retail,United Kingdom,2019-01-10,low
+596,Blackwell and Sons,Entertainment,Netherlands,2018-06-18,low
+597,Mccarthy and Sons,Entertainment,Germany,2024-01-15,medium
+598,Cook Ltd,Utilities,Australia,2021-09-12,low
+599,Ford-Wagner,Food & Beverage,Canada,2016-02-16,low
+600,Powell-Brown,Entertainment,Ireland,2020-07-24,low
+601,Lopez LLC,Food & Beverage,Netherlands,2016-03-16,medium
+602,Bryant Group,Travel,Ireland,2017-01-30,low
+603,Simmons-Mayer,Entertainment,Australia,2019-02-05,medium
+604,"Davidson, Howard and Robertson",Retail,Germany,2016-11-07,low
+605,Joseph-Simmons,Food & Beverage,United Kingdom,2023-10-10,low
+606,Fisher PLC,Food & Beverage,Canada,2023-06-12,low
+607,Watson-Villarreal,Entertainment,Australia,2022-08-13,low
+608,"Clark, Cruz and Spence",Food & Beverage,Canada,2023-02-23,low
+609,Nelson-Rodriguez,Services,Australia,2023-06-12,low
+610,"Green, White and Nelson",Food & Beverage,Australia,2019-05-29,low
+611,"Goodwin, Green and Carroll",Electronics,Ireland,2018-06-06,low
+612,"Campbell, Anthony and Flores",Electronics,Netherlands,2021-12-27,low
+613,Williams-Smith,Healthcare,France,2016-05-24,low
+614,Arnold Ltd,Entertainment,Spain,2020-06-04,low
+615,Smith PLC,Travel,United Kingdom,2020-06-08,low
+616,Garcia-Chen,Travel,Australia,2018-12-27,low
+617,"Clay, Martinez and Lewis",Healthcare,Canada,2020-01-11,low
+618,"Perkins, Davidson and Woods",Retail,United Kingdom,2024-02-20,low
+619,"Davis, Vargas and Roman",Food & Beverage,United Kingdom,2020-12-24,low
+620,"Randall, Rodriguez and Bishop",Retail,Australia,2018-09-01,low
+621,Hutchinson-Anderson,Entertainment,Australia,2020-11-26,low
+622,Cook-Davis,Retail,Netherlands,2019-12-20,low
+623,"Friedman, Marshall and Cox",Electronics,Canada,2019-01-31,low
+624,Garner-Garcia,Retail,Germany,2020-03-20,low
+625,Sanford Group,Services,Australia,2023-07-07,low
+626,"Gonzales, Wilkinson and Curry",Food & Beverage,Australia,2021-06-25,low
+627,Jenkins LLC,Food & Beverage,Australia,2024-03-08,low
+628,"Patton, Cook and Parks",Utilities,United Kingdom,2018-05-24,high
+629,"Walker, Dixon and Meadows",Electronics,Australia,2017-09-08,low
+630,Brennan-Rogers,Food & Beverage,France,2021-03-11,low
+631,"Miller, Vaughan and Harris",Services,United Kingdom,2020-12-23,low
+632,Miller PLC,Food & Beverage,United Kingdom,2017-01-11,low
+633,Santana-Hudson,Food & Beverage,Spain,2016-08-25,low
+634,Allen and Sons,Services,Spain,2021-03-28,low
+635,"Mata, Manning and Rhodes",Retail,Australia,2018-04-03,low
+636,Mcbride-Logan,Retail,Canada,2016-08-05,low
+637,Cooper-Wright,Entertainment,Ireland,2018-01-17,low
+638,Henderson-Wood,Services,Australia,2017-01-03,low
+639,Callahan and Sons,Utilities,Canada,2016-07-19,low
+640,Kim-Rich,Entertainment,United Kingdom,2019-09-22,low
+641,"Schroeder, Rodriguez and Lewis",Electronics,United Kingdom,2021-08-10,low
+642,Bryant Group,Entertainment,United Kingdom,2018-11-02,low
+643,Saunders LLC,Retail,Canada,2017-12-16,low
+644,"Steele, Gutierrez and Nichols",Entertainment,France,2023-05-17,low
+645,"Hatfield, Lee and Martinez",Retail,Netherlands,2021-05-24,low
+646,Johnson-Harris,Entertainment,Australia,2020-03-24,low
+647,Smith-Kennedy,Retail,France,2023-11-16,low
+648,"Perry, Walters and Wagner",Entertainment,United Kingdom,2018-08-31,low
+649,Griffin-Brewer,Entertainment,Ireland,2021-09-16,low
+650,Patterson-Stewart,Food & Beverage,Canada,2019-08-25,low
+651,"King, Thomas and Robertson",Services,Netherlands,2022-04-10,low
+652,Robinson-Hooper,Food & Beverage,Germany,2021-05-29,low
+653,"Thompson, Chang and Shannon",Food & Beverage,United Kingdom,2016-04-08,low
+654,Hicks-Ayers,Food & Beverage,United Kingdom,2018-11-29,low
+655,Ramirez-Williams,Food & Beverage,United Kingdom,2019-04-30,low
+656,Brown-Hammond,Electronics,Germany,2019-10-18,low
+657,Jones-Collins,Entertainment,Netherlands,2020-12-16,low
+658,"Gray, Brown and Bush",Electronics,Netherlands,2017-11-03,medium
+659,Morris-Barnes,Travel,Australia,2020-12-29,high
+660,"Gillespie, Norris and Robinson",Electronics,France,2017-03-04,low
+661,Mccormick-Carter,Food & Beverage,Canada,2022-08-28,low
+662,Miller-Parker,Entertainment,United Kingdom,2016-08-20,low
+663,Morgan and Sons,Travel,Spain,2021-09-02,low
+664,"Solis, Houston and Weeks",Retail,Italy,2018-05-12,low
+665,"Wright, Shields and Miller",Electronics,United Kingdom,2017-11-14,low
+666,Wood-Ellis,Food & Beverage,Australia,2020-03-17,low
+667,Carr Ltd,Entertainment,France,2017-10-03,low
+668,"Blackburn, Fisher and Reyes",Services,Australia,2019-11-03,low
+669,Duran-Avery,Food & Beverage,United Kingdom,2020-08-20,low
+670,Mcdowell Group,Entertainment,Ireland,2017-05-14,low
+671,"Williams, Young and Lawson",Retail,France,2020-06-28,low
+672,Werner Group,Travel,France,2024-03-30,low
+673,"Tucker, Scott and Bradford",Food & Beverage,Canada,2020-07-18,low
+674,Huffman Ltd,Entertainment,Canada,2018-03-07,low
+675,"King, Richards and Winters",Entertainment,Germany,2022-06-16,low
+676,"Ingram, Rodriguez and Lopez",Food & Beverage,Canada,2020-04-29,low
+677,"Brown, Smith and Lambert",Services,United Kingdom,2022-04-26,low
+678,Johnson-Fitzgerald,Food & Beverage,Netherlands,2020-10-09,medium
+679,Mclaughlin-Dixon,Retail,United Kingdom,2016-12-08,low
+680,Fitzgerald-Wilson,Entertainment,Germany,2018-01-09,low
+681,Gonzalez-Blair,Travel,Spain,2021-01-02,low
+682,Ochoa Inc,Entertainment,Germany,2016-04-16,low
+683,Miller Inc,Entertainment,Australia,2019-03-18,low
+684,Sanders-Campbell,Food & Beverage,Germany,2022-05-28,low
+685,Park-Davis,Entertainment,Italy,2021-12-09,low
+686,"Frederick, Wells and Gibbs",Food & Beverage,United Kingdom,2020-06-10,medium
+687,Moran-Day,Food & Beverage,Australia,2017-10-14,low
+688,Fox-Hunt,Entertainment,Netherlands,2016-08-12,low
+689,Bailey-Mason,Food & Beverage,Canada,2019-07-14,low
+690,"Swanson, Harvey and Suarez",Food & Beverage,Canada,2021-11-04,low
+691,Haynes-Woods,Entertainment,Australia,2016-02-04,low
+692,Carter PLC,Food & Beverage,Australia,2017-11-06,low
+693,Ellis PLC,Food & Beverage,Netherlands,2016-09-01,low
+694,Butler-Holland,Retail,Canada,2017-12-31,low
+695,"Brown, Bennett and Erickson",Services,Canada,2017-06-03,low
+696,Marsh Ltd,Retail,Germany,2016-03-13,low
+697,"Duncan, Gomez and Smith",Retail,Canada,2021-04-28,low
+698,"Estes, Sharp and Fitzgerald",Services,Australia,2016-03-22,low
+699,Vaughan Group,Travel,Netherlands,2019-02-18,low
+700,"Black, Sanders and Meyer",Food & Beverage,Australia,2017-02-16,low
+701,Weaver-Keller,Entertainment,Netherlands,2019-05-27,low
+702,"Duncan, Turner and Smith",Entertainment,Netherlands,2018-05-17,low
+703,Lopez Group,Entertainment,United Kingdom,2024-03-07,low
+704,Brown-Perez,Entertainment,Italy,2021-01-15,low
+705,Humphrey and Sons,Food & Beverage,Australia,2023-10-30,low
+706,Davis-Nelson,Food & Beverage,Australia,2018-07-01,low
+707,Williams Group,Retail,Germany,2016-10-27,low
+708,Brooks-Davis,Food & Beverage,Netherlands,2016-07-20,low
+709,Robinson and Sons,Healthcare,Australia,2016-02-25,low
+710,"Campbell, Brooks and Kim",Services,Spain,2020-01-31,low
+711,Joseph Ltd,Utilities,Australia,2020-07-04,low
+712,"Butler, Norris and Chaney",Services,Canada,2016-09-19,low
+713,"Nelson, Villegas and Chen",Retail,Spain,2019-01-08,low
+714,"Martin, Higgins and Woods",Food & Beverage,Netherlands,2018-01-13,medium
+715,Mejia-Harris,Entertainment,France,2024-01-26,medium
+716,Daniels-Ross,Food & Beverage,France,2020-05-05,medium
+717,Neal PLC,Retail,Australia,2021-10-13,medium
+718,Jenkins-Bennett,Entertainment,United Kingdom,2018-07-23,low
+719,Dodson and Sons,Utilities,Canada,2018-10-21,low
+720,Evans-Flores,Services,Canada,2016-08-09,low
+721,Kaiser Ltd,Food & Beverage,Australia,2020-11-05,high
+722,Benitez Inc,Utilities,France,2020-01-08,low
+723,Figueroa-Michael,Food & Beverage,United Kingdom,2017-04-29,low
+724,"Sims, Sutton and Torres",Services,Netherlands,2021-10-31,low
+725,"Ray, Willis and Cline",Food & Beverage,France,2024-04-26,low
+726,Whitney Inc,Entertainment,France,2016-03-09,low
+727,Berg Inc,Food & Beverage,Australia,2020-02-22,low
+728,Meyer LLC,Services,Canada,2018-12-23,low
+729,"Livingston, Collins and Compton",Services,France,2019-09-29,low
+730,Dillon LLC,Utilities,Canada,2021-08-22,low
+731,Rowland Group,Food & Beverage,United Kingdom,2017-02-01,low
+732,Lewis Ltd,Entertainment,France,2018-09-05,medium
+733,White-Sanchez,Entertainment,Germany,2021-05-28,low
+734,Sharp-Robinson,Healthcare,Australia,2017-04-17,low
+735,Evans Ltd,Travel,Canada,2019-10-01,low
+736,Collins LLC,Electronics,Germany,2021-07-05,low
+737,"Gonzales, Pham and Armstrong",Services,Australia,2018-08-21,high
+738,Pitts-Long,Retail,France,2023-12-26,low
+739,Malone Group,Entertainment,United Kingdom,2020-09-13,low
+740,"Nash, Hopkins and Gross",Healthcare,United Kingdom,2021-02-21,low
+741,Luna-Nixon,Food & Beverage,Netherlands,2020-12-25,low
+742,"Lynch, Garcia and Ochoa",Services,Australia,2019-11-01,low
+743,Taylor-Stafford,Services,Spain,2020-01-31,low
+744,"Wang, Miller and Peterson",Travel,Australia,2023-12-15,medium
+745,Leach LLC,Food & Beverage,Germany,2020-03-10,low
+746,Dennis Group,Retail,France,2019-06-29,low
+747,"Bradley, Young and Walker",Electronics,United Kingdom,2018-11-23,low
+748,Mcdaniel-Bates,Food & Beverage,Netherlands,2016-03-05,medium
+749,"Peck, Willis and Velasquez",Healthcare,France,2023-10-22,low
+750,"Mccullough, Lyons and Dickson",Retail,Ireland,2017-11-01,low
+751,Davis-Sanders,Entertainment,Netherlands,2017-10-28,low
+752,Olson LLC,Travel,Spain,2019-04-19,low
+753,Washington-Hays,Retail,Canada,2017-12-28,low
+754,Howe-Schmidt,Entertainment,Canada,2023-01-10,low
+755,"Hamilton, Romero and Martin",Travel,France,2018-09-25,low
+756,Alexander LLC,Retail,Spain,2021-01-16,medium
+757,"Potter, Ford and Lowe",Retail,France,2019-09-24,low
+758,Martinez-Jones,Retail,Netherlands,2018-01-06,low
+759,"Duncan, Lee and Benson",Food & Beverage,Canada,2024-06-23,low
+760,"French, Vasquez and Griffith",Food & Beverage,Canada,2022-01-18,low
+761,Smith-Huffman,Food & Beverage,Germany,2019-02-24,low
+762,Walsh-Smith,Retail,Spain,2020-04-26,low
+763,Lucas PLC,Services,Australia,2022-05-14,low
+764,Hampton-Doyle,Entertainment,France,2016-08-12,low
+765,Rogers-Ramos,Food & Beverage,Canada,2017-10-27,low
+766,Rush-Smith,Healthcare,Australia,2023-04-26,low
+767,Robinson PLC,Food & Beverage,Netherlands,2020-12-20,low
+768,Mason-Fischer,Services,Spain,2019-02-13,low
+769,Huerta-Rasmussen,Retail,United Kingdom,2021-07-28,low
+770,Villanueva-Peterson,Travel,Ireland,2024-05-01,low
+771,"Parker, Carlson and Hopkins",Entertainment,United Kingdom,2022-03-20,low
+772,"Perry, Brewer and Colon",Retail,United Kingdom,2018-06-17,low
+773,Burke-Dixon,Food & Beverage,Australia,2016-06-12,medium
+774,"Nelson, Page and Hale",Retail,Australia,2017-02-20,low
+775,Clark PLC,Services,Australia,2019-08-11,medium
+776,Jackson PLC,Food & Beverage,Australia,2020-07-12,high
+777,Mason-Johnson,Food & Beverage,United Kingdom,2017-08-15,low
+778,"Clark, Richardson and Cordova",Food & Beverage,United Kingdom,2018-12-16,low
+779,"Sparks, Schmidt and Hartman",Food & Beverage,Australia,2017-04-14,medium
+780,Murphy-Thornton,Services,Germany,2021-11-27,low
+781,Eaton-Lewis,Food & Beverage,United Kingdom,2022-01-08,low
+782,"Thomas, Burgess and Barnes",Food & Beverage,Australia,2021-01-08,low
+783,Smith PLC,Services,Germany,2016-03-24,low
+784,Walker and Sons,Retail,Australia,2018-12-12,medium
+785,Reed Group,Electronics,France,2019-11-21,medium
+786,Smith-Jones,Services,Canada,2020-09-11,low
+787,Fisher LLC,Retail,France,2018-04-09,low
+788,Schwartz LLC,Travel,United Kingdom,2021-03-03,low
+789,"Hodges, Armstrong and Massey",Retail,Netherlands,2016-11-07,low
+790,Wood-Stevenson,Food & Beverage,Germany,2018-03-17,low
+791,"Ramos, Garcia and Carrillo",Food & Beverage,Canada,2018-05-20,low
+792,Keller Group,Food & Beverage,Italy,2017-11-20,low
+793,Thompson-Morton,Travel,Canada,2022-10-27,low
+794,Henry-Patterson,Retail,Ireland,2020-01-06,low
+795,Whitney and Sons,Entertainment,Australia,2018-04-14,low
+796,"Rasmussen, Brown and Nixon",Services,Netherlands,2018-12-23,low
+797,Williams LLC,Services,Netherlands,2019-05-02,low
+798,Fox-Bruce,Services,France,2021-08-28,medium
+799,"Rhodes, Patterson and Wilson",Entertainment,Australia,2016-07-03,low
+800,Rios-Allen,Entertainment,United Kingdom,2024-06-09,medium
+801,"Massey, Salazar and Morrison",Retail,Australia,2022-07-18,low
+802,"Marks, Harrington and Bowman",Food & Beverage,Netherlands,2020-06-21,medium
+803,"Cannon, Sanchez and Gonzalez",Retail,France,2021-06-13,medium
+804,Rose Group,Healthcare,Spain,2019-09-28,low
+805,"Hunt, Arnold and Hogan",Food & Beverage,Australia,2021-05-23,low
+806,"Carpenter, Moreno and Reed",Food & Beverage,Australia,2020-08-21,low
+807,Moyer and Sons,Food & Beverage,Spain,2019-06-17,medium
+808,"Harrell, Hamilton and Ryan",Entertainment,Canada,2021-09-08,low
+809,Bailey-Newton,Services,Germany,2019-09-30,low
+810,Cook Group,Entertainment,Germany,2016-05-21,low
+811,"Morrison, Page and Gilbert",Travel,Canada,2018-02-03,low
+812,Daniels-Henry,Retail,Spain,2019-01-01,low
+813,"Welch, Anderson and Riley",Electronics,United Kingdom,2020-12-30,low
+814,"Johnson, Mcmahon and Scott",Food & Beverage,Germany,2017-10-08,low
+815,"Powell, Estrada and Noble",Electronics,Australia,2017-01-28,low
+816,Thompson-Kerr,Travel,France,2020-08-21,low
+817,"Hardy, Brown and Foster",Services,Canada,2020-01-19,medium
+818,Bright and Sons,Travel,France,2021-07-03,low
+819,Bates-Hamilton,Retail,Germany,2018-03-12,medium
+820,"Davis, Brown and Powell",Retail,United Kingdom,2017-04-28,low
+821,Figueroa-Wallace,Services,Australia,2019-12-19,low
+822,"Castaneda, Nixon and Lambert",Food & Beverage,Ireland,2021-05-31,low
+823,Haynes Group,Utilities,Australia,2017-03-02,low
+824,Patel Inc,Travel,Canada,2018-09-07,low
+825,"Williams, Pearson and Kim",Food & Beverage,Germany,2019-04-29,low
+826,Mason-Cobb,Travel,Australia,2018-01-22,low
+827,"Perez, Johnson and Lewis",Food & Beverage,Spain,2024-08-03,low
+828,Ramirez-Barnett,Food & Beverage,Netherlands,2020-03-21,low
+829,Villegas and Sons,Retail,Italy,2018-04-14,low
+830,Wilson-Fletcher,Travel,United Kingdom,2017-08-05,low
+831,Hernandez PLC,Electronics,Germany,2018-07-17,low
+832,"Kennedy, Lopez and Bell",Travel,United Kingdom,2022-11-06,low
+833,"Herrera, Chan and Rodriguez",Services,Spain,2017-02-09,low
+834,"Colon, Webster and Miller",Services,United Kingdom,2022-07-30,high
+835,Carpenter Inc,Entertainment,Netherlands,2017-09-02,low
+836,Allen-Diaz,Travel,France,2017-08-19,low
+837,White-Mcdonald,Food & Beverage,Netherlands,2018-12-05,low
+838,Greene LLC,Travel,Australia,2022-05-22,low
+839,Cannon-Morton,Food & Beverage,France,2024-08-09,low
+840,"Lyons, Morris and Smith",Entertainment,Germany,2019-10-02,low
+841,Tran Ltd,Retail,Australia,2017-06-21,medium
+842,"Evans, Perez and Wong",Entertainment,France,2024-07-13,low
+843,"Kelly, Hampton and Conner",Travel,United Kingdom,2019-12-08,low
+844,Riley PLC,Services,France,2022-10-11,low
+845,"Patterson, Lam and Cantu",Entertainment,Canada,2016-10-21,low
+846,"Martin, Terry and Adams",Food & Beverage,Germany,2017-09-19,low
+847,Vaughn-Spears,Services,United Kingdom,2016-11-07,low
+848,Pitts PLC,Retail,Australia,2020-12-03,low
+849,Collins Group,Entertainment,Italy,2016-05-12,low
+850,"Walker, Le and Freeman",Travel,United Kingdom,2022-04-09,low
+851,Perez-Mitchell,Retail,Netherlands,2016-12-25,low
+852,Young-James,Entertainment,Canada,2018-03-02,low
+853,Montgomery-Myers,Services,Canada,2016-05-26,low
+854,"Brown, Porter and Hull",Services,United Kingdom,2021-08-18,low
+855,"Fields, Bryant and Hernandez",Entertainment,Australia,2022-01-19,low
+856,Wolfe LLC,Entertainment,Australia,2016-01-03,low
+857,Cross-Miller,Retail,France,2017-04-19,low
+858,Villa-Young,Food & Beverage,Canada,2016-02-02,low
+859,Smith Group,Food & Beverage,Australia,2017-07-16,low
+860,Taylor LLC,Retail,Canada,2018-07-05,low
+861,"Brown, Bradford and Kirby",Food & Beverage,France,2023-05-13,low
+862,"Ruiz, Orozco and Kim",Entertainment,Australia,2017-03-17,medium
+863,"Sanchez, Medina and Williams",Entertainment,France,2020-11-03,low
+864,Rodriguez-Howard,Food & Beverage,United Kingdom,2020-11-15,low
+865,"Bennett, Wheeler and Smith",Retail,United Kingdom,2021-11-21,low
+866,Black-Salas,Entertainment,United Kingdom,2024-04-17,low
+867,Gill Inc,Food & Beverage,Australia,2023-03-01,low
+868,Peterson-Smith,Food & Beverage,Italy,2018-03-29,low
+869,Powell PLC,Services,Canada,2018-01-03,low
+870,"Miller, Bailey and Moreno",Retail,Canada,2023-07-01,low
+871,Reilly-Robinson,Food & Beverage,France,2022-01-15,low
+872,"English, Moore and Thomas",Food & Beverage,Canada,2022-06-01,low
+873,Scott-Kelly,Retail,Australia,2021-03-22,low
+874,Morgan-Lewis,Food & Beverage,Australia,2023-03-06,low
+875,Davis Ltd,Entertainment,United Kingdom,2018-07-18,low
+876,"Duke, Parker and Wang",Services,Canada,2018-03-22,low
+877,Howell PLC,Food & Beverage,United Kingdom,2022-12-23,medium
+878,"Brooks, Miller and West",Electronics,Spain,2021-02-07,high
+879,"Greene, Clark and Williams",Retail,Canada,2016-09-05,low
+880,"Miller, Hamilton and Murphy",Services,Netherlands,2017-03-15,low
+881,Olson LLC,Healthcare,Germany,2023-11-13,medium
+882,"Hopkins, Gallagher and Harper",Food & Beverage,France,2019-01-04,low
+883,"Brown, Franco and Short",Food & Beverage,United Kingdom,2017-02-08,medium
+884,Jenkins Inc,Retail,Australia,2021-10-13,low
+885,"Glover, Morton and Stone",Entertainment,Germany,2018-11-29,low
+886,Carter-Bush,Services,United Kingdom,2023-02-18,low
+887,"Wong, Brown and Carey",Entertainment,Canada,2021-05-31,low
+888,Mcdaniel PLC,Services,Canada,2017-01-24,low
+889,"Perez, Moreno and Jones",Food & Beverage,Canada,2020-10-14,low
+890,Anderson-Alexander,Electronics,Australia,2017-05-23,low
+891,"Aguilar, Todd and Oneal",Retail,France,2023-09-23,medium
+892,Taylor-Johnston,Healthcare,United Kingdom,2022-03-18,low
+893,Smith Ltd,Electronics,Canada,2016-10-25,low
+894,Tran Inc,Food & Beverage,Ireland,2023-12-20,low
+895,Thomas-Shaw,Electronics,United Kingdom,2019-01-22,low
+896,Flores Inc,Travel,Ireland,2018-05-20,medium
+897,"Walls, Manning and Duncan",Healthcare,Australia,2016-06-30,low
+898,Delgado Inc,Food & Beverage,Canada,2019-10-07,low
+899,Miles-Payne,Retail,Ireland,2017-08-11,low
+900,"Lutz, Bradley and Nguyen",Entertainment,Spain,2016-06-29,low
+901,"Walls, Jones and Mcpherson",Food & Beverage,Canada,2018-05-01,low
+902,Ali-Wheeler,Food & Beverage,Australia,2021-01-31,low
+903,Stephens Group,Food & Beverage,Australia,2018-05-22,low
+904,Branch-Stevens,Food & Beverage,Germany,2016-12-31,low
+905,"Townsend, Conway and May",Entertainment,Canada,2022-09-20,low
+906,Mcdaniel LLC,Entertainment,Canada,2018-01-25,low
+907,Dixon-Torres,Food & Beverage,Germany,2016-12-31,low
+908,Johnson-Ross,Utilities,Canada,2018-10-19,low
+909,Walker Ltd,Food & Beverage,Germany,2019-07-04,low
+910,Bass Group,Retail,United Kingdom,2021-12-26,low
+911,Silva LLC,Healthcare,Canada,2021-03-29,medium
+912,Sims-Savage,Entertainment,Canada,2023-07-12,medium
+913,Smith-Davis,Services,United Kingdom,2023-02-16,low
+914,"Osborne, Walker and Cook",Food & Beverage,Australia,2020-01-14,low
+915,Foster-Brooks,Entertainment,France,2017-11-27,low
+916,Reynolds-Brown,Retail,Italy,2018-02-18,low
+917,Johnson-Bailey,Food & Beverage,Netherlands,2018-09-27,low
+918,Davenport LLC,Services,Ireland,2022-12-26,low
+919,"Watson, Ellis and Rivera",Food & Beverage,Netherlands,2020-04-12,low
+920,"Vance, Lewis and Brock",Services,Canada,2020-01-10,low
+921,"Lyons, Wright and Davis",Food & Beverage,Germany,2016-11-10,medium
+922,"Parker, Adams and Murray",Entertainment,Spain,2019-12-06,low
+923,"Bridges, Williams and Lee",Entertainment,France,2016-05-10,low
+924,Miller PLC,Food & Beverage,Ireland,2022-10-26,low
+925,"Reilly, Hughes and Bradford",Travel,France,2024-02-06,low
+926,"Martinez, Taylor and Henderson",Services,Australia,2020-04-04,low
+927,Crawford-Blankenship,Food & Beverage,France,2020-07-11,low
+928,Lopez-Lowe,Food & Beverage,United Kingdom,2022-02-19,low
+929,Jackson Inc,Food & Beverage,Italy,2023-12-18,low
+930,Li PLC,Food & Beverage,Germany,2018-08-23,low
+931,Anderson Ltd,Electronics,Australia,2019-05-20,medium
+932,Gill-Anderson,Travel,Australia,2018-06-10,low
+933,Cole-Braun,Entertainment,Spain,2020-07-31,medium
+934,"Rodriguez, Robinson and Chase",Food & Beverage,Germany,2018-12-28,low
+935,Smith PLC,Travel,France,2023-01-08,low
+936,Davis LLC,Food & Beverage,United Kingdom,2018-08-25,medium
+937,Good-Wright,Food & Beverage,Ireland,2018-02-03,low
+938,"Morse, Pope and Clark",Entertainment,United Kingdom,2021-03-09,high
+939,Robinson-Gonzalez,Utilities,Australia,2017-08-19,low
+940,Robertson LLC,Travel,Canada,2017-11-26,low
+941,"Hernandez, Diaz and Flores",Healthcare,France,2022-01-22,low
+942,"Long, Hodges and Johnson",Retail,Canada,2019-08-25,low
+943,"Mullen, Mora and Williams",Electronics,Australia,2022-10-01,medium
+944,Baldwin PLC,Services,Netherlands,2018-07-01,medium
+945,"Sandoval, Mccall and Lyons",Food & Beverage,Australia,2019-01-23,low
+946,Stephens LLC,Travel,France,2018-08-26,low
+947,Collier-Grimes,Food & Beverage,Australia,2020-01-21,low
+948,Durham LLC,Services,Germany,2016-08-12,low
+949,Walker-Stephens,Travel,Australia,2016-09-13,low
+950,"Francis, Stanton and Gibson",Entertainment,Netherlands,2018-09-20,medium
+951,Castro Inc,Travel,Germany,2021-06-30,medium
+952,Gibson-Levy,Travel,United Kingdom,2021-05-06,low
+953,"Mcbride, Harvey and Ramsey",Retail,Canada,2023-09-12,low
+954,Lloyd PLC,Entertainment,France,2022-12-26,low
+955,"Savage, Wilson and Santiago",Food & Beverage,United Kingdom,2017-11-05,low
+956,"Mcgrath, Larsen and Friedman",Food & Beverage,Germany,2020-07-21,low
+957,Patterson-Davis,Services,Netherlands,2020-01-09,low
+958,"Barrett, Peterson and Rodriguez",Services,Australia,2021-10-17,low
+959,Johnson Group,Travel,Italy,2016-03-17,low
+960,Perry-Thomas,Travel,Australia,2024-04-17,low
+961,Myers-Herrera,Retail,Spain,2022-10-25,low
+962,Roberts-Bowers,Travel,Germany,2021-02-21,low
+963,"Cook, Waters and Schultz",Healthcare,Australia,2018-02-05,low
+964,Robinson-Velazquez,Retail,Canada,2024-02-07,low
+965,Coleman-Ward,Food & Beverage,France,2023-06-17,low
+966,"Preston, Montgomery and Williams",Food & Beverage,United Kingdom,2019-12-13,low
+967,"Perez, Campbell and Ayala",Healthcare,Australia,2020-11-01,low
+968,Hall PLC,Food & Beverage,United Kingdom,2017-09-04,medium
+969,Davenport and Sons,Travel,Germany,2017-11-24,low
+970,James LLC,Food & Beverage,France,2020-09-04,low
+971,"Mathis, Austin and Rodriguez",Entertainment,United Kingdom,2019-02-20,low
+972,"Myers, Collins and Tanner",Services,Canada,2023-01-09,medium
+973,"Black, Powell and Joseph",Entertainment,Ireland,2018-05-19,medium
+974,"Shepard, Hopkins and Walton",Entertainment,Germany,2016-12-12,low
+975,Miller LLC,Services,Netherlands,2018-03-31,low
+976,Soto Inc,Electronics,Australia,2017-08-08,low
+977,"Good, Reed and Wilson",Utilities,Germany,2019-12-24,medium
+978,Shah Inc,Food & Beverage,United Kingdom,2016-06-01,low
+979,Washington LLC,Entertainment,Canada,2022-07-03,medium
+980,Lopez-Parker,Food & Beverage,Australia,2022-05-30,low
+981,"Kramer, Griffin and Goodman",Entertainment,Australia,2018-03-13,low
+982,Carrillo Ltd,Retail,Netherlands,2021-07-23,low
+983,Olson Group,Retail,France,2017-12-27,low
+984,Bishop Group,Food & Beverage,Netherlands,2018-09-29,low
+985,"Martin, Jackson and Boyd",Travel,Australia,2016-07-26,low
+986,Wade-Mills,Travel,Canada,2020-07-13,low
+987,Stanley-Wilson,Food & Beverage,Germany,2024-07-15,low
+988,"Thornton, Edwards and Maldonado",Retail,Canada,2021-08-23,low
+989,Torres-Rose,Retail,Spain,2018-03-08,low
+990,Griffin-Johnson,Entertainment,Spain,2018-10-04,medium
+991,Lee-Woods,Food & Beverage,Australia,2021-01-12,low
+992,"Fuller, Garcia and Freeman",Entertainment,France,2021-08-14,low
+993,Peterson-Washington,Travel,United Kingdom,2017-06-14,low
+994,"Patrick, Brown and Martinez",Food & Beverage,United Kingdom,2020-12-01,low
+995,Yang LLC,Entertainment,Australia,2021-12-30,low
+996,Murphy Inc,Food & Beverage,France,2017-08-02,low
+997,"Johnson, Stewart and Cook",Retail,Canada,2018-05-14,low
+998,Richards Ltd,Utilities,Australia,2019-07-31,low
+999,Roberts LLC,Electronics,Netherlands,2021-06-03,low
+1000,Palmer Group,Entertainment,Spain,2019-11-19,low
+1001,Collins LLC,Food & Beverage,Spain,2019-11-10,medium
+1002,Jones Group,Services,United Kingdom,2019-02-03,low
+1003,Lambert Inc,Retail,United Kingdom,2020-01-03,low
+1004,"Contreras, King and Kent",Retail,Germany,2018-03-30,medium
+1005,Torres-Lewis,Healthcare,France,2016-10-22,low
+1006,Vasquez LLC,Travel,Germany,2023-06-27,low
+1007,Smith LLC,Retail,Canada,2022-01-11,low
+1008,Austin-Hill,Retail,United Kingdom,2016-06-10,low
+1009,"Rodriguez, Cohen and Evans",Travel,Australia,2019-07-12,low
+1010,Bell Group,Entertainment,United Kingdom,2017-03-19,low
+1011,Lopez Group,Utilities,Australia,2023-07-07,low
+1012,"Nelson, Cummings and Davis",Utilities,France,2016-09-24,low
+1013,Jones-Henry,Entertainment,United Kingdom,2016-12-18,low
+1014,Smith Inc,Services,Canada,2022-01-12,low
+1015,Rodriguez-Brooks,Services,France,2022-05-05,medium
+1016,"Garcia, Krueger and Berger",Services,Canada,2022-06-05,low
+1017,Collins LLC,Utilities,Australia,2020-03-24,low
+1018,Ramirez Ltd,Services,Australia,2020-11-05,low
+1019,"Howard, Patel and Lopez",Retail,Canada,2017-04-11,low
+1020,Mathews-Reyes,Entertainment,Canada,2019-12-27,low
+1021,Sosa Group,Entertainment,France,2019-04-16,low
+1022,Larson Group,Entertainment,Germany,2016-01-28,low
+1023,"Miller, Melton and Williams",Services,Canada,2020-03-27,low
+1024,Allen-Meyer,Retail,Canada,2022-11-05,low
+1025,Reyes PLC,Food & Beverage,United Kingdom,2018-06-11,low
+1026,Moreno-Mathews,Electronics,Germany,2018-08-31,low
+1027,"Jackson, Gonzalez and Mcclure",Retail,Netherlands,2016-11-30,low
+1028,"Munoz, Bryant and Smith",Food & Beverage,Canada,2019-11-18,low
+1029,Cummings-Cruz,Electronics,Australia,2017-10-10,low
+1030,Peterson-Young,Food & Beverage,Canada,2023-02-03,low
+1031,"Smith, Powers and Green",Services,France,2020-01-12,low
+1032,"Cummings, Craig and Mendez",Food & Beverage,Italy,2023-04-05,low
+1033,"Miller, Palmer and Hall",Entertainment,Australia,2016-06-12,low
+1034,Johnson Group,Utilities,Netherlands,2019-09-08,medium
+1035,"Holloway, Allen and Vang",Retail,United Kingdom,2016-12-04,low
+1036,White-Clark,Travel,France,2018-03-01,low
+1037,Walker-Simmons,Services,Netherlands,2016-06-09,high
+1038,Brown-Guerra,Entertainment,Canada,2016-04-27,low
+1039,Rangel Group,Food & Beverage,Australia,2020-07-13,low
+1040,Rivera Inc,Retail,United Kingdom,2020-05-16,low
+1041,Marshall-Kelly,Travel,Australia,2017-02-28,low
+1042,Bridges-Martin,Food & Beverage,Australia,2017-07-24,medium
+1043,"Bartlett, Green and Harris",Healthcare,Italy,2019-02-14,low
+1044,Callahan-Ali,Retail,Germany,2021-09-06,low
+1045,"Mcdonald, Lee and Torres",Services,Germany,2016-02-26,low
+1046,Davis-Rhodes,Electronics,Australia,2018-06-18,low
+1047,Pacheco-Matthews,Retail,Spain,2023-08-13,low
+1048,Thomas-Brown,Food & Beverage,Canada,2023-07-17,low
+1049,Holloway-Espinoza,Entertainment,Australia,2016-03-12,low
+1050,"Hoffman, Mann and Moore",Utilities,Spain,2016-03-21,low
+1051,Khan-Haynes,Food & Beverage,France,2021-12-21,low
+1052,Green Ltd,Healthcare,Canada,2016-07-16,low
+1053,Wilson Group,Retail,France,2024-07-02,low
+1054,Davis-Jones,Utilities,Canada,2016-12-27,low
+1055,"Bond, Haynes and Hamilton",Electronics,Australia,2022-06-10,medium
+1056,Collins-Williams,Entertainment,Australia,2023-08-29,low
+1057,"Spence, Moore and Ward",Entertainment,United Kingdom,2016-10-13,low
+1058,Mcclure-Thompson,Retail,Australia,2022-10-18,low
+1059,Williams and Sons,Entertainment,United Kingdom,2019-12-17,low
+1060,"Goodwin, Andrews and White",Retail,Netherlands,2017-08-14,high
+1061,Meyer and Sons,Travel,Canada,2023-05-29,low
+1062,Rosales-Lynch,Services,France,2017-01-04,low
+1063,"Lopez, Lucas and Flores",Services,Netherlands,2017-01-02,low
+1064,"Turner, Liu and Hart",Food & Beverage,Australia,2018-01-15,low
+1065,Moore Inc,Food & Beverage,France,2019-08-30,low
+1066,"Olson, Camacho and Morris",Retail,United Kingdom,2019-08-08,low
+1067,"Nelson, Wallace and Kelly",Retail,France,2017-07-11,low
+1068,Edwards-Martin,Entertainment,Netherlands,2016-04-26,low
+1069,"Nunez, Williamson and Cook",Entertainment,Canada,2022-05-17,low
+1070,Harris-Lopez,Food & Beverage,United Kingdom,2018-12-05,low
+1071,Russell-Reed,Services,Canada,2016-11-24,medium
+1072,Brown-Miller,Food & Beverage,Australia,2016-08-29,medium
+1073,Miller and Sons,Food & Beverage,Spain,2020-11-06,low
+1074,"Jones, Walker and Wolf",Entertainment,Canada,2016-11-08,low
+1075,"Sheppard, Snyder and Hartman",Food & Beverage,Canada,2019-07-28,high
+1076,"Waters, Glover and White",Food & Beverage,Australia,2020-05-29,low
+1077,Mitchell-Dixon,Travel,France,2018-11-26,low
+1078,Roberts-Rowe,Utilities,Australia,2016-11-12,low
+1079,Webster-Gibson,Healthcare,Spain,2016-04-25,low
+1080,"Hunter, Joseph and Hall",Entertainment,Netherlands,2020-10-12,low
+1081,Blackwell-Waller,Healthcare,United Kingdom,2018-10-29,medium
+1082,"Steele, Cox and Watson",Utilities,Germany,2019-04-07,low
+1083,Lewis-Hanson,Services,Ireland,2020-05-10,low
+1084,Hurley Ltd,Entertainment,Australia,2018-04-19,medium
+1085,Frederick LLC,Healthcare,Netherlands,2020-02-12,low
+1086,Oconnell LLC,Food & Beverage,Australia,2021-10-26,medium
+1087,Henry Ltd,Retail,United Kingdom,2019-02-17,medium
+1088,Clarke-Fisher,Retail,Germany,2019-08-22,low
+1089,Bentley Group,Electronics,Germany,2016-07-25,high
+1090,"Cummings, Bowman and Lamb",Travel,Australia,2018-04-20,medium
+1091,"Haas, Stanton and Scott",Entertainment,Italy,2020-06-29,low
+1092,Rivers Group,Food & Beverage,United Kingdom,2018-01-14,medium
+1093,Perry-Garcia,Food & Beverage,Canada,2017-03-16,low
+1094,"Williams, Kent and Williams",Entertainment,Canada,2020-09-11,low
+1095,Fuentes and Sons,Services,Germany,2021-08-30,low
+1096,Wu Ltd,Retail,Ireland,2021-10-13,low
+1097,Clark LLC,Retail,France,2020-06-01,medium
+1098,Rodriguez-Davis,Services,Australia,2020-11-05,low
+1099,Carlson-Walker,Retail,Australia,2019-07-20,low
+1100,Hernandez LLC,Retail,Australia,2023-02-21,low
+1101,Garcia-Cherry,Healthcare,Australia,2018-09-28,medium
+1102,Ortiz and Sons,Food & Beverage,United Kingdom,2023-10-19,low
+1103,"Anderson, Manning and Francis",Retail,Netherlands,2016-11-05,low
+1104,Phillips LLC,Food & Beverage,France,2023-05-14,low
+1105,Kerr Inc,Electronics,Netherlands,2019-03-16,low
+1106,Brewer-Adams,Food & Beverage,Germany,2021-12-23,low
+1107,Davenport Group,Food & Beverage,Netherlands,2021-07-02,medium
+1108,Stephens-Alexander,Services,United Kingdom,2017-02-09,low
+1109,"Porter, Johnson and Gallegos",Services,Australia,2016-03-14,medium
+1110,Shelton Ltd,Food & Beverage,Canada,2018-09-07,low
+1111,Juarez-Garcia,Food & Beverage,Canada,2018-04-12,low
+1112,Henderson LLC,Electronics,Canada,2018-03-10,low
+1113,Gonzalez and Sons,Healthcare,United Kingdom,2017-10-03,low
+1114,"Parks, Lee and Kelly",Utilities,United Kingdom,2020-07-21,low
+1115,Perry-Becker,Food & Beverage,United Kingdom,2018-02-11,low
+1116,Lee Group,Food & Beverage,Spain,2021-04-27,low
+1117,"Hart, Lopez and Johnson",Services,Netherlands,2016-08-14,low
+1118,Wallace-Bradley,Entertainment,Australia,2016-12-03,low
+1119,Thompson Ltd,Food & Beverage,Australia,2019-06-12,low
+1120,"Garcia, Carter and Morgan",Electronics,United Kingdom,2021-01-30,medium
+1121,Rasmussen-Crosby,Services,Spain,2020-03-02,low
+1122,"Harrison, Fowler and Martin",Travel,United Kingdom,2016-03-27,low
+1123,Smith-White,Entertainment,Canada,2023-01-05,low
+1124,Rivera LLC,Electronics,Australia,2020-03-17,low
+1125,Archer PLC,Healthcare,Germany,2019-08-17,low
+1126,Smith PLC,Food & Beverage,Australia,2016-07-14,low
+1127,"Ferguson, Hicks and Spence",Travel,United Kingdom,2020-11-12,low
+1128,"Ramsey, Smith and Dominguez",Retail,Netherlands,2016-07-18,low
+1129,Simpson-Carroll,Retail,Canada,2019-10-26,low
+1130,Hudson-Lawson,Travel,Canada,2018-06-27,medium
+1131,Contreras Inc,Electronics,Australia,2021-03-04,low
+1132,"Bolton, Martinez and Kline",Retail,United Kingdom,2018-01-07,low
+1133,"Roberts, Cordova and Pruitt",Entertainment,Canada,2016-05-15,low
+1134,Nelson-Wilson,Retail,Netherlands,2019-02-01,low
+1135,Richmond Inc,Retail,Netherlands,2018-05-11,low
+1136,"Dominguez, Smith and Thomas",Services,France,2023-11-26,medium
+1137,Cox Inc,Entertainment,Ireland,2017-01-16,low
+1138,Charles-Murphy,Retail,Australia,2019-05-20,low
+1139,Escobar-Roach,Food & Beverage,United Kingdom,2021-04-22,low
+1140,Clark-Harris,Travel,Canada,2021-04-02,high
+1141,Suarez Inc,Travel,Italy,2021-12-31,low
+1142,Wagner PLC,Entertainment,United Kingdom,2021-06-09,medium
+1143,"Morales, Estes and Mason",Travel,Canada,2017-09-03,low
+1144,"Wood, Ryan and Reese",Food & Beverage,Germany,2019-09-06,low
+1145,Jones Group,Food & Beverage,Canada,2018-11-07,low
+1146,Mcintyre Inc,Food & Beverage,Italy,2016-11-24,low
+1147,"Lambert, Sullivan and Boyer",Retail,France,2024-06-15,low
+1148,Torres PLC,Retail,France,2017-05-27,medium
+1149,Kirby-Clark,Food & Beverage,United Kingdom,2020-01-13,low
+1150,"Donovan, Gross and Cohen",Retail,France,2017-12-25,medium
+1151,Curry-Miller,Retail,Canada,2016-12-11,low
+1152,Gomez-Simpson,Healthcare,Australia,2024-09-01,low
+1153,"Williams, Harris and Brown",Food & Beverage,Australia,2019-02-13,low
+1154,"Barton, Murray and Berry",Food & Beverage,Netherlands,2024-04-02,low
+1155,Grant Ltd,Services,Germany,2024-01-19,low
+1156,"Fritz, Hines and Kelley",Retail,Australia,2022-07-28,low
+1157,"Hayes, Lopez and Rivera",Food & Beverage,Canada,2016-10-21,low
+1158,"Evans, Scott and Martin",Retail,Canada,2020-06-26,low
+1159,Green LLC,Food & Beverage,United Kingdom,2020-08-31,low
+1160,Jackson-Garcia,Services,Spain,2020-03-02,low
+1161,Mann-Sanford,Food & Beverage,Germany,2017-03-19,low
+1162,"Hamilton, Coleman and Day",Travel,Germany,2016-09-25,low
+1163,Sherman PLC,Entertainment,Germany,2022-10-18,low
+1164,Arnold Ltd,Entertainment,Canada,2022-08-01,low
+1165,Williams-Andrews,Entertainment,Australia,2017-05-27,low
+1166,"Daniel, Clayton and Richards",Retail,Australia,2020-06-07,low
+1167,Martinez-Maynard,Utilities,France,2022-04-01,low
+1168,"Garcia, Smith and Cobb",Retail,Australia,2020-02-11,low
+1169,"Bailey, Ortega and Padilla",Food & Beverage,France,2017-10-23,low
+1170,"Adams, Soto and Espinoza",Retail,Canada,2023-09-22,low
+1171,"Watts, Stout and Bowers",Electronics,Canada,2020-03-31,low
+1172,Jones-White,Travel,Australia,2019-09-27,low
+1173,Turner-Taylor,Services,Netherlands,2021-06-02,medium
+1174,"Adams, Robinson and Andrews",Services,Germany,2018-03-16,low
+1175,Mitchell and Sons,Retail,Germany,2016-07-02,low
+1176,"Hebert, Sanders and Boone",Electronics,Canada,2016-05-25,low
+1177,King PLC,Entertainment,France,2020-06-15,low
+1178,Chavez Ltd,Utilities,Australia,2020-07-24,low
+1179,"Hill, Richardson and Young",Entertainment,Germany,2018-06-21,medium
+1180,"Lyons, Carson and Trujillo",Entertainment,France,2016-12-23,low
+1181,Rice-Rogers,Electronics,Canada,2024-02-21,high
+1182,"Lopez, Leon and Valentine",Entertainment,Australia,2020-09-15,medium
+1183,Gordon-Thompson,Travel,Germany,2019-03-02,medium
+1184,"Garcia, Holland and Garcia",Services,France,2017-02-18,low
+1185,Parker Group,Food & Beverage,Australia,2023-11-06,low
+1186,Martinez-Green,Services,United Kingdom,2017-05-24,low
+1187,Maxwell PLC,Retail,Netherlands,2022-09-10,low
+1188,Jacobs Group,Retail,Australia,2017-09-04,low
+1189,Martin PLC,Retail,France,2016-09-16,low
+1190,Matthews-Smith,Electronics,United Kingdom,2018-05-05,low
+1191,Craig-Howard,Entertainment,Germany,2022-04-24,low
+1192,Guerra Ltd,Entertainment,Germany,2020-03-04,low
+1193,Dean-Jones,Retail,Netherlands,2019-12-11,high
+1194,Banks-Young,Retail,Australia,2023-09-18,low
+1195,Brown-Lambert,Retail,United Kingdom,2023-06-08,low
+1196,Woodard-Allen,Retail,Germany,2018-06-08,low
+1197,"Wells, Schmidt and Williams",Food & Beverage,United Kingdom,2016-03-02,low
+1198,"Young, Hines and Mccall",Food & Beverage,Netherlands,2022-09-27,low
+1199,"Murray, Mack and Gonzalez",Food & Beverage,Canada,2017-11-12,low
+1200,Vasquez Inc,Electronics,United Kingdom,2021-01-26,low
+1201,"Wilson, Hall and Perez",Food & Beverage,United Kingdom,2016-06-12,low
+1202,Gonzalez and Sons,Entertainment,United Kingdom,2017-08-24,high
+1203,Tapia-Johnston,Entertainment,Netherlands,2016-01-04,low
+1204,Nelson-Gallagher,Food & Beverage,Australia,2018-03-08,low
+1205,Lee and Sons,Healthcare,United Kingdom,2023-06-24,medium
+1206,Leblanc LLC,Healthcare,Ireland,2020-05-01,low
+1207,Larson PLC,Entertainment,Germany,2017-06-06,low
+1208,Bishop PLC,Entertainment,Canada,2021-03-24,low
+1209,"Turner, Thomas and Douglas",Food & Beverage,United Kingdom,2016-03-02,medium
+1210,Miller LLC,Food & Beverage,France,2016-02-22,low
+1211,Smith PLC,Entertainment,Australia,2023-12-25,low
+1212,Shea Ltd,Services,Germany,2022-09-03,high
+1213,"Acevedo, Holt and Wilson",Travel,Canada,2016-02-24,low
+1214,Kelly Group,Entertainment,Australia,2018-11-17,medium
+1215,"Cooper, Trevino and Mckinney",Healthcare,Germany,2022-05-03,medium
+1216,Crawford-Clark,Food & Beverage,United Kingdom,2021-06-23,low
+1217,Barnes-Meadows,Entertainment,United Kingdom,2016-06-24,medium
+1218,Murphy Ltd,Entertainment,France,2020-10-10,high
+1219,Nguyen-White,Travel,Australia,2023-10-28,low
+1220,"Taylor, Taylor and Nguyen",Food & Beverage,Netherlands,2023-03-29,low
+1221,Rivas PLC,Utilities,United Kingdom,2016-10-17,low
+1222,"Morris, Lopez and Moran",Food & Beverage,Germany,2019-06-09,medium
+1223,Farmer-Carroll,Electronics,Italy,2019-05-20,low
+1224,"Scott, Allison and Kelly",Services,Canada,2019-12-15,low
+1225,Bryant-Pierce,Travel,Germany,2020-01-01,low
+1226,"Walker, Thompson and Caldwell",Food & Beverage,United Kingdom,2020-05-27,low
+1227,Smith-Vega,Food & Beverage,Spain,2024-06-03,low
+1228,Smith-Hamilton,Entertainment,Australia,2019-04-26,low
+1229,Thomas Ltd,Entertainment,Canada,2023-04-29,low
+1230,"Davidson, Morris and Williams",Food & Beverage,United Kingdom,2021-06-09,medium
+1231,Green-Stevens,Food & Beverage,Canada,2020-12-16,medium
+1232,Smith Group,Utilities,Germany,2017-11-11,low
+1233,Smith-Ross,Travel,Australia,2020-02-24,low
+1234,Jimenez Inc,Services,United Kingdom,2024-01-30,low
+1235,Curtis PLC,Food & Beverage,Germany,2023-12-21,medium
+1236,King Inc,Travel,Canada,2021-01-12,medium
+1237,"Reed, James and Jacobs",Retail,Germany,2023-02-23,medium
+1238,Harris-Mcfarland,Electronics,Canada,2022-11-28,low
+1239,Jackson-Cantu,Food & Beverage,Netherlands,2023-12-03,low
+1240,"Jones, Pruitt and Sullivan",Food & Beverage,Australia,2021-09-18,low
+1241,Sutton-Pugh,Electronics,Germany,2019-10-27,low
+1242,Hughes Group,Entertainment,Canada,2016-07-03,low
+1243,"Wong, Saunders and Carr",Healthcare,Canada,2020-04-29,low
+1244,Mendoza-Torres,Healthcare,France,2017-02-10,low
+1245,Soto-Mcintosh,Food & Beverage,Australia,2018-11-04,low
+1246,Carlson-Ortiz,Utilities,Italy,2024-02-20,medium
+1247,Smith Inc,Utilities,United Kingdom,2019-07-05,low
+1248,"Hall, Walker and Freeman",Services,Canada,2022-01-20,low
+1249,"Doyle, Raymond and Pierce",Electronics,Netherlands,2020-02-19,medium
+1250,Cain Group,Travel,United Kingdom,2018-07-14,low
+1251,Jackson Group,Retail,Ireland,2017-07-18,low
+1252,"Callahan, Martinez and Knight",Electronics,Australia,2018-01-17,low
+1253,Phillips PLC,Healthcare,Germany,2018-02-10,low
+1254,Dean-Vincent,Retail,Germany,2020-12-01,low
+1255,Wilson-Navarro,Food & Beverage,United Kingdom,2022-12-01,medium
+1256,Henderson-Martinez,Healthcare,Spain,2020-04-05,low
+1257,Stevenson-Hogan,Food & Beverage,Canada,2021-04-16,low
+1258,"Campbell, Fry and Villegas",Food & Beverage,Ireland,2016-12-09,low
+1259,Sanders Group,Food & Beverage,Germany,2017-09-23,low
+1260,"Gilmore, Pittman and Arellano",Food & Beverage,Australia,2020-02-20,medium
+1261,Knight-Page,Retail,Canada,2016-09-07,low
+1262,Parker Inc,Retail,Germany,2018-04-04,low
+1263,Cunningham Group,Entertainment,United Kingdom,2023-11-14,low
+1264,Jones-Walls,Electronics,France,2017-05-05,low
+1265,"Jackson, Beard and Moore",Retail,Canada,2019-07-29,medium
+1266,Ashley-Hayes,Food & Beverage,United Kingdom,2016-02-24,medium
+1267,"Williams, Payne and Rogers",Food & Beverage,United Kingdom,2021-01-14,high
+1268,Henderson Inc,Food & Beverage,Australia,2021-11-29,medium
+1269,Brown Ltd,Entertainment,Canada,2021-03-20,medium
+1270,Mitchell Ltd,Services,United Kingdom,2016-06-24,low
+1271,Doyle-Meyers,Entertainment,Italy,2017-03-05,low
+1272,"Jones, White and Taylor",Food & Beverage,Australia,2021-03-17,low
+1273,Johnson Ltd,Retail,Spain,2019-01-31,low
+1274,Mckee PLC,Food & Beverage,Canada,2020-01-19,low
+1275,"Ochoa, Cox and Berry",Retail,Canada,2017-04-03,low
+1276,Park-Hoover,Food & Beverage,France,2020-11-25,low
+1277,"Mcdaniel, Watkins and Moore",Travel,Canada,2024-06-21,low
+1278,Marshall and Sons,Healthcare,France,2022-11-06,low
+1279,Williams and Sons,Retail,Australia,2016-06-12,low
+1280,Watson PLC,Entertainment,Germany,2020-11-11,low
+1281,Walker PLC,Entertainment,United Kingdom,2019-06-29,low
+1282,"Williamson, Howard and Garcia",Entertainment,Spain,2021-06-16,low
+1283,Bernard Ltd,Food & Beverage,France,2020-06-09,medium
+1284,"Aguilar, Hines and Harrison",Travel,Australia,2019-12-10,low
+1285,Weaver Ltd,Food & Beverage,Germany,2020-08-31,low
+1286,Guzman-Gonzales,Utilities,Germany,2021-07-29,low
+1287,Price-Kim,Entertainment,France,2017-02-27,low
+1288,"Underwood, Sanchez and Smith",Food & Beverage,Canada,2017-02-26,low
+1289,"Klein, White and Watkins",Food & Beverage,Canada,2020-09-21,low
+1290,Pacheco-Chang,Food & Beverage,Australia,2024-06-28,low
+1291,Murphy-Torres,Services,France,2024-05-18,low
+1292,"Green, Hicks and Morgan",Food & Beverage,United Kingdom,2019-01-21,low
+1293,Gonzalez-Villanueva,Services,France,2020-01-11,low
+1294,Wilkins Group,Services,Germany,2020-02-11,low
+1295,"Brown, Lowe and Beltran",Entertainment,France,2016-07-31,low
+1296,"Fields, Pacheco and Mendez",Services,Australia,2024-02-19,low
+1297,Matthews Ltd,Food & Beverage,Australia,2020-05-13,low
+1298,Thomas-Thompson,Food & Beverage,Spain,2016-10-24,high
+1299,"Palmer, Brown and Smith",Food & Beverage,Netherlands,2020-09-20,low
+1300,Holmes and Sons,Utilities,Canada,2016-12-16,low
+1301,"Robinson, Wilson and Roberts",Food & Beverage,Australia,2019-09-08,low
+1302,Riley PLC,Services,Germany,2016-01-25,low
+1303,Fischer Inc,Food & Beverage,Australia,2017-08-30,low
+1304,"Choi, Kim and Ortiz",Food & Beverage,Canada,2021-08-18,low
+1305,Smith LLC,Services,Australia,2022-10-18,low
+1306,Lutz LLC,Utilities,United Kingdom,2020-09-08,medium
+1307,"Chung, Brown and Campbell",Entertainment,Canada,2016-06-27,low
+1308,Bradford and Sons,Retail,Germany,2020-08-30,low
+1309,Davis-Pittman,Entertainment,United Kingdom,2021-12-23,low
+1310,Hudson Ltd,Services,Australia,2017-04-28,low
+1311,Thomas PLC,Utilities,Australia,2024-02-11,low
+1312,Bray-Santos,Services,Ireland,2020-07-06,low
+1313,Hogan Group,Food & Beverage,United Kingdom,2018-09-26,low
+1314,Craig PLC,Food & Beverage,France,2019-03-11,low
+1315,Werner Group,Retail,Australia,2016-01-12,low
+1316,Nelson Inc,Food & Beverage,Australia,2020-12-19,low
+1317,"Figueroa, Wang and Holden",Services,United Kingdom,2020-12-09,low
+1318,Blackburn Ltd,Food & Beverage,United Kingdom,2016-11-07,low
+1319,"Patterson, Anderson and Hunter",Food & Beverage,United Kingdom,2024-01-23,low
+1320,Burns Ltd,Food & Beverage,Germany,2018-12-16,low
+1321,Webb-Ortega,Food & Beverage,United Kingdom,2017-04-08,low
+1322,Johnson Group,Healthcare,Italy,2017-07-07,low
+1323,Ho-Thompson,Food & Beverage,Spain,2019-10-17,low
+1324,"Cook, Adams and Higgins",Travel,United Kingdom,2017-05-27,low
+1325,Ward PLC,Food & Beverage,Canada,2017-06-09,low
+1326,Fox Inc,Food & Beverage,Ireland,2018-06-17,low
+1327,Young-Snyder,Food & Beverage,Spain,2018-03-21,low
+1328,Holder Inc,Electronics,Canada,2017-07-07,medium
+1329,Campbell-Frank,Food & Beverage,United Kingdom,2017-11-23,low
+1330,"Hamilton, Carson and Hill",Food & Beverage,Canada,2024-01-29,low
+1331,Rodriguez-Lee,Food & Beverage,Canada,2020-01-20,low
+1332,"Lozano, Brown and Winters",Entertainment,Australia,2020-07-01,low
+1333,Clay PLC,Healthcare,Australia,2020-08-15,low
+1334,"Garcia, Morgan and Barton",Electronics,Canada,2019-03-20,low
+1335,"Atkins, Jennings and Combs",Food & Beverage,Australia,2022-05-20,medium
+1336,"Richardson, Miller and Martinez",Food & Beverage,Canada,2019-04-06,low
+1337,Davis Group,Food & Beverage,United Kingdom,2023-07-29,low
+1338,Anderson Ltd,Services,France,2021-11-27,low
+1339,Wright-Morgan,Retail,Germany,2017-06-15,low
+1340,"Bonilla, Hicks and Dixon",Services,Spain,2019-11-16,high
+1341,Davis LLC,Electronics,France,2018-03-12,low
+1342,Medina and Sons,Services,Ireland,2020-12-14,low
+1343,"Allen, Patterson and Burnett",Food & Beverage,United Kingdom,2023-07-04,low
+1344,Simpson-Reyes,Entertainment,Spain,2016-11-07,high
+1345,Thomas Inc,Food & Beverage,Canada,2016-09-11,low
+1346,Hoffman-White,Food & Beverage,Australia,2021-10-03,low
+1347,"Kemp, Peters and Hill",Entertainment,Germany,2016-06-21,low
+1348,Hunt-Parks,Entertainment,Canada,2020-01-19,low
+1349,Mullen-Gardner,Utilities,Canada,2018-02-18,medium
+1350,"Gonzalez, Best and Perez",Retail,France,2024-07-12,medium
+1351,Caldwell-Wallace,Services,Germany,2024-05-09,low
+1352,Bailey Inc,Travel,Australia,2017-01-03,low
+1353,Wong Ltd,Utilities,United Kingdom,2020-09-21,low
+1354,"Scott, Hall and Smith",Healthcare,Canada,2021-01-04,low
+1355,"Peters, Lopez and Holmes",Electronics,United Kingdom,2020-06-20,low
+1356,Lewis Ltd,Entertainment,Canada,2023-04-04,low
+1357,Terry PLC,Food & Beverage,United Kingdom,2016-05-16,low
+1358,Collins Inc,Retail,Netherlands,2018-04-26,low
+1359,"Turner, Young and Hill",Food & Beverage,United Kingdom,2017-05-24,low
+1360,Parker-Bradley,Healthcare,Australia,2017-02-26,high
+1361,"Sims, Phillips and Hogan",Food & Beverage,Australia,2020-09-18,low
+1362,"Gutierrez, Evans and Frederick",Electronics,United Kingdom,2021-06-20,low
+1363,Hodges Inc,Food & Beverage,Australia,2017-03-12,medium
+1364,"Hayes, Fox and Cross",Food & Beverage,Canada,2024-03-10,low
+1365,Wright LLC,Food & Beverage,Canada,2018-04-20,medium
+1366,Brown Inc,Healthcare,France,2022-03-19,medium
+1367,"Cox, Estrada and Gonzalez",Entertainment,Netherlands,2017-01-22,medium
+1368,Lewis Group,Retail,United Kingdom,2019-02-13,low
+1369,Trevino-Jones,Services,United Kingdom,2018-01-10,medium
+1370,Hughes Inc,Services,France,2016-10-28,low
+1371,Jennings-Morales,Services,Australia,2022-01-10,low
+1372,"Adams, Gutierrez and Hogan",Services,Spain,2023-07-01,low
+1373,"Craig, Taylor and Davidson",Electronics,United Kingdom,2016-02-14,low
+1374,Velazquez PLC,Food & Beverage,Netherlands,2019-05-16,low
+1375,Martinez-Collins,Travel,United Kingdom,2016-03-15,low
+1376,"Sellers, Mcclure and Hunt",Retail,Germany,2018-07-11,low
+1377,"Price, Long and Taylor",Travel,Germany,2016-04-29,low
+1378,King-Scott,Entertainment,Canada,2021-11-24,high
+1379,Wood-Thomas,Travel,Netherlands,2018-05-27,low
+1380,Jimenez-Murray,Retail,Germany,2023-10-23,low
+1381,Gibbs PLC,Travel,Germany,2019-12-02,low
+1382,Castaneda-Santos,Services,Germany,2023-10-18,low
+1383,Hernandez-Mann,Healthcare,United Kingdom,2016-03-03,low
+1384,"Jones, Smith and Guerrero",Utilities,Germany,2018-09-11,medium
+1385,Silva-Morse,Travel,Canada,2023-07-13,low
+1386,Woods Ltd,Electronics,Ireland,2021-08-28,low
+1387,Lin Inc,Entertainment,Canada,2024-08-15,low
+1388,"Johnson, Gonzales and Hale",Retail,Canada,2016-05-18,low
+1389,Henderson-Colon,Retail,Ireland,2024-02-29,low
+1390,Sanchez-Kim,Entertainment,Germany,2021-01-27,low
+1391,Wolfe LLC,Electronics,Germany,2022-04-14,low
+1392,"Johnston, Kirby and Palmer",Food & Beverage,Canada,2022-02-06,low
+1393,Barber-Livingston,Healthcare,Australia,2019-09-10,low
+1394,"Williams, Brock and Olson",Food & Beverage,Australia,2023-02-24,medium
+1395,Benson-Davis,Electronics,Australia,2023-12-31,low
+1396,Decker LLC,Entertainment,Australia,2018-08-06,low
+1397,Ali-Cruz,Retail,Australia,2018-05-06,low
+1398,"Ramirez, Becker and Stewart",Services,Spain,2017-12-31,low
+1399,Barnes-Davis,Healthcare,United Kingdom,2023-05-03,low
+1400,Mejia-Blackburn,Travel,United Kingdom,2017-07-11,low
+1401,Short and Sons,Services,Canada,2023-04-18,low
+1402,Pineda Inc,Entertainment,Australia,2019-09-11,low
+1403,Boyd Ltd,Retail,Spain,2020-11-12,low
+1404,Schwartz Ltd,Food & Beverage,Germany,2019-12-28,low
+1405,"Tate, Lee and Richardson",Entertainment,Canada,2019-10-30,low
+1406,Henry-Lawrence,Entertainment,United Kingdom,2021-09-08,high
+1407,Brock Group,Entertainment,Italy,2022-06-07,low
+1408,Ward LLC,Food & Beverage,Germany,2017-11-03,high
+1409,Reed Group,Food & Beverage,United Kingdom,2017-02-28,medium
+1410,Bailey Ltd,Travel,Ireland,2018-08-21,low
+1411,"Sexton, Huerta and Young",Services,Australia,2018-10-23,low
+1412,Wiggins-Lawson,Food & Beverage,Germany,2022-05-03,low
+1413,"Palmer, Scott and Williams",Electronics,Australia,2022-09-05,low
+1414,"Butler, Gordon and Chambers",Retail,France,2022-08-28,low
+1415,"Vazquez, Black and Huber",Food & Beverage,Spain,2016-09-04,low
+1416,Fuentes and Sons,Entertainment,United Kingdom,2020-07-17,low
+1417,Mckay-Martin,Food & Beverage,Netherlands,2017-11-23,medium
+1418,"Sawyer, Randall and Fernandez",Food & Beverage,Ireland,2022-09-01,medium
+1419,Anderson Inc,Electronics,Canada,2020-08-11,low
+1420,"Vaughn, Brown and Allen",Entertainment,Canada,2021-01-15,low
+1421,"Stephens, Mckenzie and Smith",Retail,Spain,2018-12-12,low
+1422,Ramirez Inc,Entertainment,Australia,2023-05-27,low
+1423,Burns Group,Electronics,Canada,2021-10-27,low
+1424,Spencer-Bass,Food & Beverage,Canada,2023-06-14,low
+1425,"Bradley, Wall and Rodriguez",Utilities,Ireland,2021-01-22,medium
+1426,Williams-Morgan,Food & Beverage,Ireland,2016-06-01,low
+1427,Fitzgerald-Hernandez,Travel,Netherlands,2017-09-28,low
+1428,Cole-Freeman,Travel,Australia,2016-02-02,low
+1429,"Stevenson, Owen and Williams",Food & Beverage,Canada,2021-05-26,low
+1430,Bishop-Thomas,Healthcare,Australia,2021-08-09,low
+1431,Moss-Elliott,Travel,Germany,2021-07-10,low
+1432,Myers-Foster,Services,France,2016-02-14,low
+1433,Strickland PLC,Food & Beverage,Canada,2019-08-01,low
+1434,Black and Sons,Food & Beverage,Australia,2016-03-03,low
+1435,"Fisher, Adams and Webster",Healthcare,Spain,2019-04-21,low
+1436,James Group,Retail,Canada,2020-03-16,low
+1437,"Blankenship, Perry and Gutierrez",Food & Beverage,United Kingdom,2017-06-16,low
+1438,Price Group,Entertainment,United Kingdom,2019-06-01,low
+1439,"Levy, Mcclure and Gibson",Utilities,Spain,2017-07-31,low
+1440,"Ellis, Lopez and Jenkins",Retail,Australia,2021-02-14,low
+1441,"Duncan, Evans and Nunez",Entertainment,France,2020-04-11,low
+1442,Barker PLC,Entertainment,United Kingdom,2021-01-22,low
+1443,Howard LLC,Food & Beverage,Australia,2016-06-23,low
+1444,"Fernandez, Mendez and Buckley",Travel,Canada,2022-11-23,low
+1445,"Daniel, Powers and Baker",Food & Beverage,United Kingdom,2020-09-10,low
+1446,"Taylor, Murphy and Martin",Food & Beverage,Germany,2020-07-01,high
+1447,Goodwin-Kennedy,Electronics,United Kingdom,2020-01-25,low
+1448,Johnson-Ferguson,Food & Beverage,France,2019-05-04,low
+1449,Morgan-Morgan,Food & Beverage,Germany,2019-04-12,low
+1450,Jordan-Baker,Food & Beverage,Germany,2017-07-15,low
+1451,"Miller, Newton and Lindsey",Electronics,Canada,2016-08-27,medium
+1452,"Golden, Petty and Patel",Food & Beverage,Germany,2023-01-21,low
+1453,Ramos-Woodward,Retail,Canada,2021-03-13,medium
+1454,"Richardson, Johnson and Perez",Entertainment,Australia,2016-09-21,low
+1455,"Rodriguez, Ray and Fox",Retail,Canada,2019-10-19,low
+1456,Gonzales LLC,Food & Beverage,Australia,2016-06-25,medium
+1457,"Miller, Liu and Johnson",Electronics,United Kingdom,2019-04-11,medium
+1458,Hill PLC,Entertainment,Australia,2020-04-26,low
+1459,"Clarke, Garrison and Lewis",Services,France,2018-01-24,medium
+1460,"Thompson, Alvarado and Mcfarland",Entertainment,Germany,2020-03-04,low
+1461,Smith-Myers,Food & Beverage,United Kingdom,2024-03-05,medium
+1462,Wells-Kim,Food & Beverage,Ireland,2016-05-17,low
+1463,"Gonzalez, Howard and Alexander",Retail,Australia,2022-07-14,low
+1464,Lewis Ltd,Retail,United Kingdom,2018-12-18,medium
+1465,Olson and Sons,Food & Beverage,Canada,2019-08-04,low
+1466,Williams Ltd,Entertainment,United Kingdom,2020-10-16,low
+1467,"Smith, Torres and Frank",Healthcare,Canada,2017-11-12,low
+1468,Sanders-Porter,Entertainment,Canada,2024-04-09,low
+1469,Brandt and Sons,Retail,Germany,2019-05-17,low
+1470,Bray Inc,Food & Beverage,Australia,2016-03-26,medium
+1471,"Morris, Mullen and Hughes",Food & Beverage,United Kingdom,2020-04-22,low
+1472,Garcia-Stevens,Retail,Canada,2019-04-12,medium
+1473,"Ortega, Brown and Orr",Travel,United Kingdom,2018-07-22,medium
+1474,"Frederick, Berry and Jones",Services,Germany,2017-07-03,medium
+1475,"Duncan, Davidson and Mata",Retail,Italy,2017-10-01,low
+1476,"Conner, Weiss and Bruce",Retail,Germany,2016-03-04,low
+1477,Sanders-Barnes,Utilities,Germany,2017-02-08,low
+1478,Smith-Andrews,Services,Canada,2021-04-07,medium
+1479,Davis Inc,Entertainment,France,2016-10-13,low
+1480,Espinoza LLC,Food & Beverage,France,2018-02-27,low
+1481,Daniel-Martin,Healthcare,Italy,2018-07-07,low
+1482,Steele-Anderson,Electronics,Australia,2017-01-27,low
+1483,Krause Ltd,Services,Australia,2024-06-17,low
+1484,"Larson, Thomas and Johnson",Food & Beverage,United Kingdom,2018-11-04,low
+1485,Chang-Valencia,Travel,Australia,2018-08-03,low
+1486,"Cooper, Johnson and Brock",Retail,United Kingdom,2016-01-12,low
+1487,Evans-Jones,Retail,Spain,2016-11-11,low
+1488,York-Whitaker,Services,United Kingdom,2019-12-25,low
+1489,Frazier-Williams,Entertainment,Australia,2019-08-30,low
+1490,Acosta-Kemp,Healthcare,France,2021-04-19,low
+1491,Watson-Moore,Food & Beverage,France,2016-05-05,low
+1492,Johnson Inc,Entertainment,Netherlands,2024-07-07,low
+1493,Flores-Carroll,Food & Beverage,United Kingdom,2022-12-05,low
+1494,"Lewis, Graves and Flores",Services,Australia,2016-05-03,low
+1495,Johnson-Garner,Retail,Canada,2021-04-05,low
+1496,"Mendoza, Long and Figueroa",Electronics,Netherlands,2018-09-30,low
+1497,"Bryant, Smith and Bass",Retail,Canada,2021-08-18,low
+1498,Vance LLC,Entertainment,Canada,2018-05-14,low
+1499,"Baird, Lee and Parsons",Entertainment,Netherlands,2018-07-10,high
+1500,Wong Group,Retail,France,2016-01-12,low

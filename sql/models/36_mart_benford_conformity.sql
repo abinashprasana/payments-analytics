@@ -34,7 +34,10 @@ WITH expected AS (
     SELECT
         digits.*,
         CAST(observed_count AS DECIMAL(12, 6)) * 100 / total_count AS observed_pct,
-        CAST(total_count AS DECIMAL(18, 6)) * expected_pct / 100 AS expected_count
+        -- DECIMAL(38) keeps the product exact: at 70k+ payments per currency a
+        -- DECIMAL(18) product passes 10^18 and overflows in DuckDB.
+        CAST(total_count AS DECIMAL(38, 6)) * CAST(expected_pct AS DECIMAL(38, 6)) / 100
+            AS expected_count
     FROM digits
 ), currency_stats AS (
     SELECT

@@ -80,7 +80,7 @@ test.describe("settlement operations workbench", () => {
       .filter({ hasText: "Synthetic scenario" })
       .getByRole("combobox");
     await scenarioSelect.click();
-    await page.getByText("Missing Retail / CAD batch", { exact: true }).last().click();
+    await page.getByText("Lost settlement file / CAD", { exact: true }).last().click();
 
     await expect
       .poll(() => new URL(page.url()).searchParams.get("scenario"), { timeout: 60_000 })
