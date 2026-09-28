@@ -55,7 +55,33 @@ The dataset is entirely synthetic, generated with Python and Faker, and none of 
 
 Four scenarios are injected deterministically into the snapshot and recorded in [`data/scenarios.json`](data/scenarios.json): a clean daily close with nothing wrong, a Travel/GBP batch that settles late, a Retail/CAD batch that never settles, and an Electronics/EUR batch where the recorded fee falls out of step with the merchant's current contract. The site currently walks through the fee-mismatch one; the workbench can reproduce all four.
 
-Outside those scenarios the data is shaped to behave like a card ledger rather than a uniform random table. Purchase amounts are lognormal per merchant category, so first digits follow Benford's law (mean absolute deviation under 0.006 in every currency). Volume follows hour of day, weekday, and a November and December peak, and the top tenth of merchants carry about 54% of purchases. Every refund points to an earlier completed purchase through `parent_transaction_id` and settles as a negative amount with no fee. Settlements land in a 02:00 business-day batch, so a payment made just before Christmas or New Year can breach a calendar-day SLA, as it would in practice. About 0.45% of purchases are disputed, weighted toward riskier merchants and categories. `python data/generate_data.py` prints these measurements and refuses to write a snapshot that misses them.
+### How the synthetic data was made realistic
+
+The first version drew every value from a flat random range, and it showed. An audit of v2 found patterns no real ledger has, and v3 rebuilt the generator around how card payments actually behave. The four scenarios above are unchanged; everything around them is new.
+
+| What the audit measured | v2 | v3 |
+|---|---|---|
+| Transactions per year, 2022 / 2023 / 2024 | 0.3% / 6% / 94% | 25% / 33% / 42% |
+| Share of all transactions in December 2024 | 36% | 4.9% |
+| Purchase first digits against Benford's law (mean absolute deviation) | digits 1 to 4 at about 22% each, 5 to 9 at about 2%: fails | 0.002 to 0.005 in every currency: close conformity |
+| Median purchase by category | about 2,490 in every category | 22 (Food & Beverage) up to 520 (Travel) |
+| Share of purchases at the top tenth of merchants | 12% | 54% |
+| Refunds with no earlier purchase behind them | 3,891 of 3,919 | 0 of 3,000 |
+| Settlements dated on a Saturday or Sunday | 16,589 | 0 |
+| Settlements stamped at the payment's own time of day | 61,124 of 61,124 | 0 |
+| Fraud flags | the 2,500 largest transfers | risk scored: 2.2% of low-risk merchant payments, 5.7% of high-risk |
+| Transactions outside the account's open period | 4,238 | 0 |
+
+How v3 gets there:
+
+- Amounts are lognormal per merchant category, scaled by customer segment, with some prices snapped to .99 and .00. That spread is what makes first digits follow Benford's law.
+- Volume follows each account's own activity rate, hour of day, weekday and a November and December peak. Merchant popularity follows a Pareto curve, and a customer's country decides their currency.
+- Every refund points to an earlier completed purchase from the same account and merchant through `parent_transaction_id`, and settles as a negative amount with no fee.
+- Settlements land in a 02:00 batch on business days, inside each merchant's deadline. A payment made just before Christmas or New Year can still miss a calendar-day deadline, which is where the 331 background late settlements come from.
+- About 0.45% of purchases are disputed, weighted toward riskier merchants and categories. Visa's dispute monitoring threshold is 0.9%.
+- Closed and suspended accounts stop transacting, and failure rates rise with amount and merchant risk.
+
+`python data/generate_data.py` prints these measurements on every run and refuses to write a snapshot that misses its targets. The choices draw on the [PaySim](https://www.msc-les.org/proceedings/emss/2016/EMSS2016_249.pdf) mobile money simulator, the [Sparkov](https://github.com/namebrandon/Sparkov_Data_Generation) card transaction generator, [Stripe's payout timing](https://support.stripe.com/questions/understanding-daily-automatic-and-manual-payout-schedules), published [card network dispute thresholds](https://solidgate.com/blog/monitoring-programs/), and Nigrini's mean absolute deviation bands for Benford conformity.
 
 ---
 
@@ -113,7 +139,7 @@ Every view is deep-linkable (`?view=&scenario=&payment_id=`), which is how the w
 
 ## 🤖 Ask Claude (MCP)
 
-The query registry is also published as a [Model Context Protocol](https://modelcontextprotocol.io) server, so you can ask Claude about the snapshot in plain English and get answers built from the same validated queries the workbench runs. It's read-only, and it has no way to run SQL you write. The walkthrough's last chapter replays one real call.
+The query registry is also published as a [Model Context Protocol](https://modelcontextprotocol.io) server, so you can ask Claude about the snapshot in plain English and get answers built from the same validated queries the workbench runs. It's read-only, and it has no way to run SQL you write. The walkthrough's last chapter, "Use it", replays one real call.
 
 ```text
 https://settlement-gap-mcp.onrender.com/mcp
