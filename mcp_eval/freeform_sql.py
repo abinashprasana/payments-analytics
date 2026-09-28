@@ -242,7 +242,13 @@ def main(argv: list[str] | None = None) -> int:
                     except agent_stub.BudgetExhausted as exc:
                         stopped = str(exc)
                         break
-                    text = model.complete_text(prompt_messages(question))
+                    try:
+                        text = model.complete_text(prompt_messages(question))
+                    except Exception as exc:  # provider failure after the client's retries
+                        if "per day" in str(exc) or "401" in str(exc):
+                            stopped = f"provider stopped the run: {type(exc).__name__}"
+                            break
+                        raise
                     sql = extract_sql(text)
                     result = execute(connection, sql)
                     row = {"id": record["id"], "repeat": repeat, **score(record, sql, result)}
@@ -259,7 +265,8 @@ def main(argv: list[str] | None = None) -> int:
         "suite": f"freeform_{args.suite}", "mode": "live", "provider": "groq", "model": args.model,
         "temperature": args.temperature, "repeats": args.repeats,
         "started_utc": started.isoformat(timespec="seconds"),
-        "requests_used": budget.used, "max_requests": args.max_requests, "stopped_early": stopped,
+        "requests_used": budget.used, "tokens_used": model.tokens_used,
+        "max_requests": args.max_requests, "stopped_early": stopped,
     }
     output = {"meta": meta,
               "reviewed": summarize(scored, records, reviewed_only=True),

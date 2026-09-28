@@ -98,7 +98,7 @@ Parameter match rule: every required key must be present with an equal value aft
 
 ## Provider proposal
 
-Groq through its OpenAI compatible endpoint, reading `GROQ_API_KEY` from the environment only. The default model is `llama-3.3-70b-versatile`, which supports tool calls on Groq, with `openai/gpt-oss-120b` selectable by `--model`. Groq's free tier allows roughly 30 requests a minute and 1,000 a day (confirm in the Groq console), so the runner paces at one request every 2.1 seconds.
+Groq through its OpenAI compatible endpoint. The default model is `openai/gpt-oss-120b`: `llama-3.3-70b-versatile` was no longer offered when the live runs started (2026-09-28), and gpt-oss-120b was the strongest tool calling model available to the key. `--model` selects another. Groq's free tier allows roughly 30 requests a minute and 1,000 a day (confirm in the Groq console), so the runner paces at one request every 2.1 seconds.
 
 One question usually needs two or three model requests (tool choice, then the answer after the tool result). About 45 questions repeated 3 times is therefore around 300 to 400 requests. Confirmed on 2026-09-28: the runner defaults to `--max-requests 400`, which fits inside one day's free quota.
 

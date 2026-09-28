@@ -117,6 +117,10 @@ def main(argv: list[str] | None = None) -> int:
                 if "401" in str(exc) or "invalid_api_key" in str(exc):
                     stopped = "authentication failed"
                     break
+                if "per day" in str(exc):
+                    errors.pop()
+                    stopped = "provider daily limit reached"
+                    break
                 continue
             score = (scoring.score_question(record, trial) if args.suite == "questions"
                      else scoring.score_refusal(record, trial))
@@ -140,6 +144,7 @@ def main(argv: list[str] | None = None) -> int:
             (golden.PROJECT_ROOT / "data" / "scenarios.json").read_text(encoding="utf-8"))["datasetVersion"],
         "git_sha": _git_sha(),
         "requests_used": None if budget is None else budget.used,
+        "tokens_used": None if live_model is None else live_model.tokens_used,
         "max_requests": args.max_requests,
         "trials_scored": len(scored),
         "trial_errors": len(errors),

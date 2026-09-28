@@ -10,6 +10,12 @@ Claude audited all 45 questions on 2026-09-28 against the v3 snapshot and the ph
 | q042 | Reason text now allows adding the two EUR closes | A partial EUR subtotal is legitimate; only GBP and CAD must stay apart. |
 | q045 | Removed "Both are EUR." from the question | The hint gave the answer away; the model should discover the shared currency. |
 
+## Changed after the first live smoke run (2026-09-28)
+
+| ID | Change | Reason |
+|---|---|---|
+| q011 | `exception_queue` accepted as an alternative to `close_summary` | q038 asks the same thing and already accepted both; the two records disagreed. Found when gpt-oss-120b answered q011 from the queue. |
+
 ## Worth a second look before flagging
 
 | ID | Point |

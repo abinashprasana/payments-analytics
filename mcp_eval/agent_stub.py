@@ -23,8 +23,9 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = PROJECT_ROOT / "mcp_server" / "tests" / "tool_manifest.json"
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
-DEFAULT_MODEL = "llama-3.3-70b-versatile"
-MAX_TURNS = 4
+# llama-3.3-70b-versatile was retired on Groq; gpt-oss-120b supports tool calls and strict schemas.
+DEFAULT_MODEL = "openai/gpt-oss-120b"
+MAX_TURNS = 6
 MAX_RESULT_CHARS = 8_000
 for path in (PROJECT_ROOT, PROJECT_ROOT / "mcp_server"):
     if str(path) not in sys.path:
@@ -104,6 +105,7 @@ class GroqModel:
             raise RuntimeError("GROQ_API_KEY is not set in the environment or .env")
         self.model = model
         self.temperature = temperature
+        self.tokens_used = 0
         self._client = OpenAI(api_key=key, base_url=GROQ_BASE_URL, max_retries=5)
 
     def complete(self, messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> Any:
@@ -111,12 +113,14 @@ class GroqModel:
             model=self.model, messages=messages, tools=tools,
             tool_choice="auto", temperature=self.temperature,
         )
+        self.tokens_used += response.usage.total_tokens if response.usage else 0
         return response.choices[0].message
 
     def complete_text(self, messages: list[dict[str, Any]]) -> str:
         response = self._client.chat.completions.create(
             model=self.model, messages=messages, temperature=self.temperature,
         )
+        self.tokens_used += response.usage.total_tokens if response.usage else 0
         return response.choices[0].message.content or ""
 
 

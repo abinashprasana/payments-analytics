@@ -184,8 +184,10 @@ SPECS: list[dict[str, Any]] = [
     # close_kpi
     _query("q010", "How many exceptions did the normal close have?", "close_kpi",
            "close_summary", {"scenario": N}, _close(N, ["exception_count", "eligible_count"])),
-    _query("q011", "How many payments settled late in the delayed Travel GBP close?", "close_kpi",
-           "close_summary", {"scenario": D}, _close(D, ["late_count", "eligible_count"])),
+    {**_query("q011", "How many payments settled late in the delayed Travel GBP close?", "close_kpi",
+              "close_summary", {"scenario": D}, _close(D, ["late_count", "eligible_count"])),
+     "alternatives": [_run("exception_queue", {"scenario": D})],
+     "why": "Counting late rows in the exception queue gives the same number, as q038 already accepts."},
     _query("q012", "As of 2024-10-14, how many payments in the delayed Travel batch were still missing a settlement?",
            "close_kpi", "close_summary", {"scenario": D, "as_of_date": "2024-10-14"},
            _close(D, ["missing_count", "matched_count"], as_of="2024-10-14")),
