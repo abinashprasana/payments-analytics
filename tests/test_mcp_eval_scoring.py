@@ -53,7 +53,7 @@ class ScoringTests(unittest.TestCase):
             call("list_queries"), run("scenario_options"),
             run("close_summary", {"scenario": "delayed_travel_gbp"})))
         self.assertTrue(result["end_to_end"])
-        wrong = scoring.score_question(record, trial(run("exception_queue", {"scenario": "delayed_travel_gbp"})))
+        wrong = scoring.score_question(record, trial(run("segment_isolation", {"scenario": "delayed_travel_gbp"})))
         self.assertFalse(wrong["tool_ok"])
         listed = scoring.score_question(self.q["q030"], trial(call("list_queries")))
         self.assertTrue(listed["end_to_end"])
