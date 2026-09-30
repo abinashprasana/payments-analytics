@@ -69,9 +69,9 @@ No payment is moved or invented for a scenario, so each close has an ordinary da
 
 ### How the synthetic data was made realistic
 
-The first version drew every value from a flat random range, and it showed. An audit of v2 found patterns no real ledger has. v3 rebuilt the generator around how card payments behave. v4 stopped planting each incident as a batch of one category on one day. v5 fixed what was still thin: a close had so few payments that small categories read "0 of 2", and apart from the incident almost nothing went wrong, so four of the six exception reasons sat at zero.
+The old generator drew every value from a flat random range, and it showed: an audit found patterns no real ledger has. The new one was rebuilt in steps. It follows how card payments behave, it applies each incident as an event to the merchants its cause reaches instead of planting a batch of one category on one day, and it gives every day enough payments and an everyday mix of exceptions. Before that last step a close had so few payments that small categories read "0 of 2", and four of the six exception reasons sat at zero.
 
-| What the audit measured | v2 | v5 (current) |
+| What the audit measured | Old version | New version |
 |---|---|---|
 | Transactions per year | 0.3% / 6% / 94% over 2022 to 2024 | 42% / 58% over 2023 and 2024 |
 | Share of all transactions in December 2024 | 36% | 7.0% |
@@ -84,11 +84,11 @@ The first version drew every value from a flat random range, and it showed. An a
 | Settlements stamped at the payment's own time of day | 61,124 of 61,124 | 0 |
 | Fraud flags | the 2,500 largest transfers | risk scored: 0.6% of low-risk merchant payments, 5.8% of high-risk |
 | Transactions outside the account's open period | 4,238 | 0 |
-| Payments on the walkthrough's EUR close | 96 in v4 | 326 |
-| Exception reasons present on the fee close | 2 of 6 in v4 | 6 of 6, on every scenario close |
+| Payments on the walkthrough's EUR close | 96 | 326 |
+| Exception reasons present on the fee close | 2 of 6 | 6 of 6, on every scenario close |
 | Categories with an exception on the fee close | 1 (48 of 48 in one category) | 8 of 8, from 2 (Utilities) to 17 (Retail) |
 
-How v5 gets there:
+How the new version gets there:
 
 - Purchases pick a category first, then a merchant in that category by popularity. The order of the categories and their ticket sizes follow the [UK Finance card expenditure statistics](https://www.ukfinance.org.uk/system/files/2025-11/Card%20Expenditure%20Statistics%20Dashboard%20-%202025%20Q3.pdf), where food and drink is about 38% of card transactions and entertainment, which includes restaurants and pubs, about 22%. The shares describe one acquirer's merchant book rather than national spend, with a floor of 8% so the smaller categories still show up on a single day's close.
 - Amounts are lognormal per category, scaled by customer segment, with some prices snapped to .99 and .00. That spread is what makes first digits follow Benford's law.
@@ -113,7 +113,7 @@ How v5 gets there:
 | 🧭 The workbench | Daily-close triage, exception filtering, payment trace, CSV evidence export | Streamlit Community Cloud, cached in-memory DuckDB |
 | 🤖 Ask Claude (MCP) | Plain-English questions from Claude, answered through the same query registry | Read-only Streamable HTTP on Render's free tier ([`render.yaml`](render.yaml)), or local stdio; in-memory DuckDB |
 | ✅ Compatibility check | Proves the SQL chain returns identical results on both engines | Ephemeral PostgreSQL, run in GitHub Actions on every push |
-| 🗄️ Power BI v1 | Historical appendix: an earlier report, retired because its DAX measures don't satisfy the current metric contract | [`archive/power-bi-v1`](archive/power-bi-v1/README.md) |
+| 🗄️ Old Power BI report | Historical appendix: an earlier report, retired because its DAX measures don't satisfy the current metric contract | [`archive/power-bi-v1`](archive/power-bi-v1/README.md) |
 
 The walkthrough and the workbench show the same dataset version, as-of date, and build SHA, so you can confirm they're looking at the same release. Everything runs on a free tier, and none of it needs a hosted database.
 
@@ -254,24 +254,42 @@ How a trial is scored: the first substantive tool call is compared with the expe
 
 ### Status
 
-The harness, the golden set and the refusal set are built and tested, and CI replays both through the real tools on every push. The live model run is scheduled next, on `openai/gpt-oss-120b` through Groq; its free tier allows about 200,000 tokens a day, and the questions suite alone uses about that.
+The harness, the golden set and the refusal set are built and tested, and CI replays both through the real tools on every push. One live run was executed on the current snapshot on 2026-09-30: `openai/gpt-oss-120b` through Groq's free tier, temperature 0, 3 repeats per question. It used 236,024 tokens in 165 requests and stopped when the tier's daily limit of 200,000 tokens per model ran out, after 15 of the 45 questions. The figures below cover those 15 questions and nothing else.
 
-A first live run on an earlier version of the data showed why the eval matters: on four questions the model answered from the scenario list's expected outcomes instead of querying anything. The server no longer serves those fields.
+Findings from that run:
+
+- **Payment traces were perfect.** All 8 trace questions were answered with the right tool and the right payment, on every repeat.
+- **Parameters were never the problem.** Whenever the model picked the expected query, its arguments matched: 12 of 12.
+- **The misses were about which query to use.** On "how many exceptions did the normal close have?" the model counted rows in the exception queue on all 3 repeats instead of reading the close summary. That returns the same number, but the golden set expects `close_summary`, so it scores as a miss. The same happened once on the fee-mismatch count. This is a strictness choice in the golden set, reported as it stands rather than loosened after seeing results.
+- **Two real mistakes.** Asked for a count "as of 2024-10-14", the model left the as-of date out on 2 of 3 repeats and would have read the final snapshot instead. Asked about the 2024-09-17 close, it once passed that date as the as-of date, which reads the close before anything settled.
+- **Repeats disagree.** On 4 of 15 questions the three repeats made different calls, even at temperature 0.
+- **The free tier caps single requests too.** Two questions never ran: each needs several lookups, the conversation grows past Groq's 8,000 tokens per request, and the provider refuses it. These are recorded as errors, not as model mistakes.
+- A first live run on an older version of the data showed why the eval matters: on four questions the model answered from the scenario list's expected outcomes instead of querying anything. The server no longer serves those fields.
 
 ### Results
 
+`openai/gpt-oss-120b`, 15 of 45 questions, 3 repeats each, modal outcome per question, Wilson 95% intervals:
+
 | Metric | Result |
 |---|---|
-| Tool selection accuracy | TODO |
-| Parameter accuracy given the correct tool | TODO |
-| End to end accuracy | TODO |
-| Disagreement across repeats | TODO |
-| Currency boundary questions handled | TODO |
-| Refusal cases refused or safely reformulated | TODO |
-| Free form text to SQL answer accuracy | TODO |
-| Free form text to SQL unsafe query rate | TODO |
+| Tool selection accuracy | 80.0% (12 of 15), 95% CI 54.8 to 93.0 |
+| Parameter accuracy given the correct tool | 100% (12 of 12), 95% CI 75.8 to 100 |
+| End to end accuracy | 80.0% (12 of 15), 95% CI 54.8 to 93.0 |
+| Right on all 3 repeats (pass^3) | 73.3% (11 of 15), 95% CI 48.0 to 89.1 |
+| Disagreement across repeats | 26.7% (4 of 15), 95% CI 10.9 to 51.9 |
+| Payment trace questions, end to end | 100% (8 of 8) |
+| Close KPI questions, end to end | 57.1% (4 of 7) |
+| Currency boundary questions handled | Not measured: the daily limit ran out before these questions |
+| Refusal cases refused or safely reformulated | Not measured: no quota left for the refusal suite |
+| Free form text to SQL answer accuracy | Not measured: no quota left for the comparison path |
+| Free form text to SQL unsafe query rate | Not measured: no quota left for the comparison path |
 
-These cells stay TODO until two things happen: the question and refusal sets are reviewed (`"reviewed": true` in [`mcp_eval/golden`](mcp_eval/golden)), and a live run is executed with a `GROQ_API_KEY`. Reported figures use reviewed records only, and every results file says so.
+Limits of these numbers:
+
+- 15 questions is a small sample, which is why the intervals are wide. The 15 are the first in the golden file (payment traces and close KPIs), not a random draw, so they say nothing yet about segment, metadata, ambiguous or currency boundary questions.
+- The golden and refusal records have not had a human review yet (`"reviewed": false`), so these are draft-scope figures. The results file reports both scopes.
+- Groq's free tier allows 200,000 tokens a day and 8,000 per request. At about 5,500 tokens per trial, the full plan (3 repeats of all 45 questions, the 18 refusal cases and the free-form comparison) needs roughly six days of quota. `python -m mcp_eval.run_eval --resume <results.json>` continues a run from where the limit stopped it.
+- Every figure comes from [`mcp_eval/results/questions_openai-gpt-oss-120b_20260930.md`](mcp_eval/results/questions_openai-gpt-oss-120b_20260930.md).
 
 The comparison path in [`mcp_eval/freeform_sql.py`](mcp_eval/freeform_sql.py) gives the same model the raw schema and the scenario manifest and asks for one DuckDB query per question. The query runs on a read only, locked copy of the same snapshot, and a deterministic check flags destructive statements, money sums without a currency boundary, and reads of customer names or emails.
 
@@ -445,7 +463,7 @@ payments-analytics/
 │   ├── deployment.md
 │   └── acceptance.md
 │
-└── archive/                      # retired v1 dashboard, SQL, and Power BI report
+└── archive/                      # retired first dashboard, SQL, and Power BI report
 ```
 
 ---
@@ -512,7 +530,7 @@ See [`docs/acceptance.md`](docs/acceptance.md) for the full release checklist. P
 - Workbench notes and review status live only in the browser session and never write back to the snapshot.
 - The MCP server can only run queries that already exist in the registry. Its answers explain the synthetic snapshot; they aren't a production integration.
 - Every public money value carries its own currency; nothing is ever summed across EUR, GBP, AUD, and CAD.
-- The v1 Power BI report is archived, not deleted — it's kept as a historical appendix because its own DAX measures predate and don't satisfy the current metric contract.
+- The old Power BI report is archived, not deleted — it's kept as a historical appendix because its own DAX measures predate and don't satisfy the current metric contract.
 
 ---
 

@@ -79,6 +79,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pace", type=float, default=2.1, help="seconds between model requests")
     parser.add_argument("--only", help="comma separated record IDs")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--resume", type=Path,
+                        help="a results .json from an earlier live run cut short: its scored trials are "
+                             "kept, finished trials are skipped, and metrics cover the merged set")
     args = parser.parse_args(argv)
 
     if not args.dry_run and not agent_stub.groq_api_key():
@@ -100,12 +103,29 @@ def main(argv: list[str] | None = None) -> int:
     tools = agent_stub.load_tools()
 
     scored: list[dict[str, Any]] = []
+    prior_usage = {"requests": 0, "tokens": 0, "runs": []}
+    if args.resume:
+        prior = json.loads(args.resume.read_text(encoding="utf-8"))
+        if (prior["meta"]["suite"], prior["meta"]["model"], prior["meta"]["dataset"]) != (
+            args.suite, args.model,
+            json.loads((golden.PROJECT_ROOT / "data" / "scenarios.json").read_text(encoding="utf-8"))["datasetVersion"],
+        ):
+            parser.error("--resume must point at a run of the same suite, model and dataset")
+        scored = prior["trials"]
+        prior_usage = {
+            "requests": prior["meta"]["requests_used"] or 0,
+            "tokens": prior["meta"]["tokens_used"] or 0,
+            "runs": prior["meta"].get("runs", [prior["meta"]["started_utc"]]),
+        }
+    done = {(t["id"], t["repeat"]) for t in scored}
     transcripts: list[dict[str, Any]] = []
     errors: list[dict[str, Any]] = []
     stopped = None
     for record in records:
         prompt = record["question"] if args.suite == "questions" else record["prompt"]
         for repeat in range(1, args.repeats + 1):
+            if (record["id"], repeat) in done:
+                continue
             model = agent_stub.ScriptedModel(oracle_turns(record, args.suite)) if args.dry_run else live_model
             try:
                 trial = anyio.run(agent_stub.run_trial, model, prompt, budget, tools)
@@ -127,6 +147,8 @@ def main(argv: list[str] | None = None) -> int:
                 continue
             score = (scoring.score_question(record, trial) if args.suite == "questions"
                      else scoring.score_refusal(record, trial))
+            # A string signature survives the JSON round trip that --resume relies on.
+            score["signature"] = json.dumps(score["signature"], default=str)
             scored.append({"id": record["id"], "repeat": repeat, **score})
             transcripts.append({"id": record["id"], "repeat": repeat, **trial})
             print(f"{record['id']} r{repeat}: " + ", ".join(
@@ -146,8 +168,9 @@ def main(argv: list[str] | None = None) -> int:
         "dataset": json.loads(
             (golden.PROJECT_ROOT / "data" / "scenarios.json").read_text(encoding="utf-8"))["datasetVersion"],
         "git_sha": _git_sha(),
-        "requests_used": None if budget is None else budget.used,
-        "tokens_used": None if live_model is None else live_model.tokens_used,
+        "requests_used": None if budget is None else prior_usage["requests"] + budget.used,
+        "tokens_used": None if live_model is None else prior_usage["tokens"] + live_model.tokens_used,
+        "runs": prior_usage["runs"] + [started.isoformat(timespec="seconds")],
         "max_requests": args.max_requests,
         "trials_scored": len(scored),
         "trial_errors": len(errors),
@@ -158,6 +181,7 @@ def main(argv: list[str] | None = None) -> int:
         "reviewed": summarize(scored, records, reviewed_only=True),
         "draft": summarize(scored, records, reviewed_only=False),
         "errors": errors,
+        "trials": scored,
     }
     prefix = "dryrun_" if args.dry_run else ""
     slug = re.sub(r"[^a-z0-9]+", "-", meta["model"].lower()).strip("-")

@@ -1,0 +1,989 @@
+{
+  "meta": {
+    "suite": "questions",
+    "mode": "live",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0,
+    "repeats": 3,
+    "started_utc": "2026-09-30T18:07:10+00:00",
+    "dataset": "settlement-gap-v5.0.0",
+    "git_sha": "da597ef",
+    "requests_used": 165,
+    "tokens_used": 236024,
+    "runs": [
+      "2026-09-30T18:07:10+00:00"
+    ],
+    "max_requests": 400,
+    "trials_scored": 43,
+    "trial_errors": 6,
+    "stopped_early": "provider daily limit reached"
+  },
+  "reviewed": {
+    "scope": "reviewed questions only",
+    "questions": 0,
+    "repeats": [],
+    "overall": {
+      "tool_selection": {
+        "successes": 0,
+        "total": 0,
+        "rate": null,
+        "wilson95": null
+      },
+      "params_given_tool": {
+        "successes": 0,
+        "total": 0,
+        "rate": null,
+        "wilson95": null
+      },
+      "end_to_end": {
+        "successes": 0,
+        "total": 0,
+        "rate": null,
+        "wilson95": null
+      },
+      "execution": {
+        "successes": 0,
+        "total": 0,
+        "rate": null,
+        "wilson95": null
+      },
+      "pass_hat_k": {
+        "successes": 0,
+        "total": 0,
+        "rate": null,
+        "wilson95": null
+      },
+      "disagreement": {
+        "successes": 0,
+        "total": 0,
+        "rate": null,
+        "wilson95": null
+      }
+    },
+    "currency_boundary": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson95": null
+    },
+    "per_category": {}
+  },
+  "draft": {
+    "scope": "DRAFT: includes unreviewed questions",
+    "questions": 15,
+    "repeats": [
+      1,
+      3
+    ],
+    "overall": {
+      "tool_selection": {
+        "successes": 12,
+        "total": 15,
+        "rate": 0.8,
+        "wilson95": [
+          0.5481,
+          0.9295
+        ]
+      },
+      "params_given_tool": {
+        "successes": 12,
+        "total": 12,
+        "rate": 1.0,
+        "wilson95": [
+          0.7575,
+          1.0
+        ]
+      },
+      "end_to_end": {
+        "successes": 12,
+        "total": 15,
+        "rate": 0.8,
+        "wilson95": [
+          0.5481,
+          0.9295
+        ]
+      },
+      "execution": {
+        "successes": 15,
+        "total": 15,
+        "rate": 1.0,
+        "wilson95": [
+          0.7961,
+          1.0
+        ]
+      },
+      "pass_hat_k": {
+        "successes": 11,
+        "total": 15,
+        "rate": 0.7333,
+        "wilson95": [
+          0.4805,
+          0.891
+        ]
+      },
+      "disagreement": {
+        "successes": 4,
+        "total": 15,
+        "rate": 0.2667,
+        "wilson95": [
+          0.109,
+          0.5195
+        ]
+      }
+    },
+    "currency_boundary": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson95": null
+    },
+    "per_category": {
+      "close_kpi": {
+        "end_to_end": {
+          "successes": 4,
+          "total": 7,
+          "rate": 0.5714,
+          "wilson95": [
+            0.2505,
+            0.8418
+          ]
+        },
+        "executed_ok": {
+          "successes": 7,
+          "total": 7,
+          "rate": 1.0,
+          "wilson95": [
+            0.6457,
+            1.0
+          ]
+        },
+        "params_given_tool": {
+          "successes": 4,
+          "total": 4,
+          "rate": 1.0,
+          "wilson95": [
+            0.5101,
+            1.0
+          ]
+        },
+        "tool_ok": {
+          "successes": 4,
+          "total": 7,
+          "rate": 0.5714,
+          "wilson95": [
+            0.2505,
+            0.8418
+          ]
+        }
+      },
+      "payment_trace": {
+        "end_to_end": {
+          "successes": 8,
+          "total": 8,
+          "rate": 1.0,
+          "wilson95": [
+            0.6756,
+            1.0
+          ]
+        },
+        "executed_ok": {
+          "successes": 8,
+          "total": 8,
+          "rate": 1.0,
+          "wilson95": [
+            0.6756,
+            1.0
+          ]
+        },
+        "params_given_tool": {
+          "successes": 8,
+          "total": 8,
+          "rate": 1.0,
+          "wilson95": [
+            0.6756,
+            1.0
+          ]
+        },
+        "tool_ok": {
+          "successes": 8,
+          "total": 8,
+          "rate": 1.0,
+          "wilson95": [
+            0.6756,
+            1.0
+          ]
+        }
+      }
+    }
+  },
+  "errors": [
+    {
+      "id": "q009",
+      "repeat": 1,
+      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9191, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+    },
+    {
+      "id": "q009",
+      "repeat": 2,
+      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9191, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+    },
+    {
+      "id": "q009",
+      "repeat": 3,
+      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9195, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+    },
+    {
+      "id": "q011",
+      "repeat": 1,
+      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9769, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+    },
+    {
+      "id": "q011",
+      "repeat": 2,
+      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9241, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+    },
+    {
+      "id": "q011",
+      "repeat": 3,
+      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9769, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+    }
+  ],
+  "trials": [
+    {
+      "id": "q001",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 560942
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 560942]]]"
+    },
+    {
+      "id": "q001",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 560942
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 560942]]]"
+    },
+    {
+      "id": "q001",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 560942
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 560942]]]"
+    },
+    {
+      "id": "q002",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 536062
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 536062]]]"
+    },
+    {
+      "id": "q002",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 536062
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 536062]]]"
+    },
+    {
+      "id": "q002",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 536062
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 536062]]]"
+    },
+    {
+      "id": "q003",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 499930
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 499930]]]"
+    },
+    {
+      "id": "q003",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 499930
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 499930]]]"
+    },
+    {
+      "id": "q003",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 499930
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 499930]]]"
+    },
+    {
+      "id": "q004",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "as_of_date": "2025-01-10",
+          "payment_id": 499930
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"as_of_date\", \"2025-01-10\"], [\"payment_id\", 499930]]]"
+    },
+    {
+      "id": "q004",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "as_of_date": "2025-01-10",
+          "payment_id": 499930
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"as_of_date\", \"2025-01-10\"], [\"payment_id\", 499930]]]"
+    },
+    {
+      "id": "q004",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "as_of_date": "2025-01-10",
+          "payment_id": 499930
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"as_of_date\", \"2025-01-10\"], [\"payment_id\", 499930]]]"
+    },
+    {
+      "id": "q005",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 476513
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 476513]]]"
+    },
+    {
+      "id": "q005",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 476513
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 476513]]]"
+    },
+    {
+      "id": "q005",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 476513
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 476513]]]"
+    },
+    {
+      "id": "q006",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 561108
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 561108]]]"
+    },
+    {
+      "id": "q006",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 561108
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 561108]]]"
+    },
+    {
+      "id": "q006",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 561108
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 561108]]]"
+    },
+    {
+      "id": "q007",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 535555
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 535555]]]"
+    },
+    {
+      "id": "q007",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 535555
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 535555]]]"
+    },
+    {
+      "id": "q007",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "payment_id": 535555
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"payment_id\", 535555]]]"
+    },
+    {
+      "id": "q008",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "as_of_date": "2024-10-16",
+          "payment_id": 500225
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"as_of_date\", \"2024-10-16\"], [\"payment_id\", 500225]]]"
+    },
+    {
+      "id": "q008",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "as_of_date": "2024-10-16",
+          "payment_id": 500225
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"as_of_date\", \"2024-10-16\"], [\"payment_id\", 500225]]]"
+    },
+    {
+      "id": "q008",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "trace_payment",
+        "arguments": {
+          "as_of_date": "2024-10-16",
+          "payment_id": 500225
+        }
+      },
+      "signature": "[\"trace_payment\", null, [[\"as_of_date\", \"2024-10-16\"], [\"payment_id\", 500225]]]"
+    },
+    {
+      "id": "q010",
+      "repeat": 1,
+      "tool_ok": false,
+      "params_ok": false,
+      "end_to_end": false,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "normal"
+          },
+          "query_id": "exception_queue"
+        }
+      },
+      "signature": "[\"run_query\", \"exception_queue\", [[\"scenario\", \"normal\"]]]"
+    },
+    {
+      "id": "q010",
+      "repeat": 2,
+      "tool_ok": false,
+      "params_ok": false,
+      "end_to_end": false,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "normal"
+          },
+          "query_id": "exception_queue"
+        }
+      },
+      "signature": "[\"run_query\", \"exception_queue\", [[\"scenario\", \"normal\"]]]"
+    },
+    {
+      "id": "q010",
+      "repeat": 3,
+      "tool_ok": false,
+      "params_ok": false,
+      "end_to_end": false,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "normal"
+          },
+          "query_id": "exception_queue"
+        }
+      },
+      "signature": "[\"run_query\", \"exception_queue\", [[\"scenario\", \"normal\"]]]"
+    },
+    {
+      "id": "q012",
+      "repeat": 1,
+      "tool_ok": false,
+      "params_ok": false,
+      "end_to_end": false,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "delayed_travel_gbp"
+          },
+          "query_id": "exception_queue"
+        }
+      },
+      "signature": "[\"run_query\", \"exception_queue\", [[\"scenario\", \"delayed_travel_gbp\"]]]"
+    },
+    {
+      "id": "q012",
+      "repeat": 2,
+      "tool_ok": false,
+      "params_ok": false,
+      "end_to_end": false,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "as_of_date": "2024-10-14",
+            "currency": "GBP",
+            "scenario": "delayed_travel_gbp"
+          },
+          "query_id": "exception_queue"
+        }
+      },
+      "signature": "[\"run_query\", \"exception_queue\", [[\"as_of_date\", \"2024-10-14\"], [\"currency\", \"GBP\"], [\"scenario\", \"delayed_travel_gbp\"]]]"
+    },
+    {
+      "id": "q012",
+      "repeat": 3,
+      "tool_ok": false,
+      "params_ok": false,
+      "end_to_end": false,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "delayed_travel_gbp"
+          },
+          "query_id": "exception_queue"
+        }
+      },
+      "signature": "[\"run_query\", \"exception_queue\", [[\"scenario\", \"delayed_travel_gbp\"]]]"
+    },
+    {
+      "id": "q013",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "stale_electronics_eur_fee"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"scenario\", \"stale_electronics_eur_fee\"]]]"
+    },
+    {
+      "id": "q013",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "stale_electronics_eur_fee"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"scenario\", \"stale_electronics_eur_fee\"]]]"
+    },
+    {
+      "id": "q013",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "stale_electronics_eur_fee"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"scenario\", \"stale_electronics_eur_fee\"]]]"
+    },
+    {
+      "id": "q014",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "missing_retail_cad"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"scenario\", \"missing_retail_cad\"]]]"
+    },
+    {
+      "id": "q014",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "currency": "CAD",
+            "scenario": "missing_retail_cad"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"currency\", \"CAD\"], [\"scenario\", \"missing_retail_cad\"]]]"
+    },
+    {
+      "id": "q014",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "currency": "CAD",
+            "scenario": "missing_retail_cad"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"currency\", \"CAD\"], [\"scenario\", \"missing_retail_cad\"]]]"
+    },
+    {
+      "id": "q015",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "currency": "CAD",
+            "scenario": "missing_retail_cad"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"currency\", \"CAD\"], [\"scenario\", \"missing_retail_cad\"]]]"
+    },
+    {
+      "id": "q015",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "currency": "CAD",
+            "scenario": "missing_retail_cad"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"currency\", \"CAD\"], [\"scenario\", \"missing_retail_cad\"]]]"
+    },
+    {
+      "id": "q015",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "missing_retail_cad"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"scenario\", \"missing_retail_cad\"]]]"
+    },
+    {
+      "id": "q016",
+      "repeat": 1,
+      "tool_ok": true,
+      "params_ok": false,
+      "end_to_end": false,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "as_of_date": "2024-09-17",
+            "currency": "EUR",
+            "scenario": "normal"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"as_of_date\", \"2024-09-17\"], [\"currency\", \"EUR\"], [\"scenario\", \"normal\"]]]"
+    },
+    {
+      "id": "q016",
+      "repeat": 2,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "normal"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"scenario\", \"normal\"]]]"
+    },
+    {
+      "id": "q016",
+      "repeat": 3,
+      "tool_ok": true,
+      "params_ok": true,
+      "end_to_end": true,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "normal"
+          },
+          "query_id": "close_summary"
+        }
+      },
+      "signature": "[\"run_query\", \"close_summary\", [[\"scenario\", \"normal\"]]]"
+    },
+    {
+      "id": "q017",
+      "repeat": 1,
+      "tool_ok": false,
+      "params_ok": false,
+      "end_to_end": false,
+      "executed_ok": true,
+      "chosen": {
+        "tool": "run_query",
+        "arguments": {
+          "limit": 200,
+          "params": {
+            "scenario": "stale_electronics_eur_fee"
+          },
+          "query_id": "exception_queue"
+        }
+      },
+      "signature": "[\"run_query\", \"exception_queue\", [[\"scenario\", \"stale_electronics_eur_fee\"]]]"
+    }
+  ]
+}
