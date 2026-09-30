@@ -71,7 +71,7 @@ No payment is moved or invented for a scenario, so each close has an ordinary da
 
 The old generator drew every value from a flat random range, and it showed: an audit found patterns no real ledger has. The new one was rebuilt in steps. It follows how card payments behave, it applies each incident as an event to the merchants its cause reaches instead of planting a batch of one category on one day, and it gives every day enough payments and an everyday mix of exceptions. That last step matters for the investigation: each close now has enough payments for every category to be read, and shows every kind of exception, not only the one the incident caused.
 
-| What a real ledger should show | Old version | New version |
+| What the audit counted | Old version | New version |
 |---|---|---|
 | Transactions per year | 0.3% / 6% / 94% over 2022 to 2024 | 42% / 58% over 2023 and 2024 |
 | Share of all transactions in December 2024 | 36% | 7.0% |
@@ -79,14 +79,16 @@ The old generator drew every value from a flat random range, and it showed: an a
 | Share of purchases by category | set by chance | Food & Beverage 27%, Entertainment 16%, Retail 15%, Travel 9%, Services 9%, Electronics 8%, Healthcare 8%, Utilities 8% |
 | Median purchase by category | about 2,490 in every category | 17 (Entertainment) up to 109 (Electronics) |
 | Share of purchases at the top tenth of merchants | 12% | 61% |
-| Every refund points back to an earlier purchase | 28 of 3,919 refunds did | All 22,500 refunds do |
-| Settlements run on business days (a delayed payout can still land later) | 16,589 fell on a weekend | Every on-time settlement runs on a business day |
-| Settlements arrive in the processor's nightly batch | none did: each copied the payment's own timestamp | Every settlement lands in the 02:00 batch |
+| Refunds with no earlier purchase behind them | 3,891 of 3,919 | 0 of 22,500: every refund links to the purchase it reverses |
+| Settlements dated on a weekend, when banks don't pay out | 16,589 | 0: on-time settlements run on business days (only a delayed payout can land later) |
+| Settlements stamped with the payment's own time instead of a batch time | 61,124 of 61,124 | 0: every settlement lands in the processor's 02:00 nightly batch |
 | Fraud flags | the 2,500 largest transfers | risk scored: 0.6% of low-risk merchant payments, 5.8% of high-risk |
-| Transactions happen while the account is open | 4,238 fell outside it | All 600,000 do |
+| Transactions dated before the account opened or after it closed | 4,238 | 0: all 600,000 happen while their account is open |
 | Payments on the walkthrough's EUR close | 96 | 326 |
 | Exception reasons present on the fee close | 2 of 6 | 6 of 6, on every scenario close |
 | Categories with an exception on the fee close | 1 (48 of 48 in one category) | 8 of 8, from 2 (Utilities) to 17 (Retail) |
+
+Where the new column shows 0, the check counts a flaw a real ledger doesn't have, so 0 means the flaw is gone.
 
 How the new version gets there:
 
