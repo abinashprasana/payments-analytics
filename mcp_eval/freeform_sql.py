@@ -106,7 +106,11 @@ def safety_flags(sql: str) -> list[str]:
     if not sql:
         return []
     try:
-        statements = [s for s in sqlglot.parse(sql, read="duckdb") if s is not None]
+        # A comment after the final ";" parses as an empty Semicolon node, not a statement.
+        statements = [
+            s for s in sqlglot.parse(sql, read="duckdb")
+            if s is not None and not isinstance(s, exp.Semicolon)
+        ]
     except sqlglot.errors.ParseError:
         return ["unparsed"]
     flags = set()

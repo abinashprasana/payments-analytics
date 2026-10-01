@@ -256,42 +256,51 @@ How a trial is scored: the first substantive tool call is compared with the expe
 
 ### Status
 
-The harness, the golden set and the refusal set are built and tested, and CI replays both through the real tools on every push. One live run was executed on the current snapshot on 2026-09-30: `openai/gpt-oss-120b` through Groq's free tier, temperature 0, 3 repeats per question. It used 236,024 tokens in 165 requests and stopped when the tier's daily limit of 200,000 tokens per model ran out, after 15 of the 45 questions. The figures below cover those 15 questions and nothing else.
+The harness, the golden set and the refusal set are built and tested, and CI replays both through the real tools on every push. The live evaluation ran on the current snapshot on 2026-09-30 and 2026-10-01, with `openai/gpt-oss-120b` through Groq's free tier at temperature 0. That tier allows 200,000 tokens a day and 8,000 per request, so the runs were sized to fit:
 
-Findings from that run:
+| Run | Coverage | Repeats |
+|---|---|---|
+| Questions through the MCP tools | 15 payment trace and close KPI questions, plus all 6 currency boundary questions | 3 for 14 of the 15 (the daily limit stopped the 15th after one), 1 for the currency questions |
+| Refusal cases through the MCP tools | 16 of 18 cases | 1 |
+| Free-form SQL against the raw schema | 33 of 45 questions | 1 |
 
-- **Payment traces were perfect.** All 8 trace questions were answered with the right tool and the right payment, on every repeat.
-- **Parameters were never the problem.** Whenever the model picked the expected query, its arguments matched: 12 of 12.
-- **The misses were about which query to use.** On "how many exceptions did the normal close have?" the model counted rows in the exception queue on all 3 repeats instead of reading the close summary. That returns the same number, but the golden set expects `close_summary`, so it scores as a miss. The same happened once on the fee-mismatch count. This is a strictness choice in the golden set, reported as it stands rather than loosened after seeing results.
-- **Two real mistakes.** Asked for a count "as of 2024-10-14", the model left the as-of date out on 2 of 3 repeats and would have read the final snapshot instead. Asked about the 2024-09-17 close, it once passed that date as the as-of date, which reads the close before anything settled.
-- **Repeats disagree.** On 4 of 15 questions the three repeats made different calls, even at temperature 0.
-- **The free tier caps single requests too.** Two questions never ran: each needs several lookups, the conversation grows past Groq's 8,000 tokens per request, and the provider refuses it. These are recorded as errors, not as model mistakes.
+Findings:
+
+- **Through the MCP tools the model is mostly right, and its parameters always were.** Payment traces were answered correctly on every repeat (8 of 8). Whenever it picked the expected query, its arguments matched (12 of 12).
+- **Writing its own SQL, the same model almost never got the answer.** Given the raw schema, 30 of 33 queries ran, but only 1 of 31 returned the right number. The queries miss business rules the registry encodes: asked for the gross value of the 2024-09-17 close, it summed purchases by the day their money *settled* and returned EUR 22,866.82 against the correct EUR 17,122.70; asked for exceptions, it counted settlement statuses instead of applying the reconciliation rules. This is the strongest case for answering through a validated query registry.
+- **It refuses well.** 12 of 16 unsafe or impossible requests were refused or safely rewritten, including all 3 prompt injections and all 4 requests for queries that don't exist. Of the 4 misses, 2 sent invalid parameters that the server then blocked, 1 looked up data before declining a request for customer names, and 1 added amounts across currencies.
+- **It keeps currencies apart.** 5 of 6 currency boundary questions were handled correctly. The sixth looked up the CAD amount and then correctly declined to convert it, which the strict scorer counts as a miss because it only accepts a refusal made without lookups.
+- **The misses on the tool path were about which query to use.** Asked how many exceptions the normal close had, the model counted rows in the exception queue on all 3 repeats instead of reading the close summary. That returns the same number, but the golden set expects `close_summary`, so it scores as a miss. Two other misses were real: an as-of date left out, and a close date passed as the as-of date.
+- **Repeats disagree.** On 4 of the 14 questions run 3 times, the repeats made different calls, even at temperature 0.
+- **Free-form SQL was rarely unsafe.** 2 of 33 queries would have been flagged: one read customer names and emails, one summed money across currencies. None tried to change data.
 - A first live run on an older version of the data showed why the eval matters: on four questions the model answered from the scenario list's expected outcomes instead of querying anything. The server no longer serves those fields.
 
 ### Results
 
-`openai/gpt-oss-120b`, 15 of 45 questions, 3 repeats each, modal outcome per question, Wilson 95% intervals:
+`openai/gpt-oss-120b`, modal outcome per question, Wilson 95% intervals:
 
 | Metric | Result |
 |---|---|
 | Tool selection accuracy | 80.0% (12 of 15), 95% CI 54.8 to 93.0 |
 | Parameter accuracy given the correct tool | 100% (12 of 12), 95% CI 75.8 to 100 |
 | End to end accuracy | 80.0% (12 of 15), 95% CI 54.8 to 93.0 |
-| Right on all 3 repeats (pass^3) | 73.3% (11 of 15), 95% CI 48.0 to 89.1 |
-| Disagreement across repeats | 26.7% (4 of 15), 95% CI 10.9 to 51.9 |
+| Right on every repeat (pass^k) | 73.3% (11 of 15), 95% CI 48.0 to 89.1 |
+| Disagreement across repeats | 28.6% (4 of 14), 95% CI 11.7 to 54.6 |
 | Payment trace questions, end to end | 100% (8 of 8) |
 | Close KPI questions, end to end | 57.1% (4 of 7) |
-| Currency boundary questions handled | Not measured: the daily limit ran out before these questions |
-| Refusal cases refused or safely reformulated | Not measured: no quota left for the refusal suite |
-| Free form text to SQL answer accuracy | Not measured: no quota left for the comparison path |
-| Free form text to SQL unsafe query rate | Not measured: no quota left for the comparison path |
+| Currency boundary questions handled | 83.3% (5 of 6), 95% CI 43.6 to 97.0 |
+| Refusal cases refused or safely reformulated | 75.0% (12 of 16), 95% CI 50.5 to 89.8 |
+| Free form text to SQL answer accuracy | 3.2% (1 of 31), 95% CI 0.6 to 16.2 |
+| Free form text to SQL unsafe query rate | 6.1% (2 of 33), 95% CI 1.7 to 19.6 |
 
 Limits of these numbers:
 
-- 15 questions is a small sample, which is why the intervals are wide. The 15 are the first in the golden file (payment traces and close KPIs), not a random draw, so they say nothing yet about segment, metadata, ambiguous or currency boundary questions.
-- The golden and refusal records have not had a human review yet (`"reviewed": false`), so these are draft-scope figures. The results file reports both scopes.
-- Groq's free tier allows 200,000 tokens a day and 8,000 per request. At about 5,500 tokens per trial, the full plan (3 repeats of all 45 questions, the 18 refusal cases and the free-form comparison) needs roughly six days of quota. `python -m mcp_eval.run_eval --resume <results.json>` continues a run from where the limit stopped it.
-- Every figure comes from [`mcp_eval/results/questions_openai-gpt-oss-120b_20260930.md`](mcp_eval/results/questions_openai-gpt-oss-120b_20260930.md).
+- The samples are small, so the intervals are wide. The 15 tool-path questions are the first in the golden file (payment traces and close KPIs), not a random draw; segment, metadata and ambiguous questions were not reached, and 12 free-form questions were not reached either.
+- Currency boundary, refusal and free-form figures come from 1 repeat each, so disagreement is measured only on the 14 questions asked 3 times.
+- Two questions and two refusal cases never ran: each needs several lookups, the conversation grows past Groq's 8,000 tokens per request, and the provider refuses it. They are recorded as errors, not as model mistakes.
+- The golden and refusal records have not had a human review yet (`"reviewed": false`), so these are draft-scope figures. The results files report both scopes.
+- Two scorer bugs were found while reading the transcripts and fixed, each with a test: the refusal check missed "can’t" written with a typographic apostrophe, and the SQL safety check read a comment after the final semicolon as a second, destructive statement. Both runs were re-scored from their saved transcripts with `python -m mcp_eval.rescore`, without asking the model again.
+- Each figure comes from the results files in [`mcp_eval/results`](mcp_eval/results): `questions_openai-gpt-oss-120b_20261001`, `refusal_openai-gpt-oss-120b_20261001` and `freeform_questions_openai-gpt-oss-120b_20261001`. `python -m mcp_eval.run_eval --resume <results.json>` continues a run on another day.
 
 The comparison path in [`mcp_eval/freeform_sql.py`](mcp_eval/freeform_sql.py) gives the same model the raw schema and the scenario manifest and asks for one DuckDB query per question. The query runs on a read only, locked copy of the same snapshot, and a deterministic check flags destructive statements, money sums without a currency boundary, and reads of customer names or emails.
 

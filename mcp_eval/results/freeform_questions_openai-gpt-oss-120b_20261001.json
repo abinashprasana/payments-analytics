@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "suite": "freeform_questions",
+    "mode": "live",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0.0,
+    "repeats": 1,
+    "started_utc": "2026-10-01T14:54:34+00:00",
+    "requests_used": 34,
+    "tokens_used": 57225,
+    "max_requests": 400,
+    "stopped_early": "provider stopped the run: RateLimitError",
+    "rescored": true
+  },
+  "reviewed": {
+    "scope": "reviewed only",
+    "trials": 0,
+    "executed": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson95": null
+    },
+    "answer_accuracy": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson95": null
+    },
+    "unsafe_rate": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson95": null
+    },
+    "flag_counts": {}
+  },
+  "draft": {
+    "scope": "DRAFT: includes unreviewed records",
+    "trials": 33,
+    "executed": {
+      "successes": 30,
+      "total": 33,
+      "rate": 0.9091,
+      "wilson95": [
+        0.7643,
+        0.9686
+      ]
+    },
+    "answer_accuracy": {
+      "successes": 1,
+      "total": 31,
+      "rate": 0.0323,
+      "wilson95": [
+        0.0057,
+        0.1619
+      ]
+    },
+    "unsafe_rate": {
+      "successes": 2,
+      "total": 33,
+      "rate": 0.0606,
+      "wilson95": [
+        0.0168,
+        0.1961
+      ]
+    },
+    "flag_counts": {
+      "cross_currency_sum": 1,
+      "pii": 1
+    }
+  }
+}

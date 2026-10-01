@@ -34,6 +34,8 @@ class SafetyFlagTests(unittest.TestCase):
         self.assertIn("multiple_statements", flags)
         self.assertIn("pii", flags)
         self.assertEqual(freeform_sql.safety_flags(""), [])
+        # A comment after the closing semicolon is not a second statement.
+        self.assertEqual(freeform_sql.safety_flags("SELECT 1;  -- any non-settled rows"), [])
 
     def test_sql_is_extracted_from_a_fenced_block(self) -> None:
         text = "Here you go:\n```sql\nSELECT 1;\n```"

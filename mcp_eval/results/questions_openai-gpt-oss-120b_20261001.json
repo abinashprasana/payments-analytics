@@ -5,19 +5,21 @@
     "provider": "groq",
     "model": "openai/gpt-oss-120b",
     "temperature": 0.0,
-    "repeats": 3,
-    "started_utc": "2026-09-30T18:07:10+00:00",
+    "repeats": 1,
+    "started_utc": "2026-10-01T14:50:06+00:00",
     "dataset": "settlement-gap-v5.0.0",
-    "git_sha": "da597ef",
-    "requests_used": 165,
-    "tokens_used": 236024,
+    "git_sha": "3f30df1",
+    "requests_used": 196,
+    "tokens_used": 282060,
     "runs": [
-      "2026-09-30T18:07:10+00:00"
+      "2026-09-30T18:07:10+00:00",
+      "2026-10-01T14:50:06+00:00"
     ],
     "max_requests": 400,
-    "trials_scored": 43,
-    "trial_errors": 6,
-    "stopped_early": "provider daily limit reached"
+    "trials_scored": 49,
+    "trial_errors": 0,
+    "stopped_early": null,
+    "rescored": true
   },
   "reviewed": {
     "scope": "reviewed questions only",
@@ -71,7 +73,7 @@
   },
   "draft": {
     "scope": "DRAFT: includes unreviewed questions",
-    "questions": 15,
+    "questions": 21,
     "repeats": [
       1,
       3
@@ -124,19 +126,22 @@
       },
       "disagreement": {
         "successes": 4,
-        "total": 15,
-        "rate": 0.2667,
+        "total": 14,
+        "rate": 0.2857,
         "wilson95": [
-          0.109,
-          0.5195
+          0.1172,
+          0.5465
         ]
       }
     },
     "currency_boundary": {
-      "successes": 0,
-      "total": 0,
-      "rate": null,
-      "wilson95": null
+      "successes": 5,
+      "total": 6,
+      "rate": 0.8333,
+      "wilson95": [
+        0.4365,
+        0.9699
+      ]
     },
     "per_category": {
       "close_kpi": {
@@ -174,6 +179,17 @@
           "wilson95": [
             0.2505,
             0.8418
+          ]
+        }
+      },
+      "currency_boundary": {
+        "behavior_ok": {
+          "successes": 5,
+          "total": 6,
+          "rate": 0.8333,
+          "wilson95": [
+            0.4365,
+            0.9699
           ]
         }
       },
@@ -217,38 +233,7 @@
       }
     }
   },
-  "errors": [
-    {
-      "id": "q009",
-      "repeat": 1,
-      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9191, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
-    },
-    {
-      "id": "q009",
-      "repeat": 2,
-      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9191, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
-    },
-    {
-      "id": "q009",
-      "repeat": 3,
-      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9195, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
-    },
-    {
-      "id": "q011",
-      "repeat": 1,
-      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9769, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
-    },
-    {
-      "id": "q011",
-      "repeat": 2,
-      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9241, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
-    },
-    {
-      "id": "q011",
-      "repeat": 3,
-      "error": "APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyjgszsxe0xtkrff6f4djcav` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 9769, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
-    }
-  ],
+  "errors": [],
   "trials": [
     {
       "id": "q001",
@@ -984,6 +969,48 @@
         }
       },
       "signature": "[\"run_query\", \"exception_queue\", [[\"scenario\", \"stale_electronics_eur_fee\"]]]"
+    },
+    {
+      "id": "q040",
+      "repeat": 1,
+      "behavior": "split_by_currency",
+      "behavior_ok": true,
+      "signature": "[[\"list_queries\", null, []], [\"run_query\", \"close_summary\", [[\"currency\", \"CAD\"], [\"scenario\", \"missing_retail_cad\"]]], [\"run_query\", \"close_summary\", [[\"currency\", \"EUR\"], [\"scenario\", \"normal\"]]], [\"run_query\", \"scenario_options\", []]]"
+    },
+    {
+      "id": "q041",
+      "repeat": 1,
+      "behavior": "split_by_currency",
+      "behavior_ok": true,
+      "signature": "[[\"list_queries\", null, []], [\"run_query\", \"close_summary\", [[\"scenario\", \"delayed_travel_gbp\"]]], [\"run_query\", \"close_summary\", [[\"scenario\", \"missing_retail_cad\"]]], [\"run_query\", \"scenario_options\", []]]"
+    },
+    {
+      "id": "q042",
+      "repeat": 1,
+      "behavior": "split_by_currency",
+      "behavior_ok": true,
+      "signature": "[[\"list_queries\", null, []], [\"run_query\", \"close_summary\", [[\"scenario\", \"delayed_travel_gbp\"]]], [\"run_query\", \"close_summary\", [[\"scenario\", \"missing_retail_cad\"]]], [\"run_query\", \"close_summary\", [[\"scenario\", \"normal\"]]], [\"run_query\", \"close_summary\", [[\"scenario\", \"stale_electronics_eur_fee\"]]], [\"run_query\", \"scenario_options\", []]]"
+    },
+    {
+      "id": "q043",
+      "repeat": 1,
+      "behavior": "other",
+      "behavior_ok": false,
+      "signature": "[[\"list_queries\", null, []], [\"run_query\", \"catalog_metrics\", []], [\"run_query\", \"close_summary\", [[\"currency\", \"CAD\"], [\"scenario\", \"missing_retail_cad\"]]], [\"run_query\", \"scenario_options\", []]]"
+    },
+    {
+      "id": "q044",
+      "repeat": 1,
+      "behavior": "split_by_currency",
+      "behavior_ok": true,
+      "signature": "[[\"list_queries\", null, []], [\"run_query\", \"close_summary\", [[\"currency\", \"CAD\"], [\"scenario\", \"missing_retail_cad\"]]], [\"run_query\", \"close_summary\", [[\"currency\", \"GBP\"], [\"scenario\", \"delayed_travel_gbp\"]]], [\"run_query\", \"scenario_options\", []]]"
+    },
+    {
+      "id": "q045",
+      "repeat": 1,
+      "behavior": "same_currency_sum_allowed",
+      "behavior_ok": true,
+      "signature": "[[\"list_queries\", null, []], [\"run_query\", \"close_summary\", [[\"scenario\", \"normal\"]]], [\"run_query\", \"close_summary\", [[\"scenario\", \"stale_electronics_eur_fee\"]]], [\"run_query\", \"scenario_options\", []]]"
     }
   ]
 }

@@ -90,6 +90,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     records = golden.load() if args.suite == "questions" else refusals.load(refusals.REFUSALS_PATH)
+    all_records = records  # metrics need every record a resumed run may already hold
     if args.only:
         wanted = set(args.only.split(","))
         records = [r for r in records if r["id"] in wanted]
@@ -178,8 +179,8 @@ def main(argv: list[str] | None = None) -> int:
     }
     output = {
         "meta": meta,
-        "reviewed": summarize(scored, records, reviewed_only=True),
-        "draft": summarize(scored, records, reviewed_only=False),
+        "reviewed": summarize(scored, all_records, reviewed_only=True),
+        "draft": summarize(scored, all_records, reviewed_only=False),
         "errors": errors,
         "trials": scored,
     }

@@ -116,7 +116,8 @@ def mentions_amount(text: str, minor_units: int) -> bool:
 
 
 def declines(text: str) -> bool:
-    return bool(DECLINE.search(text or ""))
+    # Models often write typographic apostrophes ("can’t"); match them like "can't".
+    return bool(DECLINE.search((text or "").replace("’", "'").replace("‘", "'")))
 
 
 def _matches_any(call: Mapping[str, Any], wanted: list[Mapping[str, Any]], *, subset: bool) -> bool:

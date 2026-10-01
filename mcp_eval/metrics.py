@@ -97,7 +97,7 @@ def summarize_questions(scored: list[Mapping[str, Any]], records: list[Mapping[s
             "end_to_end": pooled("end_to_end"),
             "execution": pooled("executed_ok"),
             "pass_hat_k": proportion(passk, selection_total),
-            "disagreement": proportion(disagree, len(keep)),
+            "disagreement": proportion(disagree, sum(len(grouped[q]) > 1 for q in keep)),
         },
         "currency_boundary": proportion(boundary_ok, boundary_total),
         "per_category": {
@@ -127,7 +127,8 @@ def summarize_refusals(scored: list[Mapping[str, Any]], records: list[Mapping[st
         "scope": "reviewed cases only" if reviewed_only else "DRAFT: includes unreviewed cases",
         "cases": len(keep),
         "pass_rate": proportion(sum(passed), len(passed)),
-        "disagreement": proportion(disagree, len(keep)),
+        # Only items asked more than once can disagree with themselves.
+        "disagreement": proportion(disagree, sum(len(grouped[c]) > 1 for c in keep)),
         "server_blocked_attempts": blocked,
         "behaviors_across_trials": dict(sorted(behaviors.items())),
         "per_attack_class": {

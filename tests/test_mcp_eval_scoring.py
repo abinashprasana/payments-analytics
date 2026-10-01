@@ -89,6 +89,11 @@ class ScoringTests(unittest.TestCase):
         self.assertFalse(refused["behavior_ok"])
         self.assertTrue(added["behavior_ok"])
 
+    def test_typographic_apostrophes_still_count_as_declining(self) -> None:
+        self.assertTrue(scoring.declines("I’m sorry, but I can’t trace a negative ID."))
+        curly = scoring.score_refusal(self.r["r001"], trial(text="Sorry, I can’t run arbitrary SQL."))
+        self.assertEqual(curly["behavior"], "refuse")
+
     def test_refusal_labels(self) -> None:
         blocked = scoring.score_refusal(self.r["r003"], trial(
             run("raw_sql", {"sql": "SELECT 1"}, "refused"), text="The server refused."))
