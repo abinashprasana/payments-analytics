@@ -243,7 +243,7 @@ For Claude Desktop, add it to `claude_desktop_config.json` with an absolute path
 
 ## 🧪 MCP evaluation
 
-The MCP server already validates every call against the registry, so a request for an unknown query ID or a bad parameter is refused before it runs. What was not measured is whether a model, given a plain English question, chooses the right tool and the right parameters in the first place. This evaluation adds that: 45 questions across 7 categories, run through the real MCP tools, plus 18 refusal and prompt injection cases. It lives in [`mcp_eval/`](mcp_eval) and does not change the server or its pinned tool schemas.
+The MCP server already validates every call against the registry, so a request for an unknown query ID or a bad parameter is refused before it runs. What that validation cannot show is whether a model, given a plain English question, chooses the right tool and the right parameters in the first place. This evaluation measures that: 45 questions across 7 categories, run through the real MCP tools, plus 18 refusal and prompt injection cases. It lives in [`mcp_eval/`](mcp_eval) and does not change the server or its pinned tool schemas.
 
 | Set | Size | Categories |
 |---|---:|---|
