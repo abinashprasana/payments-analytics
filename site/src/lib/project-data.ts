@@ -164,6 +164,14 @@ export interface AskEvidence {
   tools: { name: string; purpose: string }[];
 }
 
+/** Headline of the live MCP evaluation: the same golden questions answered
+ *  through the registry tools and as free-form SQL against the raw tables. */
+export interface EvaluationSummary {
+  model: string;
+  toolPath: { correct: number; total: number };
+  ownSql: { correct: number; total: number };
+}
+
 export interface CaseStudyDataV2 {
   schemaVersion: 2;
   dataset: DatasetMetadata;
@@ -192,6 +200,7 @@ export interface CaseStudyDataV2 {
   primaryLabelPrecedence: string[];
   trace: TraceEvidence;
   ask: AskEvidence;
+  evaluation: EvaluationSummary | null;
   recommendation: {
     finding: string;
     action: string;

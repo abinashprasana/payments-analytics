@@ -548,6 +548,17 @@
       }
     ]
   },
+  "evaluation": {
+    "model": "openai/gpt-oss-120b",
+    "toolPath": {
+      "correct": 12,
+      "total": 15
+    },
+    "ownSql": {
+      "correct": 1,
+      "total": 31
+    }
+  },
   "recommendation": {
     "finding": "47 EUR payments on the 2024-11-12 close carry fee-mismatch exceptions, across 8 categories. Most belong to merchants repriced on 1 Oct whose new rate never reached the processor's fee table, and the rest are everyday cross-border fee pass-throughs. Amounts and currency still agree.",
     "action": "Update the processor's fee table, recompute the fee on every repriced merchant's payments since the repricing, and export the filtered evidence for operations.",

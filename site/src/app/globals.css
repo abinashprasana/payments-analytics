@@ -1342,6 +1342,9 @@ tbody th { font-weight: 600; }
 .mcp-tools td { color: var(--ink-soft); }
 
 .mcp-scope { color: var(--muted); font-size: var(--fs-75); }
+.mcp-eval { color: var(--ink-soft); font-size: var(--fs-100); line-height: 1.55; }
+.mcp-eval strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+.mcp-eval a { white-space: nowrap; }
 
 .mcp-flow { margin: clamp(var(--sp-7), 6vw, var(--sp-9)) 0 0; }
 

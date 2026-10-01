@@ -155,7 +155,7 @@ Six chapters, each answering the question the last one raised:
 | **Data** | The source model, and the four scripted closes on one date axis |
 | **Investigation** | Three queries (coverage, then category, then exception reason), each with its chart pinned beside the explanation, ending in one payment traced end to end |
 | **Proof** | The finding, the action and its owner, the model chain, 12 of 12 quality checks, and how to reproduce it |
-| **Use it** | A deep link into the workbench and the MCP endpoint, with one real `trace_payment` call replayed |
+| **Use it** | A deep link into the workbench and the MCP endpoint, one real `trace_payment` call replayed, and the live evaluation's headline: tools against a model writing its own SQL |
 
 SQL, full result tables and check lists sit behind "Show" toggles, so the page reads as findings first. Every number comes from a payload generated from the SQL marts; nothing on the page is typed by hand. Motion is CSS only, with no animation library, and switches off for visitors who ask for reduced motion. Lighthouse on mobile scores 95 for performance and 100 for accessibility.
 

@@ -49,6 +49,7 @@ class CaseStudyArtifactTests(unittest.TestCase):
                 "primaryLabelPrecedence",
                 "trace",
                 "ask",
+                "evaluation",
                 "recommendation",
                 "validation",
                 "models",
@@ -96,6 +97,21 @@ class CaseStudyArtifactTests(unittest.TestCase):
                 for item in self.payload["scenarios"]
                 if item["id"] == "delayed_travel_gbp"
             ),
+        )
+
+    def test_evaluation_headline_matches_the_committed_results(self) -> None:
+        results = PROJECT_ROOT / "mcp_eval" / "results"
+        tool = json.loads(sorted(results.glob("questions_*.json"))[-1].read_text(encoding="utf-8"))
+        sql = json.loads(sorted(results.glob("freeform_questions_*.json"))[-1].read_text(encoding="utf-8"))
+        headline = self.payload["evaluation"]
+        self.assertEqual(headline["model"], tool["meta"]["model"])
+        self.assertEqual(
+            (headline["toolPath"]["correct"], headline["toolPath"]["total"]),
+            (tool["draft"]["overall"]["end_to_end"]["successes"], tool["draft"]["overall"]["end_to_end"]["total"]),
+        )
+        self.assertEqual(
+            (headline["ownSql"]["correct"], headline["ownSql"]["total"]),
+            (sql["draft"]["answer_accuracy"]["successes"], sql["draft"]["answer_accuracy"]["total"]),
         )
 
     def test_daily_close_is_one_close_observed_across_real_as_of_states(self) -> None:

@@ -338,6 +338,28 @@ def _ask_payload(record: dict[str, Any], scenario_id: str) -> dict[str, Any]:
     }
 
 
+def _evaluation_payload() -> dict[str, Any] | None:
+    """Headline of the latest live MCP evaluation, read from its committed results.
+
+    The tool path and the free-form SQL path answer the same golden questions,
+    so the two accuracies are directly comparable. Dry runs are never results.
+    """
+    results = PROJECT_ROOT / "mcp_eval" / "results"
+    questions = sorted(results.glob("questions_*.json"))
+    freeform = sorted(results.glob("freeform_questions_*.json"))
+    if not questions or not freeform:
+        return None
+    tool = json.loads(questions[-1].read_text(encoding="utf-8"))
+    sql = json.loads(freeform[-1].read_text(encoding="utf-8"))
+    tool_path = tool["draft"]["overall"]["end_to_end"]
+    sql_path = sql["draft"]["answer_accuracy"]
+    return {
+        "model": tool["meta"]["model"],
+        "toolPath": {"correct": tool_path["successes"], "total": tool_path["total"]},
+        "ownSql": {"correct": sql_path["successes"], "total": sql_path["total"]},
+    }
+
+
 def _trace_payload(record: dict[str, Any], scenario_id: str) -> dict[str, Any]:
     currency = str(record["transaction_currency"])
     flags = [
@@ -646,6 +668,7 @@ def build_payload(*, build_sha: str = "development") -> dict[str, Any]:
             "primaryLabelPrecedence": list(PRIMARY_PRECEDENCE),
             "trace": _trace_payload(trace.iloc[0].to_dict(), SELECTED_SCENARIO_ID),
             "ask": _ask_payload(trace.iloc[0].to_dict(), SELECTED_SCENARIO_ID),
+            "evaluation": _evaluation_payload(),
             "recommendation": {
                 "finding": (
                     f"{exception_count} {selected['defaultCurrency']} payments on the "

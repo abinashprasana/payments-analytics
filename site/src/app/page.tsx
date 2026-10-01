@@ -475,6 +475,15 @@ export default function Home() {
                     </tbody>
                   </table>
                 </details>
+                {projectData.evaluation ? (
+                  <p className="mcp-eval">
+                    Tested live with <code>{projectData.evaluation.model}</code>: through these tools it answered{" "}
+                    <strong>{projectData.evaluation.toolPath.correct} of {projectData.evaluation.toolPath.total}</strong> questions
+                    correctly. Writing its own SQL against the raw tables, it got{" "}
+                    <strong>{projectData.evaluation.ownSql.correct} of {projectData.evaluation.ownSql.total}</strong>.{" "}
+                    <a href={`${publicConfig.repositoryUrl}#-mcp-evaluation`} target="_blank" rel="noreferrer">How it was measured <span aria-hidden="true">↗</span></a>
+                  </p>
+                ) : null}
                 <p className="mcp-scope">The free server sleeps when idle, so the first call can take 30 to 60 seconds.</p>
               </div>
             </div>
