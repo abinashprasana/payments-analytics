@@ -9,6 +9,7 @@ test.describe("public free-tier deployment", () => {
     page,
     request,
   }, testInfo) => {
+    test.setTimeout(300_000);
     test.skip(testInfo.project.name !== "desktop-1440", "One deployment probe is sufficient.");
     test.skip(
       !publicCaseStudyURL || !publicWorkbenchURL,
@@ -56,12 +57,15 @@ test.describe("public free-tier deployment", () => {
       waitUntil: "domcontentloaded",
       timeout: 120_000,
     });
-    const ready = page.getByRole("heading", {
+    const appFrame = page.frameLocator('iframe[title="streamlitApp"]');
+    const ready = appFrame.getByRole("heading", {
       name: "Find the close that did not close.",
       level: 1,
     });
     const sleeping = page.getByText(/app.*(?:sleep|hibernate)|wake.*app/i).first();
-    await expect(ready.or(sleeping)).toBeVisible({ timeout: 120_000 });
+    await expect(page.locator('iframe[title="streamlitApp"]').or(sleeping)).toBeVisible({
+      timeout: 120_000,
+    });
 
     if (await sleeping.isVisible().catch(() => false)) {
       const wakeButton = page.getByRole("button", {
@@ -70,15 +74,15 @@ test.describe("public free-tier deployment", () => {
       if (await wakeButton.isVisible().catch(() => false)) {
         await wakeButton.click();
       }
-      await expect(ready).toBeVisible({ timeout: 180_000 });
     }
 
-    await expect(page.getByText("Metric and model catalog", { exact: true }).first()).toBeVisible({
+    await expect(ready).toBeVisible({ timeout: 180_000 });
+    await expect(appFrame.getByText("Metric and model catalog", { exact: true }).first()).toBeVisible({
       timeout: 120_000,
     });
     if (expectedBuildSHA) {
       await expect(
-        page.getByText("Build " + expectedBuildSHA.slice(0, 8), { exact: true }).first(),
+        appFrame.getByText("Build " + expectedBuildSHA.slice(0, 8), { exact: true }).first(),
       ).toBeVisible();
     }
   });
